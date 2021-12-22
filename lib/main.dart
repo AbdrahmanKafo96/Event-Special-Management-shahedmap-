@@ -40,7 +40,9 @@ Future  main() async{
   print(token);
   print(email);
   if (defaultTargetPlatform == TargetPlatform.android) {
+    
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+
   }
 
 
