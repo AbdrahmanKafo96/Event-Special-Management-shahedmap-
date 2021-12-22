@@ -105,6 +105,7 @@ class _LoginUiState extends State<LoginUi> {
                             // L login  , R Register  ...
                             userdata = val == PageState.login ?{
                               'userState':'L',
+                              'message_token':await FirebaseMessaging.instance.getToken(),
                               'email':Provider.of<UserAuthProvider>(context, listen: false).user.getEmail.toString(),
                               'password':Provider.of<UserAuthProvider>(context, listen: false).user.getPassword.toString(),
                             }

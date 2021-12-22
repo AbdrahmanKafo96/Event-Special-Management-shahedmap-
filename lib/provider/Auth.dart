@@ -33,6 +33,21 @@ class UserAuthProvider extends ChangeNotifier{
 
           var responseData = json.decode(response.body);
           print(responseData['message']);
+          if(userData['userState']=='L'){
+            if(responseData['message']=="تحقق من البريد الالكتروني وكلمة المرور"){
+              showShortToast('تحقق من البريد الالكتروني وكلمة المرور', Colors.orange);
+                return false;
+            }else{
+              user.user_id=responseData["user_id"];
+              user.api_token=responseData["api_token"];
+
+              prefs.setString('api_token', user.api_token);
+              prefs.setInt('user_id', user.user_id);
+              prefs.setString('email', responseData["email"]);
+
+              return true ;
+            }
+          }
           //مرحبا بك
           if(responseData['message']=="مرحبا بك"){
             user.user_id=responseData['data']["user_id"];
