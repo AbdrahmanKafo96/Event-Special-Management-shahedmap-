@@ -172,6 +172,8 @@ class _VideoPickerState extends State<VideoPicker> {
             Center(
               child: InkWell(
                 onTap: (){
+
+
                   setState(() {
                     _controller.value.isPlaying
                         ? _controller.pause()
@@ -237,7 +239,7 @@ class _VideoPickerState extends State<VideoPicker> {
                       ),
 
                     ) :
-                    widget.oldVideo==null ||_controller==null?AspectRatio(
+                     _controller==null?AspectRatio(
                       aspectRatio:
                       16.0/9.0 ,
                       child:
@@ -255,6 +257,8 @@ class _VideoPickerState extends State<VideoPicker> {
                           ],
                         ),
                           onPressed: (){
+                            print("the controller is ${_controller}");
+                            print(widget.oldVideo);
                         _showPicker(context  );
 
                       },)

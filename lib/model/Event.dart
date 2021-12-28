@@ -52,6 +52,11 @@ class Event {
     if(index>-1)
       _xfile.removeAt(index);
   }
+  void dropAll( ){
+    _videoFile=null;
+     if(_xfile !=null) _xfile.clear();
+     if(_listSelected !=null) _listSelected.clear();
+  }
 
   // File get getImageFile => _imageFile;
   //

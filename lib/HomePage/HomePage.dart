@@ -1,9 +1,5 @@
 import 'dart:convert';
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
-import 'package:systemevents/webBrowser/webView.dart';
-import 'package:url_launcher/url_launcher.dart';
+
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -13,6 +9,8 @@ import 'package:systemevents/model/Event.dart';
 import 'package:systemevents/provider/Auth.dart';
 import 'package:systemevents/provider/EventProvider.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/webBrowser/webView.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 import 'menu/EventMenu.dart';
 import 'settings/setting.dart';
 import 'package:http/http.dart' as http;
@@ -28,7 +26,7 @@ class _HomePageState extends State<HomePage> {
   int _activePage = 0;
   final List<Widget> _tabItems = [
     EventsMenu(),
-     WebView(),
+
     Settings(),
   ];
    List<Event>   futureList=[];
@@ -88,12 +86,20 @@ class _HomePageState extends State<HomePage> {
                             delegate: DataSearchSe(listName: listNames,futureList: futureList));
                     })
                 : SizedBox.shrink(),
+            _activePage == 0? IconButton(
+              onPressed: (){
+             
+                bottomSheet();
+            }, icon: Icon(
+              Icons.language,
+              color: Colors.white,
+            ),) : SizedBox.shrink(),
           ],
           centerTitle: true,
           elevation: 1.0,
           titleSpacing: 1.0,
           title: Text(
-            _activePage == 0 ? "الاحداث"  :_activePage == 1?"تطبيق الويب": "الاعدادت",
+            _activePage == 0 ? "الاحداث"  : "الاعدادت",
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
         ),
@@ -105,10 +111,7 @@ class _HomePageState extends State<HomePage> {
               Icons.list,
               color: Colors.white,
             ),
-            Icon(
-              Icons.language,
-              color: Colors.white,
-            ),
+
             Icon(
               Icons.settings,
               color: Colors.white,
@@ -128,6 +131,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  void bottomSheet(){
+      showModalBottomSheet(
+          isScrollControlled: true,
+          context: context, builder:(context){
+          return Container(
+             color: Color(0xFF737373),
+            height: MediaQuery.of(context).size.height-100,
+            child: Container(
+              height: MediaQuery.of(context).size.height-100,
+             // height: MediaQuery.of(context).size.height-100,
+
+              decoration: BoxDecoration(
+                color: Theme.of(context).canvasColor,
+                borderRadius: BorderRadius.only(
+                    topLeft: const Radius.circular(30),
+                    topRight: const Radius.circular(30),
+                )
+              ),
+               child:  Padding(
+                 padding: const EdgeInsets.all(8.0),
+                 child: Column(
+                   children: [
+                     Directionality(
+                       textDirection: TextDirection.rtl,
+                       child: Container(
+                         padding:  const EdgeInsets.all(5.0),
+                         margin:const EdgeInsets.all(5.0),
+                         //color: Colors.green,
+                         child: Row(
+                           children: [
+                           IconButton(
+
+                             icon:Text("خروج",style: TextStyle(fontWeight: FontWeight.bold , fontSize: 14 , color: Colors.blue),),
+                             onPressed: (){
+                               Navigator.of(context).pop();
+                             },
+                           ),
+                           Text("https://system.com/auth/login",style: TextStyle(
+                               fontSize:14,color: Colors.black87),),
+                           SizedBox(width: 6,),
+                           Icon(Icons.lock,color: Colors.black87,),
+
+                         ],),
+                       ),
+                     ),
+                     CustomWebView(),
+                   ],
+                 )
+               )  ,
+              // child: Scaffold(
+              //   appBar: AppBar(
+              //     elevation: 0,
+              //     centerTitle: true,
+              //     leading: IconButton(
+              //       icon: Icon(Icons.arrow_back,color: Colors.black87,),
+              //       onPressed: (){
+              //         Navigator.of(context).pop();
+              //       },
+              //     ),
+              //     title: Row(children: [
+              //       Text("https://system.com/auth/login",style: TextStyle(
+              //           fontSize:14,color: Colors.black87),),
+              //       SizedBox(width: 6,),
+              //       Icon(Icons.lock,color: Colors.black87,),
+              //
+              //     ],)
+              //     ,backgroundColor: Colors.white,),
+              //     body:   ,
+              // ),
+            ),
+          );
+      });
+  }
   Future getData()   {
     var  list;
      Singleton.getPrefInstace().then((value) async {
@@ -202,7 +278,7 @@ class DataSearchSe extends SearchDelegate<String> {
           close(context, null);
         });
   }
-  Future  fetchSearchedEvent(   ) async {
+  Future  fetchSearchedEvent() async {
     Map data={
       'addede_id': eventId.toString(),
     };

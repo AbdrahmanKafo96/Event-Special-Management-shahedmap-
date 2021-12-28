@@ -36,9 +36,8 @@ Future  main() async{
 
   SharedPreferences prefs= await Singleton.getPrefInstace();
   String token = prefs.getString("api_token");
-  String email = prefs.getString("email");
-  print(token);
-  print(email);
+
+
   if (defaultTargetPlatform == TargetPlatform.android) {
 
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;

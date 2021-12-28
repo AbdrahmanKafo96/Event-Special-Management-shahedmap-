@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:icon_shadow/icon_shadow.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/HomePage/EventFolder/MapPage.dart';
-import 'package:systemevents/HomePage/EventFolder/PickEventImage.dart';
-import 'package:systemevents/HomePage/EventFolder/eventCategoryWidget.dart';
-import 'package:systemevents/provider/EventProvider.dart';
+ import 'package:systemevents/HomePage/EventFolder/PickImages.dart';
+ import 'package:systemevents/provider/EventProvider.dart';
 
 class EventForm extends StatefulWidget {
   @override
@@ -26,7 +24,7 @@ class _EventFormState extends State<EventForm> {
               "إضافة صور",
               style: Theme.of(context).textTheme.headline6,
             ),
-            MyCustomImage(),
+            PickImages(),
             Text(
               "اسم الحدث",
               style: Theme.of(context).textTheme.headline6,

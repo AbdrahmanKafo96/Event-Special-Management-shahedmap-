@@ -1,50 +1,41 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
+import 'dart:io';
 
-class WebView extends StatefulWidget {
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class  CustomWebView extends StatefulWidget {
 
   @override
-  State<WebView> createState() => _WebViewState();
+  State<CustomWebView> createState() => _CustomWebViewState();
 }
 
-class _WebViewState extends State<WebView> {
+class _CustomWebViewState extends State<CustomWebView> {
   TextEditingController controller = TextEditingController();
 
-  FlutterWebviewPlugin flutterWebviewPlugin = FlutterWebviewPlugin();
 
-  var urlString = "https://google.com";
 
-  launchUrl() {
-    setState(() {
-      urlString = controller.text;
-      flutterWebviewPlugin.reloadUrl(urlString);
-    });
-  }
+  var urlString = "http://192.168.1.3:8000/auth/login";
 
-  @override
+
   void initState() {
     super.initState();
-
-    flutterWebviewPlugin.onStateChanged.listen((WebViewStateChanged wvs) {
-      print(wvs.type);
-    });
+    // Enable virtual display.
+    if (Platform.isAndroid) WebView.platform = AndroidWebView();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WebviewScaffold(
-      url: urlString,
-      withZoom: false,
-      withLocalStorage: true,
-
-
-
+    return  Expanded(
+      child: SingleChildScrollView(
+        child: Container(
+          height: MediaQuery.of(context).size.height ,
+          child:  WebView(
+            zoomEnabled:false ,
+            initialUrl: urlString,
+          ),
+        ),
+      ),
     );
   }
-  @override
-  void dispose() {
-    // Every listener should be canceled, the same should be done with this stream.
-    controller.clear();
-    super.dispose();
-  }
+
 }

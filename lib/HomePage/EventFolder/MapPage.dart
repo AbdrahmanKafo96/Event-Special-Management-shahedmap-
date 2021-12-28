@@ -6,7 +6,8 @@ import 'package:provider/provider.dart';
 import 'package:systemevents/CustomWidget/customToast.dart';
 import 'package:systemevents/provider/EventProvider.dart';
 import 'package:flutter/services.dart';
-
+import 'dart:convert';
+import 'package:http/http.dart' as http;
 class MapPage extends StatefulWidget {
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -81,21 +82,37 @@ class _MyHomePageState extends State<MapPage> {
   //
   //
   //
-  handleTap(LatLng tappedPoint) {
+  handleTap(LatLng tappedPoint) async{
 
-    Provider.of<EventProvider>(context, listen: false).event.setLat =
-        tappedPoint.latitude;
-    Provider.of<EventProvider>(context, listen: false).event.setLng =
-        tappedPoint.longitude;
-    setState(() {
-      myMarker = [];
-      myMarker.add(Marker(
-        markerId: MarkerId(tappedPoint.toString()),
-        position: tappedPoint,
-      ));
-      Provider.of<EventProvider>(context, listen: false).event.tappedPoint=tappedPoint;
-    });
+    final response = await http
+        .get(Uri.parse('http://api.geonames.org/countryCodeJSON?lat=${tappedPoint.latitude}&'
+        'lng=${tappedPoint.longitude}&username=abdo&fbclid=IwAR3wz-bIao6j4wH60PNmQtEnBHUaC8_rmRN9TScyL6P75Gv4YAV0r8LMIKs'));
+    if (response.statusCode == 200) {
+      // If the server did return a 200 OK response,
+      // then parse the JSON.
+     var result =   jsonDecode(response.body);
+     // if(result['countryName']=='Libya'){
 
+     if(result['countryName']=='Libya')
+       {
+         Provider.of<EventProvider>(context, listen: false).event.setLat =
+             tappedPoint.latitude;
+         Provider.of<EventProvider>(context, listen: false).event.setLng =
+             tappedPoint.longitude;
+         setState(() {
+           myMarker = [];
+           myMarker.add(Marker(
+             markerId: MarkerId(tappedPoint.toString()),
+             position: tappedPoint,
+           ));
+           Provider.of<EventProvider>(context, listen: false).event.tappedPoint=tappedPoint;
+         });
+       }else{
+       showShortToast('يجب ان يكون عنوان الحدث داخل نطاق ليبيا', Colors.orange);
+     }
+    } else {
+      throw Exception('Failed to load album');
+    }
 
   }
 
@@ -161,6 +178,11 @@ class _MyHomePageState extends State<MapPage> {
     return   Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        floatingActionButton:  FloatingActionButton.extended(
+        onPressed: _currentLocation2,
+        label: Text('الموقع الحالي'),
+        icon: Icon(Icons.location_on),
+      ),
         appBar: AppBar(
           elevation: 0,
           backgroundColor: Colors.teal,
@@ -168,74 +190,75 @@ class _MyHomePageState extends State<MapPage> {
             "حدد موقع الحدث",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
           ),
-          leading: IconButton(icon: Icon(Icons.add_location ,color: Colors.white ,),
-            onPressed: (){
+          leading:PopupMenuButton(
+            itemBuilder: (builder) {
+              return <PopupMenuEntry<int>>[
+                PopupMenuItem<int>(
+                  value: 0,
+                  child: Text('Hybrid'),
+                ),
+                PopupMenuItem<int>(
+                  value: 1,
+                  child: Text('Normal'),
+                ),
+                PopupMenuItem<int>(
+                  value: 2,
+                  child: Text('Satellite'),
+                ),
+                PopupMenuItem<int>(
+                  value: 3,
+                  child: Text('Terrain'),
+                ),
+              ];
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 0:
+                  setState(() {
+                    maptype = MapType.hybrid;
+                  });
+                  break;
+                case 1:
+                  setState(() {
+                    maptype = MapType.normal;
+                  });
+                  break;
+                case 2:
+                  setState(() {
+                    maptype = MapType.satellite;
+                  });
+                  break;
+                case 3:
+                  setState(() {
+                    maptype = MapType.terrain;
+                  });
+                  break;
+              }
+            },
+          ),
 
-            if(Provider.of<EventProvider>(context, listen: false).event.getLat ==null
-                &&
-                Provider.of<EventProvider>(context, listen: false).event.getLng==null
-            ){
-              showShortToast('يجب تحديث موقع الحدث', Colors.orange);
-            }else{
-
-                customAlertForButton(context);
-
-            }
-          },),
           actions: [
-            PopupMenuButton(
-              itemBuilder: (builder) {
-                return <PopupMenuEntry<int>>[
-                  PopupMenuItem<int>(
-                    value: 0,
-                    child: Text('Hybrid'),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 1,
-                    child: Text('Normal'),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 2,
-                    child: Text('Satellite'),
-                  ),
-                  PopupMenuItem<int>(
-                    value: 3,
-                    child: Text('Terrain'),
-                  ),
-                ];
-              },
-              onSelected: (value) {
-                switch (value) {
-                  case 0:
-                    setState(() {
-                      maptype = MapType.hybrid;
-                    });
-                    break;
-                  case 1:
-                    setState(() {
-                      maptype = MapType.normal;
-                    });
-                    break;
-                  case 2:
-                    setState(() {
-                      maptype = MapType.satellite;
-                    });
-                    break;
-                  case 3:
-                    setState(() {
-                      maptype = MapType.terrain;
-                    });
-                    break;
+            IconButton(icon: Icon(Icons.add_location ,color: Colors.white ,),
+              onPressed: (){
+
+                if(Provider.of<EventProvider>(context, listen: false).event.getLat ==null
+                    &&
+                    Provider.of<EventProvider>(context, listen: false).event.getLng==null
+                ){
+                  showShortToast('يجب تحديد موقع الحدث', Colors.orange);
+                }else{
+                  customAlertForButton(context);
                 }
-              },
-            )
+              },),
           ],
         ),
         body: Padding(
           padding: const EdgeInsets.only(top: 8.0),
           child: Stack(
             children: [
+
               GoogleMap(
+                layoutDirection: TextDirection.rtl,
                 onLongPress: (val){
                  setState(() {
                    myMarker.removeAt(0);
@@ -244,7 +267,7 @@ class _MyHomePageState extends State<MapPage> {
                    Provider.of<EventProvider>(context, listen: false).event.setLng=null;
                  });
                 },
-
+                myLocationButtonEnabled: false,
                 mapType: maptype,
                 onTap: handleTap,
                 initialCameraPosition:
@@ -255,13 +278,46 @@ class _MyHomePageState extends State<MapPage> {
                 myLocationEnabled: true,
                 markers: Set<Marker>.of(myMarker),
               ),
+              Positioned(
+                top: 0,
+                right: 0,
+                child: IconButton(
+                  hoverColor: Colors.grey,
+                  highlightColor: Colors.grey,
+                  icon: Icon(Icons.arrow_back ,color: Colors.black87,),
+                  onPressed: (){
+                    Provider.of<EventProvider>(context, listen: false).event.setLat =
+                    null;
+                    Provider.of<EventProvider>(context, listen: false).event.setLng =
+                   null;
+
+                    Provider.of<EventProvider>(context, listen: false).event.tappedPoint=null;
+                    Navigator.of(context).pop();
+                  },),),
             ],
           ),
         ),
       ),
     );
   }
+  void _currentLocation2() async {
+    final GoogleMapController controller = await _cController.future;
+    LocationData currentLocation;
+    var location = new Location();
+    try {
+      currentLocation = await location.getLocation();
+    } on Exception {
+      currentLocation = null;
+    }
 
+    controller.animateCamera(CameraUpdate.newCameraPosition(
+      CameraPosition(
+        bearing: 0,
+        target: LatLng(currentLocation.latitude, currentLocation.longitude),
+        zoom: 15.0,
+      ),
+    ));
+  }
   // initPlatformState() async {
   //   await _locationService.changeSettings(
   //       accuracy: LocationAccuracy.high, interval: 1000);

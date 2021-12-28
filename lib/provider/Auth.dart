@@ -213,7 +213,7 @@ class UserAuthProvider extends ChangeNotifier{
       if(response.statusCode==200){
         final respStr = await response.stream.bytesToString();
         var responseData= jsonDecode(respStr);
-
+            print(responseData);
         if(responseData['message']=='success'){
 
           return true;

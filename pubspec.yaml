@@ -45,8 +45,8 @@ dependencies:
   shared_preferences:
   icon_shadow: ^1.0.1
   android_intent:
+  webview_flutter: ^3.0.0
 
-  webview_flutter:
   connectivity:
   video_player: ^2.2.7
   #location: any

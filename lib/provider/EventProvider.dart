@@ -12,7 +12,7 @@ import 'package:systemevents/singleton/singleton.dart';
 class EventProvider extends ChangeNotifier{
 
       Event event= Event();
-      addEvent(Map  userData , BuildContext context) async {
+      addEvent(Map  userData  ) async {
         var _count=1;
             var request =   http.MultipartRequest("POST",
                 Uri.parse("${Singleton.apiPath}/save_event") ) ;
@@ -69,15 +69,14 @@ class EventProvider extends ChangeNotifier{
                var s= jsonDecode(respStr);
                print(s['error']);
                if(s['status']=='success'){
-                 event=null;
-                 event=Event();
+                 event.dropAll();
+                 //event=Event();
                  return true;
                }else{
                  return false;
                }
             }else{
               return false;
-
             }
       }
       // finally {
@@ -100,8 +99,33 @@ class EventProvider extends ChangeNotifier{
                   throw Exception('Failed to delete album.');
             }
       }//  we need to close connection after call these methods
-      updateEvent(Map myData){
+      updateEvent(Map userData) async {
+        var request =   http.MultipartRequest("POST",
+            Uri.parse("${Singleton.apiPath}/updateEvent") ) ;
+        request.fields['description'] = userData['description'];
+        request.fields['user_id'] = userData['user_id'].toString();
+        request.fields['addede_id'] = userData['addede_id'].toString();
+        request.fields['event_name'] = userData['event_name'];
 
+        if(event.getVideoFile!=null)
+          request.files.add(
+              http.MultipartFile('video',
+                  File(event.getVideoFile.path ).readAsBytes().asStream(), File(event.getVideoFile.path).lengthSync(),
+                  filename: event.getVideoFile.path.split("/").last
+              ));
+
+        var response =await  request.send();
+        print(response.statusCode);
+        if(response.statusCode==200 ){
+          final respStr = await response.stream.bytesToString();
+          var respo= jsonDecode(respStr);
+          print(respo['error']);
+          if(respo['status']=='success'){
+            return true;
+          }else{
+            return false;
+          }
+        }
 
       }//  we need to close connection after call these methods
          Future<dynamic>  fetchEventDataByEventId( int addede_id)async {
