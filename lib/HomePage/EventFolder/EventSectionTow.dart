@@ -41,6 +41,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: IconButton(
+                tooltip: 'إلغاء الحدث',
                 icon: Icon(Icons.clear),
                 onPressed: () {
                   Provider.of<EventProvider>(context, listen: false).event.dropAll();
@@ -51,6 +52,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
               actions: [
 
                 IconButton(
+                  tooltip: "حفظ",
                     icon: Icon(
                       Icons.check,
                     ),

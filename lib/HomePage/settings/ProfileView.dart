@@ -79,255 +79,253 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     checkInternetConnectivity(context);
-    return Scaffold(
-        key: _scaffoldKey,
-        appBar: AppBar(
-          title: Text(
-            ' بيانات المستخدم',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          leading: IconButton(
-            icon: Icon(Icons.arrow_back, color: Colors.white),
-
-            onPressed: () {
-                Navigator.of(context).pop();
-
-            }
-          ),
-          actions: [
-            IconButton(
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+          key: _scaffoldKey,
+          appBar: AppBar(
+            title: Text(
+              ' بيانات المستخدم',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
+            leading: IconButton(
+              icon: Icon(Icons.arrow_back, color: Colors.white),
+                tooltip: 'رجوع',
               onPressed: () {
-                var form = _formKey.currentState;
-                if (form.validate()) {
-                   state==true?updateForm(context): saveData(context);
-                } else {
-                  _scaffoldKey.currentState.showSnackBar(SnackBar(
-                    content: Text(
-                      'من فضلك ادخل بيانات النموذج بالكامل',
-                      //textDirection: TextDirection.rtl,
-                      textAlign: TextAlign.center,
-                    ),
-                    backgroundColor: Colors.red,
-                  ));
-                }
-              },
-              icon: Icon(
-                state == true ? Icons.edit : Icons.save,
-                color: Colors.white,
-              ),
-            )
-          ],
-        ),
-        body: Directionality(
-          textDirection: TextDirection.rtl,
-          child: Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.all(10),
-            child: SingleChildScrollView(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      InkWell(
-                        onTap: pickImage,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            color: Colors.white,
-                            shape: BoxShape.circle,
-                            boxShadow: [
-                              BoxShadow(
-                                  blurRadius: 5,
-                                  color: Colors.grey,
-                                  spreadRadius: 5)
-                            ],
-                          ),
-                          child: CircleAvatar(
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                      text: "حمل الصورة الشخصية",
-                                      style: TextStyle(
-                                          color: Colors.black, fontSize: 12)),
-                                  WidgetSpan(
-                                    child: Icon(Icons.perm_media_sharp),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            backgroundColor: Colors.white,
-                            foregroundColor: Colors.green,
+                  Navigator.of(context).pop();
 
-                            backgroundImage: _image == null
-                                ? state == true
-                                    ? NetworkImage(_uri)
-                                    : null
-                                :
-                            FileImage(_image),
-                            radius: 80,
-                          ),
-                        ),
+              }
+            ),
+            actions: [
+              IconButton(
+                tooltip: 'تعديل',
+                onPressed: () {
+                  var form = _formKey.currentState;
+                  if (form.validate()) {
+                     state==true?updateForm(context): saveData(context);
+                  } else {
+                    _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      content: Text(
+                        'من فضلك ادخل بيانات النموذج بالكامل',
+                        //textDirection: TextDirection.rtl,
+                        textAlign: TextAlign.center,
                       ),
-
-                    ],
-                  ),
-
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Form(
-                    key: _formKey,
-                    child: Column(
-                      children: [
-                        TextFormField(
-                          controller: firstNameCon,
-                          textAlign: TextAlign.right,
-                          keyboardType: TextInputType.text,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.singleLineFormatter
-                          ],
-
-                          validator: (value) =>
-                              value.isEmpty ? 'الاسم الاول مطلوب' : null,
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(
-
-                                Icons.drive_file_rename_outline,
-                                color: Colors.teal,
-                              ),
-                              labelText: "الاسم الاول",
-                              hintText: "ادخل اسم الاول"),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        TextFormField(
-                          controller: fatherNameCon,
-                          textAlign: TextAlign.right,
-                          keyboardType: TextInputType.text,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.singleLineFormatter
-                          ],
-
-                          validator: (value) =>
-                              value.isEmpty ? 'اسم الاب مطلوب' : null,
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.drive_file_rename_outline,
-                                color: Colors.teal,
-                              ),
-                              labelText: "اسم الاب",
-                              hintText: "ادخل اسم الاب"),
-                        ),
-                        SizedBox(
-                          height: 12,
-                        ),
-                        TextFormField(
-                          controller: lastNameCon,
-                          textAlign: TextAlign.right,
-                          keyboardType: TextInputType.text,
-                          inputFormatters: <TextInputFormatter>[
-                            FilteringTextInputFormatter.singleLineFormatter
-                          ],
-
-                          validator: (value) =>
-                              value.isEmpty ? 'لقب العائلة مطلوب' : null,
-                          decoration: InputDecoration(
-                              prefixIcon: Icon(
-                                Icons.drive_file_rename_outline,
-                                color: Colors.teal,
-                              ),
-                              labelText: "لقب العائلة",
-                              hintText: "ادخل لقب العائلة"),
-                        ),
-                        SizedBox(height: 24,),
-                        Row(
-                          children: [
-                            Expanded(
-                              flex: 1,
-                              child: Directionality(
-                                textDirection: TextDirection.rtl,
-                                child: DateTimePicker(
-                                  validator: (value){
-                                    if(value.isEmpty || value ==null)
-                                      return "يجب ادخال تاريخ الميلاد";
-                                    else
-                                      return null;
-                                  },
-                                  onChanged: (value){
-
-                                    Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=value;
-                                  },
-                                  controller: dateCon,
-                                  // controller: date_of_birthController,
-                                  type: DateTimePickerType.date,
-                                  cancelText: "لا",
-                                  confirmText: 'نعم',
-                                  dateMask: 'd MMM, yyyy',
-                                //  initialValue:dateCon.text  ,
-                                  firstDate: DateTime(1930),
-                                  lastDate: DateTime(DateTime.now().year-12),
-                                  calendarTitle: 'اختر تاريخ ميلادك',
-                                  icon: Icon(Icons.event),
-                                  dateLabelText: 'تاريخ الميلاد',
-                                  timeLabelText: "ساعة",
-                                  textAlign: TextAlign.left ,
-                                  autovalidate:true ,
-                                  errorFormatText: "ادخل تاريخ صحيح",
-                                  errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                                  selectableDayPredicate: (date) {
-                                    // Disable weekend days to select from the calendar
-                                    if (date.weekday == 6 || date.weekday == 7) {
-                                      return false;
-                                    }
-                                    return true;
-                                  },
-
-                                  // validator: (val) {
-                                  //   print('the date on validation $val ');
-                                  //   return null;
-                                  // },
-                                  onSaved: (val) => print('the date on save $val'),
+                      backgroundColor: Colors.red,
+                    ));
+                  }
+                },
+                icon: Icon(
+                  state == true ? Icons.edit : Icons.save,
+                  color: Colors.white,
+                ),
+              )
+            ],
+          ),
+          body: Directionality(
+            textDirection: TextDirection.rtl,
+            child: Container(
+              margin: EdgeInsets.all(10),
+              padding: EdgeInsets.all(10),
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: <Widget>[
+                        InkWell(
+                          onTap: pickImage,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
+                              shape: BoxShape.circle,
+                              boxShadow: [
+                                BoxShadow(
+                                    blurRadius: 5,
+                                    color: Colors.grey,
+                                    spreadRadius: 5)
+                              ],
+                            ),
+                            child: CircleAvatar(
+                              child: RichText(
+                                text: TextSpan(
+                                  children: [
+                                    TextSpan(
+                                        text: state != true?"حمل الصورة الشخصية":"",
+                                        style: TextStyle(
+                                            color: Colors.black, fontSize: 12)),
+                                    WidgetSpan(
+                                      child: state != true?Icon(Icons.perm_media_sharp):SizedBox.shrink(),
+                                    ),
+                                  ],
                                 ),
                               ),
+                              backgroundColor: Colors.white,
+                              foregroundColor: Colors.green,
+
+                              backgroundImage: _image == null
+                                  ? state == true
+                                      ? NetworkImage(_uri)
+                                      : null
+                                  :
+                              FileImage(_image),
+                              radius: 80,
                             ),
-                            Expanded(
-                              flex: 1,
-                              child: TextButton.icon(
-
-                                onPressed: () {
-                                  showCountryPicker(
-
-                                    context: context,
-                                    //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                                    exclude: <String>['KN', 'MF'],
-                                    //Optional. Shows phone code before the country name.
-                                    showPhoneCode: true,
-
-                                    onSelect: (Country country) {
-                                      // countryController=country.displayName;
-                                      Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
-                                      setState(() {
-                                        country1=country.displayNameNoCountryCode.toString();
-                                      });
-                                    },
-                                  );
-                                },
-                                icon: Icon(Icons.language),
-                                label: Text(country1!=""?country1:'اختيار الدولة' ),
-                              ),),
-                          ],
+                          ),
                         ),
+
                       ],
                     ),
-                  ),
-                ],
+
+                    SizedBox(
+                      height: 12,
+                    ),
+                    Form(
+                      key: _formKey,
+                      child: Column(
+                        children: [
+                          TextFormField(
+                            controller: firstNameCon,
+                            textAlign: TextAlign.right,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.singleLineFormatter
+                            ],
+
+                            validator: (value) =>
+                                value.isEmpty ? 'الاسم الاول مطلوب' : null,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(
+
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.teal,
+                                ),
+                                labelText: "الاسم الاول",
+                                hintText: "ادخل اسم الاول"),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          TextFormField(
+                            controller: fatherNameCon,
+                            textAlign: TextAlign.right,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.singleLineFormatter
+                            ],
+
+                            validator: (value) =>
+                                value.isEmpty ? 'اسم الاب مطلوب' : null,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.teal,
+                                ),
+                                labelText: "اسم الاب",
+                                hintText: "ادخل اسم الاب"),
+                          ),
+                          SizedBox(
+                            height: 12,
+                          ),
+                          TextFormField(
+                            controller: lastNameCon,
+                            textAlign: TextAlign.right,
+                            keyboardType: TextInputType.text,
+                            inputFormatters: <TextInputFormatter>[
+                              FilteringTextInputFormatter.singleLineFormatter
+                            ],
+
+                            validator: (value) =>
+                                value.isEmpty ? 'لقب العائلة مطلوب' : null,
+                            decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.teal,
+                                ),
+                                labelText: "لقب العائلة",
+                                hintText: "ادخل لقب العائلة"),
+                          ),
+                          SizedBox(height: 24,),
+                          Row(
+                            children: [
+                              Expanded(
+                                flex: 1,
+                                child: Directionality(
+                                  textDirection: TextDirection.rtl,
+                                  child: DateTimePicker(
+                                    validator: (value){
+                                      if(value.isEmpty || value ==null)
+                                        return "يجب ادخال تاريخ الميلاد";
+                                      else
+                                        return null;
+                                    },
+                                    onChanged: (value){
+
+                                      Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=value;
+                                    },
+                                    controller: dateCon,
+                                    // controller: date_of_birthController,
+                                    type: DateTimePickerType.date,
+                                    cancelText: "لا",
+                                    confirmText: 'نعم',
+                                    dateMask: 'd MMM, yyyy',
+                                  //  initialValue:dateCon.text  ,
+                                    firstDate: DateTime(1930),
+                                    lastDate: DateTime(DateTime.now().year-12),
+                                    calendarTitle: 'اختر تاريخ ميلادك',
+                                    icon: Icon(Icons.event),
+                                    dateLabelText: 'تاريخ الميلاد',
+                                    timeLabelText: "ساعة",
+                                    textAlign: TextAlign.left ,
+                                    autovalidate:true ,
+                                    errorFormatText: "ادخل تاريخ صحيح",
+                                    errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
+
+
+                                    // validator: (val) {
+                                    //   print('the date on validation $val ');
+                                    //   return null;
+                                    // },
+                                    onSaved: (val) => print('the date on save $val'),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                flex: 1,
+                                child: TextButton.icon(
+
+                                  onPressed: () {
+                                    showCountryPicker(
+
+                                      context: context,
+                                      //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                      exclude: <String>['KN', 'MF'],
+                                      //Optional. Shows phone code before the country name.
+                                      showPhoneCode: true,
+
+                                      onSelect: (Country country) {
+                                        // countryController=country.displayName;
+                                        Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
+                                        setState(() {
+                                          country1=country.displayNameNoCountryCode.toString();
+                                        });
+                                      },
+                                    );
+                                  },
+                                  icon: Icon(Icons.language),
+                                  label: Text(country1!=""?country1:'اختيار الدولة' ),
+                                ),),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-        ));
+          )),
+    );
   }
 
   void pickImage() async {

@@ -105,7 +105,7 @@ class _CustomCategoryEventState extends State<CustomCategoryEvent> {
                   items: gategoryList.map((CategoryClass data){
                     return DropdownMenuItem<String>(
                       value: data.category_id.toString(),
-                      child: Text(data.category_name ,style:  TextStyle(fontSize: 16), ),
+                      child: Text(data.category_name ,style:  TextStyle(fontSize: 14), ),
                     );
                   }).toList(),
                 ) ,
@@ -147,7 +147,7 @@ class _CustomCategoryEventState extends State<CustomCategoryEvent> {
                   subTypesList.map((EventType data){
                     return DropdownMenuItem<String>(
                       value: data.type_id.toString(),
-                      child: Text(data.type_name ,style: TextStyle(fontSize: 16),),
+                      child: Text(data.type_name ,style: TextStyle(fontSize: 14),),
                     );
                   }).toList(),
                 ) ,

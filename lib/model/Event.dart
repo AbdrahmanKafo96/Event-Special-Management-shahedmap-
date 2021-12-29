@@ -57,6 +57,11 @@ class Event {
      if(_xfile !=null) _xfile.clear();
      if(_listSelected !=null) _listSelected.clear();
   }
+  void nullAll( ){
+    _videoFile=null;
+    if(_xfile !=null) _xfile=null;
+    if(_listSelected !=null) _listSelected=null;
+  }
 
   // File get getImageFile => _imageFile;
   //

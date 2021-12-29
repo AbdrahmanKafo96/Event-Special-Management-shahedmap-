@@ -24,10 +24,8 @@ class EventProvider extends ChangeNotifier{
             request.fields['lat'] = userData['lat'];
             request.fields['lng'] = userData['lng'];
             // code below for camera image ...
-        for(int i=0 ; i<event.getXFile.length; i++){
-          print(event.getXFile[i].path);
-        }
-        print("the len = ${event.getXFile.length}");
+
+
             if(event.getXFile!=null){
               if(event.getXFile.length>=1 && event.getXFile.length<=4)
                 {
@@ -42,18 +40,8 @@ class EventProvider extends ChangeNotifier{
                         ));
                   }
                 }
-
             }
 
-
-             // if( event.getImageFile!=null){
-             //   request.files.add(
-             //       http.MultipartFile('image1',
-             //           File(event.getImageFile.path).readAsBytes().asStream(),
-             //           File(event.getImageFile.path).lengthSync(),
-             //           filename: event.getImageFile.path.split("/").last
-             //       ));
-             // }
 
             if(event.getVideoFile!=null)
             request.files.add(
@@ -100,6 +88,7 @@ class EventProvider extends ChangeNotifier{
             }
       }//  we need to close connection after call these methods
       updateEvent(Map userData) async {
+        var _count=1;
         var request =   http.MultipartRequest("POST",
             Uri.parse("${Singleton.apiPath}/updateEvent") ) ;
         request.fields['description'] = userData['description'];
@@ -107,15 +96,35 @@ class EventProvider extends ChangeNotifier{
         request.fields['addede_id'] = userData['addede_id'].toString();
         request.fields['event_name'] = userData['event_name'];
 
+
+        if(event.getXFile!=null){
+          if(event.getXFile.length>=1 && event.getXFile.length<=4)
+          {
+            event.setListSelected=event.getXFile;
+
+            for(int i=0 ; i<event.getListSelected.length; i++){
+              print(_count);
+              if(event.getXFile[i]!=null)
+              request.files.add(
+                  http.MultipartFile('image${_count}',
+                      File(event.getListSelected[i].path).readAsBytes().asStream(),
+                      File(event.getListSelected[i].path).lengthSync(),
+                      filename: event.getListSelected[i].path.split("/").last
+                  ));
+              _count++;
+            }
+          }
+        }
         if(event.getVideoFile!=null)
           request.files.add(
               http.MultipartFile('video',
-                  File(event.getVideoFile.path ).readAsBytes().asStream(), File(event.getVideoFile.path).lengthSync(),
+                  File(event.getVideoFile.path ).readAsBytes().asStream(),
+                  File(event.getVideoFile.path).lengthSync(),
                   filename: event.getVideoFile.path.split("/").last
               ));
 
         var response =await  request.send();
-        print(response.statusCode);
+
         if(response.statusCode==200 ){
           final respStr = await response.stream.bytesToString();
           var respo= jsonDecode(respStr);
@@ -126,8 +135,11 @@ class EventProvider extends ChangeNotifier{
             return false;
           }
         }
-
-      }//  we need to close connection after call these methods
+      }
+      deleteImage(){
+        
+      }
+      //  we need to close connection after call these methods
          Future<dynamic>  fetchEventDataByEventId( int addede_id)async {
         Map data={
           'addede_id':addede_id.toString(),

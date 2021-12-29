@@ -30,18 +30,18 @@ class _PickImagesState extends State<PickImages> {
             textDirection: TextDirection.rtl,
             child: SafeArea(
               child: Container(
-                child: new Wrap(
+                child:   Wrap(
                   children: <Widget>[
-                    new ListTile(
-                        leading: new Icon(Icons.photo_library),
-                        title: new Text('مكتبة الصور'),
+                      ListTile(
+                        leading:   Icon(Icons.photo_library),
+                        title:   Text('مكتبة الصور'),
                         onTap: () {
                           _imgFromGallery(index);
                           Navigator.of(context).pop();
                         }),
-                    new ListTile(
-                      leading: new Icon(Icons.photo_camera),
-                      title: new Text('الكميرا'),
+                      ListTile(
+                      leading:   Icon(Icons.photo_camera),
+                      title:   Text('الكميرا'),
                       onTap: () {
                         _imgFromCamera(index);
                         Navigator.of(context).pop();

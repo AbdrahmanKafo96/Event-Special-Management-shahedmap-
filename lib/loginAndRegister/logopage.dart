@@ -14,8 +14,8 @@ class _LogoState extends State<Logo> {
       padding: EdgeInsets.all(10),
        child: Center(child: Image(
          image: AssetImage('assets/images/${widget._url}'),
-         width: 200,
-         height: 200,))
+         width: MediaQuery.of(context).size.width,
+         height: MediaQuery.of(context).size.height*0.4,))
     );
   }
 }

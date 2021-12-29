@@ -32,10 +32,11 @@ class _LoginUiState extends State<LoginUi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+
         appBar: AppBar(
           centerTitle: true,
           title: Text(
-            " تتبع الحدث",
+            val == PageState.login?" تسجيل الدخول" :'إنشاء حساب',
             style: TextStyle(
               fontWeight: FontWeight.bold,
             ),
@@ -44,12 +45,13 @@ class _LoginUiState extends State<LoginUi> {
         body: Directionality(
             textDirection: TextDirection.rtl,
             child: Container(
+              color: Colors.white,
               child: SingleChildScrollView(
                 padding: EdgeInsets.all(15),
                 child: Form(
                   key: _formKey,
                   child: Column(children: [
-                    Logo('logo.png'),
+                    Logo('logo.png' ),
                     val == PageState.login ? LoginForm() : RegistrationForm(),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -94,7 +96,7 @@ class _LoginUiState extends State<LoginUi> {
                       height: 50,
                       width: 250,
                       decoration: BoxDecoration(
-                          color: Color(0xFF11b719),
+                          color: Color(0xFF5a8f62),
                           borderRadius: BorderRadius.circular(20)),
                       child: TextButton(
                         onPressed: () async {

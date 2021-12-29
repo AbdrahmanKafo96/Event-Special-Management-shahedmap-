@@ -49,12 +49,14 @@ class _HomePageState extends State<HomePage> {
         floatingActionButton: _activePage == 0
             ? FloatingActionButton(
                 onPressed: () {
+                  Provider.of<EventProvider>(context, listen: false).event=Event();
                   Navigator.push(
                     context,
                     MaterialPageRoute(builder: (context) => EventSectionOne()),
                   );
-                },
+                },tooltip: 'اضف حدث',
                 child: const Icon(
+
                   Icons.add,
                   color: Colors.black45,
                   size: 24,
@@ -66,6 +68,7 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           leading: _activePage == 0
               ? IconButton(
+            tooltip: 'تسجيل الخروج',
                   icon: Icon(
                     Icons.logout,
                   ),
@@ -77,6 +80,7 @@ class _HomePageState extends State<HomePage> {
           actions: [
             _activePage == 0
                 ? IconButton(
+                    tooltip: 'بحث',
                     icon: Icon(
                       Icons.search_rounded,
                       color: Colors.white,
@@ -90,7 +94,8 @@ class _HomePageState extends State<HomePage> {
               onPressed: (){
              
                 bottomSheet();
-            }, icon: Icon(
+            },tooltip: "تصفح الموقع",
+              icon: Icon(
               Icons.language,
               color: Colors.white,
             ),) : SizedBox.shrink(),
@@ -266,13 +271,16 @@ class DataSearchSe extends SearchDelegate<String> {
   @override
   List<Widget> buildActions(BuildContext context) {
     // action for appbar
-    return [IconButton(icon: Icon(Icons.clear), onPressed: () => query = "")];
+    return [IconButton(
+        tooltip: 'إلغاء البحث',
+        icon: Icon(Icons.clear), onPressed: () => query = "")];
   }
 
   @override
   Widget buildLeading(BuildContext context) {
     // icon leading
     return IconButton(
+      tooltip: "رجوع",
         icon: Icon(Icons.arrow_back ,color: Colors.black,),
         onPressed: () {
           close(context, null);
@@ -323,16 +331,21 @@ class DataSearchSe extends SearchDelegate<String> {
                         child: Row(
                           children: [
                             IconButton(
+                              tooltip: 'تعديل الحدث',
                               icon: Icon(
                                 Icons.edit,
                                 color: Colors.green,
                               ),
                               onPressed: () {
-                                // print(
-                                //     "the edit id is ${snapshot.data[index].addede_id}");
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => EventView(eventID: eventId,)),
+                                );
                               },
                             ),
                             IconButton(
+                                tooltip: 'حذف الحدث',
                                 icon: Icon(
                                   Icons.delete,
                                   color: Colors.red,

@@ -97,7 +97,7 @@ class _EventsMenuState extends State<EventsMenu> {
           //   return Center(child: Text('قم بإنشاء حدث جديد'));
           switch (snapshot.connectionState) {
             case ConnectionState.none:
-              return Text('غير متصل بالانترنت');
+              return Text('');
 
             case ConnectionState.waiting:
               return Center(child: CircularProgressIndicator());
@@ -136,7 +136,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                 // TODO: Navigate to edit page;
                               }
                             },
-                            background: slideRightBackground(),
+                             background: slideRightBackground(),
                             secondaryBackground: slideLeftBackground(),
                             key: Key(index.toString()),
                             child: Column(
@@ -154,16 +154,21 @@ class _EventsMenuState extends State<EventsMenu> {
                                       child: Row(
                                         children: [
                                           IconButton(
+                                            tooltip: 'تعديل الحدث',
                                             icon: Icon(
                                               Icons.edit,
                                               color: Colors.green,
                                             ),
                                             onPressed: () {
-                                              print(
-                                                  "the edit id is ${snapshot.data[index].addede_id}");
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) => EventView(eventID: snapshot.data[index].addede_id,)),
+                                              );
                                             },
                                           ),
                                           IconButton(
+                                            tooltip: 'حذف الحدث',
                                               icon: Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
@@ -196,10 +201,10 @@ class _EventsMenuState extends State<EventsMenu> {
                             ));
                       },
                     )
-                  : Center(child: Text('قم بإنشاء حدث جديد'));
+                  : Center(child: Text('انشئ حدث جديد'));
             default:
               {
-                return Center(child: Text('قم بإنشاء حدث جديد'));
+                return Center(child: Text('انشئ حدث جديد'));
               }
           }
           return null; // unreachable

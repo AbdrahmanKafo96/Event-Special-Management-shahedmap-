@@ -26,6 +26,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
             leading: IconButton(
+              tooltip: 'الغاء الحدث',
               icon: Icon(Icons.clear),
               onPressed: () {
                  Provider.of<EventProvider>(context, listen: false).event.dropAll();
@@ -42,6 +43,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                           .of(context)
                           .pushReplacement( MaterialPageRoute(builder: (BuildContext context) => EventSectionTow() ));
                     },
+                    tooltip: 'التالي',
                     icon: Icon(
                       Icons.arrow_back_ios_sharp,
                     )),

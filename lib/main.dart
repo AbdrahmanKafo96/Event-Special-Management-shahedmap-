@@ -36,7 +36,7 @@ Future  main() async{
 
   SharedPreferences prefs= await Singleton.getPrefInstace();
   String token = prefs.getString("api_token");
-
+  print(token);
 
   if (defaultTargetPlatform == TargetPlatform.android) {
 

@@ -1,3 +1,5 @@
+
+
 import 'package:country_picker/country_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +22,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String  countryController  ;
   final   date_of_birthController = TextEditingController();
 
-
+  String country1="";
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -150,8 +152,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
                  cancelText: "لا",
                  confirmText: 'نعم',
                  dateMask: 'd MMM, yyyy',
+                 enabled: true,
                 initialValue:"1960-01-01 00:00:00.000"  ,
-                 firstDate: DateTime(1930),
+                 firstDate: DateTime(1960),
                  lastDate: DateTime(DateTime.now().year-12),
                  calendarTitle: 'اختر تاريخ ميلادك',
                  icon: Icon(Icons.event),
@@ -159,20 +162,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
                  timeLabelText: "ساعة",
                  textAlign: TextAlign.left ,
                  autovalidate:true ,
-                  errorFormatText: "ادخل تاريخ صحيح",
+                 errorFormatText: "ادخل تاريخ صحيح",
                  errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                 selectableDayPredicate: (date) {
-                   // Disable weekend days to select from the calendar
-                   if (date.weekday == 6 || date.weekday == 7) {
-                     return false;
-                   }
-                   return true;
-                 },
-
-                 // validator: (val) {
-                 //   print('the date on validation $val ');
-                 //   return null;
-                 // },
                  onSaved: (val) => print('the date on save $val'),
                ),
              ),
@@ -180,7 +171,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
            Expanded(
              flex: 1,
              child: TextButton.icon(
-
                onPressed: () {
                  showCountryPicker(
 
@@ -191,13 +181,16 @@ class _RegistrationFormState extends State<RegistrationForm> {
                    showPhoneCode: true,
 
                    onSelect: (Country country) {
-                   // countryController=country.displayName;
-                      Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
+                     // countryController=country.displayName;
+                     Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
+                     setState(() {
+                       country1=country.displayNameNoCountryCode.toString();
+                     });
                    },
                  );
                },
                icon: Icon(Icons.language),
-               label: Text('اختيار الدولة'),
+               label: Text(country1!=""?country1:'اختيار الدولة' ),
              ),),
          ],
        ),
