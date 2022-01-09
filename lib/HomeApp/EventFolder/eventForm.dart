@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:icon_shadow/icon_shadow.dart';
 import 'package:provider/provider.dart';
- import 'package:systemevents/HomePage/EventFolder/PickImages.dart';
- import 'package:systemevents/provider/EventProvider.dart';
+import 'package:systemevents/HomeApp/EventFolder/VideoPicker.dart';
+  import 'package:systemevents/provider/EventProvider.dart';
 
 class EventForm extends StatefulWidget {
   @override
@@ -20,39 +19,35 @@ class _EventFormState extends State<EventForm> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              "إضافة صور",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            PickImages(),
-            Text(
-              "اسم الحدث",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(10),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   border: Border.all(
-              //       color: Colors.blueGrey,// set border color
-              //       width: 2.0),   // set border width
-              //   borderRadius: BorderRadius.all(
-              //       Radius.circular(10.0)), // set rounded corner radius
-              // ),
 
-              child: TextFormField(
-                onChanged: (value) {
-                  Provider.of<EventProvider>(context, listen: false)
-                      .event
-                      .setEventName = value;
-                },
-                decoration: InputDecoration(
-                  hintText: 'ادخل اسم الحدث',
-                  border: InputBorder.none,
-                ),
-              ),
-            ),
+            // Text(
+            //   "اسم الحدث",
+            //   style: Theme.of(context).textTheme.headline6,
+            // ),
+            // Container(
+            //   margin: EdgeInsets.all(10),
+            //   padding: EdgeInsets.all(10),
+            //   // decoration: BoxDecoration(
+            //   //   color: Colors.white,
+            //   //   border: Border.all(
+            //   //       color: Colors.blueGrey,// set border color
+            //   //       width: 2.0),   // set border width
+            //   //   borderRadius: BorderRadius.all(
+            //   //       Radius.circular(10.0)), // set rounded corner radius
+            //   // ),
+            //
+            //   child: TextFormField(
+            //     onChanged: (value) {
+            //       Provider.of<EventProvider>(context, listen: false)
+            //           .event
+            //           .setEventName = value;
+            //     },
+            //     decoration: InputDecoration(
+            //       hintText: 'ادخل اسم الحدث',
+            //       border: InputBorder.none,
+            //     ),
+            //   ),
+            // ),
             Text(
               "إضافة وصف (اختياري)",
               style: Theme.of(context).textTheme.headline6,
@@ -85,7 +80,7 @@ class _EventFormState extends State<EventForm> {
                 ),
               ),
             ),
-
+            VideoPicker(),
 
            // new style
           ],

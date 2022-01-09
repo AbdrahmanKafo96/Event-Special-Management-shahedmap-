@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:provider/single_child_widget.dart';
+
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/CustomWidget/customToast.dart';
-import 'package:systemevents/HomePage/EventFolder/PickEventImage.dart';
-import 'package:systemevents/HomePage/EventFolder/VideoPicker.dart';
-import 'package:systemevents/HomePage/HomePage.dart';
-import 'package:systemevents/model/Event.dart';
+import 'package:systemevents/HomeApp/EventFolder/PickEventImage.dart';
+import 'package:systemevents/HomeApp/EventFolder/VideoPicker.dart';
+import 'package:systemevents/HomeApp/HomePage.dart';
+
 import 'package:systemevents/provider/EventProvider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 

@@ -1,12 +1,11 @@
-
-
+import 'package:intl/intl.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/loginAndRegister/validator.dart';
 import 'package:systemevents/provider/Auth.dart';
-
+import 'dart:ui' as ui;
 import 'LoginForm.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -21,8 +20,15 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final   familyNameController = TextEditingController();
   String  countryController  ;
   final   date_of_birthController = TextEditingController();
+  bool _passwordVisible;
 
   String country1="";
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _passwordVisible = false;
+  }
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -50,22 +56,35 @@ class _RegistrationFormState extends State<RegistrationForm> {
           onChanged: (value){
             Provider.of<UserAuthProvider>(context,listen: false).user.setConfPassword=value;
           },
-          obscureText: true,
+          obscureText: !_passwordVisible,
           controller:passwordConfController,
           decoration: InputDecoration(
               border: OutlineInputBorder(),
               labelText: 'إعادة إدخال كلمة المرور',
-              hintText: 'اعد إدخال كلمة المرور'
+              hintText: 'اعد إدخال كلمة المرور',
+
+              suffixIcon: IconButton(
+                icon: Icon(
+
+                  // Based on passwordVisible state choose the icon
+                  _passwordVisible
+                      ? Icons.visibility
+                      : Icons.visibility_off,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  // Update the state i.e. toogle the state of passwordVisible variable
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
+              ),
+
           ),
+
         ),
         SizedBox(height: 12,),
-        // TextFormField(
-        //   decoration: InputDecoration(
-        //       border: OutlineInputBorder(),
-        //       labelText: 'اسم المستخدم',
-        //       hintText: 'Enter valid mail id as abc@gmail.com'
-        //   ),
-        // ),
+
         SizedBox(height: 12,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -135,7 +154,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
            Expanded(
              flex: 1,
              child: Directionality(
-             textDirection: TextDirection.rtl,
+             textDirection: ui.TextDirection.rtl,
                child: DateTimePicker(
                  validator: (value){
                    if(value.isEmpty || value ==null)
@@ -164,7 +183,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                  autovalidate:true ,
                  errorFormatText: "ادخل تاريخ صحيح",
                  errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                 onSaved: (val) => print('the date on save $val'),
+                 onSaved: (val) => print('the date is $val'),
                ),
              ),
            ),

@@ -28,6 +28,7 @@ class _CheckEmailViewState extends State<CheckEmailView> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
+          centerTitle: true,
           title: Text(
             'رجوع',
             style: TextStyle(color: Colors.white),

@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:multi_image_picker/multi_image_picker.dart';
-import 'package:provider/provider.dart';
-import 'package:systemevents/CustomWidget/customToast.dart';
-import 'package:systemevents/model/ImageUploadModel.dart';
+ import 'package:provider/provider.dart';
+ import 'package:systemevents/model/ImageUploadModel.dart';
 import 'package:systemevents/provider/EventProvider.dart';
 
 class PickImages extends StatefulWidget {
@@ -69,8 +67,6 @@ class _PickImagesState extends State<PickImages> {
         subValue=(total-4)*-1;
 
       }
-
-
       setState(() {
         for(int index= 1 ; index <= total; index++){
           images.add("Add Image");

@@ -9,12 +9,20 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  bool _passwordVisible;
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _passwordVisible = false;
+  }
 
   @override
   Widget build(BuildContext context) {
     return Column(
     children: [
       TextFormField(
+        keyboardType:TextInputType.emailAddress  ,
         controller:emailController ,
         onChanged: (value){
           Provider.of<UserAuthProvider>(context,listen: false).user.setEmail=emailController.text;
@@ -36,6 +44,8 @@ class _LoginFormState extends State<LoginForm> {
       ),
       SizedBox(height: 12,),
       TextFormField(
+        obscureText: !_passwordVisible,
+        keyboardType: TextInputType.text,
         validator: (value){
           String result=ValidatorClass.isValidPassword(value);
          if(result == "" )
@@ -48,8 +58,23 @@ class _LoginFormState extends State<LoginForm> {
           Provider.of<UserAuthProvider>(context,listen: false).user.setPassword=passwordController.text;
         },
         controller: passwordController,
-        obscureText: true,
+
         decoration: InputDecoration(
+            suffixIcon: IconButton(
+          icon: Icon(
+            // Based on passwordVisible state choose the icon
+            _passwordVisible
+                ? Icons.visibility
+                : Icons.visibility_off,
+            color: Colors.grey,
+          ),
+          onPressed: () {
+            // Update the state i.e. toogle the state of passwordVisible variable
+            setState(() {
+              _passwordVisible = !_passwordVisible;
+            });
+          },
+        ),
             border: OutlineInputBorder(),
             labelText: 'كلمة المرور',
             hintText: 'ادخل كلمة المرور'

@@ -196,7 +196,7 @@ class EventProvider extends ChangeNotifier{
 
     if (response.statusCode == 200) {
 
-                  final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+                  final parsed = json.decode(response.body)['collection'].cast<Map<String, dynamic>>();
 
                   return parsed.map<Event>((json) => Event.fromJson(json)).toList();
             } else {
@@ -220,7 +220,7 @@ class EventProvider extends ChangeNotifier{
     }
   }
 
-  Future  searchByName( int sender_id  ) async {
+  Future<dynamic>  searchByName( int sender_id  ) async {
     Map data={
       'sender_id':sender_id.toString(),
     };
@@ -230,8 +230,10 @@ class EventProvider extends ChangeNotifier{
     if (response.statusCode == 200) {
 
       final parsed = json.decode(response.body) ;
-
-      return parsed ;
+      if(parsed['data']=='success')
+      return parsed['collection'] ;
+      else
+        return false;
     } else {
       throw Exception('Failed to load List');
     }

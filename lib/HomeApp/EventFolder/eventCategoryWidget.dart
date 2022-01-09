@@ -139,7 +139,13 @@ class _CustomCategoryEventState extends State<CustomCategoryEvent> {
                     setState(() {
                         dropdownValue2=value;
                        //  print(Provider.of<EventProvider>(context, listen: false).event.categoryClass.category_id );
-                      Provider.of<EventProvider>
+
+                        Provider.of<EventProvider>(context, listen: false).event.eventType.type_name =
+                            subTypesList.where((el) {
+                         return el.type_id.toString()==value;
+                        }).toList()[0].type_name ;
+
+                        Provider.of<EventProvider>
                          (context, listen: false).event.eventType.type_id=int.parse(dropdownValue2.toString() );
                     });
                   },

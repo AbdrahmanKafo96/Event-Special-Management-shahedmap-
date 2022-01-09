@@ -1,7 +1,10 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/HomePage/menu/EventView.dart';
+import 'package:systemevents/HomeApp/menu/EventView.dart';
+import 'package:http/http.dart' as http;
 import 'package:systemevents/model/Event.dart';
 import 'package:systemevents/provider/EventProvider.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -12,18 +15,34 @@ class EventsMenu extends StatefulWidget {
 }
 
 class _EventsMenuState extends State<EventsMenu> {
-  Future<List<Event>> futureList;
-
+  Future<List<Event>> fuList;
+   List<Event>   futureList=[];
+   List<dynamic>   listNames=[];
 
   @override
   initState() {
     super.initState();
+    getData();
     Singleton.getPrefInstace().then((value) {
       setState(() {
         //  value.getInt('user_id')
-        futureList = Provider.of<EventProvider>(context, listen: false)
+        fuList = Provider.of<EventProvider>(context, listen: false)
             .fetchAllListByUserId(value.getInt('user_id'));
       });
+    });
+  }
+  Future getData()   {
+    var  list;
+    Singleton.getPrefInstace().then((value) async {
+      list =    await Provider.of<EventProvider>(context, listen: false)
+          .searchByName(value.getInt('user_id'));
+
+      if(list!=false)
+        for(int i=0 ;i <list.length; i ++)
+        {
+          listNames.add(list[i]['event_name']);
+          futureList.add(Event(addede_id:list[i]['addede_id'] , event_name:list[i]['event_name'] ));
+        }
     });
   }
 
@@ -87,7 +106,7 @@ class _EventsMenuState extends State<EventsMenu> {
 
   generateItemsList() {
     return FutureBuilder<List<Event>>(
-        future: futureList,
+        future: fuList,
         builder: (context, snapshot) {
           // if(!snapshot.hasData){
           //   return Center(child: CircularProgressIndicator());
@@ -262,8 +281,202 @@ class _EventsMenuState extends State<EventsMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: generateItemsList(),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Scaffold(
+
+        appBar: AppBar(
+          actions: [
+            IconButton(
+                tooltip: 'بحث',
+                icon: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  showSearch(context: context,
+                      delegate: DataSearchSe(listName: listNames,futureList: futureList));
+                }),
+
+          ],
+          centerTitle: true,
+          elevation: 1.0,
+          titleSpacing: 1.0,
+          title: Text(
+              "الاحداث" ,
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+        ),
+        body: generateItemsList(),
+      ),
     );
   }
+
+}
+class DataSearchSe extends SearchDelegate<String> {
+  List<dynamic>   listName;
+  List<Event>   futureList;
+  static int eventId;
+  DataSearchSe({ this.listName,this.futureList});
+  @override
+  String get searchFieldLabel => 'ابحث باسم الحدث';
+
+  @override
+  List<Widget> buildActions(BuildContext context) {
+    // action for appbar
+    return [IconButton(
+        tooltip: 'إلغاء البحث',
+        icon: Icon(Icons.clear), onPressed: () => query = "")];
+  }
+
+  @override
+  Widget buildLeading(BuildContext context) {
+    // icon leading
+    return IconButton(
+        tooltip: "رجوع",
+        icon: Icon(Icons.arrow_back ,color: Colors.black,),
+        onPressed: () {
+          close(context, null);
+        });
+  }
+  Future  fetchSearchedEvent() async {
+    Map data={
+      'addede_id': eventId.toString(),
+    };
+    final response = await http
+        .post(Uri.parse('${Singleton.apiPath}/getEvent'),body: data);
+
+    if (response.statusCode == 200) {
+
+      var parsed = json.decode(response.body) ;
+
+      return parsed ;
+    } else {
+      throw Exception('Failed to load List');
+    }
+  }
+
+  @override
+  Widget buildResults(BuildContext context) {
+    // result search...
+
+    return  FutureBuilder    (
+      future: fetchSearchedEvent(),
+      builder: (  context ,  AsyncSnapshot  snapshot){
+        if(snapshot.hasData){
+          print(snapshot.data);
+
+          return ListView.builder(
+              itemCount:1,
+              itemBuilder: (context , index) {
+                return Column(
+                  children: [
+                    ListTile(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => EventView(eventID: eventId,)),
+                          );
+                        },
+                        trailing: SizedBox(
+                          width: 100,
+                          child: Row(
+                            children: [
+                              IconButton(
+                                tooltip: 'تعديل الحدث',
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.green,
+                                ),
+                                onPressed: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                        builder: (context) => EventView(eventID: eventId,)),
+                                  );
+                                },
+                              ),
+                              IconButton(
+                                  tooltip: 'حذف الحدث',
+                                  icon: Icon(
+                                    Icons.delete,
+                                    color: Colors.red,
+                                  ),
+                                  onPressed: () {
+                                    return customAlertForButton(
+                                        snapshot
+                                            .data[index].addede_id,
+                                        snapshot,
+                                        index,
+                                        context);
+                                  })
+                            ],
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.event_note_rounded,
+                          size: 30,
+                          color: Colors.blueGrey,
+                        ),
+                        title: Text(
+                          '${snapshot.data['data']['event_name']}',
+                          style:
+                          TextStyle(color: Color(0xFF666666)),
+                        )),
+                    Divider(
+                      color: Colors.grey,
+                    )
+                  ],
+
+                );
+              }
+          );
+
+        }
+        return Center(child: CircularProgressIndicator(),);
+
+
+      },
+    );
+  }
+
+  @override
+  Widget buildSuggestions(BuildContext context) {
+
+    //show when someone searchers for something...
+    var searchList = query.isEmpty?listName :
+    listName.where(( element) => element.startsWith(query )).toList();
+
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: ListView.builder (
+          itemCount: searchList.length,
+          itemBuilder: (context, index) {
+            return ListTile(
+              //leading: Image.network('${imgLinks}'),
+              leading: Icon(Icons.event_note_rounded),
+              title: Text("${searchList[index] }"),
+              onTap: () {
+                eventId = futureList[index].addede_id ;
+                showResults(context);
+              },
+            );
+          }),
+    );
+  }
+  customAlertForButton(
+      int addede_id, AsyncSnapshot snapshot, int index, BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Directionality(
+            child: _EventsMenuState().customAlert(addede_id, snapshot, index, context),
+            textDirection: TextDirection.rtl,
+          );
+        });
+  }
+
+
+
 }

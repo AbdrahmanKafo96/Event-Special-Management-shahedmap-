@@ -16,8 +16,6 @@ import 'package:systemevents/singleton/singleton.dart';
 class UserAuthProvider extends ChangeNotifier{
 
   User user=User();
-
-
   Future<bool> login(Map userData)async {
     try {
       print(userData);
@@ -49,19 +47,18 @@ class UserAuthProvider extends ChangeNotifier{
             }
           }
           //مرحبا بك
-          if(responseData['message']=="مرحبا بك"){
+          if(responseData['status']=="failed"){
+            showShortToast('تأكد من الحقول مدخلة بشكل صحيح', Colors.red);
+            return false;
+          }else{
             user.user_id=responseData['data']["user_id"];
             user.api_token=responseData['data']["api_token"];
 
             prefs.setString('api_token', user.api_token);
-             prefs.setInt('user_id', user.user_id);
-             prefs.setString('email', responseData['data']["email"]);
+            prefs.setInt('user_id', user.user_id);
+            prefs.setString('email', responseData['data']["email"]);
 
             return true ;
-
-          }else{
-            showShortToast(responseData['message'], Colors.red);
-            return false;
           }
         }else
         {
@@ -70,7 +67,6 @@ class UserAuthProvider extends ChangeNotifier{
         }
       }
 
-      // تحتاج الى تعديل عندا استلام الرسالة من سيرفر يتم توضيح ... يجب التنبيه هنا ...
       //return  user.api_token.isNotEmpty ?  true ;
       return true;
     } catch (e) {
@@ -85,21 +81,22 @@ class UserAuthProvider extends ChangeNotifier{
       'password_confirmation':confPassword.trim(),
       "user_id":user_id.trim(),
       "email":email.trim(),
-
     };
 
     final response = await http
-        .post(Uri.parse('${Singleton.apiPath}/resetPsswordUser'), body: data);
+        .post(Uri.parse('${Singleton.apiPath}/resetPasswordUser'), body: data);
 
 
     if (response.statusCode == 200) {
       var parsed = json.decode(response.body) ;
-
       if(parsed['message']=='success'){
         return true;
       } else {
         return false;
       }}
+    else{
+      showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+    }
   }
 
   void logout(BuildContext context) async {
@@ -120,7 +117,7 @@ class UserAuthProvider extends ChangeNotifier{
       Navigator.pushReplacement(context,
           MaterialPageRoute(builder: (_) => LoginUi()));
     }else{
-      // تحاتج تعديللللللللل
+
       showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
     }
   }
@@ -167,8 +164,8 @@ class UserAuthProvider extends ChangeNotifier{
   }
   Future<Witness>  checkState(var  result ) async {
 
-    print("get user called ");
-    // // this method for check of state when you come to this page as saver or updater ...
+
+    // // this method for check if the user has data before or no ...
     if(result !=null){
       Map data={
         'user_id':result,
@@ -179,19 +176,20 @@ class UserAuthProvider extends ChangeNotifier{
       if(response.statusCode==200){
         var res=jsonDecode(response.body);
 
-        if(res['message1']=='success'){
-          return Witness.fromJson(res['message']) ;
+        if(res['message']=='success'){
+          return Witness.fromJson(res['data']) ;
         }
         else{
           return null;
         }
+      }else{
+        showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
+        return null;
       }
     }
   }
   Future<bool> updateProfileData(Map userData  )async {
     try {
-
-
       final request =
       await http.MultipartRequest("POST", Uri.parse("${Singleton.apiPath}/updateUserData") ) ;
       request.fields['user_id'] = userData['user_id'].toString();
@@ -218,11 +216,12 @@ class UserAuthProvider extends ChangeNotifier{
 
           return true;
         }else{
+
           return false ;
         }
       }else
       {
-
+        showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
         return false;
       }
     } catch (e) {

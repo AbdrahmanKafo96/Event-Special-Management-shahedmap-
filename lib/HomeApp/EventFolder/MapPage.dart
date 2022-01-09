@@ -84,21 +84,12 @@ class _MyHomePageState extends State<MapPage> {
   //
   handleTap(LatLng tappedPoint) async{
 
-    final response = await http
-        .get(Uri.parse('http://api.geonames.org/countryCodeJSON?lat=${tappedPoint.latitude}&'
-        'lng=${tappedPoint.longitude}&username=abdo&fbclid=IwAR3wz-bIao6j4wH60PNmQtEnBHUaC8_rmRN9TScyL6P75Gv4YAV0r8LMIKs'));
-    if (response.statusCode == 200) {
-      // If the server did return a 200 OK response,
-      // then parse the JSON.
-     var result =   jsonDecode(response.body);
-     // if(result['countryName']=='Libya'){
-
-     if(result['countryName']=='Libya')
-       {
          Provider.of<EventProvider>(context, listen: false).event.setLat =
              tappedPoint.latitude;
          Provider.of<EventProvider>(context, listen: false).event.setLng =
              tappedPoint.longitude;
+         print(tappedPoint.latitude);
+         print(tappedPoint.longitude);
          setState(() {
            myMarker = [];
            myMarker.add(Marker(
@@ -107,12 +98,6 @@ class _MyHomePageState extends State<MapPage> {
            ));
            Provider.of<EventProvider>(context, listen: false).event.tappedPoint=tappedPoint;
          });
-       }else{
-       showShortToast('يجب ان يكون عنوان الحدث داخل نطاق ليبيا', Colors.orange);
-     }
-    } else {
-      throw Exception('Failed to load album');
-    }
 
   }
 

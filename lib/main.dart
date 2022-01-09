@@ -1,21 +1,22 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/HomePage/HomePage.dart';
+import 'package:systemevents/HomeApp/EventFolder/SectionOne.dart';
+import 'package:systemevents/HomeApp/HomePage.dart';
+import 'package:systemevents/HomeApp/menu/EventMenu.dart';
+import 'package:systemevents/HomeApp/settings/About.dart';
+import 'package:systemevents/HomeApp/settings/ProfileView.dart';
+import 'package:systemevents/HomeApp/settings/ResetPassword/CreateNewPasswordView.dart';
+import 'package:systemevents/HomeApp/settings/ThemeApp.dart';
 import 'package:systemevents/provider/Auth.dart';
 import 'package:systemevents/provider/EventProvider.dart';
 import 'package:systemevents/singleton/singleton.dart';
-import 'HomePage/settings/About.dart';
-import 'HomePage/settings/ProfileView.dart';
-import 'HomePage/settings/ResetPassword/CreateNewPasswordView.dart';
-import 'HomePage/settings/ResetPassword/ResetPassword.dart';
-import 'HomePage/settings/ThemeApp.dart';
 import 'loginAndRegister/loginUI.dart';
-  //import 'package:google_map_location_picker/generated/l10n.dart' as location_picker;
- // import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 
 Future  main() async{
   final MaterialColor primarySwatch = MaterialColor(0xff5a8f62, <int, Color>{
@@ -54,10 +55,13 @@ Future  main() async{
           ],
          child:  MaterialApp(
            localizationsDelegates: const [
-             // location_picker.S.delegate,
-             // GlobalMaterialLocalizations.delegate,
-             // GlobalWidgetsLocalizations.delegate,
-             // GlobalCupertinoLocalizations.delegate,
+             GlobalMaterialLocalizations.delegate,
+             GlobalWidgetsLocalizations.delegate,
+             GlobalCupertinoLocalizations.delegate,
+           ],
+           supportedLocales: [
+             Locale('ar', ''), // arabic, no country code
+
            ],
            theme: ThemeData(
              iconTheme: IconThemeData(color: Color(0xff74767f)),
@@ -69,7 +73,9 @@ Future  main() async{
                fillColor: Color(0xFFFFFFFF),
                isDense: true,
                contentPadding: EdgeInsets.all(16),
-               labelStyle: TextStyle(color: Color(0xFF242b3b),fontWeight: FontWeight.bold) ,
+               labelStyle: GoogleFonts.notoSansArabic(
+                   color: Color(0xFF242b3b),fontWeight: FontWeight.bold
+               ) ,
                filled: true,
                enabledBorder: OutlineInputBorder(
                  borderSide: BorderSide(color:Colors.blueGrey),
@@ -85,14 +91,31 @@ Future  main() async{
                ),
              ),
              textTheme: TextTheme(
+               button: GoogleFonts.notoSansArabic(
+                // textStyle: TextStyle(color: Color(0xFF666666),
+                 ),
+                 headline6: GoogleFonts.notoSansArabic(
+                    textStyle: TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.bold),
+                 ),
                  headline4:
-                 TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.bold),
-                 subtitle1: TextStyle(
-                   color: Colors.grey.shade600,
-                 )),
+                 GoogleFonts.notoSansArabic(
+                   textStyle: TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.bold),
+                 ),
+                 subtitle1: GoogleFonts.notoSansArabic(
+                 textStyle: TextStyle(
+                       color: Colors.grey.shade600,
+                   ),
+             ),
+               bodyText1: GoogleFonts.notoSansArabic(
+                   textStyle: TextStyle(color: Color(0xFF666666),)
+               )
+           ),
+               scaffoldBackgroundColor:Colors.white,
 
              appBarTheme: AppBarTheme(
-               titleTextStyle: TextStyle(color: Colors.white ,fontWeight: FontWeight.bold,fontSize: 18),
+               titleTextStyle: GoogleFonts.notoSansArabic(
+                 textStyle: TextStyle(color: Colors.white ,fontWeight: FontWeight.bold,fontSize: 18),
+               ),
                  iconTheme: IconThemeData(color: Colors.white) ,
                color: Color(0xFF5a8f62),
                shadowColor: Color(0xFF5a8f62),
@@ -112,8 +135,12 @@ Future  main() async{
              'ProfilePage':(context)=>ProfilePage(),
              'ResetPage':(context)=>CreateNewPasswordView(),
              'ThemeApp':(context)=>ThemeApp(),
+             'EventSectionOne':(context)=>EventSectionOne(),
+             'eventList':(context)=>EventsMenu(),
+
              },
           ),
         ) ,
-      );
-    }
+      );}
+
+

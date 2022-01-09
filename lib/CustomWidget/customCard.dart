@@ -1,21 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 Widget customCard( IconData icon , String title){
   return  Card(
+    color: Colors.white,
     borderOnForeground: true,
     elevation:4.0,
     margin: new EdgeInsets.all(8.0),
     child: Container(
-      // decoration: BoxDecoration(
-      //   boxShadow: [
-      //     BoxShadow(
-      //       color: Colors.grey.withOpacity(0.8),
-      //       spreadRadius: 5,
-      //       blurRadius: 5,
-      //       offset: Offset(0, 7), // changes position of shadow
-      //     ),
-      //   ],
-      // ),
 
       child: Center(
         child: Column(
@@ -34,10 +26,12 @@ Widget customCard( IconData icon , String title){
             new Center(
               child: new Text(title,
                   style:
-                  new TextStyle(
-                      fontSize: 14.0,
-                      color: Colors.black,
-                      fontWeight: FontWeight.bold)
+                    GoogleFonts.notoSansArabic(
+                      textStyle: TextStyle(
+                          fontSize: 14.0,
+                          color: Colors.black,
+                          fontWeight: FontWeight.bold)
+                    )
               ),
             )
           ],
