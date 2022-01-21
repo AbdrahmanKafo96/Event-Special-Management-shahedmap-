@@ -1,146 +1,123 @@
+import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/HomeApp/EventFolder/SectionOne.dart';
-import 'package:systemevents/HomeApp/HomePage.dart';
-import 'package:systemevents/HomeApp/menu/EventMenu.dart';
-import 'package:systemevents/HomeApp/settings/About.dart';
-import 'package:systemevents/HomeApp/settings/ProfileView.dart';
-import 'package:systemevents/HomeApp/settings/ResetPassword/CreateNewPasswordView.dart';
-import 'package:systemevents/HomeApp/settings/ThemeApp.dart';
-import 'package:systemevents/provider/Auth.dart';
-import 'package:systemevents/provider/EventProvider.dart';
+import 'package:systemevents/modules/home/Responses/responses_screen.dart';
+import 'package:systemevents/modules/home/event_screens/main_section.dart';
+import 'package:systemevents/modules/home/home.dart';
+import 'package:systemevents/modules/home/menu/menu_screen.dart';
+import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateNewPasswordView.dart';
+import 'package:systemevents/modules/home/settings_screens/ThemeApp.dart';
+import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
+import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
+
+import 'package:systemevents/provider/auth_provider.dart';
+import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
-import 'loginAndRegister/loginUI.dart';
+import 'package:systemevents/theme/theam.dart';
+import 'package:systemevents/web_browser/webView.dart';
+import 'modules/login/login_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:workmanager/workmanager.dart';
+import 'package:systemevents/notification/notification.dart' as notif;
+import 'dart:convert'  as convert;
+import 'package:http/http.dart' as http;
 
-Future  main() async{
-  final MaterialColor primarySwatch = MaterialColor(0xff5a8f62, <int, Color>{
-    50: Color(0xffE8F5E9),
-    100: Color(0xffC8E6C9),
-    200: Color(0xffA5D6A7),
-    300: Color(0xff81C784),
-    400: Color(0xff66BB6A),
-    500: Color(0xff4CAF50),
-    600: Color(0xff43A047),
-    700: Color(0xff388E3C),
-    800: Color(0xff2E7D32),
-    900: Color(0xff1B5E20),
-  });
+
+
+callbackDispatcher() {
+  try {
+    Workmanager().executeTask((task, inputData) async {
+      switch (task) {
+        case "fetchBackground":
+          Position userLocation = await Geolocator.getCurrentPosition(
+              desiredAccuracy: LocationAccuracy.high);
+
+          print(userLocation);
+          // print(userLocation.longitude);
+          SharedPreferences prefs = await Singleton.getPrefInstance();
+
+          Map data = {
+            'user_id': prefs.getInt('user_id').toString(),
+            'lat': userLocation.latitude.toString(),
+            'lng': userLocation.longitude.toString(),
+          };
+          final response = await http
+              .post(Uri.parse('${Singleton.apiPath}/updateUnit'), body: data);
+
+          if (response.statusCode == 200) {
+            var parsed = json.decode(response.body);
+            notif.Notification notification = new notif.Notification();
+            notification.showNotificationWithoutSound(userLocation);
+            // if(parsed['message']=='success'){
+            //    // return true;
+            // } else {
+            //     //return false;
+            // }
+          }
+          break;
+      }
+      return Future.value(true);
+    });
+  } catch (e) {
+    print(e);
+  }
+}
+
+Future main() async {
+
 
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
 
-  SharedPreferences prefs= await Singleton.getPrefInstace();
-  String token = prefs.getString("api_token");
-  print(token);
+  final storage = await Singleton.getStorage()  ;
+  String token = await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
+  final pref= await Singleton.getPrefInstance();
+  if(pref.getInt('version_number')==null)
+  pref.setInt('version_number', 0);
+
 
   if (defaultTargetPlatform == TargetPlatform.android) {
-
     AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-
   }
-
-
-
-
-  runApp( MultiProvider(
-          providers: [
-            ChangeNotifierProvider<EventProvider>(create:(context)=>EventProvider(),),
-            ChangeNotifierProvider<UserAuthProvider>(create:(context)=>UserAuthProvider(),),
-          ],
-         child:  MaterialApp(
-           localizationsDelegates: const [
-             GlobalMaterialLocalizations.delegate,
-             GlobalWidgetsLocalizations.delegate,
-             GlobalCupertinoLocalizations.delegate,
-           ],
-           supportedLocales: [
-             Locale('ar', ''), // arabic, no country code
-
-           ],
-           theme: ThemeData(
-             iconTheme: IconThemeData(color: Color(0xff74767f)),
-             backgroundColor: Color(0xFFFFFFFF),
-             shadowColor: Color(0xFF242b3b),
-             hintColor: Color(0xFF74767f),
-             inputDecorationTheme: InputDecorationTheme(
-
-               fillColor: Color(0xFFFFFFFF),
-               isDense: true,
-               contentPadding: EdgeInsets.all(16),
-               labelStyle: GoogleFonts.notoSansArabic(
-                   color: Color(0xFF242b3b),fontWeight: FontWeight.bold
-               ) ,
-               filled: true,
-               enabledBorder: OutlineInputBorder(
-                 borderSide: BorderSide(color:Colors.blueGrey),
-                 borderRadius: BorderRadius.circular(10),
-               ),
-               disabledBorder: OutlineInputBorder(
-                 borderSide: BorderSide(color: Color(0xFFD3D3D3)),
-                 borderRadius: BorderRadius.circular(10),
-               ),
-               focusedBorder: OutlineInputBorder(
-                 borderSide: BorderSide(color: Color(0xFFD3D3D3)),
-                 borderRadius: BorderRadius.circular(10),
-               ),
-             ),
-             textTheme: TextTheme(
-               button: GoogleFonts.notoSansArabic(
-                // textStyle: TextStyle(color: Color(0xFF666666),
-                 ),
-                 headline6: GoogleFonts.notoSansArabic(
-                    textStyle: TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.bold),
-                 ),
-                 headline4:
-                 GoogleFonts.notoSansArabic(
-                   textStyle: TextStyle(color: Color(0xFF666666), fontWeight: FontWeight.bold),
-                 ),
-                 subtitle1: GoogleFonts.notoSansArabic(
-                 textStyle: TextStyle(
-                       color: Colors.grey.shade600,
-                   ),
-             ),
-               bodyText1: GoogleFonts.notoSansArabic(
-                   textStyle: TextStyle(color: Color(0xFF666666),)
-               )
-           ),
-               scaffoldBackgroundColor:Colors.white,
-
-             appBarTheme: AppBarTheme(
-               titleTextStyle: GoogleFonts.notoSansArabic(
-                 textStyle: TextStyle(color: Colors.white ,fontWeight: FontWeight.bold,fontSize: 18),
-               ),
-                 iconTheme: IconThemeData(color: Colors.white) ,
-               color: Color(0xFF5a8f62),
-               shadowColor: Color(0xFF5a8f62),
-               elevation: 1.0,
-               centerTitle: true,
-             ),
-             primarySwatch: primarySwatch,
-           ),
-           debugShowCheckedModeBanner: false,
-           // title: 'Flutter Demo',
-           //  theme: ThemeData(
-           //    primarySwatch: Colors.blue,
-           //  ),
-           home: token!=null ?HomePage(): LoginUi(),
-           routes: {
-             'About':(context)=>About(),
-             'ProfilePage':(context)=>ProfilePage(),
-             'ResetPage':(context)=>CreateNewPasswordView(),
-             'ThemeApp':(context)=>ThemeApp(),
-             'EventSectionOne':(context)=>EventSectionOne(),
-             'eventList':(context)=>EventsMenu(),
-
-             },
-          ),
-        ) ,
-      );}
-
-
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider<EventProvider>(
+          create: (context) => EventProvider(),
+        ),
+        ChangeNotifierProvider<UserAuthProvider>(
+          create: (context) => UserAuthProvider(),
+        ),
+      ],
+      child: MaterialApp(
+        localizationsDelegates: const [
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+          GlobalCupertinoLocalizations.delegate,
+        ],
+        supportedLocales: [
+          Locale('ar', ''), // arabic, no country code
+        ],
+        theme: CustomTheme.myTheme(),
+        debugShowCheckedModeBanner: false,
+        home: token != null ? HomePage() : LoginUi(),
+        routes: {
+          'About': (context) => About(),
+          'ProfilePage': (context) => ProfilePage(),
+          'ResetPage': (context) => CreateNewPasswordView(),
+          'ThemeApp': (context) => ThemeApp(),
+          'EventSectionOne': (context) => EventSectionOne(),
+          'eventList': (context) => EventsMenu(),
+          'CustomWebView': (context) => CustomWebView(),
+          'response': (context) => ResponsePage(),
+        },
+      ),
+    ),
+  );
+}

@@ -54,6 +54,10 @@ dependencies:
 #  workmanager: ^0.2.0
 #  flutter_local_notifications: ^9.2.0
   hovering: ^1.0.4
+  flutter_secure_storage: ^5.0.2
+  sqflite: ^2.0.2
+  flutter_polyline_points: ^1.0.0
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -68,7 +72,10 @@ dependency_overrides:
   google_maps_flutter: ^2.0.6
   flutter_plugin_android_lifecycle: ^2.0.1
   plugin_platform_interface: ^2.0.0
-  flutter_webview_plugin: ^0.4.0
+  geolocator: ^8.0.1
+  workmanager: ^0.4.1
+  flutter_local_notifications: ^9.2.0
+
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
 
