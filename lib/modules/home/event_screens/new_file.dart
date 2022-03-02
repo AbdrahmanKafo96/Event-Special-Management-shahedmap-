@@ -33,19 +33,25 @@ class _MapMapState extends State<MapMap> {
     );
    Future getCurrentPosition() async {
 
+        currentPosition = await Geolocator.getCurrentPosition(
+            desiredAccuracy: LocationAccuracy.bestForNavigation);
 
-      currentPosition = await Geolocator.getCurrentPosition(
-          desiredAccuracy: LocationAccuracy.bestForNavigation);
   }
-
+  CameraPosition initialCameraPosition;
   @override
   void initState() {
     super.initState();
     getCurrentPosition().then((value){
+
+
+
+      setState(() {
       _kGooglePlex=CameraPosition(
         target: LatLng(currentPosition.latitude, currentPosition.longitude),
         zoom: 14 ,
       );
+
+      });
       return value;
 
     });
@@ -54,24 +60,24 @@ class _MapMapState extends State<MapMap> {
 @override
   void dispose() {
     super.dispose();
+    polylines=null;
+    _kGooglePlex=null;
+    mapController=null;
+    initialCameraPosition=null;
     _controller=null;
+    markers=null;
   }
   @override
   Widget build(BuildContext context) {
-    CameraPosition initialCameraPosition = _kGooglePlex;
-    if (currentPosition != null) {
-      initialCameraPosition = CameraPosition(
-          target: LatLng(currentPosition.latitude, currentPosition.longitude),
-          zoom: 14.4746);
-    }
-    return   Scaffold(
-        appBar: AppBar(),
-        body: GoogleMap(
+
+    return Scaffold(
+        appBar: AppBar(centerTitle: true,title: Text('الاستجابة'),),
+        body:_kGooglePlex==null?Container(child: Center(child: CircularProgressIndicator(color: Colors.green,)))  : GoogleMap(
           padding: EdgeInsets.only(top: 135),
           myLocationButtonEnabled: true,
           myLocationEnabled: true,
           mapType: MapType.normal,
-          initialCameraPosition: initialCameraPosition,
+          initialCameraPosition: _kGooglePlex,
           onMapCreated: (GoogleMapController controller) {
             _controller.complete(controller);
             mapController = controller;

@@ -207,7 +207,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
 
 
   Future _imgFromGallery(int index) async {
-    XFile file = await _picker.pickImage(source: ImageSource.gallery);
+    XFile file = await _picker.pickImage(source: ImageSource.gallery , imageQuality: 75);
     if (file != null) {
 
       _imageFile[index] = file;
@@ -224,7 +224,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
   }
 
   Future _imgFromCamera(int index) async {
-    XFile file = await _picker.pickImage(source: ImageSource.camera);
+    XFile file = await _picker.pickImage(source: ImageSource.camera , imageQuality: 75);
     if (file != null) {
       _imageFile[index] = file;
       if (_imageFile[index].path != "")

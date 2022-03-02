@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/modules/login/validator.dart';
 import 'package:systemevents/provider/auth_provider.dart';
@@ -182,25 +183,28 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                 ),
                 ElevatedButton(
                   onPressed: () async {
-                   if(_formKey.currentState.validate()){
-                     var prefs= await Singleton.getPrefInstance();
-                     String email=prefs.getString('email');
-                     int user_id=prefs.getInt('user_id');
+                    checkInternetConnectivity(context).then((
+                        bool value) async {
+                      if (value) { if(_formKey.currentState.validate()){
+                        var prefs= await Singleton.getPrefInstance();
+                        String email=prefs.getString('email');
+                        int user_id=prefs.getInt('user_id');
 
-                     var result=  await Provider.of<UserAuthProvider>(context,listen: false).
-                     resetPassword(passwordController.text.toString(),confPasswordController.text.toString()
-                         ,user_id.toString(),email,context
-                     );
-                     if(result ==true){
-                       Navigator.of(context).pop();
-                       showShortToast(
-                           'تم تغيير كلمة المرور بنجاح', Colors.green);
+                        var result=  await Provider.of<UserAuthProvider>(context,listen: false).
+                        resetPassword(passwordController.text.toString(),confPasswordController.text.toString()
+                            ,user_id.toString(),email,context
+                        );
+                        if(result ==true){
+                          Navigator.of(context).pop();
+                          showShortToast(
+                              'تم تغيير كلمة المرور بنجاح', Colors.green);
 
-                     } else {
-                       showShortToast(
-                           'حاول تغيير كلمة المرور مرة اخرى', Colors.red);
-                     }
-                   }
+                        } else {
+                          showShortToast(
+                              'حاول تغيير كلمة المرور مرة اخرى', Colors.red);
+                        }
+                      }}});
+
                   },
                   child: Text(
                     'إعادة ضبط كلمة المرور',

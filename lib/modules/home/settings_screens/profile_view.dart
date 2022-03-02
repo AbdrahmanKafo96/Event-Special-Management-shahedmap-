@@ -97,19 +97,22 @@ class _ProfilePageState extends State<ProfilePage> {
                 IconButton(
                   tooltip: 'تعديل',
                   onPressed: () {
-                    var form = _formKey.currentState;
-                    if (form.validate()) {
-                       state==true?updateForm(context): saveData(context);
-                    } else {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
-                        content: Text(
-                          'من فضلك املاء حقول المستخدم',
-                          //textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.center,
-                        ),
-                        backgroundColor: Colors.red,
-                      ));
-                    }
+                    checkInternetConnectivity(context).then((
+                        bool value) async {
+                      if (value) { var form = _formKey.currentState;
+                      if (form.validate()) {
+                        state==true?updateForm(context): saveData(context);
+                      } else {
+                        _scaffoldKey.currentState.showSnackBar(SnackBar(
+                          content: Text(
+                            'من فضلك املاء حقول المستخدم',
+                            //textDirection: TextDirection.rtl,
+                            textAlign: TextAlign.center,
+                          ),
+                          backgroundColor: Colors.red,
+                        ));
+                      }}});
+
                   },
                   icon: Icon(
                     state == true ? Icons.edit : Icons.save,
@@ -329,7 +332,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void pickImage() async {
 
-    var image = await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    var image = await picker.getImage(source: ImageSource.gallery, imageQuality: 50 );
    if(image!=null)
     if(image.path!="")
     setState(() {

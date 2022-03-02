@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
 import 'package:systemevents/main.dart';
 import 'package:systemevents/models/Event.dart';
 import 'package:systemevents/modules/home/dashboard.dart';
@@ -24,22 +23,22 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   Position  position;
 
-  // void _getUserPosition() async {
-  //
-  //   Geolocator.getCurrentPosition(
-  //       desiredAccuracy: LocationAccuracy.bestForNavigation,
-  //       forceAndroidLocationManager: false)
-  //       .then((position) {
-  //     print(position);
-  //   });
-  //
-  //   Position userLocation = await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-  //   setState(() {
-  //     position = userLocation;
-  //     print(userLocation.longitude);
-  //     print(userLocation.latitude);
-  //   });
-  // }
+  void _getUserPosition() async {
+
+    Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation,
+        forceAndroidLocationManager: false)
+        .then((position) {
+      print(position);
+    });
+
+    Position userLocation = await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    setState(() {
+      position = userLocation;
+      print(userLocation.longitude);
+      print(userLocation.latitude);
+    });
+  }
   var myMenuItems = <String>[
     'تسجيل الخروج',
 
@@ -85,15 +84,20 @@ class _HomePageState extends State<HomePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        resizeToAvoidBottomInset: false,
         // floatingActionButtonLocation: FloatingActionButtonLocation,
         floatingActionButton: _activePage == 0
             ? FloatingActionButton(
                 onPressed: () {
-                  Provider.of<EventProvider>(context, listen: false).event=Event();
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => EventSectionOne()),
-                  );
+                  checkInternetConnectivity(context).then((
+                      bool value) async {
+                        if (value) { Provider.of<EventProvider>(context, listen: false).event=Event();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => EventSectionOne()),
+                        );}
+                  });
+
                 },tooltip: 'اضف حدث',
                 child: const Icon(
 

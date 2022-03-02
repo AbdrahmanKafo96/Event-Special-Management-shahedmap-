@@ -4,8 +4,6 @@ import 'package:systemevents/modules/home/event_screens/event_images.dart';
 import 'package:systemevents/modules/home/event_screens/extra_section.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
 import 'package:systemevents/widgets/customToast.dart';
-
-
 import 'package:systemevents/provider/event_provider.dart';
 import 'event_category.dart';
 import 'dart:ui' as ui;

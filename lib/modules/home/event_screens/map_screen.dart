@@ -21,7 +21,7 @@ class _MyHomePageState extends State<MapPage> {
   GoogleMapController _gcontroller;
    Location _locationService = Location();
   BitmapDescriptor customMarker; //attribute
-  List<Polyline> myPolyline = [];
+  //List<Polyline> myPolyline = [];
   Completer<GoogleMapController> _cController = Completer();
 
   // static final CameraPosition _kGooglePlex = CameraPosition(
@@ -65,7 +65,7 @@ class _MyHomePageState extends State<MapPage> {
   @override
   void initState() {
     super.initState();
-    createPloyLine();
+   // createPloyLine();
     maptype = MapType.normal;
    if( Provider.of<EventProvider>(context, listen: false).event.tappedPoint !=null
 
@@ -81,32 +81,32 @@ class _MyHomePageState extends State<MapPage> {
      });
    }
   }
-  createPloyLine()  {
-    LocationData currentLocation;
-    var location =   Location();
-
-          location.getLocation().then((value) {
-
-         setState(() {
-           myPolyline.add(
-             Polyline(
-                 polylineId: PolylineId('1'),
-                 color: Colors.blue,
-                 width: 3,
-                 points: [
-                   widget.lat!=null? LatLng(widget.lat, widget.lng):
-                   LatLng(26.3351, 17.2283),
-                   LatLng(value.latitude, value.longitude),
-                 ],
-                 patterns: [
-               //    PatternItem.dash(20),
-                 //  PatternItem.gap(10),
-                 ]),
-           );
-         });
-        });
-
-  }
+  // createPloyLine()  {
+  //   LocationData currentLocation;
+  //   var location =   Location();
+  //
+  //         location.getLocation().then((value) {
+  //
+  //        setState(() {
+  //          myPolyline.add(
+  //            Polyline(
+  //                polylineId: PolylineId('1'),
+  //                color: Colors.blue,
+  //                width: 3,
+  //                points: [
+  //                  widget.lat!=null? LatLng(widget.lat, widget.lng):
+  //                  LatLng(26.3351, 17.2283),
+  //                  LatLng(value.latitude, value.longitude),
+  //                ],
+  //                patterns: [
+  //              //    PatternItem.dash(20),
+  //                //  PatternItem.gap(10),
+  //                ]),
+  //          );
+  //        });
+  //       });
+  //
+  // }
 
   customAlertForButton(BuildContext context) {
     return showDialog(
@@ -246,7 +246,7 @@ class _MyHomePageState extends State<MapPage> {
             children: [
 
               GoogleMap(
-                polylines: myPolyline.toSet(),
+             //  polylines: myPolyline.toSet(),
                 layoutDirection: TextDirection.rtl,
                 onLongPress: (val){
                  setState(() {

@@ -1,14 +1,13 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:http/http.dart' as http;
 import 'package:systemevents/models/Category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
 import 'package:systemevents/modules/home/event_screens/new_file.dart';
  import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
 
 class ResponsePage extends StatefulWidget {
@@ -26,7 +25,10 @@ class _ResponsePageState extends State<ResponsePage> {
   @override
   initState() {
     super.initState();
-    //getData();
+     getData();
+
+  }
+  Future<void> getData()   {
     Singleton.getPrefInstance().then((value) {
       setState(() {
         user_id=value.getInt('user_id');
@@ -35,23 +37,10 @@ class _ResponsePageState extends State<ResponsePage> {
             .getAllRespons(value.getInt('user_id'));
       });
     });
+    Future.delayed(const Duration(seconds: 1), () {
+
+    });
   }
-  // Future getData()   {
-  //   var  list;
-  //   Singleton.getPrefInstace().then((value) async {
-  //     list =    await Provider.of<EventProvider>(context, listen: false)
-  //         .getAllRespons(value.getInt('user_id'));
-  //
-  //     if(list!=false)
-  //       for(int i=0 ;i <list.length; i ++)
-  //       {
-  //
-  //         // futureList.add(Respo(type_name:list[i]['type_name'] ,
-  //         //     notification_id:list[i]['notification_id'] ));
-  //         print(list.elementAt(i).type_name);
-  //       }
-  //   });
-  // }
 
   // Widget slideRightBackground() {
   //   return Container(
@@ -115,7 +104,7 @@ class _ResponsePageState extends State<ResponsePage> {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: FutureBuilder<List<Respo>>(
-          future: fuList,
+          future: fuList ,
           builder: (context, snapshot) {
             // if(!snapshot.hasData){
             //   return Center(child: CircularProgressIndicator());
@@ -128,14 +117,27 @@ class _ResponsePageState extends State<ResponsePage> {
                 return Text('');
 
               case ConnectionState.waiting:
-                return Center(child: CircularProgressIndicator());
+                return  ListView.separated(
+                  itemCount: 5,
+                  itemBuilder: (context, index) =>   NewsCardSkelton(),
+                  separatorBuilder: (context, index) =>
+                  const SizedBox(height: 16),
+                );
 
               case ConnectionState.active:
-                return Center(child: CircularProgressIndicator());
+                return  ListView.separated(
+                  itemCount: 5,
+                  itemBuilder: (context, index) =>   NewsCardSkelton(),
+                  separatorBuilder: (context, index) =>
+                  const SizedBox(height: 16),
+                );
 
               case ConnectionState.done:
                 return snapshot.hasData
-                    ? ListView.builder(
+                    ? RefreshIndicator(
+                  displacement: 5,
+                      onRefresh: getData,
+                      child: ListView.builder(
                   shrinkWrap: true,
 
                   itemCount: snapshot.data.length,
@@ -143,93 +145,78 @@ class _ResponsePageState extends State<ResponsePage> {
                   //   color: Colors.black,
                   // ),
                   itemBuilder: (context, index) {
-                    return Dismissible(
-                      // ignore: missing_return
-                        confirmDismiss: (DismissDirection direction) async {
-                          if (direction == DismissDirection.endToStart) {
-                            final bool res = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return Directionality(
-                                    textDirection: TextDirection.rtl,
-                                    child: customAlert(
-                                        snapshot.data[index].notification_id,
-                                        snapshot,
-                                        index,
-                                        context),
-                                  );
-                                });
-                            return res;
-                          } else {
-                            // TODO: Navigate to edit page;
-                          }
-                        },
-                        background: slideLeftBackground() ,
-                        secondaryBackground: slideLeftBackground(),
-                        key: Key(index.toString()),
-                        child: Column(
-                          children: [
-                            Container(
-                              color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
-                              Colors.white,
-                              child: ListTile(
+                      return Column(
+                        children: [
+                           InkWell(
 
-                                  onTap: () {
-                                    Provider.of<EventProvider>(context, listen: false)
-                                        .updateNoti( user_id,snapshot.data[index].notification_id).
-                                    then((value){
+
+                              onTap: (){},
+                              child: Ink(
+                                color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
+                                Colors.white,
+                                child: ListTile(
+                                    onTap: () {
                                       Provider.of<EventProvider>(context, listen: false)
-                                          .getRespo( user_id,snapshot.data[index].notification_id).then((value){
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
+                                          .updateNoti( user_id,snapshot.data[index].notification_id).
+                                      then((value){
+                                        Provider.of<EventProvider>(context, listen: false)
+                                            .getRespo( user_id,snapshot.data[index].notification_id).then((value){
+                                          print(value['data']['lat']);
+                                          print(value['data']['lng']);
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
 
-                                                  MapMap(
-                                                      lat: value['data']['lat'] ,
-                                                      lng:value['data']['lng'])),
-                                        );
+                                                    MapMap(
+                                                        lat: value['data']['lat'] ,
+                                                        lng:value['data']['lng'])),
+                                          );
+                                        });
                                       });
-                                    });
 
-                                  },
-                                  trailing: IconButton(
-                                      tooltip: 'حذف الحدث',
-                                      icon: Icon(
-                                        Icons.delete,
-                                        color: Colors.red,
-                                      ),
-                                      onPressed: () {
-                                        // return customAlertForButton(
-                                        //     snapshot
-                                        //         .data[index].addede_id,
-                                        //     snapshot,
-                                        //     index,
-                                        //     context);
-                                      }),
+                                    },
+                                    // trailing: IconButton(
+                                    //     tooltip: 'حذف الحدث',
+                                    //     icon: Icon(
+                                    //       Icons.delete,
+                                    //       color: Colors.red,
+                                    //     ),
+                                    //     onPressed: () {
+                                    //       // return customAlertForButton(
+                                    //       //     snapshot
+                                    //       //         .data[index].addede_id,
+                                    //       //     snapshot,
+                                    //       //     index,
+                                    //       //     context);
+                                    //     }),
 
-                                  leading: Icon(
-                                    Icons.event_note_rounded,
-                                    size: 30,
-                                    color: Colors.blueGrey,
-                                  ),
-                                  title: Text(
-                                    '${snapshot.data[index].type_name}',
-                                    style:
-                                    TextStyle(color: Color(0xFF666666)),
-                                  )),
-                            ),
-                            Divider(
-                              color: Colors.grey,
-                            )
-                          ],
-                        ));
+                                    leading: Icon(
+                                      Icons.event_note_rounded,
+                                      size: 30,
+                                      color: Colors.blueGrey,
+                                    ),
+                                    title: Text(
+                                      '${snapshot.data[index].type_name}',
+                                      style:
+                                      TextStyle(color: Color(0xFF666666)),
+                                    )),
+                              ),
+
+                          ),
+                          Divider(
+                            color: Colors.grey,
+                          )
+                        ],
+                      );
+
                   },
-                )
-                    : Center(child: Text('انشئ حدث جديد'));
+                ),
+                    )
+                    : Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
               default:
                 {
-                  return Center(child: Text('انشئ حدث جديد'));
+                  return Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
                 }
             }
             return null; // unreachable
@@ -319,3 +306,5 @@ class _ResponsePageState extends State<ResponsePage> {
     );
   }
 }
+
+

@@ -29,8 +29,8 @@ class ValidatorClass {
     String isValid = "",
         upperCaseChars = "(.*[A-Z].*)",
         lowerCaseChars = "(.*[a-z].*)",
-        numbers = "(.*[0-9].*)",
-        specialChars = "(.*[@,#,\$,%,].*\$)";
+        numbers = "(.*[0-9].*)";
+       // specialChars = "(.*[@,#,\$,%,].*\$)";
 
     if(password ==null || password.isEmpty)
       isValid="هذا الحقل مطلوب";
@@ -42,8 +42,8 @@ class ValidatorClass {
       isValid = "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل";
     else if (!RegExp(numbers).hasMatch(password))
       isValid = "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل";
-    else if (!RegExp(specialChars).hasMatch(password))
-      isValid = "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل مثال:@";
+    // else if (!RegExp(specialChars).hasMatch(password))
+    //   isValid = "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل مثال:@";
     else
       isValid = "";
     return isValid;

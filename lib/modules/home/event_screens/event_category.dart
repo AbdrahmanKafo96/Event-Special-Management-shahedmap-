@@ -243,6 +243,18 @@ class _EventCategoryState extends State<EventCategory> {
 
                   onChanged: (String value){
                     setState(() {
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event.categoryClass.category_name =
+                          gategoryList.where((el) {
+                            return el.category_id.toString()==value;
+                          }).toList()[0].category_name ;
+
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event.categoryClass.emergency_number =
+                          gategoryList.where((el) {
+                            return el.category_id.toString()==value;
+                          }).toList()[0].emergency_number ;
+
                       dropdownValue1=value ;
 
                        Provider.of<EventProvider>

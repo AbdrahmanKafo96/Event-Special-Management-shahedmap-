@@ -85,51 +85,59 @@ class UserAuthProvider extends ChangeNotifier{
   Future<bool> resetPassword(  String password ,String confPassword ,String user_id, String email ,
       BuildContext context) async {
 
-    Map data={
-      'password':password.trim(),
-      'password_confirmation':confPassword.trim(),
-      "user_id":user_id.trim(),
-      "email":email.trim(),
-    };
+    try{
+      Map data={
+        'password':password.trim(),
+        'password_confirmation':confPassword.trim(),
+        "user_id":user_id.trim(),
+        "email":email.trim(),
+      };
 
-    final response = await http
-        .post(Uri.parse('${Singleton.apiPath}/resetPasswordUser'), body: data);
+      final response = await http
+          .post(Uri.parse('${Singleton.apiPath}/resetPasswordUser'), body: data);
 
 
-    if (response.statusCode == 200) {
-      var parsed = json.decode(response.body) ;
-      if(parsed['message']=='success'){
-        return true;
-      } else {
-        return false;
-      }}
-    else{
-      showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+      if (response.statusCode == 200) {
+        var parsed = json.decode(response.body) ;
+        if(parsed['message']=='success'){
+          return true;
+        } else {
+          return false;
+        }}
+      else{
+        showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+      }
+    }catch (e){
+
     }
   }
 
   void logout(BuildContext context) async {
-    SharedPreferences prefs= await Singleton.getPrefInstance();
-    final storage = await Singleton.getStorage() ;
-    String api_token=await storage.read(key: 'api_token' ,aOptions: Singleton.getAndroidOptions());
+   try{
+     SharedPreferences prefs= await Singleton.getPrefInstance();
+     final storage = await Singleton.getStorage() ;
+     String api_token=await storage.read(key: 'api_token' ,aOptions: Singleton.getAndroidOptions());
 
-    Map userdata={ 'api_token': api_token, };
+     Map userdata={ 'api_token': api_token, };
 
-    final response =  await http.post(
-        Uri.parse("${Singleton.apiPath}/logout"),body: userdata );
-    if(response.statusCode==200){
-      var responseData = json.decode(response.body);
+     final response =  await http.post(
+         Uri.parse("${Singleton.apiPath}/logout"),body: userdata );
+     if(response.statusCode==200){
+       var responseData = json.decode(response.body);
 
-      await storage.delete(key: 'api_token',aOptions: Singleton.getAndroidOptions());
-      prefs.remove("user_id");
-      prefs.remove("email");
+       await storage.delete(key: 'api_token',aOptions: Singleton.getAndroidOptions());
+       prefs.remove("user_id");
+       prefs.remove("email");
 
-      Navigator.pushReplacement(context,
-          MaterialPageRoute(builder: (_) => LoginUi()));
-    }else{
+       Navigator.pushReplacement(context,
+           MaterialPageRoute(builder: (_) => LoginUi()));
+     }else{
 
-      showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
-    }
+       showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+     }
+   }catch(e){
+
+   }
   }
 
   Future<bool> saveProfileData(Map userData  )async {
@@ -175,29 +183,32 @@ class UserAuthProvider extends ChangeNotifier{
     }
   }
   Future<Witness>  checkState(var  result ) async {
+    try{
 
+      // // this method for check if the user has data before or no ...
+      if(result !=null){
+        Map data={
+          'user_id':result,
+        };
 
-    // // this method for check if the user has data before or no ...
-    if(result !=null){
-      Map data={
-        'user_id':result,
-      };
+        final response =  await http.post(
+            Uri.parse("${Singleton.apiPath}/getUser") ,body: data );
+        if(response.statusCode==200){
+          var res=jsonDecode(response.body);
 
-      final response =  await http.post(
-          Uri.parse("${Singleton.apiPath}/getUser") ,body: data );
-      if(response.statusCode==200){
-        var res=jsonDecode(response.body);
-
-        if(res['message']=='success'){
-          return Witness.fromJson(res['data']) ;
-        }
-        else{
+          if(res['message']=='success'){
+            return Witness.fromJson(res['data']) ;
+          }
+          else{
+            return null;
+          }
+        }else{
+          showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
           return null;
         }
-      }else{
-        showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
-        return null;
       }
+    }catch (e){
+
     }
   }
   Future<bool> updateProfileData(Map userData  )async {
