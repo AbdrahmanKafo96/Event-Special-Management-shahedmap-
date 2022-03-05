@@ -341,7 +341,7 @@ class _VideoPickerState extends State<VideoPicker> {
   }
 
   Future _imgFromGallery( ) async {
-    XFile  videofile= await _picker.pickVideo(source: ImageSource.gallery ,imageQuality: 75);
+    XFile  videofile= await _picker.pickVideo(source: ImageSource.gallery ,);
     if(videofile!=null){
       File file = File(videofile.path );
       setState(() {

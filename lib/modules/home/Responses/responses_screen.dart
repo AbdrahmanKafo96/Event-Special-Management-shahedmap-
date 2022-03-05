@@ -11,8 +11,6 @@ import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
 
 class ResponsePage extends StatefulWidget {
-
-
   @override
   _ResponsePageState createState() => _ResponsePageState();
 }
@@ -138,86 +136,89 @@ class _ResponsePageState extends State<ResponsePage> {
                   displacement: 5,
                       onRefresh: getData,
                       child: ListView.builder(
-                  shrinkWrap: true,
+                        shrinkWrap: true,
 
-                  itemCount: snapshot.data.length,
-                  // separatorBuilder: (context, index) => Divider(
-                  //   color: Colors.black,
-                  // ),
-                  itemBuilder: (context, index) {
-                      return Column(
-                        children: [
-                           InkWell(
+                        itemCount: snapshot.data.length,
+                        // separatorBuilder: (context, index) => Divider(
+                        //   color: Colors.black,
+                        // ),
+                        itemBuilder: (context, index) {
+                         return Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Column(
+                            children: [
+                             InkWell(
 
 
-                              onTap: (){},
-                              child: Ink(
-                                color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
-                                Colors.white,
-                                child: ListTile(
-                                    onTap: () {
-                                      Provider.of<EventProvider>(context, listen: false)
-                                          .updateNoti( user_id,snapshot.data[index].notification_id).
-                                      then((value){
+                                onTap: (){},
+                                child: Ink(
+                                  color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
+                                  Colors.white,
+                                  child: ListTile(
+                                      onTap: () {
                                         Provider.of<EventProvider>(context, listen: false)
-                                            .getRespo( user_id,snapshot.data[index].notification_id).then((value){
-                                          print(value['data']['lat']);
-                                          print(value['data']['lng']);
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
+                                            .updateNoti( user_id,snapshot.data[index].notification_id).
+                                        then((value){
+                                          Provider.of<EventProvider>(context, listen: false)
+                                              .getRespo( user_id,snapshot.data[index].notification_id).then((value){
+                                            print(value['data']['lat']);
+                                            print(value['data']['lng']);
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
 
-                                                    MapMap(
-                                                        lat: value['data']['lat'] ,
-                                                        lng:value['data']['lng'])),
-                                          );
+                                                      MapMap(
+                                                          lat: value['data']['lat'] ,
+                                                          lng:value['data']['lng'])),
+                                            );
+                                          });
                                         });
-                                      });
 
-                                    },
-                                    // trailing: IconButton(
-                                    //     tooltip: 'حذف الحدث',
-                                    //     icon: Icon(
-                                    //       Icons.delete,
-                                    //       color: Colors.red,
-                                    //     ),
-                                    //     onPressed: () {
-                                    //       // return customAlertForButton(
-                                    //       //     snapshot
-                                    //       //         .data[index].addede_id,
-                                    //       //     snapshot,
-                                    //       //     index,
-                                    //       //     context);
-                                    //     }),
+                                      },
+                                      // trailing: IconButton(
+                                      //     tooltip: 'حذف الحدث',
+                                      //     icon: Icon(
+                                      //       Icons.delete,
+                                      //       color: Colors.red,
+                                      //     ),
+                                      //     onPressed: () {
+                                      //       // return customAlertForButton(
+                                      //       //     snapshot
+                                      //       //         .data[index].addede_id,
+                                      //       //     snapshot,
+                                      //       //     index,
+                                      //       //     context);
+                                      //     }),
 
-                                    leading: Icon(
-                                      Icons.event_note_rounded,
-                                      size: 30,
-                                      color: Colors.blueGrey,
-                                    ),
-                                    title: Text(
-                                      '${snapshot.data[index].type_name}',
-                                      style:
-                                      TextStyle(color: Color(0xFF666666)),
-                                    )),
-                              ),
+                                      leading: Icon(
+                                        Icons.event_note_rounded,
+                                        size: 30,
+                                        color: Colors.blueGrey,
+                                      ),
+                                      title: Text(
+                                        '${snapshot.data[index].type_name}',
+                                        style:
+                                        TextStyle(color: Color(0xFF666666)),
+                                      )),
+                                ),
 
-                          ),
-                          Divider(
-                            color: Colors.grey,
-                          )
-                        ],
+                            ),
+                            Divider(
+                              color: Colors.grey,
+                            )
+                          ],
+                        ),
                       );
 
                   },
                 ),
                     )
                     : Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
-              default:
-                {
-                  return Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
-                }
+                    default:
+                      {
+                        return Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
+                      }
             }
             return null; // unreachable
           }),
