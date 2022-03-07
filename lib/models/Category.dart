@@ -5,19 +5,19 @@
 class CategoryClass{
     int   category_id;
     String category_name;
-    int emergency_number;
+    int emergency_phone;
 
   CategoryClass({
       this.category_id,
       this.category_name,
-      this.emergency_number,
+      this.emergency_phone,
   });
 
   factory CategoryClass.fromJson(Map<String, dynamic> json) {
     return CategoryClass(
       category_id: json['category_id'],
       category_name: json['category_name'],
-      emergency_number: json['emergency_number'],
+      emergency_phone: json['emergency_phone'],
     );
   }
 }

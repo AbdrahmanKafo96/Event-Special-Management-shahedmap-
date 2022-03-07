@@ -70,54 +70,58 @@ callbackDispatcher() {
 }
 
 Future main() async {
+    try{
+      WidgetsFlutterBinding.ensureInitialized();
+      await Firebase.initializeApp();
+
+      final storage = await Singleton.getStorage()  ;
+      String token = await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
+      final pref= await Singleton.getPrefInstance();
+      if(pref.getInt('version_number')==null)
+        pref.setInt('version_number', 0);
 
 
-  WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
-
-  final storage = await Singleton.getStorage()  ;
-  String token = await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
-  final pref= await Singleton.getPrefInstance();
-  if(pref.getInt('version_number')==null)
-  pref.setInt('version_number', 0);
-
-
-  if (defaultTargetPlatform == TargetPlatform.android) {
-    AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-  }
-  runApp(
-    MultiProvider(
-      providers: [
-        ChangeNotifierProvider<EventProvider>(
-          create: (context) => EventProvider(),
+      if (defaultTargetPlatform == TargetPlatform.android) {
+        AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+      }
+      runApp(
+        MultiProvider(
+          providers: [
+            ChangeNotifierProvider<EventProvider>(
+              create: (context) => EventProvider(),
+            ),
+            ChangeNotifierProvider<UserAuthProvider>(
+              create: (context) => UserAuthProvider(),
+            ),
+          ],
+          child: MaterialApp(
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ar', ''), // arabic, no country code
+            ],
+            theme: CustomTheme.myTheme(),
+            debugShowCheckedModeBanner: false,
+            home: token != null ? HomePage() : LoginUi(),
+            routes: {
+              'About': (context) => About(),
+              'ProfilePage': (context) => ProfilePage(),
+              'ResetPage': (context) => CreateNewPasswordView(),
+              'ThemeApp': (context) => ThemeApp(),
+              'EventSectionOne': (context) => EventSectionOne(),
+              'eventList': (context) => EventsMenu(),
+              'CustomWebView': (context) => CustomWebView(),
+              'response': (context) => ResponsePage(),
+            },
+          ),
         ),
-        ChangeNotifierProvider<UserAuthProvider>(
-          create: (context) => UserAuthProvider(),
-        ),
-      ],
-      child: MaterialApp(
-        localizationsDelegates: const [
-          GlobalMaterialLocalizations.delegate,
-          GlobalWidgetsLocalizations.delegate,
-          GlobalCupertinoLocalizations.delegate,
-        ],
-        supportedLocales: [
-          Locale('ar', ''), // arabic, no country code
-        ],
-        theme: CustomTheme.myTheme(),
-        debugShowCheckedModeBanner: false,
-        home: token != null ? HomePage() : LoginUi(),
-        routes: {
-          'About': (context) => About(),
-          'ProfilePage': (context) => ProfilePage(),
-          'ResetPage': (context) => CreateNewPasswordView(),
-          'ThemeApp': (context) => ThemeApp(),
-          'EventSectionOne': (context) => EventSectionOne(),
-          'eventList': (context) => EventsMenu(),
-          'CustomWebView': (context) => CustomWebView(),
-          'response': (context) => ResponsePage(),
-        },
-      ),
-    ),
-  );
+      );
+    }catch (e) {
+      print(e);
+    }
+
+
 }

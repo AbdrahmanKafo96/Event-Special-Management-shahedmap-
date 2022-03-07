@@ -90,9 +90,9 @@ class _EventCategoryState extends State<EventCategory> {
         list.forEach((element) {
 
           gategoryList.add(new CategoryClass(category_id:element['category_id'],
-              category_name: element['category_name'],emergency_number: int.parse(element['emergency_number'])));
+              category_name: element['category_name'],emergency_phone: int.parse(element['emergency_phone'])));
         });
-        gategoryList.insert(0, CategoryClass(category_id: 0 ,category_name:'اختار الصنف',emergency_number:0)) ;
+        gategoryList.insert(0, CategoryClass(category_id: 0 ,category_name:'اختار الصنف',emergency_phone:0)) ;
         dropdownValue1=gategoryList.first.category_id.toString();
         dropdownName1=gategoryList.first.category_name.toString();
       });
@@ -193,11 +193,11 @@ class _EventCategoryState extends State<EventCategory> {
 
           if(state==1) {
             insertCategory(category_name: element.category_name,
-                emergency_number: element.emergency_number ,
+                emergency_number: element.emergency_phone ,
                 category_id: element.category_id);
           }else{
             gategoryList.add(new CategoryClass(category_id: element.category_id,
-                category_name: element.category_name ,emergency_number: element.emergency_number));
+                category_name: element.category_name ,emergency_phone: element.emergency_phone));
           }
         });
 
@@ -250,10 +250,10 @@ class _EventCategoryState extends State<EventCategory> {
                           }).toList()[0].category_name ;
 
                       Provider.of<EventProvider>(context, listen: false)
-                          .event.categoryClass.emergency_number =
+                          .event.categoryClass.emergency_phone =
                           gategoryList.where((el) {
                             return el.category_id.toString()==value;
-                          }).toList()[0].emergency_number ;
+                          }).toList()[0].emergency_phone ;
 
                       dropdownValue1=value ;
 

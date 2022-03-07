@@ -76,7 +76,7 @@ class _DashboardState extends State<Dashboard> {
                  int emergency_number=Provider.of<EventProvider>(context, listen: false)
                       .event
                       .categoryClass
-                      .emergency_number ;
+                      .emergency_phone ;
 
                   var userLocation = await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
 
