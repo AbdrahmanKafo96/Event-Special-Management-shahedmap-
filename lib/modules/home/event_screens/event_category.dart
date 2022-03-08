@@ -121,7 +121,7 @@ class _EventCategoryState extends State<EventCategory> {
         onCreate: (Database db, int version)   {
             db.execute(
               'CREATE TABLE event_category (category_id INTEGER PRIMARY KEY, category_name TEXT,'
-                  'emergency_number TEXT )');
+                  'emergency_phone TEXT )');
             db.execute(
               'CREATE TABLE event_type (type_id INTEGER PRIMARY KEY, type_name TEXT,'
                   'category_id INTEGER ,'
@@ -134,11 +134,11 @@ class _EventCategoryState extends State<EventCategory> {
          }
         );
   }
-  void insertCategory({int category_id,String category_name, int emergency_number  })  {
+  void insertCategory({int category_id,String category_name, int emergency_phone  })  {
       database.transaction((txn) {
          txn.rawInsert(
-          'INSERT INTO event_category(category_id ,category_name, emergency_number) VALUES(?,?,?)',
-          [category_id ,category_name,emergency_number ]).then((id2) {
+          'INSERT INTO event_category(category_id ,category_name, emergency_phone) VALUES(?,?,?)',
+          [category_id ,category_name,emergency_phone ]).then((id2) {
         print('inserted2: $id2');
       });
         return null;
@@ -193,7 +193,7 @@ class _EventCategoryState extends State<EventCategory> {
 
           if(state==1) {
             insertCategory(category_name: element.category_name,
-                emergency_number: element.emergency_phone ,
+                emergency_phone: element.emergency_phone ,
                 category_id: element.category_id);
           }else{
             gategoryList.add(new CategoryClass(category_id: element.category_id,
