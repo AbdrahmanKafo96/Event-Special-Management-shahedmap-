@@ -73,7 +73,7 @@ class _DashboardState extends State<Dashboard> {
                       .event
                       .categoryClass
                       .category_name ;
-                 int emergency_number=Provider.of<EventProvider>(context, listen: false)
+                 int emergency_phone=Provider.of<EventProvider>(context, listen: false)
                       .event
                       .categoryClass
                       .emergency_phone ;
@@ -100,9 +100,9 @@ class _DashboardState extends State<Dashboard> {
                         backgroundColor: Colors.orangeAccent,
                       ));
                      } else{
-                      print(emergency_number.toString());
+                      print(emergency_phone.toString());
                     telephony.sendSms(
-                        to: "+218${emergency_number.toString()}",
+                        to: "+218${emergency_phone.toString()}",
                         message:  message,
                         statusListener: listener,
                       isMultipart: true
