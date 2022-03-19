@@ -28,8 +28,6 @@ import 'package:systemevents/notification/notification.dart' as notif;
 import 'dart:convert'  as convert;
 import 'package:http/http.dart' as http;
 
-
-
 callbackDispatcher() {
   try {
     Workmanager().executeTask((task, inputData) async {
