@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:systemevents/models/Category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
-import 'package:systemevents/modules/home/event_screens/new_file.dart';
+import 'package:systemevents/modules/home/Responses/map_respo.dart';
  import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -168,7 +168,7 @@ class _ResponsePageState extends State<ResponsePage> {
                                               MaterialPageRoute(
                                                   builder: (context) =>
 
-                                                      MapMap(
+                                                      Mappoly(
                                                           lat: value['data']['lat'] ,
                                                           lng:value['data']['lng'])),
                                             );

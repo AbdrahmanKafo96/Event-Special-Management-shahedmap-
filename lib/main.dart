@@ -39,14 +39,19 @@ callbackDispatcher() {
           print(userLocation);
           // print(userLocation.longitude);
           SharedPreferences prefs = await Singleton.getPrefInstance();
-
+          final storage = await Singleton.getStorage()  ;
+          String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
           Map data = {
             'user_id': prefs.getInt('user_id').toString(),
             'lat': userLocation.latitude.toString(),
             'lng': userLocation.longitude.toString(),
           };
           final response = await http
-              .post(Uri.parse('${Singleton.apiPath}/updateUnit'), body: data);
+              .post(Uri.parse('${Singleton.apiPath}/updateUnit' ),  body:jsonEncode(data),headers: {
+              'Accept':'application/json',
+              'Authorization' : 'Bearer $value',
+              'content-type': 'application/json',}
+              );
 
           if (response.statusCode == 200) {
             var parsed = json.decode(response.body);

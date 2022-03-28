@@ -57,15 +57,15 @@ class _EventsMenuState extends State<EventsMenu> {
       list = await Provider.of<EventProvider>(context, listen: false)
           .searchData(value.getInt('user_id'));
             try{
-
+              if (list != false  )
+                for (int i = 0; i < list.length; i++) {
+                  listNames.add(list[i]['event_name']);
+                  futureList.add(Event(
+                      addede_id: list[i]['addede_id'],
+                      event_name: list[i]['event_name']));
+                }
             }catch(e){
-        if (list != false  )
-          for (int i = 0; i < list.length; i++) {
-            listNames.add(list[i]['event_name']);
-            futureList.add(Event(
-                addede_id: list[i]['addede_id'],
-                event_name: list[i]['event_name']));
-          }
+
       }
 
     });
@@ -438,8 +438,14 @@ class DataSearchSe extends SearchDelegate<String> {
     Map data = {
       'addede_id': eventId.toString(),
     };
+    final storage = await Singleton.getStorage()  ;
+    String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
     final response =
-        await http.post(Uri.parse('${Singleton.apiPath}/getEvent'), body: data);
+        await http.post(Uri.parse('${Singleton.apiPath}/getEvent'), body: data ,headers: {
+          // 'Accept':'application/json',
+          'Authorization' : 'Bearer $value',
+          // 'content-type': 'application/json',
+        } );
 
     if (response.statusCode == 200) {
       var parsed = json.decode(response.body);

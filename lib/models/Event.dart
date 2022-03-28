@@ -17,7 +17,7 @@ class Event {
   File _imageFile, _videoFile;
   List<XFile>  _xfile  , _listSelected;
 
-  get getListSelected => _listSelected;
+  List<XFile>  get getListSelected => _listSelected;
 
   set setListSelected(List<XFile> value) {
     _listSelected = value;
@@ -37,11 +37,10 @@ class Event {
     );
   }
 
-  get getVideoFile => _videoFile;
-
-  set setVideoFile(value) {
-    _videoFile = value;
-  }
+    get getVideoFile => _videoFile;
+    set setVideoFile(value) {
+      _videoFile = value;
+    }
 
   List<XFile> get getXFile => _xfile;
 

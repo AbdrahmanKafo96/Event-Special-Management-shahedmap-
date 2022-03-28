@@ -7,7 +7,7 @@ import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-import 'package:http/http.dart' as http;
+
 class MapPage extends StatefulWidget {
   double lat ,lng;
   MapPage({this.lat, this.lng});

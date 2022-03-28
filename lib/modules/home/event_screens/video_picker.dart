@@ -99,7 +99,8 @@ import 'package:video_player/video_player.dart';
 // }
 class VideoPicker extends StatefulWidget {
   String oldVideo="";
-  VideoPicker({this.oldVideo});
+  int eventID;
+  VideoPicker({this.oldVideo , this.eventID});
 
   @override
   _VideoPickerState createState() => _VideoPickerState();
@@ -172,8 +173,6 @@ class _VideoPickerState extends State<VideoPicker> {
             Center(
               child: InkWell(
                 onTap: (){
-
-
                   setState(() {
                     _controller.value.isPlaying
                         ? _controller.pause()
@@ -205,8 +204,10 @@ class _VideoPickerState extends State<VideoPicker> {
                                 color: Colors.red,
                               ),
                               onPressed: () {
+                                Provider.of<EventProvider>(context, listen: false).removeVideo(widget.eventID);
+                                // this for remove video ... we need it in view screen.
                                 setState(() {
-
+                                  Provider.of<EventProvider>(context, listen: false).event.setVideoFile = null;
                                   _controller=null;
 
                                 });
@@ -257,7 +258,7 @@ class _VideoPickerState extends State<VideoPicker> {
                           ],
                         ),
                           onPressed: (){
-                            print("the controller is ${_controller}");
+
                             print(widget.oldVideo);
                         _showPicker(context  );
 
@@ -284,11 +285,13 @@ class _VideoPickerState extends State<VideoPicker> {
                               ),
                               onPressed: () {
                                 setState(() {
+
                                   //   Provider.of<EventProvider>(context, listen: false).event.dropValue(index);
                                   //   print(images.length);
                                   //   if((images.length>=2 )&& (images.length<=4)){
                                   //     // images.replaceRange(index, index + 1, ['Add Image']);
                                   _controller=null;
+                                  Provider.of<EventProvider>(context, listen: false).event.setVideoFile = null;
                                   //   }else{
                                   //     images.replaceRange(index, index + 1, ['Add Image']);
                                   //   }

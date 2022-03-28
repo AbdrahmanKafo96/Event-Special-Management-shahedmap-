@@ -20,14 +20,26 @@ class UserAuthProvider extends ChangeNotifier{
   Future<bool> login(Map userData)async {
 
     try {
-      final storage = await Singleton.getStorage() ;
+      final storage = await Singleton.getStorage()  ;
+      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final prefs = await Singleton.getPrefInstance();
 
-      SharedPreferences prefs  = await Singleton.getPrefInstance();
+      //  String value="5|ffLcqmF9uzIBCAI6BXhQNoRx74J9utqNygpzaQ7C";
+      //SharedPreferences prefs  = await Singleton.getPrefInstance();
       if(prefs !=null){
         final response =userData['userState'] == 'L' ?
-        await http.post(Uri.parse("${Singleton.apiPath}/login"),  body: userData, )
+        await http.post(Uri.parse("${Singleton.apiPath}/login"),  body:jsonEncode( userData),
+          headers: {
+        'Accept':'application/json',
+        'Authorization' : 'Bearer $value',
+          'content-type': 'application/json',
+        }, )
             :
-        await http.post(Uri.parse("${Singleton.apiPath}/register",) , body: userData,);
+        await http.post(Uri.parse("${Singleton.apiPath}/register",) , body: jsonEncode( userData),headers: {
+         'Accept':'application/json',
+          // 'Authorization' : 'Bearer $value',
+         'content-type': 'application/json',
+        },);
 
 
         if(response.statusCode==200){
@@ -39,33 +51,39 @@ class UserAuthProvider extends ChangeNotifier{
               showShortToast('تحقق من البريد الالكتروني وكلمة المرور', Colors.orange);
                 return false;
             }else{
-              user.user_id=responseData['data']["user_id"];
-              user.api_token=responseData['data']["api_token"];
+              user.user_id=responseData['result']['original']['data']["user_id"];
+              user.api_token=responseData['result']['original']['data']["api_token"];
 
               await storage.write(key: 'api_token',
                   value:  user.api_token  ,aOptions: Singleton.getAndroidOptions());
+              await storage.write(key: 'token',
+                  value:  responseData['token'] ,aOptions: Singleton.getAndroidOptions());
+
               prefs.setInt('user_id', user.user_id);
-              prefs.setString('email', responseData['data']["email"]);
-              prefs.setInt('role_id', responseData['data']["role_id"]);
+              prefs.setString('email', responseData['result']['original']['data']["email"]);
+              prefs.setInt('role_id', responseData['result']['original']['data']["role_id"]);
 
 
               return true ;
             }
           }
           //مرحبا بك
+          print(userData);
           if(responseData['status']=="failed"){
             showShortToast('تأكد من الحقول مدخلة بشكل صحيح', Colors.red);
             return false;
           }else{
-            user.user_id=responseData['data']["user_id"];
-            user.api_token=responseData['data']["api_token"];
+            user.user_id=responseData ['result']['original']['data']["user_id"];
+            user.api_token=responseData ['result']['original']['data']["api_token"];
 
 
             await storage.write(key: 'api_token',
                 value: user.api_token  ,aOptions: Singleton.getAndroidOptions());
+            await storage.write(key: 'token',
+                value:  responseData['token'] ,aOptions: Singleton.getAndroidOptions());
             prefs.setInt('user_id', user.user_id);
-            prefs.setString('email', responseData['data']["email"]);
-            prefs.setInt('role_id', responseData['data']["role_id"]);
+            prefs.setString('email', responseData ['result']['original']['data']["email"]);
+            prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
 
             return true ;
           }
@@ -85,6 +103,8 @@ class UserAuthProvider extends ChangeNotifier{
   Future<bool> resetPassword(  String password ,String confPassword ,String user_id, String email ,
       BuildContext context) async {
 
+    final storage = await Singleton.getStorage()  ;
+    String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
     try{
       Map data={
         'password':password.trim(),
@@ -93,8 +113,11 @@ class UserAuthProvider extends ChangeNotifier{
         "email":email.trim(),
       };
 
-      final response = await http
-          .post(Uri.parse('${Singleton.apiPath}/resetPasswordUser'), body: data);
+      final response = await http.post(Uri.parse('${Singleton.apiPath}/resetPasswordUser'), body: jsonEncode(data),headers: {
+        'Accept':'application/json',
+        'Authorization' : 'Bearer $value',
+        'content-type': 'application/json',
+      },);
 
 
       if (response.statusCode == 200) {
@@ -114,20 +137,28 @@ class UserAuthProvider extends ChangeNotifier{
 
   void logout(BuildContext context) async {
    try{
-     SharedPreferences prefs= await Singleton.getPrefInstance();
-     final storage = await Singleton.getStorage() ;
+    SharedPreferences prefs= await Singleton.getPrefInstance();
+     final storage = await Singleton.getStorage()  ;
+     String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+
      String api_token=await storage.read(key: 'api_token' ,aOptions: Singleton.getAndroidOptions());
 
      Map userdata={ 'api_token': api_token, };
 
      final response =  await http.post(
-         Uri.parse("${Singleton.apiPath}/logout"),body: userdata );
+         Uri.parse("${Singleton.apiPath}/logout"),body: jsonEncode(userdata) ,headers: {
+       'Accept':'application/json',
+       'Authorization' : 'Bearer $value',
+       'content-type': 'application/json',
+     },);
      if(response.statusCode==200){
-       var responseData = json.decode(response.body);
+       //var responseData = json.decode(response.body);
 
        await storage.delete(key: 'api_token',aOptions: Singleton.getAndroidOptions());
+       await storage.delete(key: 'token',aOptions: Singleton.getAndroidOptions());
        prefs.remove("user_id");
        prefs.remove("email");
+
 
        Navigator.pushReplacement(context,
            MaterialPageRoute(builder: (_) => LoginUi()));
@@ -142,9 +173,12 @@ class UserAuthProvider extends ChangeNotifier{
 
   Future<bool> saveProfileData(Map userData  )async {
     try {
-
+      final storage = await Singleton.getStorage()  ;
+      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final request =
-      await http.MultipartRequest("POST", Uri.parse("${Singleton.apiPath}/saveUserData") ) ;
+      await http.MultipartRequest("POST", Uri.parse("${Singleton.apiPath}/saveUserData",) ) ;
+      request.headers.addAll({"Authorization":"Bearer $value" });
+
       request.fields['user_id'] = userData['user_id'].toString();
       request.fields['first_name'] = userData['first_name'];
       request.fields['father_name'] = userData['father_name'];
@@ -175,7 +209,7 @@ class UserAuthProvider extends ChangeNotifier{
         }
       }else
       {
-        showShortToast('dddd', Colors.orange);
+        showShortToast('خطاء', Colors.orange);
         return false;
       }
     } catch (e) {
@@ -190,9 +224,15 @@ class UserAuthProvider extends ChangeNotifier{
         Map data={
           'user_id':result,
         };
+        final storage = await Singleton.getStorage()  ;
+        String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
 
         final response =  await http.post(
-            Uri.parse("${Singleton.apiPath}/getUser") ,body: data );
+            Uri.parse("${Singleton.apiPath}/getUser") ,body:  data , headers: {
+
+        'Authorization' : 'Bearer $value',
+
+        },);
         if(response.statusCode==200){
           var res=jsonDecode(response.body);
 
@@ -213,8 +253,11 @@ class UserAuthProvider extends ChangeNotifier{
   }
   Future<bool> updateProfileData(Map userData  )async {
     try {
+      final storage = await Singleton.getStorage()  ;
+      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final request =
       await http.MultipartRequest("POST", Uri.parse("${Singleton.apiPath}/updateUserData") ) ;
+      request.headers.addAll({"Authorization":"Bearer $value" });
       request.fields['user_id'] = userData['user_id'].toString();
       request.fields['first_name'] = userData['first_name'];
       request.fields['father_name'] = userData['father_name'];

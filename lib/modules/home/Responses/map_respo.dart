@@ -4,15 +4,15 @@ import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
-class MapMap extends StatefulWidget {
+class Mappoly extends StatefulWidget {
   double lat ,lng;
-  MapMap({this.lat, this.lng});
+  Mappoly({this.lat, this.lng});
 
   @override
-  _MapMapState createState() => _MapMapState();
+  _MappolyState createState() => _MappolyState();
 }
 
-class _MapMapState extends State<MapMap> {
+class _MappolyState extends State<Mappoly> {
   GoogleMapController mapController;
 
   // Markers to show points on the map

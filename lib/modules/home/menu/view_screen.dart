@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/modules/home/event_screens/image_picker.dart';
+import 'package:systemevents/modules/home/menu/image_picker.dart';
 import 'package:systemevents/modules/home/event_screens/video_picker.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
@@ -207,10 +207,10 @@ class _EventViewState extends State<EventView> {
                                       children: [
                                         count>0?
                                         MyCustomImage(
-                                            count: count, updateList: imgList)
+                                            count: count, updateList: imgList , eventID: widget.eventID)
                                             :MyCustomImage(),
                                          _response['data']['video'] != null
-                                             ? VideoPicker(oldVideo: video)
+                                             ? VideoPicker(oldVideo: video , eventID: widget.eventID)
                                              : VideoPicker(),
                                       ],
                                     ),

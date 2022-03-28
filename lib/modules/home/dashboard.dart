@@ -58,7 +58,8 @@ class _DashboardState extends State<Dashboard> {
     return InkWell(
       onTap: () {
         if(title=="تواصل مع الجهات"){
-          createDialog(ctx , "اختيار الصنف والنوع",'إرسال',
+          createDialog(
+              ctx , "اختيار الصنف والنوع",'إرسال',
                 ({TextEditingController textEditingController}) async {
 
 

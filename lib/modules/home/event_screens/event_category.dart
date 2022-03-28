@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/models/Category.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -26,7 +27,9 @@ class _EventCategoryState extends State<EventCategory> {
     super.initState();
     openDB().then((db) {
       Singleton.getPrefInstance().then((pref) async{
-
+        // SharedPreferences prefs= await Singleton.getPrefInstance();
+        // final key = 'token';
+        // final value = prefs.get(key ) ?? 0;
 
         checkInternetConnectivity(context).then((ste) async{
           if(ste==true){
@@ -36,7 +39,7 @@ class _EventCategoryState extends State<EventCategory> {
               'version_number':  pref.getInt('version_number').toString(),
             };
             final response =  await http.post(
-                Uri.parse("${Singleton.apiPath}/isVersionUpdated") ,body: data );
+                Uri.parse("${Singleton.apiPath}/isVersionUpdated") ,body:  data  );
             if(response.statusCode==200){
               var res=jsonDecode(response.body);
               print(res['message']);

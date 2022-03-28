@@ -11,8 +11,8 @@ class MyCustomImage extends StatefulWidget {
   int count;
 
   List updateList = [];
-
-  MyCustomImage({this.count, this.updateList});
+  int  eventID;
+  MyCustomImage({this.count, this.updateList , this.eventID});
 
   @override
   _MyCustomImageState createState() => _MyCustomImageState();
@@ -99,6 +99,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
       crossAxisCount: 4,
       childAspectRatio: 1,
       children: List.generate(images.length, (index) {
+
         if (images.elementAt(index)is ImageModel) {
           ImageModel uploadModel = images[index];
 
@@ -122,7 +123,12 @@ class _MyCustomImageState extends State<MyCustomImage> {
                     ),
                     onTap: () {
                       setState(() {
+
                         images[index]='removed';
+                        print("index is ${index}");
+                         Provider.of<EventProvider>(context, listen: false)
+                             .removeImage(widget.eventID , index);
+
 
                         // print(images.length);
                         // if ((images.length >= 2) && (images.length <= 4)) {
@@ -161,10 +167,14 @@ class _MyCustomImageState extends State<MyCustomImage> {
                       color: Colors.red,
                     ),
                     onTap: () {
-                      setState(() {
 
+                      setState(() {
+                        Provider.of<EventProvider>(context, listen: false).removeImage(widget.eventID ,index);
                         images[index] = "removed";
+                        print("index is ${index}");
+
                       });
+                     // Provider.of<EventProvider>(context, listen: false).event.getXFile[index]=null;
                     },
                   ),
                 )
@@ -184,17 +194,18 @@ class _MyCustomImageState extends State<MyCustomImage> {
                 IconButton(
                   icon: Icon(Icons.add_photo_alternate),
                   onPressed: () {
-                    if (images.length >= 1 && images.length <= 4) {
+
+                    // if (images.length >= 1 && images.length <= 4) {
 
                       _showPicker(context, index);
-                    } else {
-                      // we can put a message here if the list is full.
-                    }
+                    // } else {
+                    //   // we can put a message here if the list is full.
+                    // }
                   },
                 ),
                 Text(
                   "اختر صورة",
-                  style: TextStyle(fontSize: 12),
+                  style: TextStyle(fontSize: 10),
                 )
               ],
             ),

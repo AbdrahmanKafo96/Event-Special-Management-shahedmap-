@@ -199,7 +199,7 @@ class _PickImagesState extends State<PickImages> {
                     }
                   },
                 ),
-                Text("اختر صورة",style: TextStyle(fontSize: 12),)
+                Text("اختر صورة",style: TextStyle(fontSize: 10),)
               ],
             ),
           );
@@ -211,7 +211,7 @@ class _PickImagesState extends State<PickImages> {
 
   Future _imgFromGallery(int index) async {
 
-    XFile file= await _picker.pickImage(source: ImageSource.gallery);
+    XFile file= await _picker.pickImage(source: ImageSource.gallery ,imageQuality: 75);
     if(file!=null){
       _imageFile.add(file );
       if(_imageFile[index].path!="")
@@ -225,7 +225,7 @@ class _PickImagesState extends State<PickImages> {
 
   }
   Future  _imgFromCamera(int index) async {
-    XFile file=await _picker.pickImage(source: ImageSource.camera);
+    XFile file=await _picker.pickImage(source: ImageSource.camera,imageQuality: 75);
     if(file!=null){
       _imageFile.add( file);
       if(_imageFile[index]!=null)
