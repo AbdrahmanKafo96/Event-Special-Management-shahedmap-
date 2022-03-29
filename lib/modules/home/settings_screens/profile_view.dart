@@ -52,7 +52,7 @@ class _ProfilePageState extends State<ProfilePage> {
           {
             state=true;
               _image=null;
-              _uri=witness.image!=null?"http://192.168.1.3:8000${witness.image}":null;
+              _uri=witness.image!=null?"https://www.ets.ly/${witness.image}":null;
               print(_uri);
             setDataForm();
           }
@@ -291,31 +291,31 @@ class _ProfilePageState extends State<ProfilePage> {
                                     ),
                                   ),
                                 ),
-                                Expanded(
-                                  flex: 1,
-                                  child: TextButton.icon(
-
-                                    onPressed: () {
-                                      showCountryPicker(
-
-                                        context: context,
-                                        //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                                        exclude: <String>['KN', 'MF'],
-                                        //Optional. Shows phone code before the country name.
-                                        showPhoneCode: true,
-
-                                        onSelect: (Country country) {
-                                          // countryController=country.displayName;
-                                          Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
-                                          setState(() {
-                                            country1=country.displayNameNoCountryCode.toString();
-                                          });
-                                        },
-                                      );
-                                    },
-                                    icon: Icon(Icons.language),
-                                    label: Text(country1!=""?country1:'اختيار الدولة' ),
-                                  ),),
+                                // Expanded(
+                                //   flex: 1,
+                                //   child: TextButton.icon(
+                                //
+                                //     onPressed: () {
+                                //       showCountryPicker(
+                                //
+                                //         context: context,
+                                //         //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
+                                //         exclude: <String>['KN', 'MF'],
+                                //         //Optional. Shows phone code before the country name.
+                                //         showPhoneCode: true,
+                                //
+                                //         onSelect: (Country country) {
+                                //           // countryController=country.displayName;
+                                //           Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
+                                //           setState(() {
+                                //             country1=country.displayNameNoCountryCode.toString();
+                                //           });
+                                //         },
+                                //       );
+                                //     },
+                                //     icon: Icon(Icons.language),
+                                //     label: Text(country1!=""?country1:'اختيار الدولة' ),
+                                //   ),),
                               ],
                             ),
                           ],

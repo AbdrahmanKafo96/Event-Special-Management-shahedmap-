@@ -35,7 +35,7 @@
        android:usesCleartextTraffic="true"
 
        android:requestLegacyExternalStorage="true"
-        android:label="systemevents"
+        android:label="system events"
         android:icon="@mipmap/launcher_icon">
        <meta-data android:name="com.google.android.geo.API_KEY"
            android:value="AIzaSyD_zQR-4DgIbGEQrgv4ENebE430KtB0fOk

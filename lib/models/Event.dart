@@ -14,8 +14,8 @@ class Event {
   double _lat;
   double _lng;
   String _description;
-  File _imageFile, _videoFile;
-  List<XFile>  _xfile  , _listSelected;
+  File _imageFile, _videoFile ;
+  List<XFile>  _xfile  =[], _listSelected;
 
   List<XFile>  get getListSelected => _listSelected;
 

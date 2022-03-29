@@ -55,12 +55,22 @@ class EventProvider extends ChangeNotifier {
             filename: event.getVideoFile.path.split("/").last));
 
       var response = await request.send();
-      print(response.statusCode);
+
       if (response.statusCode == 200) {
+
         final respStr = await response.stream.bytesToString();
-        var s = jsonDecode(respStr);
-        print(s['error']);
-        if (s['status'] == 'success') {
+        var res = jsonDecode(respStr);
+        print(res['error']);
+        if(res['error'].toString()!= 'null')
+        {
+          showShortToast(res['error'].toString(), Colors.red);
+          return false;
+        }
+        if(res['message']=='لاتستطيع ارسال حدث لان حسابك محظور'){
+          showShortToast('لاتستطيع ارسال حدث لان حسابك محظور', Colors.red);
+          return false;
+        }
+        if (res['status'] == 'success') {
           event.dropAll();
           //event=Event();
           return true;
@@ -121,42 +131,46 @@ class EventProvider extends ChangeNotifier {
         //  event.setListSelected = event.getXFile;
 
         //  for (int i = 0; i < event.getListSelected.length; i++) {
+            if(event.getXFile!=null){
+              if (event.getXFile[0] != null)
+                request.files.add(http.MultipartFile(
+                    'image1',
+                    File(event.getXFile[0].path).readAsBytes().asStream(),
+                    File(event.getXFile[0].path).lengthSync(),
+                    filename: event.getXFile[0].path.split("/").last));
 
-            if (event.getXFile[0] != null)
-              request.files.add(http.MultipartFile(
-                  'image1',
-                  File(event.getXFile[0].path).readAsBytes().asStream(),
-                  File(event.getXFile[0].path).lengthSync(),
-                  filename: event.getXFile[0].path.split("/").last));
+              if (event.getXFile[1] != null)
+                request.files.add(http.MultipartFile(
+                    'image2',
+                    File(event.getXFile[1].path).readAsBytes().asStream(),
+                    File(event.getXFile[1].path).lengthSync(),
+                    filename: event.getXFile[1].path.split("/").last));
 
-      if (event.getXFile[1] != null)
-        request.files.add(http.MultipartFile(
-            'image2',
-            File(event.getXFile[1].path).readAsBytes().asStream(),
-            File(event.getXFile[1].path).lengthSync(),
-            filename: event.getXFile[1].path.split("/").last));
+              if (event.getXFile[2] != null)
+                request.files.add(http.MultipartFile(
+                    'image3',
+                    File(event.getXFile[2].path).readAsBytes().asStream(),
+                    File(event.getXFile[2].path).lengthSync(),
+                    filename: event.getXFile[2].path.split("/").last));
 
-      if (event.getXFile[2] != null)
-        request.files.add(http.MultipartFile(
-            'image3',
-            File(event.getXFile[2].path).readAsBytes().asStream(),
-            File(event.getXFile[2].path).lengthSync(),
-            filename: event.getXFile[2].path.split("/").last));
+              if (event.getXFile[3] != null)
+                request.files.add(http.MultipartFile(
+                    'image4',
+                    File(event.getXFile[3].path).readAsBytes().asStream(),
+                    File(event.getXFile[3].path).lengthSync(),
+                    filename: event.getXFile[3].path.split("/").last));
 
-      if (event.getXFile[3] != null)
-        request.files.add(http.MultipartFile(
-            'image4',
-            File(event.getXFile[3].path).readAsBytes().asStream(),
-            File(event.getXFile[3].path).lengthSync(),
-            filename: event.getXFile[3].path.split("/").last));
-
+            }
 
       if (event.getVideoFile != null)
-        {request.files.add(http.MultipartFile(
-            'video',
-            File(event.getVideoFile.path).readAsBytes().asStream(),
-            File(event.getVideoFile.path).lengthSync(),
-            filename: event.getVideoFile.path.split("/").last));}
+      {
+        request.files.add(http.MultipartFile(
+          'video',
+          File(event.getVideoFile.path).readAsBytes().asStream(),
+          File(event.getVideoFile.path).lengthSync(),
+          filename: event.getVideoFile.path.split("/").last));
+      }
+
 
 
       var response = await request.send();
@@ -164,7 +178,11 @@ class EventProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         final respStr = await response.stream.bytesToString();
         var respo = jsonDecode(respStr);
-        print(respo['error']);
+
+        if(respo['message']=='لاتستطيع تعديل الحدث لان حسابك محظور'){
+          showShortToast('لاتستطيع تعديل الحدث لان حسابك محظور', Colors.red);
+          return false;
+        }
         if (respo['status'] == 'success') {
           return true;
         } else {

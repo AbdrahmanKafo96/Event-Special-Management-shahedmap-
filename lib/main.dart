@@ -17,6 +17,7 @@ import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/theme/TheamProvider.dart';
 import 'package:systemevents/theme/theam.dart';
 import 'package:systemevents/web_browser/webView.dart';
 import 'modules/login/login_screen.dart';
@@ -96,35 +97,63 @@ Future main() async {
             ChangeNotifierProvider<UserAuthProvider>(
               create: (context) => UserAuthProvider(),
             ),
+            ChangeNotifierProvider<ThemeProvider>(
+              create: (context) => ThemeProvider(),
+            ),
           ],
-          child: MaterialApp(
-            localizationsDelegates: const [
-              GlobalMaterialLocalizations.delegate,
-              GlobalWidgetsLocalizations.delegate,
-              GlobalCupertinoLocalizations.delegate,
-            ],
-            supportedLocales: [
-              Locale('ar', ''), // arabic, no country code
-            ],
-            theme: CustomTheme.myTheme(),
-            debugShowCheckedModeBanner: false,
-            home: token != null ? HomePage() : LoginUi(),
-            routes: {
-              'About': (context) => About(),
-              'ProfilePage': (context) => ProfilePage(),
-              'ResetPage': (context) => CreateNewPasswordView(),
-              'ThemeApp': (context) => ThemeApp(),
-              'EventSectionOne': (context) => EventSectionOne(),
-              'eventList': (context) => EventsMenu(),
-              'CustomWebView': (context) => CustomWebView(),
-              'response': (context) => ResponsePage(),
-            },
-          ),
+          child:MyApp(token)
         ),
       );
     }catch (e) {
       print(e);
     }
+
+
+}
+class MyApp extends StatefulWidget {
+  String token;
+  MyApp(this.token);
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
+
+  @override
+  void initState() {
+    super.initState();
+  }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      themeMode:Provider.of<ThemeProvider>(context).themeMode,
+      theme:  CustomTheme.myTheme(),
+      darkTheme: MyThemes.darkTheme,
+
+      localizationsDelegates: const [
+        GlobalMaterialLocalizations.delegate,
+        GlobalWidgetsLocalizations.delegate,
+        GlobalCupertinoLocalizations.delegate,
+      ],
+      supportedLocales: [
+        Locale('ar', ''), // arabic, no country code
+      ],
+      //theme:,
+      debugShowCheckedModeBanner: false,
+      home: widget.token != null ? HomePage() : LoginUi(),
+      routes: {
+        'About': (context) => About(),
+        'ProfilePage': (context) => ProfilePage(),
+        'ResetPage': (context) => CreateNewPasswordView(),
+        'ThemeApp': (context) => ThemeApp(),
+        'EventSectionOne': (context) => EventSectionOne(),
+        'eventList': (context) => EventsMenu(),
+        'CustomWebView': (context) => CustomWebView(),
+        'response': (context) => ResponsePage(),
+      },
+    );
+  }
 
 
 }

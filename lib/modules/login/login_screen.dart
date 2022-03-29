@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
 import 'package:intl/intl.dart' as intl;
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/modules/login/login_section.dart';
@@ -167,6 +168,7 @@ class _LoginUiState extends State<LoginUi> {
                                     'message_token': await FirebaseMessaging
                                         .instance
                                         .getToken(),
+                                    'device_name':await PlatformDeviceId.getDeviceId,
                                     'email': Provider.of<UserAuthProvider>(
                                             context,
                                             listen: false)
@@ -183,6 +185,7 @@ class _LoginUiState extends State<LoginUi> {
                                 : {
                                     'userState': 'R',
                                     'role_id': '2',
+                                    'device_name':await PlatformDeviceId.getDeviceId,
                                     'message_token': await FirebaseMessaging
                                         .instance
                                         .getToken(),

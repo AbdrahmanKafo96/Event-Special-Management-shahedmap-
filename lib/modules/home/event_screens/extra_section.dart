@@ -92,6 +92,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                     context,
                                     listen: false)
                                 .addEvent(userData);
+                            print(result);
                             if (result) {
                               showShortToast(
                                   'تمت  عمليةالحفظ بنجاح', Colors.green);
@@ -102,9 +103,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 (Route<dynamic> route) => false,
                               );
                             } else {
-                              showShortToast(
-                                  'حدثت مشكلة تحقق من اتصالك بالانترنت',
-                                  Colors.red);
+
                             }
                           }
                         });

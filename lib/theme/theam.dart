@@ -18,6 +18,7 @@ class CustomTheme{
 
  static ThemeData myTheme(){
     return ThemeData(
+
       iconTheme: IconThemeData(color: Color(0xff74767f)),
       backgroundColor: Color(0xFFFFFFFF),
       shadowColor: Color(0xFF242b3b),

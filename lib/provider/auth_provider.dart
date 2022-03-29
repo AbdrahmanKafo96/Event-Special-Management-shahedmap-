@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/modules/login/login_screen.dart';
@@ -21,7 +22,7 @@ class UserAuthProvider extends ChangeNotifier{
 
     try {
       final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+    //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final prefs = await Singleton.getPrefInstance();
 
       //  String value="5|ffLcqmF9uzIBCAI6BXhQNoRx74J9utqNygpzaQ7C";
@@ -31,7 +32,7 @@ class UserAuthProvider extends ChangeNotifier{
         await http.post(Uri.parse("${Singleton.apiPath}/login"),  body:jsonEncode( userData),
           headers: {
         'Accept':'application/json',
-        'Authorization' : 'Bearer $value',
+        //'Authorization' : 'Bearer $value',
           'content-type': 'application/json',
         }, )
             :
@@ -48,9 +49,14 @@ class UserAuthProvider extends ChangeNotifier{
 
           if(userData['userState']=='L'){
             if(responseData['message']=="تحقق من البريد الالكتروني وكلمة المرور"){
-              showShortToast('تحقق من البريد الالكتروني وكلمة المرور', Colors.orange);
+              showShortToast('تحقق من البريد الالكتروني وكلمة المرور', Colors.red);
                 return false;
-            }else{
+            }
+            else if(responseData['message']=="لاتستطيع تسجيل الدخول لان حسابك محظور"){
+              showShortToast("لاتستطيع تسجيل الدخول لان حسابك محظور", Colors.red);
+              return false;
+            }
+            else{
               user.user_id=responseData['result']['original']['data']["user_id"];
               user.api_token=responseData['result']['original']['data']["api_token"];
 
@@ -143,7 +149,7 @@ class UserAuthProvider extends ChangeNotifier{
 
      String api_token=await storage.read(key: 'api_token' ,aOptions: Singleton.getAndroidOptions());
 
-     Map userdata={ 'api_token': api_token, };
+     Map userdata={ 'api_token': api_token, 'device_name':await PlatformDeviceId.getDeviceId,};
 
      final response =  await http.post(
          Uri.parse("${Singleton.apiPath}/logout"),body: jsonEncode(userdata) ,headers: {

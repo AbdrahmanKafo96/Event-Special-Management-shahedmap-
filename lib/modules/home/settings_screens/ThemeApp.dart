@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:systemevents/widgets/change_theme_button_widget.dart';
 
 class ThemeApp  extends StatelessWidget {
   @override
@@ -6,7 +7,7 @@ class ThemeApp  extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(),
       body:   Container(
-        child: Text('ThemeApp page'),
+        child:  ChangeThemeButtonWidget(),
 
       ),
     );
