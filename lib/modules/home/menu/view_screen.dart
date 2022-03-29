@@ -326,7 +326,7 @@ class _EventViewState extends State<EventView> {
           count = _response['count'];
           print("the count is $count");
           if (_response['data']['video'] != null)
-            video = "https://www.ets.ly/" + _response['data']['video'];
+            video = "http://192.168.1.3:8000/" + _response['data']['video'];
 
           eventNameController.text = _response['data']['event_name'];
           eventDescController.text = _response['data']['description'];
@@ -334,7 +334,7 @@ class _EventViewState extends State<EventView> {
           for (int i = 1; i <= 4; i++) {
             if(_response['data']['image$i']!=null)
             {
-              imgList[index]="https://www.ets.ly/" +_response['data']['image$i'];
+              imgList[index]="http://192.168.1.3:8000/" +_response['data']['image$i'];
 
             } index++;
           }

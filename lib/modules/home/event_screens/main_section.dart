@@ -15,6 +15,7 @@ class EventSectionOne extends StatefulWidget {
 
 class _EventSectionOneState extends State<EventSectionOne> {
 
+  double lat , lng;
   @override
   void dispose() {
     // TODO: implement dispose
@@ -107,48 +108,92 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             children: [
                               Row(
                                 children: [
-                                  Text('حدد موقع الحدث', style: Theme.of(context).textTheme.headline6,),
+                                  Text(lng==null?'حدد موقع الحدث':"عدل موقع الحدث", style: Theme.of(context).textTheme.headline6,),
                                 ],
                               ),
                               SizedBox(
                                 height: 12,
                               ),
                               InkWell(
-                                onTap: (){
-                                  Navigator.push(
+                                hoverColor: Colors.blueGrey,
+                                onTap: () async {
+                               Map fetchResult=  await Navigator.push(
                                     context,
                                     MaterialPageRoute(builder: (context) => MapPage()),
                                   );
+                               setState(() {
+                                 print(fetchResult['lat']);
+                                 lat=fetchResult['lat'];
+                                 lng=fetchResult['lng'];
+                               });
                                 },
-                                child: Stack(children: [
-                                  Container(
-                                    margin: EdgeInsets.only(left: 10,  right: 10,),
-                                    height: 120.0,
-                                    // width:MediaQuery.of(context).size.width,
-                                    decoration: BoxDecoration(
-                                      boxShadow: [
-                                        BoxShadow(
-                                          color: Colors.grey.withOpacity(0.5),
-                                         // spreadRadius: 5,
-                                          blurRadius: 7,
-                                          offset: Offset(0, 3), // changes position of shadow
-                                        ),
-                                      ],
-                                      image: DecorationImage(
-                                        image: AssetImage(
-                                            'assets/images/mapScreenshot.png'),
-                                        fit: BoxFit.fill,
-                                      ),
-                                      shape: BoxShape.rectangle,
-                                    ),
-                                  ),
-                                 Positioned.fill(
+                                child:Container(
 
-                                     child: Align(
-                                         alignment: Alignment.center,
-                                         child: Icon(Icons.add_location ,color: Colors.green,)))
-                                ],)
-                              ),
+                                  child: ListTile(
+                                          title: Text(lng==null?
+                                          "موقع الحدث":"موقع الحدث الحالي" ,  style: TextStyle(fontWeight: FontWeight.bold , fontSize: 14),),
+
+                                          subtitle: Text(lng==null?
+                                          'يمكنك اختيار موقع الحدث من هنا':"${lat},${lng}",
+                                          style: TextStyle(fontSize: 12),
+                                          ),
+                                          trailing: Container(
+                                            height: double.infinity,
+                                            decoration: BoxDecoration(
+                                              color: Colors.blueAccent,
+                                              borderRadius: BorderRadius.only(
+                                                  topLeft: Radius.circular(12),
+                                                  topRight: Radius.circular(12),
+                                                  bottomLeft: Radius.circular(12),
+                                                  bottomRight: Radius.circular(12)
+                                              ),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                  color: Colors.grey.withOpacity(0.3),
+                                                  spreadRadius: 4,
+                                                  blurRadius: 3,
+                                                  offset: Offset(0, 2),
+                                                ),
+                                              ],
+                                            ),
+                                            child: Container(
+
+                                              width: 50,
+                                              child: Row(
+                                                mainAxisAlignment: MainAxisAlignment.center,
+                                                crossAxisAlignment: CrossAxisAlignment.center,
+                                                children: [
+                                                  Icon(lng==null?Icons.location_on:Icons.edit_location_outlined)
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                          isThreeLine: true,
+                                          tileColor: Colors.white,
+                                        ),
+                                 // margin: EdgeInsets.only(left: 50, top: 80, right: 50, bottom: 80),
+
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                    color: Colors.white,
+                                    borderRadius: BorderRadius.only(
+                                        topLeft: Radius.circular(12),
+                                        topRight: Radius.circular(12),
+                                        bottomLeft: Radius.circular(12),
+                                        bottomRight: Radius.circular(12)
+                                    ),
+                                    boxShadow: [
+                                      BoxShadow(
+                                        color: Colors.blueGrey.withOpacity(0.2),
+                                        spreadRadius: 4,
+                                        blurRadius: 3,
+                                        offset: Offset(0, 2),
+                                      ),
+                                    ],
+                                  ),
+                                ),
+
+                               ),
                               SizedBox(
                                 height: 16,
                               ),
@@ -180,21 +225,4 @@ class _EventSectionOneState extends State<EventSectionOne> {
     );
   }
 }
-// Consumer<EventProvider>(
-// builder: (context, myInput, child){
-// return ;})
-
-// ListView(
-// scrollDirection: Axis.vertical,
-// shrinkWrap: true,
-// children: [
-// MyCustomImage(),
-// EventForm(),
-// SizedBox(
-// height: 10,
-// ),
-// ExtraMedia(),
-// CustomCategoryEvent(),
-// Divider(),
-// ],
-// )
+//

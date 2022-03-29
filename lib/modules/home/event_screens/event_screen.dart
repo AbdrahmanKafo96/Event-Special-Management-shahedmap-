@@ -21,34 +21,7 @@ class _EventFormState extends State<EventForm> {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
 
-            // Text(
-            //   "اسم الحدث",
-            //   style: Theme.of(context).textTheme.headline6,
-            // ),
-            // Container(
-            //   margin: EdgeInsets.all(10),
-            //   padding: EdgeInsets.all(10),
-            //   // decoration: BoxDecoration(
-            //   //   color: Colors.white,
-            //   //   border: Border.all(
-            //   //       color: Colors.blueGrey,// set border color
-            //   //       width: 2.0),   // set border width
-            //   //   borderRadius: BorderRadius.all(
-            //   //       Radius.circular(10.0)), // set rounded corner radius
-            //   // ),
-            //
-            //   child: TextFormField(
-            //     onChanged: (value) {
-            //       Provider.of<EventProvider>(context, listen: false)
-            //           .event
-            //           .setEventName = value;
-            //     },
-            //     decoration: InputDecoration(
-            //       hintText: 'ادخل اسم الحدث',
-            //       border: InputBorder.none,
-            //     ),
-            //   ),
-            // ),
+
             Text(
               "إضافة وصف (اختياري)",
               style: Theme.of(context).textTheme.headline6,

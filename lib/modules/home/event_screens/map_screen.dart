@@ -132,8 +132,12 @@ class _MyHomePageState extends State<MapPage> {
                   ),
                   onPressed: () {
                     showShortToast('تم تحديث موقع الحدث بنجاح', Colors.green);
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop();
+                    Map getResult={
+                      'lat':Provider.of<EventProvider>(context, listen: false).event.getLat,
+                      'lng':Provider.of<EventProvider>(context, listen: false).event.getLng
+                    };
+                    Navigator.of(context).pop(getResult);
+                    Navigator.of(context).pop(getResult);
 
                   },
                 ),
