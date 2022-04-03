@@ -13,53 +13,57 @@ class _EventFormState extends State<EventForm> {
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
-    return Form(
-      key: _formKey,
-      child: Padding(
-        padding: const EdgeInsets.all(12.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
+    return
+      GestureDetector(
+        onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+        child: Form(
+        key: _formKey,
+        child: Padding(
+          padding: const EdgeInsets.all(12.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
 
 
-            Text(
-              "إضافة وصف (اختياري)",
-              style: Theme.of(context).textTheme.headline6,
-            ),
-            Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(10),
-              // decoration: BoxDecoration(
-              //   color: Colors.white,
-              //   border: Border.all(
-              //       color: Colors.blueGrey,// set border color
-              //       width: 2.0),   // set border width
-              //   borderRadius: BorderRadius.all(
-              //       Radius.circular(10.0)), // set rounded corner radius
-              // ),
-              child: TextFormField(
-                onChanged: (value) {
-                  Provider.of<EventProvider>(context, listen: false)
-                      .event
-                      .setDescription = value;
-                },
+              Text(
+                "إضافة وصف الحدث",
+                style: Theme.of(context).textTheme.headline6,
+              ),
+              Container(
+                margin: EdgeInsets.all(10),
+                padding: EdgeInsets.all(10),
+                // decoration: BoxDecoration(
+                //   color: Colors.white,
+                //   border: Border.all(
+                //       color: Colors.blueGrey,// set border color
+                //       width: 2.0),   // set border width
+                //   borderRadius: BorderRadius.all(
+                //       Radius.circular(10.0)), // set rounded corner radius
+                // ),
+                child: TextFormField(
+                  onChanged: (value) {
+                    Provider.of<EventProvider>(context, listen: false)
+                        .event
+                        .setDescription = value;
+                  },
 
-                 keyboardType: TextInputType.multiline ,
-                maxLines: 4,
-                maxLength: 500,
-                decoration: InputDecoration(
+                   keyboardType: TextInputType.multiline ,
+                  maxLines: 4,
+                  maxLength: 500,
+                  decoration: InputDecoration(
 
-                  hintText: ' ادخل الوصف ',
-                  border: InputBorder.none,
+                    hintText: 'ادخل وصف الحدث هنا.',
+                    border: InputBorder.none,
+                  ),
                 ),
               ),
-            ),
-            VideoPicker(),
+              VideoPicker(),
 
-           // new style
-          ],
+             // new style
+            ],
+          ),
         ),
-      ),
-    );
+    ),
+      );
   }
 }

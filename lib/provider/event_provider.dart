@@ -9,6 +9,7 @@ import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/models/Category.dart';
 import 'package:systemevents/models/Event.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:mockito/mockito.dart';
 
 class EventProvider extends ChangeNotifier {
   Event event = Event();
@@ -68,9 +69,12 @@ class EventProvider extends ChangeNotifier {
         }
         if(res['message']=='لاتستطيع ارسال حدث لان حسابك محظور'){
           showShortToast('لاتستطيع ارسال حدث لان حسابك محظور', Colors.red);
+
           return false;
         }
+
         if (res['status'] == 'success') {
+          print(res['notification']);
           event.dropAll();
           //event=Event();
           return true;
@@ -131,7 +135,8 @@ class EventProvider extends ChangeNotifier {
         //  event.setListSelected = event.getXFile;
 
         //  for (int i = 0; i < event.getListSelected.length; i++) {
-            if(event.getXFile!=null){
+      print(event.getXFile.length);
+            if(event.getXFile.length!=0){
               if (event.getXFile[0] != null)
                 request.files.add(http.MultipartFile(
                     'image1',
@@ -162,14 +167,14 @@ class EventProvider extends ChangeNotifier {
 
             }
 
-      if (event.getVideoFile != null)
-      {
-        request.files.add(http.MultipartFile(
-          'video',
-          File(event.getVideoFile.path).readAsBytes().asStream(),
-          File(event.getVideoFile.path).lengthSync(),
-          filename: event.getVideoFile.path.split("/").last));
-      }
+      // if (event.getVideoFile != null)
+      // {
+      //   request.files.add(http.MultipartFile(
+      //     'video',
+      //     File(event.getVideoFile.path).readAsBytes().asStream(),
+      //     File(event.getVideoFile.path).lengthSync(),
+      //     filename: event.getVideoFile.path.split("/").last));
+      // }
 
 
 

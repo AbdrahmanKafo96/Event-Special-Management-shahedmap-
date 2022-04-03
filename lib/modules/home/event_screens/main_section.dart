@@ -22,6 +22,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
     super.dispose();
 
   }
+  Color myColor=Colors.white;
+  String errorMessage1,errorMessage2 ,errorMessage3,errorMessage4;
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -47,21 +49,58 @@ class _EventSectionOneState extends State<EventSectionOne> {
 
                IconButton(
                    onPressed: () {
-                     print(Provider.of<EventProvider>(context, listen: false)
-                         .event.eventType.type_name);
-                      if (Provider.of<EventProvider>(context, listen: false).event.getLat==null ) {
-                          showShortToast('يجب ان تختار الموقع', Colors.orange);
-                     }else if(Provider.of<EventProvider>
-                        (context, listen: false).event.categoryClass.category_id==null){
-                        showShortToast('يجب ان تختار الصنف', Colors.orange);
-                      }else if(Provider.of<EventProvider>(context, listen: false)
-                          .event.eventType.type_name==null){
-                        showShortToast('يجب ان تختار النوع', Colors.orange);
+
+                      if(!(errorMessage1=="" && errorMessage2=="" && errorMessage3 =="" && errorMessage4=="")){
+                        if (Provider.of<EventProvider>(context, listen: false).event.getLat==null ) {
+                          errorMessage1='يجب ان تختار موقع الحدث';
+                          setState(() {
+                            myColor=Colors.red;
+                          });
+                        }else{
+                          setState(() {
+                            errorMessage1="";
+                          });
+                        }  if(Provider.of<EventProvider>
+                          (context, listen: false).event.categoryClass.category_id==null||
+                            Provider.of<EventProvider>
+                              (context, listen: false).event.categoryClass.category_name=='اختار الصنف'){
+                          errorMessage2='يجب ان تختار الصنف';
+                          setState(() {
+                            myColor=Colors.red;
+                          });
+                        }else{
+                          setState(() {
+                            errorMessage2="";
+                          });
+                        }  if(Provider.of<EventProvider>(context, listen: false)
+                            .event.eventType.type_name==null || Provider.of<EventProvider>(context, listen: false)
+                            .event.eventType.type_name=='اختار النوع'){
+                          errorMessage3='يجب ان تختار النوع';
+                          setState(() {
+                            myColor=Colors.red;
+                          });
+
+                        }else{
+                          setState(() {
+                            errorMessage3="";
+                          });
+                        }
+                        if(Provider.of<EventProvider>(context, listen: false).event.getXFile==null||
+                            Provider.of<EventProvider>(context, listen: false).event.getXFile.isEmpty){
+                          errorMessage4='يجب ان ترفق صورة للحدث' ;
+                          setState(() {
+                            myColor=Colors.red;
+                          });
+                        }else{
+                          setState(() {
+                            errorMessage4="";
+                          });
+                        }
                       }
-                      else if(Provider.of<EventProvider>(context, listen: false).event.getXFile==null){
-                       showShortToast('يجب ان ترفق صورة الحدث', Colors.orange);
-                     }
                       else{
+                        setState(() {
+                          myColor=Colors.white;
+                        });
                        Navigator
                            .of(context).pushReplacement( MaterialPageRoute(builder:
                            (BuildContext context) => EventSectionTow() ));
@@ -84,6 +123,10 @@ class _EventSectionOneState extends State<EventSectionOne> {
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
+                      border: Border.all(
+                        color: myColor,
+                        width: 2,
+                      ),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
@@ -194,10 +237,13 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 ),
 
                                ),
+
+                              Text(errorMessage1!=null?errorMessage1:"" ,style: TextStyle(fontSize: 14 , color: Colors.red),),
                               SizedBox(
                                 height: 16,
                               ),
-                              Row(children: [
+                              Row(
+                                children: [
                                 Text(
                                   "اختيار الصنف والنوع",
                                   style: Theme.of(context).textTheme.headline6,
@@ -205,6 +251,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
                               ],),
                               EventCategory(),
 
+                              Text(errorMessage2!=null &&errorMessage3!=null?
+                              "${errorMessage2} ${errorMessage3}":"" ,
+                                style: TextStyle(fontSize: 14 , color: Colors.red),),
                               Row(children: [
                                 Text(
                                   "إضافة صور",
@@ -212,6 +261,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 ),
                               ],),
                               PickImages(),
+
+                              Text(errorMessage4==null?"":errorMessage4 ,style: TextStyle(fontSize: 14 , color: Colors.red),) ,
                             ],
                           ),
                         )

@@ -59,7 +59,7 @@ class UserAuthProvider extends ChangeNotifier{
             else{
               user.user_id=responseData['result']['original']['data']["user_id"];
               user.api_token=responseData['result']['original']['data']["api_token"];
-
+              print(responseData['token']);
               await storage.write(key: 'api_token',
                   value:  user.api_token  ,aOptions: Singleton.getAndroidOptions());
               await storage.write(key: 'token',

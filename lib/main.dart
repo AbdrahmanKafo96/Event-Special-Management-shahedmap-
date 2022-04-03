@@ -79,8 +79,10 @@ Future main() async {
       await Firebase.initializeApp();
       String token =null;
       final storage = await Singleton.getStorage()  ;
-      if(await storage.containsKey(key: 'api_token') != true)
+
+
         token= await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
+
       final pref= await Singleton.getPrefInstance();
       if(pref.getInt('version_number')==null)
         pref.setInt('version_number', 0);

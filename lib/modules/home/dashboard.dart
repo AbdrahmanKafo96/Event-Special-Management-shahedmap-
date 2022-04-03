@@ -4,9 +4,13 @@ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/customCard.dart';
 import 'package:systemevents/web_browser/webView.dart';
+import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/widgets/dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:telephony/telephony.dart';
+import 'package:another_flushbar/flushbar.dart';
+
+
 class Dashboard extends StatefulWidget {
 
   @override
@@ -17,6 +21,7 @@ class _DashboardState extends State<Dashboard> {
   bool state=false;
   final Telephony telephony = Telephony.instance;
   String _message = "";
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   @override
   void initState() {
 
@@ -91,23 +96,49 @@ class _DashboardState extends State<Dashboard> {
                         "https://www.google.com/maps/@$latitude,$longitude,15z"+"\n"+
                         "النوع=$category_name"+"\n"+
                         "التصنيف=$type_name";
-
+                      print(message);
                       if(latitude==null || longitude==null || category_name==null || type_name==null) {
-                              ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
+                      //         ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
+                      //           key: _scaffoldkey,
+                      //   content: Text(
+                      //     'يجب ان تدخل الصنف والنوع',
+                      //     textDirection: TextDirection.rtl,
+                      //   ),
+                      //   backgroundColor: Colors.orangeAccent,
+                      // ));
+                        await Flushbar(
+                        //  title: 'Hey Ninja',
+                          message:
                           'يجب ان تدخل الصنف والنوع',
-                          textDirection: TextDirection.rtl,
-                        ),
-                        backgroundColor: Colors.orangeAccent,
-                      ));
+                          backgroundColor: Colors.orange,
+                          duration: Duration(seconds: 3),
+                        ).show(context);
                      } else{
                       print(emergency_phone.toString());
-                    telephony.sendSms(
-                        to: "+218${emergency_phone.toString()}",
-                        message:  message,
-                        statusListener: listener,
-                      isMultipart: true
-                    );}
+                    // telephony.sendSms(
+                    //     to: "+218${emergency_phone.toString()}",
+                    //     message:  message,
+                    //     statusListener: listener,
+                    //   isMultipart: true
+                    // );
+                      showShortToast('تحقق من تطبيق الرسائل', Colors.green);
+                    Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .eventType
+                          .type_name =null;
+
+                       Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .categoryClass
+                          .category_name =null;
+                     Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .categoryClass
+                          .emergency_phone =null;
+                      double longitude=  null;
+                      double latitude= null ;
+                      Navigator.pop(context);
+                      }
                 } ,num: 1);
         }else{
           viewPage(ctx ,routName);
@@ -125,6 +156,7 @@ class _DashboardState extends State<Dashboard> {
   onSendStatus(SendStatus status) {
     setState(() {
       _message = status == SendStatus.SENT ? "sent" : "delivered";
+
     });
   }
   Future<void> initPlatformState() async {

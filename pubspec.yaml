@@ -61,10 +61,14 @@ dependencies:
   telephony: ^0.1.4
   responsive_framework: ^0.1.7
   flutter_launcher_icons: ^0.9.2
+  another_flushbar: ^1.10.28
+  mockito: ^5.1.0
+  build_runner: ^2.1.8
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  test: ^1.17.12
 
 flutter_icons:
   android: "launcher_icon"

@@ -276,7 +276,7 @@ class _EventCategoryState extends State<EventCategory> {
                   items: gategoryList.map((CategoryClass data){
                     return DropdownMenuItem<String>(
                       value: data.category_id.toString(),
-                      child: Text(data.category_name ,style:  TextStyle(fontSize: 8), ),
+                      child: Text(data.category_name ,style:  TextStyle(fontSize: 12), ),
                     );
                   }).toList(),
                 ) ,
@@ -324,7 +324,7 @@ class _EventCategoryState extends State<EventCategory> {
                   subTypesList.map((EventType data){
                     return DropdownMenuItem<String>(
                       value: data.type_id.toString(),
-                      child: Text(data.type_name ,style: TextStyle(fontSize: 8) ),
+                      child: Text(data.type_name ,style: TextStyle(fontSize: 12) ),
                     );
                   }).toList(),
                 ) ,
