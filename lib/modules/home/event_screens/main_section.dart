@@ -49,7 +49,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
 
                IconButton(
                    onPressed: () {
-
+                              // تحتاج تعديل
                       if(!(errorMessage1=="" && errorMessage2=="" && errorMessage3 =="" && errorMessage4=="")){
                         if (Provider.of<EventProvider>(context, listen: false).event.getLat==null ) {
                           errorMessage1='يجب ان تختار موقع الحدث';

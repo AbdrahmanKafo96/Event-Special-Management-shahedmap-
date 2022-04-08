@@ -59,7 +59,7 @@ class UserAuthProvider extends ChangeNotifier{
             else{
               user.user_id=responseData['result']['original']['data']["user_id"];
               user.api_token=responseData['result']['original']['data']["api_token"];
-              print(responseData['token']);
+
               await storage.write(key: 'api_token',
                   value:  user.api_token  ,aOptions: Singleton.getAndroidOptions());
               await storage.write(key: 'token',
@@ -74,9 +74,14 @@ class UserAuthProvider extends ChangeNotifier{
             }
           }
           //مرحبا بك
-          print(userData);
+
           if(responseData['status']=="failed"){
-            showShortToast('تأكد من الحقول مدخلة بشكل صحيح', Colors.red);
+            //print(responseData['error'].toString());
+            if(responseData['error'].toString()=="{email: [قيمة حقل email مُستخدمة من قبل.]}")
+            showShortToast( 'عفوا البريد الالكتروني مستخدم من قبل', Colors.red);
+            else{
+              showShortToast( 'عفوا تأكد من المدخلات', Colors.red);
+            }
             return false;
           }else{
             user.user_id=responseData ['result']['original']['data']["user_id"];

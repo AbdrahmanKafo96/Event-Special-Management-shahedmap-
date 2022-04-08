@@ -14,6 +14,81 @@ import 'package:mockito/mockito.dart';
 class EventProvider extends ChangeNotifier {
   Event event = Event();
 
+  // testAddEvent(Map userData) async {
+  //   try {
+  //    // final storage = await Singleton.getStorage()  ;
+  //  //   String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+  //
+  //     var _count = 1;
+  //     var request = http.MultipartRequest(
+  //         "POST", Uri.parse("${Singleton.apiPath}/save_event"));
+  //     request.headers.addAll({"Authorization": "Bearer ${userData['Authorization']}"});
+  //     if (userData['description'] != null)
+  //       request.fields['description'] = userData['description'];
+  //
+  //     //request.fields['event_name'] = userData['event_name'];
+  //     request.fields['sender_id'] = userData['sender_id'].toString();
+  //     request.fields['senddate'] = userData['senddate'];
+  //     request.fields['eventtype'] = userData['eventtype'];
+  //     request.fields['lat'] = userData['lat'];
+  //     request.fields['lng'] = userData['lng'];
+  //     // code below for camera image ...
+  //
+  //    // if (event.getXFile != null) {
+  //       //if (event.getXFile.length >= 1 && event.getXFile.length <= 4) {
+  //        // event.setListSelected = event.getXFile;
+  //
+  //        // for (int i = 0; i < event.getListSelected.length; i++) {
+  //        //                  request.files.add(http.MultipartFile(
+  //        //                      'image1',
+  //        //                      File(event.getListSelected[i].path).readAsBytes().asStream(),
+  //        //                      File(event.getListSelected[i].path).lengthSync(),
+  //        //                      filename: event.getListSelected[i].path.split("/").last));
+  //        // }
+  //      // }
+  //   //  }
+  //
+  //     var response = await request.send();
+  //
+  //     if (response.statusCode == 200) {
+  //
+  //       final respStr = await response.stream.bytesToString();
+  //       var res = jsonDecode(respStr);
+  //
+  //
+  //       if(res['error'].toString()== '{event_name: [حقل event name مطلوب.]}')
+  //       {
+  //         print('مطلوب حقل اسم الحدث');
+  //         return true;
+  //       }
+  //       if(res['message']=='لاتستطيع ارسال حدث لان حسابك محظور'){
+  //
+  //         print('لاتستطيع ارسال حدث لان حسابك محظور');
+  //         return false;
+  //       }
+  //
+  //       if (res['status'] == 'success') {
+  //
+  //         event.dropAll();
+  //         //event=Event();
+  //         return true;
+  //       } else {
+  //         return false;
+  //       }
+  //     } else {
+  //
+  //      if(response.statusCode==302)
+  //        {
+  //          print('Unauthenticated');
+  //          return true;
+  //        }
+  //
+  //     }
+  //   } catch (e) {
+  //     print("last one ");
+  //   }
+  // }
+
   addEvent(Map userData) async {
     try {
       final storage = await Singleton.getStorage()  ;
@@ -24,8 +99,7 @@ class EventProvider extends ChangeNotifier {
           "POST", Uri.parse("${Singleton.apiPath}/save_event"));
       request.headers.addAll({"Authorization": "Bearer $value"});
       if (userData['description'] != null)
-        request.fields['description'] = userData['description'];
-
+      request.fields['description'] = userData['description'];
       request.fields['event_name'] = userData['event_name'];
       request.fields['sender_id'] = userData['sender_id'].toString();
       request.fields['senddate'] = userData['senddate'];
@@ -61,7 +135,7 @@ class EventProvider extends ChangeNotifier {
 
         final respStr = await response.stream.bytesToString();
         var res = jsonDecode(respStr);
-        print(res['error']);
+
         if(res['error'].toString()!= 'null')
         {
           showShortToast(res['error'].toString(), Colors.red);
@@ -74,7 +148,7 @@ class EventProvider extends ChangeNotifier {
         }
 
         if (res['status'] == 'success') {
-          print(res['notification']);
+
           event.dropAll();
           //event=Event();
           return true;
@@ -128,14 +202,14 @@ class EventProvider extends ChangeNotifier {
       request.fields['event_name'] = userData['event_name'];
 
       // for (int i = 0; i < event.getXFile.length; i++) {
-      //   print("${event.getXFile[i]}  ${i}");
+
       // }
     //  if (event.getXFile != null) {
       //  if (event.getXFile.length >= 1 && event.getXFile.length <= 4) {
         //  event.setListSelected = event.getXFile;
 
         //  for (int i = 0; i < event.getListSelected.length; i++) {
-      print(event.getXFile.length);
+
             if(event.getXFile.length!=0){
               if (event.getXFile[0] != null)
                 request.files.add(http.MultipartFile(
@@ -283,7 +357,7 @@ class EventProvider extends ChangeNotifier {
   removeImage(int addede_id , int index)async{
     try {
       index+=1;
-      print(index);
+
       Map data = {
         'addede_id': addede_id.toString(),
         'index': index.toString(),
@@ -301,7 +375,7 @@ class EventProvider extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        print("okaaaaaaaaaa");
+
         final parsed = response.body;
 
         return parsed;
@@ -328,7 +402,7 @@ class EventProvider extends ChangeNotifier {
           );
 
       if (response.statusCode == 200) {
-        print("okaaaaaaaaaa");
+
         final parsed = response.body;
 
         return parsed;
@@ -354,7 +428,7 @@ class EventProvider extends ChangeNotifier {
           });
 
       if (response.statusCode == 200) {
-        print("okaaaaaaaaaa");
+
         final parsed = json
             .decode(response.body)['collection']
             .cast<Map<String, dynamic>>();
@@ -497,7 +571,7 @@ class EventProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final parsed = json.decode(response.body);
-        //print(parsed);
+
         return parsed;
         // else
         //   return false;

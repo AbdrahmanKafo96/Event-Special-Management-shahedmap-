@@ -20,6 +20,7 @@ import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/theme/TheamProvider.dart';
 import 'package:systemevents/theme/theam.dart';
 import 'package:systemevents/web_browser/webView.dart';
+import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/login/login_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -110,8 +111,6 @@ Future main() async {
     }catch (e) {
       print(e);
     }
-
-
 }
 class MyApp extends StatefulWidget {
   String token;
@@ -154,6 +153,7 @@ class _MyAppState extends State<MyApp> {
         'eventList': (context) => EventsMenu(),
         'CustomWebView': (context) => CustomWebView(),
         'response': (context) => ResponsePage(),
+        'successPage': (context) => SuccessPage(),
       },
     );
   }

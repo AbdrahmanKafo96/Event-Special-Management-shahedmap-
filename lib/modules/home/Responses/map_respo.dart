@@ -99,9 +99,10 @@ class _MappolyState extends State<Mappoly> {
   }
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
-    PolylineId id = PolylineId("poly");
+    PolylineId id = PolylineId("poly" ,);
     Polyline polyline = Polyline(
       polylineId: id,
+      color: Colors.blue,
       points: polylineCoordinates,
       width: 8,
     );

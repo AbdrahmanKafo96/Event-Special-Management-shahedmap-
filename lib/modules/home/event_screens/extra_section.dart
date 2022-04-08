@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:systemevents/modules/home/event_screens/SuccessPage.dart';
 import 'package:systemevents/modules/home/event_screens/event_screen.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
@@ -100,10 +101,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                     checkInternetConnectivity(context)
                         .then((bool value) async {
                       if (value) {
-                        print("is it :${Provider.of<EventProvider>(context,
-                            listen: false)
-                            .event
-                            .getDescription }" );
+
                         if(Provider.of<EventProvider>(context,
                             listen: false)
                             .event
@@ -147,20 +145,20 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 .toString(),
                           };
 
-                          bool result = await Provider.of<EventProvider>(
-                              context,
-                              listen: false)
-                              .addEvent(userData);
-                          print(result);
+                          bool result = await Provider.of<EventProvider>
+                            (context, listen: false).addEvent(userData);
+
                           if (result) {
-                            showShortToast(
-                                'تمت  عمليةالحفظ بنجاح', Colors.green);
-                            Navigator.pushAndRemoveUntil(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => HomePage()),
-                                  (Route<dynamic> route) => false,
-                            );
+
+
+                              Navigator.pushAndRemoveUntil(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => SuccessPage()),
+                                    (Route<dynamic> route) => false,
+                              );
+
+
                           } else {
 
                           }
