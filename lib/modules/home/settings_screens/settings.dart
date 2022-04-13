@@ -1,12 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:systemevents/widgets/customCard.dart';
-
+import 'package:systemevents/singleton/singleton.dart';
 class Settings extends StatefulWidget {
   @override
   _SettingsState createState() => _SettingsState();
 }
 
 class _SettingsState extends State<Settings> {
+  bool state=false;
+  @override
+  void initState() {
+    super.initState();
+    Singleton.getPrefInstance().then((value){
+      if(value.getInt('role_id')==4){
+        setState(() {
+          state=true;
+        });
+      }
+    });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -17,8 +29,8 @@ class _SettingsState extends State<Settings> {
           crossAxisCount: 2,
           padding: EdgeInsets.all(3.0),
           children: <Widget>[
-             dashboardItem(context,"الصفحة الشخصية", Icons.account_circle,'ProfilePage' ),
-             dashboardItem(context,"تعيين كلمة المرور", Icons.lock_clock,'ResetPage'),
+            if(state==false)dashboardItem(context,"الصفحة الشخصية", Icons.account_circle,'ProfilePage' ),
+            if(state==false)dashboardItem(context,"تعيين كلمة المرور", Icons.lock_clock,'ResetPage'),
              dashboardItem(context,"تغيير خلفية التطبيق", Icons.nights_stay,'ThemeApp'),
              dashboardItem(context,"حول التطبيق", Icons.info,'About'),
           ],

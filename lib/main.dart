@@ -50,15 +50,15 @@ callbackDispatcher() {
           };
           final response = await http
               .post(Uri.parse('${Singleton.apiPath}/updateUnit' ),  body:jsonEncode(data),headers: {
-              'Accept':'application/json',
-              'Authorization' : 'Bearer $value',
-              'content-type': 'application/json',}
-              );
+            'Accept':'application/json',
+            'Authorization' : 'Bearer $value',
+            'content-type': 'application/json',}
+          );
 
           if (response.statusCode == 200) {
             var parsed = json.decode(response.body);
             notif.Notification notification = new notif.Notification();
-            notification.showNotificationWithoutSound(userLocation);
+            notification.showNotificationWithoutSound("تم إرسال موقع الوحدة");
             // if(parsed['message']=='success'){
             //    // return true;
             // } else {
@@ -75,25 +75,25 @@ callbackDispatcher() {
 }
 
 Future main() async {
-    try{
-      WidgetsFlutterBinding.ensureInitialized();
-      await Firebase.initializeApp();
-      String token =null;
-      final storage = await Singleton.getStorage()  ;
+  try{
+    WidgetsFlutterBinding.ensureInitialized();
+    await Firebase.initializeApp();
+    String token =null;
+    final storage = await Singleton.getStorage()  ;
 
 
-        token= await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
+    token= await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
 
-      final pref= await Singleton.getPrefInstance();
-      if(pref.getInt('version_number')==null)
-        pref.setInt('version_number', 0);
+    final pref= await Singleton.getPrefInstance();
+    if(pref.getInt('version_number')==null)
+      pref.setInt('version_number', 0);
 
 
-      if (defaultTargetPlatform == TargetPlatform.android) {
-        AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
-      }
-      runApp(
-        MultiProvider(
+    if (defaultTargetPlatform == TargetPlatform.android) {
+      AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+    }
+    runApp(
+      MultiProvider(
           providers: [
             ChangeNotifierProvider<EventProvider>(
               create: (context) => EventProvider(),
@@ -106,11 +106,11 @@ Future main() async {
             ),
           ],
           child:MyApp(token)
-        ),
-      );
-    }catch (e) {
-      print(e);
-    }
+      ),
+    );
+  }catch (e) {
+    print(e);
+  }
 }
 class MyApp extends StatefulWidget {
   String token;

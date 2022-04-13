@@ -7,6 +7,7 @@ import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'event_category.dart';
 import 'dart:ui' as ui;
+import 'package:location/location.dart';
 
 class EventSectionOne extends StatefulWidget {
   @override
@@ -14,16 +15,17 @@ class EventSectionOne extends StatefulWidget {
 }
 
 class _EventSectionOneState extends State<EventSectionOne> {
+  double lat, lng;
 
-  double lat , lng;
   @override
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-
   }
-  Color myColor=Colors.white;
-  String errorMessage1,errorMessage2 ,errorMessage3,errorMessage4;
+
+  Color myColor = Colors.white;
+  String errorMessage1, errorMessage2, errorMessage3, errorMessage4;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -40,93 +42,118 @@ class _EventSectionOneState extends State<EventSectionOne> {
                 tooltip: 'إلغاء الحدث',
                 icon: Icon(Icons.arrow_back),
                 onPressed: () {
-                  Provider.of<EventProvider>(context, listen: false).event.dropAll();
+                  Provider.of<EventProvider>(context, listen: false)
+                      .event
+                      .dropAll();
                   Navigator.pop(context);
                 },
               ),
               centerTitle: true,
               actions: [
-
-               IconButton(
-                   onPressed: () {
-                              // تحتاج تعديل
-                      if(!(errorMessage1=="" && errorMessage2=="" && errorMessage3 =="" && errorMessage4=="")){
-                        if (Provider.of<EventProvider>(context, listen: false).event.getLat==null ) {
-                          errorMessage1='يجب ان تختار موقع الحدث';
+                IconButton(
+                    onPressed: () {
+                      // تحتاج تعديل
+                      if (!(errorMessage1 == "" &&
+                          errorMessage2 == "" &&
+                          errorMessage3 == "" &&
+                          errorMessage4 == "")) {
+                        if (Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .getLat ==
+                            null) {
+                          errorMessage1 = 'يجب ان تختار موقع الحدث';
                           setState(() {
-                            myColor=Colors.red;
+                            myColor = Colors.red;
                           });
-                        }else{
+                        } else {
                           setState(() {
-                            errorMessage1="";
-                          });
-                        }  if(Provider.of<EventProvider>
-                          (context, listen: false).event.categoryClass.category_id==null||
-                            Provider.of<EventProvider>
-                              (context, listen: false).event.categoryClass.category_name=='اختار الصنف'){
-                          errorMessage2='يجب ان تختار الصنف';
-                          setState(() {
-                            myColor=Colors.red;
-                          });
-                        }else{
-                          setState(() {
-                            errorMessage2="";
-                          });
-                        }  if(Provider.of<EventProvider>(context, listen: false)
-                            .event.eventType.type_name==null || Provider.of<EventProvider>(context, listen: false)
-                            .event.eventType.type_name=='اختار النوع'){
-                          errorMessage3='يجب ان تختار النوع';
-                          setState(() {
-                            myColor=Colors.red;
-                          });
-
-                        }else{
-                          setState(() {
-                            errorMessage3="";
+                            errorMessage1 = "";
                           });
                         }
-                        if(Provider.of<EventProvider>(context, listen: false).event.getXFile==null||
-                            Provider.of<EventProvider>(context, listen: false).event.getXFile.isEmpty){
-                          errorMessage4='يجب ان ترفق صورة للحدث' ;
+                        if (Provider.of<EventProvider>(context, listen: false)
+                                    .event
+                                    .categoryClass
+                                    .category_id ==
+                                null ||
+                            Provider.of<EventProvider>(context, listen: false)
+                                    .event
+                                    .categoryClass
+                                    .category_name ==
+                                'اختار الصنف') {
+                          errorMessage2 = 'يجب ان تختار الصنف';
                           setState(() {
-                            myColor=Colors.red;
+                            myColor = Colors.red;
                           });
-                        }else{
+                        } else {
                           setState(() {
-                            errorMessage4="";
+                            errorMessage2 = "";
                           });
                         }
-                      }
-                      else{
+                        if (Provider.of<EventProvider>(context, listen: false)
+                                    .event
+                                    .eventType
+                                    .type_name ==
+                                null ||
+                            Provider.of<EventProvider>(context, listen: false)
+                                    .event
+                                    .eventType
+                                    .type_name ==
+                                'اختار النوع') {
+                          errorMessage3 = 'يجب ان تختار النوع';
+                          setState(() {
+                            myColor = Colors.red;
+                          });
+                        } else {
+                          setState(() {
+                            errorMessage3 = "";
+                          });
+                        }
+                        if (Provider.of<EventProvider>(context, listen: false)
+                                    .event
+                                    .getXFile ==
+                                null ||
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .getXFile
+                                .isEmpty) {
+                          errorMessage4 = 'يجب ان ترفق صورة للحدث';
+                          setState(() {
+                            myColor = Colors.red;
+                          });
+                        } else {
+                          setState(() {
+                            errorMessage4 = "";
+                          });
+                        }
+                      } else {
                         setState(() {
-                          myColor=Colors.white;
+                          myColor = Colors.white;
                         });
-                       Navigator
-                           .of(context).pushReplacement( MaterialPageRoute(builder:
-                           (BuildContext context) => EventSectionTow() ));
-                     }
-                   },
-                   tooltip: 'التالي',
-                   icon: Icon(
-                     Icons.check,
-                   ))
+                        Navigator.of(context).pushReplacement(MaterialPageRoute(
+                            builder: (BuildContext context) =>
+                                EventSectionTow()));
+                      }
+                    },
+                    tooltip: 'التالي',
+                    icon: Icon(
+                      Icons.check,
+                    ))
               ],
             ),
             body: Container(
-                margin: EdgeInsets.only(left: 25, top: 25, right: 25, bottom: 25),
+                margin:
+                    EdgeInsets.only(left: 25, top: 25, right: 25, bottom: 25),
                 // padding:
                 width: double.infinity,
-
                 child: Container(
-
                   width: MediaQuery.of(context).size.width,
                   padding: EdgeInsets.all(10),
                   decoration: BoxDecoration(
                     color: Colors.white,
-                      border: Border.all(
-                        color: myColor,
-                        width: 2,
-                      ),
+                    border: Border.all(
+                      color: myColor,
+                      width: 2,
+                    ),
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(10),
                         topRight: Radius.circular(10),
@@ -151,7 +178,13 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             children: [
                               Row(
                                 children: [
-                                  Text(lng==null?'حدد موقع الحدث':"عدل موقع الحدث", style: Theme.of(context).textTheme.headline6,),
+                                  Text(
+                                    lng == null
+                                        ? 'حدد موقع الحدث'
+                                        : "عدل موقع الحدث",
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
                                 ],
                               ),
                               SizedBox(
@@ -160,61 +193,96 @@ class _EventSectionOneState extends State<EventSectionOne> {
                               InkWell(
                                 hoverColor: Colors.blueGrey,
                                 onTap: () async {
-                               Map fetchResult=  await Navigator.push(
-                                    context,
-                                    MaterialPageRoute(builder: (context) => MapPage()),
-                                  );
-                               setState(() {
-                                 print(fetchResult['lat']);
-                                 lat=fetchResult['lat'];
-                                 lng=fetchResult['lng'];
-                               });
+                                  Location location = Location();
+                                  bool _serviceEnabled;
+                                  PermissionStatus _permissionGranted;
+                                  LocationData _userLocation;
+
+                                  _serviceEnabled =
+                                      await location.serviceEnabled();
+                                  if (!_serviceEnabled) {
+                                    _serviceEnabled =
+                                        await location.requestService();
+                                    if (!_serviceEnabled) {
+                                      showShortToast(
+                                          'يجب تفعيل GPS', Colors.orange);
+                                    }
+                                  }
+
+                                  _permissionGranted =
+                                      await location.hasPermission();
+                                  if (_permissionGranted ==
+                                      PermissionStatus.denied) {
+                                    _permissionGranted =
+                                        await location.requestPermission();}
+                                    if (_permissionGranted ==
+                                        PermissionStatus.granted) {
+                                      Map fetchResult = await Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => MapPage()),
+                                      );
+                                      setState(() {
+                                        print(fetchResult['lat']);
+                                        lat = fetchResult['lat'];
+                                        lng = fetchResult['lng'];
+                                      });
+                                    }
+
                                 },
-                                child:Container(
-
+                                child: Container(
                                   child: ListTile(
-                                          title: Text(lng==null?
-                                          "موقع الحدث":"موقع الحدث الحالي" ,  style: TextStyle(fontWeight: FontWeight.bold , fontSize: 14),),
-
-                                          subtitle: Text(lng==null?
-                                          'يمكنك اختيار موقع الحدث من هنا':"${lat},${lng}",
-                                          style: TextStyle(fontSize: 12),
+                                    title: Text(
+                                      lng == null
+                                          ? "موقع الحدث"
+                                          : "موقع الحدث الحالي",
+                                      style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 14),
+                                    ),
+                                    subtitle: Text(
+                                      lng == null
+                                          ? 'يمكنك اختيار موقع الحدث من هنا'
+                                          : "${lat},${lng}",
+                                      style: TextStyle(fontSize: 12),
+                                    ),
+                                    trailing: Container(
+                                      height: double.infinity,
+                                      decoration: BoxDecoration(
+                                        color: Colors.blueAccent,
+                                        borderRadius: BorderRadius.only(
+                                            topLeft: Radius.circular(12),
+                                            topRight: Radius.circular(12),
+                                            bottomLeft: Radius.circular(12),
+                                            bottomRight: Radius.circular(12)),
+                                        boxShadow: [
+                                          BoxShadow(
+                                            color: Colors.grey.withOpacity(0.3),
+                                            spreadRadius: 4,
+                                            blurRadius: 3,
+                                            offset: Offset(0, 2),
                                           ),
-                                          trailing: Container(
-                                            height: double.infinity,
-                                            decoration: BoxDecoration(
-                                              color: Colors.blueAccent,
-                                              borderRadius: BorderRadius.only(
-                                                  topLeft: Radius.circular(12),
-                                                  topRight: Radius.circular(12),
-                                                  bottomLeft: Radius.circular(12),
-                                                  bottomRight: Radius.circular(12)
-                                              ),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                  color: Colors.grey.withOpacity(0.3),
-                                                  spreadRadius: 4,
-                                                  blurRadius: 3,
-                                                  offset: Offset(0, 2),
-                                                ),
-                                              ],
-                                            ),
-                                            child: Container(
-
-                                              width: 50,
-                                              child: Row(
-                                                mainAxisAlignment: MainAxisAlignment.center,
-                                                crossAxisAlignment: CrossAxisAlignment.center,
-                                                children: [
-                                                  Icon(lng==null?Icons.location_on:Icons.edit_location_outlined)
-                                                ],
-                                              ),
-                                            ),
-                                          ),
-                                          isThreeLine: true,
-                                          tileColor: Colors.white,
+                                        ],
+                                      ),
+                                      child: Container(
+                                        width: 50,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.center,
+                                          children: [
+                                            Icon(lng == null
+                                                ? Icons.location_on
+                                                : Icons.edit_location_outlined)
+                                          ],
                                         ),
-                                 // margin: EdgeInsets.only(left: 50, top: 80, right: 50, bottom: 80),
+                                      ),
+                                    ),
+                                    isThreeLine: true,
+                                    tileColor: Colors.white,
+                                  ),
+                                  // margin: EdgeInsets.only(left: 50, top: 80, right: 50, bottom: 80),
 
                                   width: double.maxFinite,
                                   decoration: BoxDecoration(
@@ -223,8 +291,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                         topLeft: Radius.circular(12),
                                         topRight: Radius.circular(12),
                                         bottomLeft: Radius.circular(12),
-                                        bottomRight: Radius.circular(12)
-                                    ),
+                                        bottomRight: Radius.circular(12)),
                                     boxShadow: [
                                       BoxShadow(
                                         color: Colors.blueGrey.withOpacity(0.2),
@@ -235,43 +302,56 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                     ],
                                   ),
                                 ),
-
-                               ),
-
-                              Text(errorMessage1!=null?errorMessage1:"" ,style: TextStyle(fontSize: 14 , color: Colors.red),),
+                              ),
+                              Text(
+                                errorMessage1 != null ? errorMessage1 : "",
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.red),
+                              ),
                               SizedBox(
                                 height: 16,
                               ),
                               Row(
                                 children: [
-                                Text(
-                                  "اختيار الصنف والنوع",
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ],),
+                                  Text(
+                                    "اختيار الصنف والنوع",
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
+                                ],
+                              ),
                               EventCategory(),
-
-                              Text(errorMessage2!=null &&errorMessage3!=null?
-                              "${errorMessage2} ${errorMessage3}":"" ,
-                                style: TextStyle(fontSize: 14 , color: Colors.red),),
-                              Row(children: [
-                                Text(
-                                  "إضافة صور",
-                                  style: Theme.of(context).textTheme.headline6,
-                                ),
-                              ],),
+                              Text(
+                                errorMessage2 != null && errorMessage3 != null
+                                    ? "${errorMessage2} ${errorMessage3}"
+                                    : "",
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.red),
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    "إضافة صور",
+                                    style:
+                                        Theme.of(context).textTheme.headline6,
+                                  ),
+                                ],
+                              ),
                               PickImages(),
-
-                              Text(errorMessage4==null?"":errorMessage4 ,style: TextStyle(fontSize: 14 , color: Colors.red),) ,
+                              Text(
+                                errorMessage4 == null ? "" : errorMessage4,
+                                style:
+                                    TextStyle(fontSize: 14, color: Colors.red),
+                              ),
                             ],
                           ),
                         )
                       ]),
                 )
 
-              // Divider(),
+                // Divider(),
 
-            )),
+                )),
       ),
     );
   }

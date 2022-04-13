@@ -44,7 +44,7 @@ class _CustomWebViewState extends State<CustomWebView> {
       ),
       body: WebView(
 
-        initialUrl: "https://flutter.dev",
+        initialUrl: "https://www.ets.ly/",
         javascriptMode: JavascriptMode.unrestricted,
         onWebViewCreated: (WebViewController webViewController) {
           _controller.complete(webViewController);
@@ -83,9 +83,9 @@ JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
       name: 'Toaster',
       onMessageReceived: (JavascriptMessage message) {
         // ignore: deprecated_member_use
-        Scaffold.of(context).showSnackBar(
-          SnackBar(content: Text(message.message)),
-        );
+        // Scaffold.of(context).showSnackBar(
+        //   SnackBar(content: Text(message.message)),
+        // );
       });
 }
 
@@ -99,7 +99,7 @@ Widget favoriteButton() {
             onPressed: () async {
               final String url = (await controller.data .currentUrl()) ;
               // ignore: deprecated_member_use
-              Scaffold.of(context).showSnackBar(
+              ScaffoldMessenger.of(context).showSnackBar(
                 SnackBar(content: Text('Favorited $url')),
               );
             },

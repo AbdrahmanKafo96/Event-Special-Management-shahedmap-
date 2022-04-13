@@ -13,7 +13,7 @@ class Notification {
   }
   FlutterLocalNotificationsPlugin  flutterLocalNotificationsPlugin;
 
-  Future showNotificationWithoutSound(Position position) async {
+  Future showNotificationWithoutSound(String position  ) async {
     var androidPlatformChannelSpecifics =   AndroidNotificationDetails(
         '1', 'location-bg', channelDescription: 'fetch location in background',
         playSound: false, importance: Importance.max, priority: Priority.high);

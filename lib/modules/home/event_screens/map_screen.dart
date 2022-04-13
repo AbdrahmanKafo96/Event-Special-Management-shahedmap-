@@ -177,7 +177,7 @@ class _MyHomePageState extends State<MapPage> {
       ),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.teal,
+          //backgroundColor: Colors.teal,
           title: Text(
             "حدد موقع الحدث",
             style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),

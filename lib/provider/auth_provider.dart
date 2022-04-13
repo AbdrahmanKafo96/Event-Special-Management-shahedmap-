@@ -67,7 +67,7 @@ class UserAuthProvider extends ChangeNotifier{
 
               prefs.setInt('user_id', user.user_id);
               prefs.setString('email', responseData['result']['original']['data']["email"]);
-              prefs.setInt('role_id', responseData['result']['original']['data']["role_id"]);
+              prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
 
 
               return true ;

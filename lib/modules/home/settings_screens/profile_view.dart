@@ -101,7 +101,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     if (form.validate()) {
                       state==true?updateForm(context): saveData(context);
                     } else {
-                      _scaffoldKey.currentState.showSnackBar(SnackBar(
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
                           'من فضلك املاء حقول المستخدم',
                           //textDirection: TextDirection.rtl,
@@ -357,21 +357,21 @@ class _ProfilePageState extends State<ProfilePage> {
           'country': Provider.of<UserAuthProvider>(context,listen: false).user.getCountry.toString(),
           'date_of_birth': Provider.of<UserAuthProvider>(context,listen: false).user.getDate_of_birth.toString(),
         };
-        print(data);
+
         bool res =await Provider.of<UserAuthProvider>(context,listen: false).saveProfileData(data);
         if(res==true)
-        _scaffoldKey.currentState.showSnackBar(SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text('تمت عملية الحفظ بنجاح', textDirection: TextDirection.rtl,),backgroundColor: Colors.green,
         ));
         else{
-          _scaffoldKey.currentState.showSnackBar( SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
             content: Text('حدثت مشكلة', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
           ));
         }
 
       }// end if stm
     }catch(ex){
-      _scaffoldKey.currentState.showSnackBar( SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
         content: Text('حدثت مشكلة', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
       ));
     }
@@ -412,18 +412,19 @@ class _ProfilePageState extends State<ProfilePage> {
          bool res = await Provider.of<UserAuthProvider>(context,listen: false)
              .updateProfileData(data);
         if(res==true)
-          _scaffoldKey.currentState.showSnackBar(SnackBar(
+
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text('تمت عملية التحديث بنجاح', textDirection: TextDirection.rtl,),backgroundColor: Colors.green,
           ));
         else{
-          _scaffoldKey.currentState.showSnackBar( SnackBar(
+          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
             content: Text('حدثت مشكلة1', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
           ));
         }
 
       }// end if stm
     }catch(ex){
-      _scaffoldKey.currentState.showSnackBar( SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
         content: Text('حدثت مشكلة2', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
       ));
     }

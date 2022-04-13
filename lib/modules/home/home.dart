@@ -1,7 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/main.dart';
 import 'package:systemevents/models/Event.dart';
 import 'package:systemevents/modules/home/dashboard.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
@@ -10,9 +9,9 @@ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'settings_screens/settings.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:workmanager/workmanager.dart';
+
 import 'package:systemevents/notification/notification.dart' as notif;
+
 
 class HomePage extends StatefulWidget {
 
@@ -21,23 +20,22 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Position  position;
+ // Position  position;
 
   void _getUserPosition() async {
 
-    Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation,
-        forceAndroidLocationManager: false)
-        .then((position) {
-      print(position);
-    });
-
-    Position userLocation = await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-    setState(() {
-      position = userLocation;
-      print(userLocation.longitude);
-      print(userLocation.latitude);
-    });
+    // Geolocator.getCurrentPosition(
+    //     desiredAccuracy: LocationAccuracy.bestForNavigation,
+    //     forceAndroidLocationManager: false)
+    //     .then((position) {
+    //   print(position);
+    // });
+    //
+    // Position userLocation = await  Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
+    // setState(() {
+    //   position = userLocation;
+    //
+    // });
   }
   var myMenuItems = <String>[
     'تسجيل الخروج',
@@ -55,19 +53,19 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
    // this._getUserPosition();
-    Singleton.getPrefInstance().then((value){
-      if(value.getInt('role_id')==4){
-          Workmanager().initialize(
-            callbackDispatcher,
-            isInDebugMode: false,
-          );
-          Workmanager().registerPeriodicTask(
-            "1",
-            "fetchBackground",
-            frequency: Duration(minutes: 15),
-          );
-      }
-    });
+   //  Singleton.getPrefInstance().then((value){
+   //    if(value.getInt('role_id')==4){
+   //        Workmanager().initialize(
+   //          callbackDispatcher,
+   //          isInDebugMode: false,
+   //        );
+   //        Workmanager().registerPeriodicTask(
+   //          "1",
+   //          "fetchBackground",
+   //          frequency: Duration(minutes: 15),
+   //        );
+   //    }
+   //  });
 
   }
   void onSelect(item) {
@@ -78,12 +76,15 @@ class _HomePageState extends State<HomePage> {
 
     }
   }
+  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     checkInternetConnectivity(context);
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+
+        key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
         // floatingActionButtonLocation: FloatingActionButtonLocation,
         floatingActionButton: _activePage == 0
@@ -167,6 +168,7 @@ class _HomePageState extends State<HomePage> {
       ),
     );
   }
+
 
 }
 

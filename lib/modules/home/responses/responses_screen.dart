@@ -5,7 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:systemevents/models/Category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
-import 'package:systemevents/modules/home/Responses/map_respo.dart';
+import 'package:systemevents/modules/home/responses/map_respo.dart';
  import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
