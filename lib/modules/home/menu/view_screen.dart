@@ -69,14 +69,14 @@ class _EventViewState extends State<EventView> {
                     await Provider.of<EventProvider>(context, listen: false)
                         .updateEvent(userData );
                     if (result) {
-                      showShortToast('تمت  عملية التحديث بنجاح', Colors.green);
+                      showShortToast('تمت  عملية التعديل بنجاح', Colors.green);
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(builder: (context) => HomePage()),
                             (Route<dynamic> route) => false,
                       );
                     } else {
-
+                      showShortToast('لم تتم عملية التعديل بنجاح', Colors.green);
                     }
                   }
 
@@ -118,7 +118,7 @@ class _EventViewState extends State<EventView> {
                                         ),
                                         onPressed: () {
                                           int postId = widget.eventID;
-                                          print(postId);
+
                                           Singleton.getPrefInstance().then((
                                               value) {
                                             Provider.of<EventProvider>(
@@ -263,7 +263,7 @@ class _EventViewState extends State<EventView> {
                                   color: Colors.green,
                                 ),
                                 onPressed: () {
-                                  print("clicked");
+
                                   createDialog(context, 'تعديل الوصف' ,"نعم" ,
                                   ({TextEditingController textEditingController}){
                                      Navigator.of(context).pop(textEditingController.text);
@@ -324,7 +324,7 @@ class _EventViewState extends State<EventView> {
         _response = value;
         if (_response != null) {
           count = _response['count'];
-          print("the count is $count");
+
           if (_response['data']['video'] != null)
             video = "http://192.168.1.3:8000" + _response['data']['video'];
 

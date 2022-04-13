@@ -36,7 +36,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                 style: TextStyle(fontWeight: FontWeight.bold),
               ),
               leading: IconButton(
-                tooltip: 'رجوع',
+                tooltip: 'اغلاق',
                 icon: Icon(Icons.clear),
                 onPressed: () {
                   Provider.of<EventProvider>(context, listen: false)
@@ -51,16 +51,17 @@ class _EventSectionTowState extends State<EventSectionTow> {
               ],
             ),
             body: Container(
-              margin: EdgeInsets.only(left: 25, top: 25, right: 25, bottom: 25),
-              height: double.infinity,
-              width: double.infinity,
+
+              margin  : EdgeInsets.only(left: 25, top: 25, right: 25, bottom: 25),
+              height: MediaQuery.of(context).size.height,
+              width: MediaQuery.of(context).size.width,
               child: ListView(
                 scrollDirection: Axis.vertical,
                 shrinkWrap: true,
                 children: [
                   Container(
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: Colors.green.shade50,
                         borderRadius: BorderRadius.only(
                             topLeft: Radius.circular(10),
                             topRight: Radius.circular(10),
@@ -78,10 +79,10 @@ class _EventSectionTowState extends State<EventSectionTow> {
                       child: EventForm() ),
 
 
-                   SizedBox(height: 16,),
+                   SizedBox(height: 6,),
                   ElevatedButton(style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(fontSize: 24),
-                    maximumSize: Size.fromHeight(72),
+
                     shape: StadiumBorder(),
                   ),
                   child: isLoading?Row(

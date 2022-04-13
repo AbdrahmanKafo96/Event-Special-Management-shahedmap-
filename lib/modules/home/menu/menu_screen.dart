@@ -62,7 +62,8 @@ class _EventsMenuState extends State<EventsMenu> {
                   listNames.add(list[i]['event_name']);
                   futureList.add(Event(
                       addede_id: list[i]['addede_id'],
-                      event_name: list[i]['event_name']));
+                      event_name: list[i]['event_name'],
+                      description:list[i]['event_name']==null?"":list[i]['event_name'] ));
                 }
             }catch(e){
 
@@ -196,98 +197,121 @@ class _EventsMenuState extends State<EventsMenu> {
                               // background: slideRightBackground(),
                               background: slideLeftBackground(),
                               key: Key(index.toString()),
-                              child: Padding(
-                                padding: const EdgeInsets.all(16.0),
-                                child: Column(
-                                  children: [
-                                    ListTile(
-                                        onTap: () {
-                                          checkInternetConnectivity(context)
-                                              .then((bool value) async {
-                                            if (value) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) => EventView(
-                                                          eventID: snapshot
-                                                              .data[index]
-                                                              .addede_id,
-                                                          eventName: snapshot
-                                                              .data[index]
-                                                              .event_name,
-                                                        )),
-                                              );
-                                            }
-                                          });
-                                        },
-                                        trailing: SizedBox(
-                                          width: 100,
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                tooltip: 'تعديل الحدث',
-                                                icon: Icon(
-                                                  Icons.edit,
-                                                  color: Colors.green,
-                                                ),
-                                                onPressed: () {
-                                                  checkInternetConnectivity(context)
-                                                      .then((bool value) async {
-                                                    if (value) {
-                                                      Navigator.push(
-                                                        context,
-                                                        MaterialPageRoute(
-                                                            builder: (context) =>
-                                                                EventView(
-                                                                    eventID: snapshot
-                                                                        .data[index]
-                                                                        .addede_id,
-                                                                    eventName: snapshot
-                                                                        .data[index]
-                                                                        .event_name)),
-                                                      );
-                                                    }
-                                                  });
-                                                },
-                                              ),
-                                              IconButton(
-                                                  tooltip: 'حذف الحدث',
+                              child: Column(
+                                children: [
+                                  Container(
+
+                                    padding: EdgeInsets.only(top: 8),
+                                    child: Card(
+                                      color: Colors.white  ,
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                          color: Colors.grey.shade50 ,
+                                        ),
+                                        borderRadius: BorderRadius.circular(15.0),
+                                      ),
+                                      child: ListTile(
+
+
+                                          onTap: () {
+                                            checkInternetConnectivity(context)
+                                                .then((bool value) async {
+                                              if (value) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder: (context) => EventView(
+                                                            eventID: snapshot
+                                                                .data[index]
+                                                                .addede_id,
+                                                            eventName: snapshot
+                                                                .data[index]
+                                                                .event_name,
+                                                  )),
+                                                );
+                                              }
+                                            });
+                                          },
+                                          trailing: SizedBox(
+                                            width: 100,
+                                            child: Row(
+                                              children: [
+                                                IconButton(
+                                                  tooltip: 'تعديل الحدث',
                                                   icon: Icon(
-                                                    Icons.delete,
-                                                    color: Colors.red,
+                                                    Icons.edit,
+                                                    color: Colors.green,
                                                   ),
                                                   onPressed: () {
-                                                    checkInternetConnectivity(
-                                                            context)
+                                                    checkInternetConnectivity(context)
                                                         .then((bool value) async {
                                                       if (value) {
-                                                        return customAlertForButton(
-                                                            snapshot.data[index]
-                                                                .addede_id,
-                                                            snapshot,
-                                                            index,
-                                                            context);
+                                                        Navigator.push(
+                                                          context,
+                                                          MaterialPageRoute(
+                                                              builder: (context) =>
+                                                                  EventView(
+                                                                      eventID: snapshot
+                                                                          .data[index]
+                                                                          .addede_id,
+                                                                      eventName: snapshot
+                                                                          .data[index]
+                                                                          .event_name)),
+                                                        );
                                                       }
                                                     });
-                                                  })
-                                            ],
+                                                  },
+                                                ),
+                                                IconButton(
+                                                    tooltip: 'حذف الحدث',
+                                                    icon: Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                    ),
+                                                    onPressed: () {
+                                                      checkInternetConnectivity(
+                                                              context)
+                                                          .then((bool value) async {
+                                                        if (value) {
+                                                          return customAlertForButton(
+                                                              snapshot.data[index]
+                                                                  .addede_id,
+                                                              snapshot,
+                                                              index,
+                                                              context);
+                                                        }
+                                                      });
+                                                    })
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        leading: Icon(
-                                          Icons.event_note_rounded,
-                                          size: 30,
-                                          color: Colors.blueGrey,
-                                        ),
-                                        title: Text(
-                                          '${snapshot.data[index].event_name}',
-                                          style:
-                                              TextStyle(color: Color(0xFF666666)),
-                                        )),
-                                    Divider(
-                                      color: Colors.grey,
-                                    )
-                                  ],
-                                ),
+                                          leading: Icon(
+                                            Icons.event_note_rounded,
+                                            size: 30,
+                                            color: Colors.blueGrey,
+                                          ),
+                                          title: Text(
+                                            '${snapshot.data[index].event_name}',
+                                            softWrap: true,
+                                            //overflow: TextOverflow.visible,
+                                            style:
+                                                TextStyle(color: Color(0xFF666666),fontWeight:FontWeight.bold,
+                                                fontSize: 14),
+                                          ),subtitle: Text(
+                                        '${snapshot.data[index].description}',
+                                        softWrap: true,
+                                        //overflow: TextOverflow.visible,
+
+                                        style:
+                                        TextStyle( fontWeight:FontWeight.normal,
+                                            fontSize: 12),
+                                      ),),
+                                    ),
+                                  ),
+                                  // Divider(
+                                  //   color: Colors.grey,
+                                  // )
+                                ],
                               ));
                         },
                       ),

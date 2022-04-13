@@ -102,7 +102,7 @@ class _DashboardState extends State<Dashboard> {
         }
 
         _permissionGranted = await location.hasPermission();
-        print(_permissionGranted);
+
         if (_permissionGranted == loc.PermissionStatus.denied) {
           _permissionGranted = await location.requestPermission();}
           if (_permissionGranted == loc.PermissionStatus.granted) {
@@ -131,7 +131,7 @@ class _DashboardState extends State<Dashboard> {
                 double longitude = userLocation.longitude;
                 double latitude = userLocation.latitude;
                 final SmsSendStatusListener listener = (SendStatus status) {
-                  print(status.name);
+
                 };
                 String message = "تطبيق الحدث" +
                     "\n" +
@@ -160,7 +160,7 @@ class _DashboardState extends State<Dashboard> {
                     duration: Duration(seconds: 3),
                   ).show(context);
                 } else {
-                  print(emergency_phone.toString());
+
                   telephony.sendSms(
                       to: "+218${emergency_phone.toString()}",
                       message: message,

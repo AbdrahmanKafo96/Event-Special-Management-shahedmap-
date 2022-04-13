@@ -47,8 +47,7 @@ class _MyHomePageState extends State<MapPage> {
              tappedPoint.latitude;
          Provider.of<EventProvider>(context, listen: false).event.setLng =
              tappedPoint.longitude;
-         print(tappedPoint.latitude);
-         print(tappedPoint.longitude);
+
          setState(() {
            myMarker = [];
            myMarker.add(Marker(
@@ -317,7 +316,8 @@ class _MyHomePageState extends State<MapPage> {
   //       }
   //     }
   //   } on PlatformException catch (e) {
-  //     print(e);
+
+
   //     if (e.code == 'PERMISSION_DENIED') {
   //       error = e.message;
   //     } else if (e.code == 'SERVICE_STATUS_ERROR') {

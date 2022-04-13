@@ -76,7 +76,7 @@ class _HomePageState extends State<HomePage> {
 
     }
   }
-  final GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+    GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
   @override
   Widget build(BuildContext context) {
     checkInternetConnectivity(context);

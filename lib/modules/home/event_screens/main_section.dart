@@ -16,10 +16,21 @@ class EventSectionOne extends StatefulWidget {
 
 class _EventSectionOneState extends State<EventSectionOne> {
   double lat, lng;
-
+  bool load=true;
+  callme() async {
+    await Future.delayed(Duration(seconds: 2));
+      setState(() {
+        load=false;
+      });
+  }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    callme();
+  }
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -53,14 +64,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
                 IconButton(
                     onPressed: () {
                       // تحتاج تعديل
-                      if (!(errorMessage1 == "" &&
-                          errorMessage2 == "" &&
-                          errorMessage3 == "" &&
-                          errorMessage4 == "")) {
-                        if (Provider.of<EventProvider>(context, listen: false)
-                                .event
-                                .getLat ==
-                            null) {
+
+                        if (lat ==null
+                             ) {
                           errorMessage1 = 'يجب ان تختار موقع الحدث';
                           setState(() {
                             myColor = Colors.red;
@@ -80,7 +86,14 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                     .categoryClass
                                     .category_name ==
                                 'اختار الصنف') {
-                          errorMessage2 = 'يجب ان تختار الصنف';
+
+
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .eventType
+                                .type_id=null;
+
+                          errorMessage2 = 'يجب ان تختار الصنف والنوع';
                           setState(() {
                             myColor = Colors.red;
                           });
@@ -89,17 +102,21 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             errorMessage2 = "";
                           });
                         }
-                        if (Provider.of<EventProvider>(context, listen: false)
+                         if (Provider.of<EventProvider>(context, listen: false)
                                     .event
                                     .eventType
-                                    .type_name ==
+                                    .type_id ==
                                 null ||
                             Provider.of<EventProvider>(context, listen: false)
                                     .event
                                     .eventType
                                     .type_name ==
-                                'اختار النوع') {
-                          errorMessage3 = 'يجب ان تختار النوع';
+                                'اختار النوع' ||
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .eventType
+                                .type_name=="") {
+                          errorMessage3 = 'يجب ان تختار النوع ';
                           setState(() {
                             myColor = Colors.red;
                           });
@@ -110,12 +127,15 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         }
                         if (Provider.of<EventProvider>(context, listen: false)
                                     .event
-                                    .getXFile ==
+                                    .getXFile.length ==
                                 null ||
                             Provider.of<EventProvider>(context, listen: false)
                                 .event
                                 .getXFile
-                                .isEmpty) {
+                                .isEmpty||Provider.of<EventProvider>(context, listen: false)
+                            .event
+                            .getXFile.length ==
+                            0) {
                           errorMessage4 = 'يجب ان ترفق صورة للحدث';
                           setState(() {
                             myColor = Colors.red;
@@ -125,14 +145,14 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             errorMessage4 = "";
                           });
                         }
-                      } else {
-                        setState(() {
-                          myColor = Colors.white;
-                        });
-                        Navigator.of(context).pushReplacement(MaterialPageRoute(
-                            builder: (BuildContext context) =>
-                                EventSectionTow()));
-                      }
+
+
+                      if(errorMessage1 =="" && errorMessage2=="" && errorMessage3=="" && errorMessage4=="")
+                        {
+                          Navigator.of(context).pushReplacement(MaterialPageRoute(
+                              builder: (BuildContext context) =>
+                                  EventSectionTow()));
+                        }
                     },
                     tooltip: 'التالي',
                     icon: Icon(
@@ -140,7 +160,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
                     ))
               ],
             ),
-            body: Container(
+            body:load==true?Center(child: CircularProgressIndicator(color: Colors.green,)):
+            Container(
                 margin:
                     EdgeInsets.only(left: 25, top: 25, right: 25, bottom: 25),
                 // padding:
@@ -214,21 +235,21 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                   if (_permissionGranted ==
                                       PermissionStatus.denied) {
                                     _permissionGranted =
-                                        await location.requestPermission();}
-                                    if (_permissionGranted ==
-                                        PermissionStatus.granted) {
-                                      Map fetchResult = await Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => MapPage()),
-                                      );
-                                      setState(() {
-                                        print(fetchResult['lat']);
-                                        lat = fetchResult['lat'];
-                                        lng = fetchResult['lng'];
-                                      });
-                                    }
+                                        await location.requestPermission();
+                                  }
+                                  if (_permissionGranted ==
+                                      PermissionStatus.granted) {
+                                    Map fetchResult = await Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => MapPage()),
+                                    );
+                                    setState(() {
 
+                                      lat = fetchResult['lat'];
+                                      lng = fetchResult['lng'];
+                                    });
+                                  }
                                 },
                                 child: Container(
                                   child: ListTile(

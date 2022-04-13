@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:systemevents/widgets/customCard.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:video_compress/video_compress.dart';
 import 'package:video_player/video_player.dart';
 
 
@@ -259,7 +260,7 @@ class _VideoPickerState extends State<VideoPicker> {
                         ),
                           onPressed: (){
 
-                            print(widget.oldVideo);
+
                         _showPicker(context  );
 
                       },)
@@ -286,10 +287,7 @@ class _VideoPickerState extends State<VideoPicker> {
                               onPressed: () {
                                 setState(() {
 
-                                  //   Provider.of<EventProvider>(context, listen: false).event.dropValue(index);
-                                  //   print(images.length);
-                                  //   if((images.length>=2 )&& (images.length<=4)){
-                                  //     // images.replaceRange(index, index + 1, ['Add Image']);
+
                                   _controller=null;
                                   Provider.of<EventProvider>(context, listen: false).event.setVideoFile = null;
                                   //   }else{
@@ -345,8 +343,14 @@ class _VideoPickerState extends State<VideoPicker> {
 
   Future _imgFromGallery( ) async {
     XFile  videofile= await _picker.pickVideo(source: ImageSource.gallery ,);
+    MediaInfo mediaInfo = await VideoCompress.compressVideo(
+      videofile.path,
+      quality:VideoQuality.LowQuality,
+      deleteOrigin: false, // It's false by default
+    );
     if(videofile!=null){
-      File file = File(videofile.path );
+      File file = File(mediaInfo.path );
+
       setState(() {
         _controller = VideoPlayerController.file(
             file)
@@ -361,9 +365,13 @@ class _VideoPickerState extends State<VideoPicker> {
   }
   Future  _imgFromCamera( ) async {
     XFile   videofile=await _picker.pickVideo(source: ImageSource.camera ,);
-
+    MediaInfo mediaInfo = await VideoCompress.compressVideo(
+      videofile.path,
+      quality:VideoQuality.LowQuality,
+      deleteOrigin: false, // It's false by default
+    );
     if(videofile!=null){
-      File file = File(videofile.path );
+      File file = File(mediaInfo.path );
       setState(() {
         _controller = VideoPlayerController.file(
             file)

@@ -122,7 +122,7 @@ class _PickImagesState extends State<PickImages> {
                     onTap: () {
                       setState(() {
                         Provider.of<EventProvider>(context, listen: false).event.dropValue(index);
-                        print(images.length);
+
                         if((images.length>=2 )&& (images.length<=4)){
                           // images.replaceRange(index, index + 1, ['Add Image']);
                           images.removeAt(index);
@@ -164,7 +164,7 @@ class _PickImagesState extends State<PickImages> {
                     onTap: () {
                       setState(() {
                         Provider.of<EventProvider>(context, listen: false).event.dropValue(index);
-                        print(images.length);
+
                         if((images.length>=2 )&& (images.length<=4)){
                           // images.replaceRange(index, index + 1, ['Add Image']);
                           images.removeAt(index);

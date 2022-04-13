@@ -38,8 +38,8 @@ callbackDispatcher() {
           Position userLocation = await Geolocator.getCurrentPosition(
               desiredAccuracy: LocationAccuracy.high);
 
-          print(userLocation);
-          // print(userLocation.longitude);
+
+
           SharedPreferences prefs = await Singleton.getPrefInstance();
           final storage = await Singleton.getStorage()  ;
           String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());

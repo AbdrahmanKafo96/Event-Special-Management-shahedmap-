@@ -42,12 +42,12 @@ class _EventCategoryState extends State<EventCategory> {
                 Uri.parse("${Singleton.apiPath}/isVersionUpdated") ,body:  data  );
             if(response.statusCode==200){
               var res=jsonDecode(response.body);
-              print(res['message']);
+
               if(res['message']==true){
 
                   int  type_count = Sqflite
                       .firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM event_type'));
-                  print('deleted');
+
                   int  category_count = Sqflite
                       .firstIntValue(await database.rawQuery('SELECT COUNT(*) FROM event_category'));
 
@@ -142,7 +142,7 @@ class _EventCategoryState extends State<EventCategory> {
          txn.rawInsert(
           'INSERT INTO event_category(category_id ,category_name, emergency_phone) VALUES(?,?,?)',
           [category_id ,category_name,emergency_phone ]).then((id2) {
-        print('inserted2: $id2');
+
       });
         return null;
     });
@@ -151,7 +151,7 @@ class _EventCategoryState extends State<EventCategory> {
         txn.rawInsert(
            'INSERT INTO event_type(type_id, type_name, category_id ) VALUES(?, ?, ?)',
            [type_id ,type_name, category_id ]).then((id2) {
-          print('inserted2: $id2');
+
         });
 
        return null;
@@ -307,7 +307,6 @@ class _EventCategoryState extends State<EventCategory> {
                 onChanged: (String value){
                   setState(() {
                       dropdownValue2=value;
-                     //  print(Provider.of<EventProvider>(context, listen: false).event.categoryClass.category_id );
 
                       Provider.of<EventProvider>(context, listen: false).event.eventType.type_name =
                           subTypesList.where((el) {

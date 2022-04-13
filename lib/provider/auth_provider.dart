@@ -305,4 +305,29 @@ class UserAuthProvider extends ChangeNotifier{
       print(e);
     }
   }
+
+  Future<void> forgotpassword(String email) async {
+    try{
+
+      // // this method for check if the user has data before or no ...
+      if(email !=null){
+        Map data={
+          'email':email,
+        };
+         
+        final response =  await http.post(
+          Uri.parse("${Singleton.apiPath}/forgotpassword") ,body:  data   ,);
+        if(response.statusCode==200){
+          var res=jsonDecode(response.body);
+          showShortToast('تحقق من البريد الالكتروني', Colors.orange);
+        }else{
+
+          showShortToast(' ', Colors.orange);
+          return null;
+        }
+      }
+    }catch (e){
+
+    }
+  }
 }

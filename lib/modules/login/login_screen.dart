@@ -6,6 +6,7 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/modules/login/login_section.dart';
+import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/widgets/customToast.dart';
  import 'package:systemevents/modules/login/validator.dart';
@@ -33,6 +34,7 @@ class _LoginUiState extends State<LoginUi> {
   TextEditingController emailController = TextEditingController();
 
   Future<void> _displayTextInputDialog(BuildContext context) async {
+      final _formKey = GlobalKey<FormState>();
     return showDialog(
       context: context,
       builder: (context) {
@@ -40,26 +42,29 @@ class _LoginUiState extends State<LoginUi> {
           textDirection: TextDirection.rtl,
           child: AlertDialog(
             title: Text('طلب كلمة مرور جديدة', style: TextStyle(fontSize: 14),),
-            content:  TextFormField(
-              keyboardType:TextInputType.emailAddress  ,
-              controller:emailController ,
-              onChanged: (value){
-                Provider.of<UserAuthProvider>(context,listen: false).user.setEmail=emailController.text;
-              },
-              validator: (value) {
-                if (value == null || value.isEmpty) {
-                  return 'البريد الالكتروني مطلوب';
-                }
-                else if (!ValidatorClass.isValidEmail(value)){
-                  return 'البريد الالكتروني غير صالح تحقق من المدخلات';
-                }
-                else return null;
-              },
-              decoration: InputDecoration(
-                  helperStyle: TextStyle(fontSize: 12),
-                  border: OutlineInputBorder(),
-                  labelText: 'البريد الإلكتروني',
-                  hintText: 'ادخل البريد الإلكتروني'
+            content:  Form(
+              key: _formKey,
+              child: TextFormField(
+                keyboardType:TextInputType.emailAddress  ,
+                controller:emailController ,
+                onChanged: (value){
+                  Provider.of<UserAuthProvider>(context,listen: false).user.setEmail=emailController.text;
+                },
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'البريد الالكتروني مطلوب';
+                  }
+                  else if (!ValidatorClass.isValidEmail(value)){
+                    return 'البريد الالكتروني غير صالح تحقق من المدخلات';
+                  }
+                  else return null;
+                },
+                decoration: InputDecoration(
+                    helperStyle: TextStyle(fontSize: 12),
+                    border: OutlineInputBorder(),
+                    labelText: 'البريد الإلكتروني',
+                    hintText: 'ادخل البريد الإلكتروني'
+                ),
               ),
             ),
             actions: <Widget>[
@@ -74,7 +79,12 @@ class _LoginUiState extends State<LoginUi> {
                 color: Colors.green,
                 child: Text('ارسال طلب' ,style: TextStyle(fontSize: 12),),
                 onPressed: () {
-                  Navigator.pop(context);
+                  if(_formKey.currentState.validate());
+                  {
+                    Provider.of<UserAuthProvider>(context,listen: false).forgotpassword(emailController.text.toString());
+                    Navigator.pop(context);
+                  }
+
                 },
               ),
 

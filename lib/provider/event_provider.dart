@@ -14,92 +14,18 @@ import 'package:mockito/mockito.dart';
 class EventProvider extends ChangeNotifier {
   Event event = Event();
 
-  // testAddEvent(Map userData) async {
-  //   try {
-  //    // final storage = await Singleton.getStorage()  ;
-  //  //   String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
-  //
-  //     var _count = 1;
-  //     var request = http.MultipartRequest(
-  //         "POST", Uri.parse("${Singleton.apiPath}/save_event"));
-  //     request.headers.addAll({"Authorization": "Bearer ${userData['Authorization']}"});
-  //     if (userData['description'] != null)
-  //       request.fields['description'] = userData['description'];
-  //
-  //     //request.fields['event_name'] = userData['event_name'];
-  //     request.fields['sender_id'] = userData['sender_id'].toString();
-  //     request.fields['senddate'] = userData['senddate'];
-  //     request.fields['eventtype'] = userData['eventtype'];
-  //     request.fields['lat'] = userData['lat'];
-  //     request.fields['lng'] = userData['lng'];
-  //     // code below for camera image ...
-  //
-  //    // if (event.getXFile != null) {
-  //       //if (event.getXFile.length >= 1 && event.getXFile.length <= 4) {
-  //        // event.setListSelected = event.getXFile;
-  //
-  //        // for (int i = 0; i < event.getListSelected.length; i++) {
-  //        //                  request.files.add(http.MultipartFile(
-  //        //                      'image1',
-  //        //                      File(event.getListSelected[i].path).readAsBytes().asStream(),
-  //        //                      File(event.getListSelected[i].path).lengthSync(),
-  //        //                      filename: event.getListSelected[i].path.split("/").last));
-  //        // }
-  //      // }
-  //   //  }
-  //
-  //     var response = await request.send();
-  //
-  //     if (response.statusCode == 200) {
-  //
-  //       final respStr = await response.stream.bytesToString();
-  //       var res = jsonDecode(respStr);
-  //
-  //
-  //       if(res['error'].toString()== '{event_name: [حقل event name مطلوب.]}')
-  //       {
-  //         print('مطلوب حقل اسم الحدث');
-  //         return true;
-  //       }
-  //       if(res['message']=='لاتستطيع ارسال حدث لان حسابك محظور'){
-  //
-  //         print('لاتستطيع ارسال حدث لان حسابك محظور');
-  //         return false;
-  //       }
-  //
-  //       if (res['status'] == 'success') {
-  //
-  //         event.dropAll();
-  //         //event=Event();
-  //         return true;
-  //       } else {
-  //         return false;
-  //       }
-  //     } else {
-  //
-  //      if(response.statusCode==302)
-  //        {
-  //          print('Unauthenticated');
-  //          return true;
-  //        }
-  //
-  //     }
-  //   } catch (e) {
-  //     print("last one ");
-  //   }
-  // }
-
   addEvent(Map userData) async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
 
       var _count = 1;
       var request = http.MultipartRequest(
           "POST", Uri.parse("${Singleton.apiPath}/save_event"));
       request.headers.addAll({"Authorization": "Bearer $value"});
       if (userData['description'] != null)
-      request.fields['description'] = userData['description'];
+        request.fields['description'] = userData['description'];
       request.fields['event_name'] = userData['event_name'];
       request.fields['sender_id'] = userData['sender_id'].toString();
       request.fields['senddate'] = userData['senddate'];
@@ -132,23 +58,20 @@ class EventProvider extends ChangeNotifier {
       var response = await request.send();
 
       if (response.statusCode == 200) {
-
         final respStr = await response.stream.bytesToString();
         var res = jsonDecode(respStr);
 
-        if(res['error'].toString()!= 'null')
-        {
+        if (res['error'].toString() != 'null') {
           showShortToast(res['error'].toString(), Colors.red);
           return false;
         }
-        if(res['message']=='لاتستطيع ارسال حدث لان حسابك محظور'){
+        if (res['message'] == 'لاتستطيع ارسال حدث لان حسابك محظور') {
           showShortToast('لاتستطيع ارسال حدث لان حسابك محظور', Colors.red);
 
           return false;
         }
 
         if (res['status'] == 'success') {
-
           event.dropAll();
           //event=Event();
           return true;
@@ -164,8 +87,9 @@ class EventProvider extends ChangeNotifier {
   //  we need to close connection after call these methods
   Future deleteEvent(int addede_id, int sender_id) async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       Map data = {
         'sender_id': sender_id.toString(),
         'addede_id': addede_id.toString(),
@@ -190,9 +114,10 @@ class EventProvider extends ChangeNotifier {
 
   updateEvent(Map userData) async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
-      var _count = 1;
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
+      //var _count = 1;
       var request = http.MultipartRequest(
           "POST", Uri.parse("${Singleton.apiPath}/updateEvent"));
       request.headers.addAll({"Authorization": "Bearer $value"});
@@ -201,64 +126,51 @@ class EventProvider extends ChangeNotifier {
       request.fields['addede_id'] = userData['addede_id'].toString();
       request.fields['event_name'] = userData['event_name'];
 
-      // for (int i = 0; i < event.getXFile.length; i++) {
+      if( event.getXFile!= null)
+      if (event.getXFile.length > 0 ) {
+        if (event.getXFile[0] != null)
+          request.files.add(http.MultipartFile(
+              'image1',
+              File(event.getXFile[0].path).readAsBytes().asStream(),
+              File(event.getXFile[0].path).lengthSync(),
+              filename: event.getXFile[0].path.split("/").last));
 
-      // }
-    //  if (event.getXFile != null) {
-      //  if (event.getXFile.length >= 1 && event.getXFile.length <= 4) {
-        //  event.setListSelected = event.getXFile;
+        if (event.getXFile[1] != null)
+          request.files.add(http.MultipartFile(
+              'image2',
+              File(event.getXFile[1].path).readAsBytes().asStream(),
+              File(event.getXFile[1].path).lengthSync(),
+              filename: event.getXFile[1].path.split("/").last));
 
-        //  for (int i = 0; i < event.getListSelected.length; i++) {
+        if (event.getXFile[2] != null)
+          request.files.add(http.MultipartFile(
+              'image3',
+              File(event.getXFile[2].path).readAsBytes().asStream(),
+              File(event.getXFile[2].path).lengthSync(),
+              filename: event.getXFile[2].path.split("/").last));
 
-            if(event.getXFile.length!=0){
-              if (event.getXFile[0] != null)
-                request.files.add(http.MultipartFile(
-                    'image1',
-                    File(event.getXFile[0].path).readAsBytes().asStream(),
-                    File(event.getXFile[0].path).lengthSync(),
-                    filename: event.getXFile[0].path.split("/").last));
+        if (event.getXFile[3] != null)
+          request.files.add(http.MultipartFile(
+              'image4',
+              File(event.getXFile[3].path).readAsBytes().asStream(),
+              File(event.getXFile[3].path).lengthSync(),
+              filename: event.getXFile[3].path.split("/").last));
+      }
 
-              if (event.getXFile[1] != null)
-                request.files.add(http.MultipartFile(
-                    'image2',
-                    File(event.getXFile[1].path).readAsBytes().asStream(),
-                    File(event.getXFile[1].path).lengthSync(),
-                    filename: event.getXFile[1].path.split("/").last));
+      if (event.getVideoFile != null)
+        request.files.add(http.MultipartFile(
+            'video',
+            File(event.getVideoFile.path).readAsBytes().asStream(),
+            File(event.getVideoFile.path).lengthSync(),
+            filename: event.getVideoFile.path.split("/").last));
 
-              if (event.getXFile[2] != null)
-                request.files.add(http.MultipartFile(
-                    'image3',
-                    File(event.getXFile[2].path).readAsBytes().asStream(),
-                    File(event.getXFile[2].path).lengthSync(),
-                    filename: event.getXFile[2].path.split("/").last));
-
-              if (event.getXFile[3] != null)
-                request.files.add(http.MultipartFile(
-                    'image4',
-                    File(event.getXFile[3].path).readAsBytes().asStream(),
-                    File(event.getXFile[3].path).lengthSync(),
-                    filename: event.getXFile[3].path.split("/").last));
-
-            }
-
-      // if (event.getVideoFile != null)
-      // {
-      //   request.files.add(http.MultipartFile(
-      //     'video',
-      //     File(event.getVideoFile.path).readAsBytes().asStream(),
-      //     File(event.getVideoFile.path).lengthSync(),
-      //     filename: event.getVideoFile.path.split("/").last));
-      // }
-
-
-
-      var response = await request.send();
+       var response = await request.send();
 
       if (response.statusCode == 200) {
         final respStr = await response.stream.bytesToString();
         var respo = jsonDecode(respStr);
 
-        if(respo['message']=='لاتستطيع تعديل الحدث لان حسابك محظور'){
+        if (respo['message'] == 'لاتستطيع تعديل الحدث لان حسابك محظور') {
           showShortToast('لاتستطيع تعديل الحدث لان حسابك محظور', Colors.red);
           return false;
         }
@@ -277,8 +189,9 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'addede_id': addede_id.toString(),
       };
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
 
       final response = await http.post(
           Uri.parse('${Singleton.apiPath}/getEvent'),
@@ -301,8 +214,9 @@ class EventProvider extends ChangeNotifier {
 //  we need to close connection after call these methods
   Future<List<CategoryClass>> fetchEventCategories() async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http.get(
           Uri.parse('${Singleton.apiPath}/fetchEventCategories'),
           headers: {
@@ -329,8 +243,9 @@ class EventProvider extends ChangeNotifier {
 
   Future<List<EventType>> fetchEventTypes() async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http
           .get(Uri.parse('${Singleton.apiPath}/fetchEventTypes'), headers: {
         // 'Accept':'application/json',
@@ -354,9 +269,9 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  removeImage(int addede_id , int index)async{
+  removeImage(int addede_id, int index) async {
     try {
-      index+=1;
+      index += 1;
 
       Map data = {
         'addede_id': addede_id.toString(),
@@ -375,7 +290,6 @@ class EventProvider extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-
         final parsed = response.body;
 
         return parsed;
@@ -384,25 +298,25 @@ class EventProvider extends ChangeNotifier {
       }
     } catch (e) {}
   }
-  removeVideo(int addede_id)async{
+
+  removeVideo(int addede_id) async {
     try {
       Map data = {
         'addede_id': addede_id.toString(),
       };
-     // final storage = await Singleton.getStorage()  ;
+      // final storage = await Singleton.getStorage()  ;
       //String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/removeVideo'),
-          body: data,
-          // headers: {
-          //   // 'Accept':'application/json',
-          //   'Authorization': 'Bearer $value',
-          //   // 'content-type': 'application/json',
-          // }
-          );
+        Uri.parse('${Singleton.apiPath}/removeVideo'),
+        body: data,
+        // headers: {
+        //   // 'Accept':'application/json',
+        //   'Authorization': 'Bearer $value',
+        //   // 'content-type': 'application/json',
+        // }
+      );
 
       if (response.statusCode == 200) {
-
         final parsed = response.body;
 
         return parsed;
@@ -411,13 +325,15 @@ class EventProvider extends ChangeNotifier {
       }
     } catch (e) {}
   }
+
   Future<List<Event>> fetchAllListByUserId(int sender_id) async {
     try {
       Map data = {
         'sender_id': sender_id.toString(),
       };
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${Singleton.apiPath}/fetchAllListByUserId'),
           body: data,
@@ -428,7 +344,6 @@ class EventProvider extends ChangeNotifier {
           });
 
       if (response.statusCode == 200) {
-
         final parsed = json
             .decode(response.body)['collection']
             .cast<Map<String, dynamic>>();
@@ -445,8 +360,9 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'user_id': user_id.toString(),
       };
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${Singleton.apiPath}/getAllRespons'),
           body: data,
@@ -472,8 +388,9 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'addede_id': addede_id.toString(),
       };
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${Singleton.apiPath}/getEvent'),
           body: data,
@@ -498,20 +415,20 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'sender_id': sender_id.toString(),
       };
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/fetchAllListByUserId'),
-          body: data,
-          // headers: {
-          //   // 'Accept':'application/json',
-          //   'Authorization': 'Bearer $value',
-          //   // 'content-type': 'application/json',
-          // }
-          );
+        Uri.parse('${Singleton.apiPath}/fetchAllListByUserId'),
+        body: data,
+        // headers: {
+        //   // 'Accept':'application/json',
+        //   'Authorization': 'Bearer $value',
+        //   // 'content-type': 'application/json',
+        // }
+      );
 
       if (response.statusCode == 200) {
-
         final parsed = json.decode(response.body);
         if (parsed['data'] == 'success')
           return parsed['collection'];
@@ -525,8 +442,9 @@ class EventProvider extends ChangeNotifier {
 
   Future<bool> updateNoti(int user_id, int notification_id) async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
         'notification_id': notification_id.toString(),
@@ -554,8 +472,9 @@ class EventProvider extends ChangeNotifier {
 
   Future<dynamic> getRespo(int user_id, int notification_id) async {
     try {
-      final storage = await Singleton.getStorage()  ;
-      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
         'notification_id': notification_id.toString(),
@@ -580,4 +499,6 @@ class EventProvider extends ChangeNotifier {
       }
     } catch (e) {}
   }
+
+
 }

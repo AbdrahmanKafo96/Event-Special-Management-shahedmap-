@@ -125,7 +125,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                       setState(() {
 
                         images[index]='removed';
-                        print("index is ${index}");
+
                          Provider.of<EventProvider>(context, listen: false)
                              .removeImage(widget.eventID , index);
 
@@ -171,7 +171,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                       setState(() {
                         Provider.of<EventProvider>(context, listen: false).removeImage(widget.eventID ,index);
                         images[index] = "removed";
-                        print("index is ${index}");
+
 
                       });
                      // Provider.of<EventProvider>(context, listen: false).event.getXFile[index]=null;

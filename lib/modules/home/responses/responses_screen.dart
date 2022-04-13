@@ -100,7 +100,7 @@ class _ResponsePageState extends State<ResponsePage> {
 
   generateItemsList() {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.only(top: 8.0),
       child: FutureBuilder<List<Respo>>(
           future: fuList ,
           builder: (context, snapshot) {
@@ -152,61 +152,68 @@ class _ResponsePageState extends State<ResponsePage> {
 
                                 onTap: (){},
                                 child: Ink(
-                                  color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
-                                  Colors.white,
-                                  child: ListTile(
-                                      onTap: () {
-                                        Provider.of<EventProvider>(context, listen: false)
-                                            .updateNoti( user_id,snapshot.data[index].notification_id).
-                                        then((value){
-                                          Provider.of<EventProvider>(context, listen: false)
-                                              .getRespo( user_id,snapshot.data[index].notification_id).then((value){
-                                            print(value['data']['lat']);
-                                            print(value['data']['lng']);
-                                            Navigator.push(
-                                              context,
-                                              MaterialPageRoute(
-                                                  builder: (context) =>
 
-                                                      Mappoly(
-                                                          lat: value['data']['lat'] ,
-                                                          lng:value['data']['lng'])),
-                                            );
-                                          });
-                                        });
-
-                                      },
-                                      // trailing: IconButton(
-                                      //     tooltip: 'حذف الحدث',
-                                      //     icon: Icon(
-                                      //       Icons.delete,
-                                      //       color: Colors.red,
-                                      //     ),
-                                      //     onPressed: () {
-                                      //       // return customAlertForButton(
-                                      //       //     snapshot
-                                      //       //         .data[index].addede_id,
-                                      //       //     snapshot,
-                                      //       //     index,
-                                      //       //     context);
-                                      //     }),
-
-                                      leading: Icon(
-                                        Icons.event_note_rounded,
-                                        size: 30,
-                                        color: Colors.blueGrey,
+                                   child: Card(
+                                     color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
+                                     Colors.white,
+                                    shape: RoundedRectangleBorder(
+                                      side: BorderSide(
+                                        color: Colors.green.shade300,
                                       ),
-                                      title: Text(
-                                        '${snapshot.data[index].type_name}',
-                                        style:
-                                        TextStyle(color: Color(0xFF666666)),
-                                      )),
+                                      borderRadius: BorderRadius.circular(15.0),
+                                    ),
+                                    child: ListTile(
+                                        onTap: () {
+                                          Provider.of<EventProvider>(context, listen: false)
+                                              .updateNoti( user_id,snapshot.data[index].notification_id).
+                                          then((value){
+                                            Provider.of<EventProvider>(context, listen: false)
+                                                .getRespo( user_id,snapshot.data[index].notification_id).then((value){
+                                              print(value['data']['lat']);
+                                              print(value['data']['lng']);
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+
+                                                        Mappoly(
+                                                            lat: value['data']['lat'] ,
+                                                            lng:value['data']['lng'])),
+                                              );
+                                            });
+                                          });
+
+                                        },
+                                        // trailing: IconButton(
+                                        //     tooltip: 'حذف الحدث',
+                                        //     icon: Icon(
+                                        //       Icons.delete,
+                                        //       color: Colors.red,
+                                        //     ),
+                                        //     onPressed: () {
+                                        //       // return customAlertForButton(
+                                        //       //     snapshot
+                                        //       //         .data[index].addede_id,
+                                        //       //     snapshot,
+                                        //       //     index,
+                                        //       //     context);
+                                        //     }),
+
+                                        leading: Icon(
+                                          Icons.event_note_rounded,
+                                          size: 30,
+                                          color: Colors.blueGrey,
+                                        ),
+                                        title: Text(
+                                          '${snapshot.data[index].type_name}',
+                                          style:
+                                          TextStyle(color: Color(0xFF666666)),
+                                        )),
+                                  ),
                                 ),
 
                             ),
-                            Divider(
-                              color: Colors.grey,
-                            )
+
                           ],
                         ),
                       );

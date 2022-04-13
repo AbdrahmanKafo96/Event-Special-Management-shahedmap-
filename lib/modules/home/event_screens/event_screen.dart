@@ -19,7 +19,7 @@ class _EventFormState extends State<EventForm> {
         child: Form(
         key: _formKey,
         child: Padding(
-          padding: const EdgeInsets.all(12.0),
+          padding: const EdgeInsets.all(6.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -30,8 +30,8 @@ class _EventFormState extends State<EventForm> {
                 style: Theme.of(context).textTheme.headline6,
               ),
               Container(
-                margin: EdgeInsets.all(10),
-                padding: EdgeInsets.all(10),
+                margin: EdgeInsets.all(5),
+                padding: EdgeInsets.all(5),
                 // decoration: BoxDecoration(
                 //   color: Colors.white,
                 //   border: Border.all(

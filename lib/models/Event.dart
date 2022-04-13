@@ -13,7 +13,7 @@ class Event {
   //int _eventType;
   double _lat;
   double _lng;
-  String _description;
+  String  description;
   File _imageFile, _videoFile ;
   List<XFile>  _xfile  =[], _listSelected;
 
@@ -28,12 +28,13 @@ class Event {
   final addede_id;
   LatLng tappedPoint  =null ;
 
-  Event({this.event_name, this.addede_id});
+  Event({this.event_name, this.addede_id ,this.description});
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
       event_name: json['event_name'],
       addede_id: json['addede_id'],
+      description: json['description'],
     );
   }
 
@@ -92,9 +93,9 @@ class Event {
     _lng = value;
   }
 
-  String get getDescription => _description;
+  String get getDescription =>  description;
 
   set setDescription(String value) {
-    _description = value;
+     description = value;
   }
 }
