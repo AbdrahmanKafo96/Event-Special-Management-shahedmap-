@@ -17,7 +17,7 @@ class EventCategory extends StatefulWidget {
 
 class _EventCategoryState extends State<EventCategory> {
    List<CategoryClass>  gategoryList = List<CategoryClass>();
-   String dropdownValue1 ,dropdownName1;
+   String dropdownValue1 ='0' ,dropdownName1;
    Database database ;
    List<EventType>  typesList = List<EventType>(); 
   List<EventType>  subTypesList = List<EventType>();
@@ -281,8 +281,8 @@ class _EventCategoryState extends State<EventCategory> {
             ),
           ),
         ),
-        dropdownValue1=="0"?
-        SizedBox.shrink(): Expanded(
+        int.parse(dropdownValue1)>0 ?
+         Expanded(
           flex: 1,
           child: Padding(
             padding: const EdgeInsets.all(2.0),
@@ -327,7 +327,7 @@ class _EventCategoryState extends State<EventCategory> {
               ) ,
             ),
           ),
-        )
+        ):SizedBox.shrink()
       ],
     );
   }

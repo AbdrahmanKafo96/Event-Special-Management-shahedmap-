@@ -85,15 +85,23 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                     .event
                                     .categoryClass
                                     .category_name ==
-                                'اختار الصنف') {
+                                'اختار الصنف' ||
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .categoryClass
+                                .category_id ==0
+                        ) {
 
 
                             Provider.of<EventProvider>(context, listen: false)
                                 .event
                                 .eventType
-                                .type_id=null;
+                                .type_id=null;Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .eventType
+                                .type_name='اختار النوع';
 
-                          errorMessage2 = 'يجب ان تختار الصنف والنوع';
+                          errorMessage2 = 'يجب ان تختار الصنف';
                           setState(() {
                             myColor = Colors.red;
                           });
@@ -102,6 +110,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             errorMessage2 = "";
                           });
                         }
+
                          if (Provider.of<EventProvider>(context, listen: false)
                                     .event
                                     .eventType
@@ -225,8 +234,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                     _serviceEnabled =
                                         await location.requestService();
                                     if (!_serviceEnabled) {
-                                      showShortToast(
-                                          'يجب تفعيل GPS', Colors.orange);
+
                                     }
                                   }
 
