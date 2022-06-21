@@ -38,6 +38,7 @@ class _EventCategoryState extends State<EventCategory> {
             Map data={
               'version_number':  pref.getInt('version_number').toString(),
             };
+
             final response =  await http.post(
                 Uri.parse("${Singleton.apiPath}/isVersionUpdated") ,body:  data  );
             if(response.statusCode==200){
