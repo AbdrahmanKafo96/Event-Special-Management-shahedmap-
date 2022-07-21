@@ -343,13 +343,13 @@ class _VideoPickerState extends State<VideoPicker> {
 
   Future _imgFromGallery( ) async {
     XFile  videofile= await _picker.pickVideo(source: ImageSource.gallery ,);
-    MediaInfo mediaInfo = await VideoCompress.compressVideo(
-      videofile.path,
-      quality:VideoQuality.LowQuality,
-      deleteOrigin: false, // It's false by default
-    );
+    // MediaInfo mediaInfo = await VideoCompress.compressVideo(
+    //   videofile.path,
+    //   quality:VideoQuality.LowQuality,
+    //   deleteOrigin: false, // It's false by default
+    // );
     if(videofile!=null){
-      File file = File(mediaInfo.path );
+      File file = File(videofile.path );
 
       setState(() {
         _controller = VideoPlayerController.file(
@@ -365,13 +365,13 @@ class _VideoPickerState extends State<VideoPicker> {
   }
   Future  _imgFromCamera( ) async {
     XFile   videofile=await _picker.pickVideo(source: ImageSource.camera ,);
-    MediaInfo mediaInfo = await VideoCompress.compressVideo(
-      videofile.path,
-      quality:VideoQuality.LowQuality,
-      deleteOrigin: false, // It's false by default
-    );
+    // MediaInfo mediaInfo = await VideoCompress.compressVideo(
+    //   videofile.path,
+    //   quality:VideoQuality.LowQuality,
+    //   deleteOrigin: false, // It's false by default
+    // );
     if(videofile!=null){
-      File file = File(mediaInfo.path );
+      File file = File(videofile.path );
       setState(() {
         _controller = VideoPlayerController.file(
             file)

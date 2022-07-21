@@ -161,11 +161,11 @@ class _DashboardState extends State<Dashboard> {
                   ).show(context);
                 } else {
 
-                  telephony.sendSms(
+                 await telephony.sendSmsByDefaultApp(
                       to: "+218${emergency_phone.toString()}",
                       message: message,
-                      statusListener: listener,
-                      isMultipart: true);
+                     // statusListener: listener,
+                       );
                   showShortToast('تحقق من تطبيق الرسائل', Colors.green);
                   Provider.of<EventProvider>(context, listen: false)
                       .event

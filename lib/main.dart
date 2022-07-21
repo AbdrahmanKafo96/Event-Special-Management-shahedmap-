@@ -13,7 +13,6 @@ import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateN
 import 'package:systemevents/modules/home/settings_screens/ThemeApp.dart';
 import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
-
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -27,7 +26,7 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
-import 'dart:convert'  as convert;
+import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
 callbackDispatcher() {
@@ -38,22 +37,23 @@ callbackDispatcher() {
           Position userLocation = await Geolocator.getCurrentPosition(
               desiredAccuracy: LocationAccuracy.high);
 
-
-
           SharedPreferences prefs = await Singleton.getPrefInstance();
-          final storage = await Singleton.getStorage()  ;
-          String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
+          final storage = await Singleton.getStorage();
+          String value = await storage.read(
+              key: "token", aOptions: Singleton.getAndroidOptions());
           Map data = {
             'user_id': prefs.getInt('user_id').toString(),
             'lat': userLocation.latitude.toString(),
             'lng': userLocation.longitude.toString(),
           };
-          final response = await http
-              .post(Uri.parse('${Singleton.apiPath}/updateUnit' ),  body:jsonEncode(data),headers: {
-            'Accept':'application/json',
-            'Authorization' : 'Bearer $value',
-            'content-type': 'application/json',}
-          );
+          final response = await http.post(
+              Uri.parse('${Singleton.apiPath}/updateUnit'),
+              body: jsonEncode(data),
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $value',
+                'content-type': 'application/json',
+              });
 
           if (response.statusCode == 200) {
             var parsed = json.decode(response.body);
@@ -75,45 +75,42 @@ callbackDispatcher() {
 }
 
 Future main() async {
-  try{
+  try {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
-    String token =null;
-    final storage = await Singleton.getStorage()  ;
+    String token = null;
+    final storage = await Singleton.getStorage();
 
+    token = await storage.read(
+        key: "api_token", aOptions: Singleton.getAndroidOptions());
 
-    token= await storage.read(key: "api_token" ,aOptions: Singleton.getAndroidOptions());
-
-    final pref= await Singleton.getPrefInstance();
-    if(pref.getInt('version_number')==null)
-      pref.setInt('version_number', 0);
-
+    final pref = await Singleton.getPrefInstance();
+    if (pref.getInt('version_number') == null) pref.setInt('version_number', 0);
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
     }
     runApp(
-      MultiProvider(
-          providers: [
-            ChangeNotifierProvider<EventProvider>(
-              create: (context) => EventProvider(),
-            ),
-            ChangeNotifierProvider<UserAuthProvider>(
-              create: (context) => UserAuthProvider(),
-            ),
-            ChangeNotifierProvider<ThemeProvider>(
-              create: (context) => ThemeProvider(),
-            ),
-          ],
-          child:MyApp(token)
-      ),
+      MultiProvider(providers: [
+        ChangeNotifierProvider<EventProvider>(
+          create: (context) => EventProvider(),
+        ),
+        ChangeNotifierProvider<UserAuthProvider>(
+          create: (context) => UserAuthProvider(),
+        ),
+        ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
+        ),
+      ], child: MyApp(token)),
     );
-  }catch (e) {
+  } catch (e) {
     print(e);
   }
 }
+
 class MyApp extends StatefulWidget {
   String token;
+
   MyApp(this.token);
 
   @override
@@ -121,16 +118,16 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   @override
   void initState() {
     super.initState();
   }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      themeMode:Provider.of<ThemeProvider>(context).themeMode,
-      theme:  CustomTheme.myTheme(),
+      themeMode: Provider.of<ThemeProvider>(context).themeMode,
+      theme: CustomTheme.myTheme(),
       darkTheme: MyThemes.darkTheme,
 
       localizationsDelegates: const [
@@ -157,6 +154,4 @@ class _MyAppState extends State<MyApp> {
       },
     );
   }
-
-
 }
