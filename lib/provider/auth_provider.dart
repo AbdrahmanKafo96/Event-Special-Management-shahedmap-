@@ -25,8 +25,7 @@ class UserAuthProvider extends ChangeNotifier{
     //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final prefs = await Singleton.getPrefInstance();
 
-      //  String value="5|ffLcqmF9uzIBCAI6BXhQNoRx74J9utqNygpzaQ7C";
-      //SharedPreferences prefs  = await Singleton.getPrefInstance();
+
       if(prefs !=null){
         final response =userData['userState'] == 'L' ?
         await http.post(Uri.parse("${Singleton.apiPath}/login"),  body:jsonEncode( userData),
@@ -46,7 +45,7 @@ class UserAuthProvider extends ChangeNotifier{
         if(response.statusCode==200){
 
           var responseData = json.decode(response.body);
-
+            print(responseData);
           if(userData['userState']=='L'){
             if(responseData['message']=="تحقق من البريد الالكتروني وكلمة المرور"){
               showShortToast('تحقق من البريد الالكتروني وكلمة المرور', Colors.red);
