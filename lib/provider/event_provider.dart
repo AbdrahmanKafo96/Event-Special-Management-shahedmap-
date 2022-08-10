@@ -6,8 +6,8 @@ import 'package:flutter/foundation.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/widgets/customToast.dart';
-import 'package:systemevents/models/Category.dart';
-import 'package:systemevents/models/Event.dart';
+import 'package:systemevents/models/category.dart';
+import 'package:systemevents/models/event.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:mockito/mockito.dart';
 
@@ -84,7 +84,32 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  //  we need to close connection after call these methods
+  Future update_position(Map data) async {
+    try {
+      final storage = await Singleton.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: Singleton.getAndroidOptions());
+
+      final response = await http.post(
+        Uri.parse('${Singleton.apiPath}/update_position'),
+        body: jsonEncode(data),
+        headers: {
+          'Accept': 'application/json',
+          'Authorization': 'Bearer $value',
+          'content-type': 'application/json',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        if(jsonDecode(response.body)==1){
+          return 'se';
+        }
+        return  'unse' ;
+      } else {
+        throw Exception('Failed to delete post.');
+      }
+    } catch (e) {}
+  }
   Future deleteEvent(int addede_id, int sender_id) async {
     try {
       final storage = await Singleton.getStorage();

@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/models/Category.dart';
+import 'package:systemevents/models/category.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';

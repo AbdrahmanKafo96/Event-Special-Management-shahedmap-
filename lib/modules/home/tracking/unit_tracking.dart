@@ -1,0 +1,333 @@
+import 'dart:async';
+
+import 'dart:typed_data';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:great_circle_distance_calculator/great_circle_distance_calculator.dart';
+import 'package:hive/hive.dart';
+import 'package:location/location.dart';
+import 'package:provider/provider.dart';
+import 'package:systemevents/models/unit.dart';
+import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/widgets/checkInternet.dart';
+
+class UnitTracking extends StatefulWidget {
+  const UnitTracking({Key key}) : super(key: key);
+
+  @override
+  State<UnitTracking> createState() => _UnitTrackingState();
+}
+
+class _UnitTrackingState extends State<UnitTracking> {
+  StreamSubscription _locationSubscription;
+  Location _locationTracker = Location();
+  Marker marker, _destination;
+  Map data;
+
+  Timer timer;
+  DateTime oldTime, newTime;
+  Circle circle;
+  Completer<GoogleMapController> _controller = Completer();
+
+  double _lat_startpoint, _lng_startpoint, _lat_endpoint, _lng_endpoint;
+
+  double _oldLatitude, _oldLongitude, _newLatitude, _newLongitude;
+
+  static final CameraPosition initialLocation = CameraPosition(
+    target: LatLng(26.3351, 17.2283),
+    zoom: 6,
+  );
+
+  Future<Uint8List> getMarker() async {
+    ByteData byteData =
+        await DefaultAssetBundle.of(context).load("assets/icons/car_icon.png");
+    return byteData.buffer.asUint8List();
+  }
+
+  void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
+    LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
+    setState(() {
+      marker = Marker(
+          markerId: MarkerId("home"),
+          position: latlng,
+          rotation: newLocalData.heading,
+          draggable: false,
+          zIndex: 2,
+          flat: true,
+          anchor: Offset(0.5, 0.5),
+          icon: BitmapDescriptor.fromBytes(imageData));
+
+      circle = Circle(
+          circleId: CircleId("car"),
+          radius: newLocalData.accuracy,
+          zIndex: 1,
+          strokeColor: Colors.blueAccent,
+          center: latlng,
+          fillColor: Colors.blue.withAlpha(70));
+    });
+  }
+
+  Future<void> getCurrentLocation()    async {
+    try {
+
+       final GoogleMapController controller = await _controller.future;
+       Uint8List imageData = await getMarker();
+       var location = await _locationTracker.getLocation();
+
+       updateMarkerAndCircle(location, imageData);
+
+       if (_locationSubscription != null) {
+         _locationSubscription.cancel();
+       }
+       _locationSubscription =
+           _locationTracker.onLocationChanged.listen((newLocalData) {
+             if (controller != null) {
+               _lat_startpoint = location.latitude;
+               _lng_startpoint = location.longitude;
+
+               controller
+                   .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                    bearing: 0,
+
+                   target: LatLng(newLocalData.latitude, newLocalData.longitude),
+                   // tilt: 0,
+                   zoom: 18.0)));
+               updateMarkerAndCircle(newLocalData, imageData);
+             }
+
+      });
+    } on PlatformException catch (e) {
+      if (e.code == 'PERMISSION_DENIED') {
+        debugPrint("Permission Denied");
+      }
+    }
+  }
+
+  int senderID;
+
+  @override
+  void initState() {
+    super.initState();
+    Hive.openBox("Tracking").then((value) => null);
+    print("database is created");
+
+    Singleton.getPrefInstance().then((value) {
+      setState(() {
+        senderID = value.getInt('user_id');
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    Hive.close();
+    timer?.cancel();
+    if (_locationSubscription != null) {
+      _locationSubscription.cancel();
+    }
+  }
+
+  Future<void> _sendLiveLocation() async {
+    var boxTracking = Hive.box('Tracking');
+    var location = await _locationTracker.getLocation();
+    _newLatitude = location.latitude;
+    _newLongitude = location.longitude;
+
+    if (_oldLatitude != null &&
+        _oldLongitude != null &&
+        _newLatitude != null &&
+        _newLongitude != null) {
+      double distance = vincentyGreatCircleDistance(
+          _oldLatitude, _oldLongitude, _newLatitude, _newLongitude);
+
+      newTime = DateTime.now();
+      int minutes = newTime.minute - oldTime.minute;
+      int seconds = newTime.second - oldTime.second;
+
+      if (minutes < 0) minutes *= -1;
+
+      if (seconds < 0) seconds *= -1;
+
+      double totalHours = ((minutes * 60) + seconds + (newTime.hour * 3600)) /
+          3600.0; // convert time to hours
+
+      var location = await _locationTracker.getLocation();
+      data = {
+        'sender_id': senderID.toString(),
+        'beneficiarie_id': 88.toString(), // ok we will do it soon
+        'lat': location.latitude.toString(),
+        'lng': location.longitude.toString(),
+        'distance': distance.toString(),
+        'lat_startpoint': _lat_startpoint.toString(),
+        'lng_startpoint': _lng_startpoint.toString(),
+        'lat_endpoint': _lat_endpoint.toString(),
+        'lng_endpoint': _lng_endpoint.toString(),
+        'time': totalHours
+      };
+
+      checkInternetConnectivity(context).then((bool value) async {
+        if (true) //distance > 4
+        {
+          if (value) // phone is connected ...
+          {
+            await syncData().then((value) {
+              print("now its time to upload data");
+              Provider.of<EventProvider>(context, listen: false)
+                  .update_position(data);
+            }); // for sync local data
+
+          } else {
+            boxTracking.add(Tracking(
+                senderID: senderID,
+                beneficiarieID: 88,
+                lat: location.latitude,
+                lng: location.longitude,
+                distance: distance,
+                latStartPoint: _lat_startpoint,
+                lngStartPoint: _lng_startpoint,
+                latEndPoint: _lat_endpoint,
+                lngEndPoint: _lng_endpoint,
+                time: totalHours));
+            print("item is saved in local database ");
+          }
+        }
+      });
+
+      setState(() {
+        _oldLatitude = _newLatitude;
+        _oldLongitude = _newLongitude;
+        oldTime = newTime;
+      });
+      // send data to the api...
+
+    } else {
+      print("this first call");
+    }
+  }
+
+  handleTap(LatLng tappedPoint) async {
+    var location = await _locationTracker.getLocation();
+
+    setState(() {
+      _destination = null;
+      _destination = Marker(
+        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+        markerId: MarkerId(tappedPoint.toString()),
+        position: tappedPoint,
+      );
+
+      _lat_endpoint = _destination.position.latitude;
+      _lng_endpoint = _destination.position.longitude;
+
+      _oldLatitude = location.latitude;
+      _oldLongitude = location.longitude;
+
+      oldTime = DateTime.now();
+
+      timer = Timer.periodic(
+          Duration(seconds: 40), (Timer t) => _sendLiveLocation());
+    });
+  }
+
+  double vincentyGreatCircleDistance(
+    double oldLatitude,
+    double oldLongitude,
+    double newLatitude,
+    double newLongitude,
+  ) {
+    // convert from degrees to radians
+    var gcd = GreatCircleDistance.fromDegrees(
+        latitude1: oldLatitude,
+        longitude1: oldLongitude,
+        latitude2: newLatitude,
+        longitude2: newLongitude);
+
+    return gcd.sphericalLawOfCosinesDistance();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("تتبع السيارة"),
+      ),
+      body: GoogleMap(
+        myLocationEnabled: true,
+        onTap: handleTap,
+        onLongPress: (val) {
+          setState(() {
+            _destination = null;
+          });
+        },
+        myLocationButtonEnabled: false,
+        mapType: MapType.hybrid,
+        initialCameraPosition: initialLocation,
+        markers: {
+          if (marker != null) marker,
+          if (_destination != null) _destination
+        },
+     //   circles: Set.of((circle != null) ? [circle] : []),
+        onMapCreated: (GoogleMapController controller) {
+          _controller.complete(controller);
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.location_searching),
+          onPressed: ()    async {
+           getCurrentLocation();
+           //  final GoogleMapController controller = await _controller.future;
+           //  LocationData currentLocation;
+           //  var location = new Location();
+           //  try {
+           //    currentLocation = await location.getLocation();
+           //  } on Exception {
+           //    currentLocation = null;
+           //  }
+           //
+           //  controller.animateCamera(CameraUpdate.newCameraPosition(
+           //    CameraPosition(
+           //      bearing: 0,
+           //      target: LatLng(currentLocation.latitude, currentLocation.longitude),
+           //      zoom: 15.0,
+           //    ),
+           //  ));
+          }),
+    );
+  }
+
+  Future<bool> syncData() async {
+    var boxTracking = await Hive.box('Tracking');
+    print("database local is open ");
+
+    Tracking tracking;
+    if (boxTracking.length == 0) {
+      print("there is no data to sync ");
+    }
+    if (boxTracking.length > 0) {
+      for (int i = 0; i < boxTracking.length; i++) {
+        tracking = boxTracking.getAt(i);
+
+        Map data = {
+          'sender_id': tracking.senderID.toString(),
+          'beneficiarie_id': tracking.beneficiarieID.toString(),
+          'lat': tracking.lat.toString(),
+          'lng': tracking.lng.toString(),
+          'distance': tracking.distance.toString(),
+          'lat_startpoint': tracking.latStartPoint.toString(),
+          'lng_startpoint': tracking.lngStartPoint.toString(),
+          'lat_endpoint': tracking.latEndPoint.toString(),
+          'lng_endpoint': tracking.lngEndPoint.toString(),
+          'time': tracking.time.toString()
+        };
+        print("local item is sent ...");
+        Provider.of<EventProvider>(context, listen: false)
+            .update_position(data);
+      }
+      boxTracking.clear();
+    }
+    return true;
+  }
+}

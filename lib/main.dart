@@ -3,8 +3,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:systemevents/models/unit.dart';
 import 'package:systemevents/modules/home/Responses/responses_screen.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/home.dart';
@@ -28,6 +30,7 @@ import 'package:workmanager/workmanager.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
+import 'package:path_provider/path_provider.dart' as path;
 
 callbackDispatcher() {
   try {
@@ -78,6 +81,10 @@ Future main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
+    final directory = await path.getApplicationDocumentsDirectory();
+    Hive.init(directory.path);
+    Hive.registerAdapter(TrackingAdapter());
+
     String token = null;
     final storage = await Singleton.getStorage();
 

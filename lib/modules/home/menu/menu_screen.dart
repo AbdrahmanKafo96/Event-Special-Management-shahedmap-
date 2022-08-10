@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
-import 'package:systemevents/models/Event.dart';
+import 'package:systemevents/models/event.dart';
 import 'package:systemevents/modules/home/menu/view_screen.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';

@@ -38,7 +38,9 @@ dependencies:
 
 #audioplayers:
 #flutter_audio_recorder2:
-  path_provider: ^2.0.6
+  path_provider: ^2.0.11
+  hive: ^2.2.3
+  hive_flutter: ^1.1.0
   provider:
   shared_preferences: ^2.0.15
   icon_shadow: ^1.0.1
@@ -47,10 +49,10 @@ dependencies:
   google_fonts: ^2.2.0
   connectivity:
   video_player: ^2.2.7
-  #location: any
   firebase_core: ^1.18.0
   firebase_messaging: ^11.4.2
   platform_device_id: ^1.0.1
+  great_circle_distance_calculator: ^1.0.3
 #  geolocator: ^8.0.1
 #  workmanager: ^0.2.0
 #  flutter_local_notifications: ^9.2.0
@@ -73,6 +75,8 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
   test: ^1.17.12
+  hive_generator: ^1.1.3
+  build_runner: ^2.2.0
 
 flutter_icons:
   android: "launcher_icon"
@@ -86,9 +90,8 @@ dependency_overrides:
     sdk: flutter
   intl: 0.17.0-nullsafety.2
   image_picker: ^0.8.5+3
-#  google_maps_flutter: ^2.1.0
   location: ^4.4.0
-  google_maps_flutter: ^2.0.6
+  google_maps_flutter: ^2.1.10
   flutter_plugin_android_lifecycle: ^2.0.1
   plugin_platform_interface: ^2.0.0
   geolocator: ^8.0.1
@@ -109,6 +112,7 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     - assets/images/
+    - assets/icons/
   #   - images/a_dot_ham.jpeg
 
   # An image asset can refer to one or more resolution-specific "variants", see

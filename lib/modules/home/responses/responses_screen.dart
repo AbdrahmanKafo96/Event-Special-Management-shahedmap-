@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:systemevents/models/Category.dart';
+import 'package:systemevents/models/category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
 import 'package:systemevents/modules/home/responses/map_respo.dart';
  import 'package:systemevents/provider/event_provider.dart';
