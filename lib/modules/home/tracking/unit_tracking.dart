@@ -1,5 +1,5 @@
 import 'dart:async';
-
+import 'package:geolocator/geolocator.dart' as geo;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,7 +25,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   Location _locationTracker = Location();
   Marker marker, _destination;
   Map data;
-
+  geo.Position currentPosition;
   Timer timer;
   DateTime oldTime, newTime;
   Circle circle;
@@ -35,10 +35,7 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   double _oldLatitude, _oldLongitude, _newLatitude, _newLongitude;
 
-  static final CameraPosition initialLocation = CameraPosition(
-    target: LatLng(26.3351, 17.2283),
-    zoom: 6,
-  );
+  static CameraPosition _kGooglePlex;
 
   Future<Uint8List> getMarker() async {
     ByteData byteData =
@@ -69,34 +66,31 @@ class _UnitTrackingState extends State<UnitTracking> {
     });
   }
 
-  Future<void> getCurrentLocation()    async {
+  Future<void> getIniLocation() async {
     try {
+      final GoogleMapController controller = await _controller.future;
+      Uint8List imageData = await getMarker();
+      var location = await _locationTracker.getLocation();
 
-       final GoogleMapController controller = await _controller.future;
-       Uint8List imageData = await getMarker();
-       var location = await _locationTracker.getLocation();
+      updateMarkerAndCircle(location, imageData);
 
-       updateMarkerAndCircle(location, imageData);
+      if (_locationSubscription != null) {
+        _locationSubscription.cancel();
+      }
+      _locationSubscription =
+          _locationTracker.onLocationChanged.listen((newLocalData) {
+        if (controller != null) {
+          _lat_startpoint = location.latitude;
+          _lng_startpoint = location.longitude;
 
-       if (_locationSubscription != null) {
-         _locationSubscription.cancel();
-       }
-       _locationSubscription =
-           _locationTracker.onLocationChanged.listen((newLocalData) {
-             if (controller != null) {
-               _lat_startpoint = location.latitude;
-               _lng_startpoint = location.longitude;
-
-               controller
-                   .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-                    bearing: 0,
-
-                   target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                   // tilt: 0,
-                   zoom: 18.0)));
-               updateMarkerAndCircle(newLocalData, imageData);
-             }
-
+          controller
+              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                  bearing: 0,
+                  target: LatLng(newLocalData.latitude, newLocalData.longitude),
+                  // tilt: 0,
+                  zoom: 18.0)));
+          updateMarkerAndCircle(newLocalData, imageData);
+        }
       });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
@@ -110,12 +104,20 @@ class _UnitTrackingState extends State<UnitTracking> {
   @override
   void initState() {
     super.initState();
-    Hive.openBox("Tracking").then((value) => null);
-    print("database is created");
 
-    Singleton.getPrefInstance().then((value) {
-      setState(() {
-        senderID = value.getInt('user_id');
+    Hive.openBox("Tracking").then((value) => null);
+    print("database is opened ");
+    Singleton.getPrefInstance().then((getValue) {
+      getCurrentPosition().then((value) {
+        setState(() {
+          senderID = getValue.getInt('user_id');
+          _kGooglePlex = CameraPosition(
+            target: LatLng(currentPosition.latitude, currentPosition.longitude),
+            zoom: 14,
+          );
+          getIniLocation();
+        });
+        return value;
       });
     });
   }
@@ -123,6 +125,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   @override
   void dispose() {
     super.dispose();
+    _kGooglePlex = null;
     Hive.close();
     timer?.cancel();
     if (_locationSubscription != null) {
@@ -232,6 +235,11 @@ class _UnitTrackingState extends State<UnitTracking> {
     });
   }
 
+  Future getCurrentPosition() async {
+    currentPosition = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.bestForNavigation);
+  }
+
   double vincentyGreatCircleDistance(
     double oldLatitude,
     double oldLongitude,
@@ -254,47 +262,53 @@ class _UnitTrackingState extends State<UnitTracking> {
       appBar: AppBar(
         title: Text("تتبع السيارة"),
       ),
-      body: GoogleMap(
-        myLocationEnabled: true,
-        onTap: handleTap,
-        onLongPress: (val) {
-          setState(() {
-            _destination = null;
-          });
-        },
-        myLocationButtonEnabled: false,
-        mapType: MapType.hybrid,
-        initialCameraPosition: initialLocation,
-        markers: {
-          if (marker != null) marker,
-          if (_destination != null) _destination
-        },
-     //   circles: Set.of((circle != null) ? [circle] : []),
-        onMapCreated: (GoogleMapController controller) {
-          _controller.complete(controller);
-        },
-      ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(Icons.location_searching),
-          onPressed: ()    async {
-           getCurrentLocation();
-           //  final GoogleMapController controller = await _controller.future;
-           //  LocationData currentLocation;
-           //  var location = new Location();
-           //  try {
-           //    currentLocation = await location.getLocation();
-           //  } on Exception {
-           //    currentLocation = null;
-           //  }
-           //
-           //  controller.animateCamera(CameraUpdate.newCameraPosition(
-           //    CameraPosition(
-           //      bearing: 0,
-           //      target: LatLng(currentLocation.latitude, currentLocation.longitude),
-           //      zoom: 15.0,
-           //    ),
-           //  ));
-          }),
+      body: _kGooglePlex == null
+          ? Container(
+              child: Center(
+                  child: CircularProgressIndicator(
+              color: Colors.green,
+            )))
+          : GoogleMap(
+              myLocationEnabled: true,
+              onTap: handleTap,
+              onLongPress: (val) {
+                setState(() {
+                  _destination = null;
+                });
+              },
+              myLocationButtonEnabled: false,
+              mapType: MapType.hybrid,
+              initialCameraPosition: _kGooglePlex,
+              markers: {
+                if (marker != null) marker,
+                if (_destination != null) _destination
+              },
+              //   circles: Set.of((circle != null) ? [circle] : []),
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+              },
+            ),
+      // floatingActionButton: FloatingActionButton(
+      //     child: Icon(Icons.location_searching),
+      //     onPressed: ()    async {
+      //      getCurrentLocation();
+      //      //  final GoogleMapController controller = await _controller.future;
+      //      //  LocationData currentLocation;
+      //      //  var location = new Location();
+      //      //  try {
+      //      //    currentLocation = await location.getLocation();
+      //      //  } on Exception {
+      //      //    currentLocation = null;
+      //      //  }
+      //      //
+      //      //  controller.animateCamera(CameraUpdate.newCameraPosition(
+      //      //    CameraPosition(
+      //      //      bearing: 0,
+      //      //      target: LatLng(currentLocation.latitude, currentLocation.longitude),
+      //      //      zoom: 15.0,
+      //      //    ),
+      //      //  ));
+      //     }),
     );
   }
 

@@ -42,18 +42,13 @@ class _MappolyState extends State<Mappoly> {
   void initState() {
     super.initState();
     getCurrentPosition().then((value){
-
-
-
       setState(() {
       _kGooglePlex=CameraPosition(
         target: LatLng(currentPosition.latitude, currentPosition.longitude),
         zoom: 14 ,
       );
-
       });
       return value;
-
     });
 
   }
