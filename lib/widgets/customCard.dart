@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget customCard( IconData icon , String title){
+Widget customCard( IconData icon , String title ){
   return  Card(
-    color: Colors.white,
+   // color: color,
     borderOnForeground: true,
     elevation:4.0,
     margin: new EdgeInsets.all(8.0),

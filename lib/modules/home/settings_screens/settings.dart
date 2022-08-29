@@ -31,7 +31,7 @@ class _SettingsState extends State<Settings> {
           children: <Widget>[
             if(state==false)dashboardItem(context,"الصفحة الشخصية", Icons.account_circle,'ProfilePage' ),
             if(state==false)dashboardItem(context,"تعيين كلمة المرور", Icons.lock_clock,'ResetPage'),
-             dashboardItem(context,"تغيير خلفية التطبيق", Icons.nights_stay,'ThemeApp'),
+             dashboardItem(context,"الاعدادت", Icons.settings,'ThemeApp'),
              dashboardItem(context,"حول التطبيق", Icons.info,'About'),
           ],
         ),

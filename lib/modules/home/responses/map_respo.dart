@@ -5,7 +5,8 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
 
 class Mappoly extends StatefulWidget {
-  double lat ,lng;
+  double lat, lng;
+
   Mappoly({this.lat, this.lng});
 
   @override
@@ -23,65 +24,73 @@ class _MappolyState extends State<Mappoly> {
   PolylinePoints polylinePoints = PolylinePoints();
   Position currentPosition;
   Completer<GoogleMapController> _controller = Completer();
-  static  CameraPosition _kGooglePlex ;
-
+  static CameraPosition _kGooglePlex;
 
   var geoLocator = Geolocator();
-  var locationOptions =  LocationSettings(
-      accuracy: LocationAccuracy.bestForNavigation,
-      distanceFilter: 4,
-    );
-   Future getCurrentPosition() async {
+  var locationOptions = LocationSettings(
+    accuracy: LocationAccuracy.bestForNavigation,
+    distanceFilter: 4,
+  );
 
-        currentPosition = await Geolocator.getCurrentPosition(
-            desiredAccuracy: LocationAccuracy.bestForNavigation);
-
+  Future getCurrentPosition() async {
+    currentPosition = await Geolocator.getCurrentPosition(
+        desiredAccuracy: LocationAccuracy.bestForNavigation);
   }
+
   CameraPosition initialCameraPosition;
+
   @override
   void initState() {
     super.initState();
-    getCurrentPosition().then((value){
+    getCurrentPosition().then((value) {
       setState(() {
-      _kGooglePlex=CameraPosition(
-        target: LatLng(currentPosition.latitude, currentPosition.longitude),
-        zoom: 14 ,
-      );
+        _kGooglePlex = CameraPosition(
+          target: LatLng(currentPosition.latitude, currentPosition.longitude),
+          zoom: 14,
+        );
       });
       return value;
     });
-
   }
-@override
+
+  @override
   void dispose() {
     super.dispose();
-    polylines=null;
-    _kGooglePlex=null;
-    mapController=null;
-    initialCameraPosition=null;
-    _controller=null;
-    markers=null;
+    polylines = null;
+    _kGooglePlex = null;
+    mapController = null;
+    initialCameraPosition = null;
+    _controller = null;
+    markers = null;
   }
+
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-        appBar: AppBar(centerTitle: true,title: Text('الاستجابة'),),
-        body:_kGooglePlex==null?Container(child: Center(child: CircularProgressIndicator(color: Colors.green,)))  : GoogleMap(
-          padding: EdgeInsets.only(top: 135),
-          myLocationButtonEnabled: true,
-          myLocationEnabled: true,
-          mapType: MapType.normal,
-          initialCameraPosition: _kGooglePlex,
-          onMapCreated: (GoogleMapController controller) {
-            _controller.complete(controller);
-            mapController = controller;
-            _getPolyline(widget.lat,widget.lng);
-          },
-          polylines: Set<Polyline>.of(polylines.values),
-          markers: Set<Marker>.of(markers.values),
-        ),
-
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('الاستجابة'),
+      ),
+      body: _kGooglePlex == null
+          ? Container(
+              child: Center(
+                  child: CircularProgressIndicator(
+              color: Colors.green,
+            )))
+          : GoogleMap(
+              padding: EdgeInsets.only(top: 135),
+              myLocationButtonEnabled: true,
+              myLocationEnabled: true,
+              mapType: MapType.normal,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                _controller.complete(controller);
+                mapController = controller;
+                _getPolyline(widget.lat, widget.lng);
+              },
+              polylines: Set<Polyline>.of(polylines.values),
+              markers: Set<Marker>.of(markers.values),
+            ),
     );
   }
 
@@ -89,12 +98,14 @@ class _MappolyState extends State<Mappoly> {
   _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
     MarkerId markerId = MarkerId(id);
     Marker marker =
-    Marker(markerId: markerId, icon: descriptor, position: position);
+        Marker(markerId: markerId, icon: descriptor, position: position);
     markers[markerId] = marker;
   }
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
-    PolylineId id = PolylineId("poly" ,);
+    PolylineId id = PolylineId(
+      "poly",
+    );
     Polyline polyline = Polyline(
       polylineId: id,
       color: Colors.blue,
@@ -105,7 +116,7 @@ class _MappolyState extends State<Mappoly> {
     setState(() {});
   }
 
-  void _getPolyline(var lat , var long) async {
+  void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
     _addMarker(
       LatLng(currentPosition.latitude, currentPosition.longitude),
@@ -335,89 +346,86 @@ class _MappolyState extends State<Mappoly> {
 //       });
 //     }}
 
-
-
-
-  //   GoogleMapController mapController;
-  //   // double _originLatitude = 6.5212402, _originLongitude = 3.3679965;
-  //   // double _destLatitude = 6.849660, _destLongitude = 3.648190;
-  //   double _originLatitude = 26.48424, _originLongitude = 50.04551;
-  //   double _destLatitude = 26.46423, _destLongitude = 50.06358;
-  //   Map<MarkerId, Marker> markers = {};
-  //   Map<PolylineId, Polyline> polylines = {};
-  //   List<LatLng> polylineCoordinates = [];
-  //   PolylinePoints polylinePoints = PolylinePoints();
-  //   String googleAPiKey = "AIzaSyD_zQR-4DgIbGEQrgv4ENebE430KtB0fOk";
-  //
-  //   @override
-  //   void initState() {
-  //     super.initState();
-  //
-  //     /// origin marker
-  //     _addMarker(LatLng(_originLatitude, _originLongitude), "origin",
-  //         BitmapDescriptor.defaultMarker);
-  //
-  //     /// destination marker
-  //     _addMarker(LatLng(_destLatitude, _destLongitude), "destination",
-  //         BitmapDescriptor.defaultMarkerWithHue(90));
-  //     _getPolyline();
-  //   }
-  //
-  //   @override
-  //   Widget build(BuildContext context) {
-  //     return SafeArea(
-  //       child: Scaffold(
-  //           body: GoogleMap(
-  //             initialCameraPosition: CameraPosition(
-  //                 target: LatLng(_originLatitude, _originLongitude), zoom: 15),
-  //             myLocationEnabled: true,
-  //             tiltGesturesEnabled: true,
-  //             compassEnabled: true,
-  //             scrollGesturesEnabled: true,
-  //             zoomGesturesEnabled: true,
-  //             onMapCreated: _onMapCreated,
-  //             markers: Set<Marker>.of(markers.values),
-  //             polylines: Set<Polyline>.of(polylines.values),
-  //           )),
-  //     );
-  //   }
-  //
-  //   void _onMapCreated(GoogleMapController controller) async {
-  //     mapController = controller;
-  //   }
-  //
-  //   _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
-  //     MarkerId markerId = MarkerId(id);
-  //     Marker marker =
-  //     Marker(markerId: markerId, icon: descriptor, position: position ,);
-  //     markers[markerId] = marker;
-  //   }
-  //
-  //   _addPolyLine() {
-  //
-  //     setState(() {
-  //       PolylineId id = PolylineId("poly");
-  //       Polyline polyline = Polyline(
-  //           patterns: [PatternItem.dash(10), PatternItem.gap(10)],
-  //           // startCap: Cap.roundCap,
-  //           // endCap: Cap.roundCap,
-  //           polylineId: id, color: Colors.red, points: polylineCoordinates);
-  //       polylines[id] = polyline;
-  //     });
-  //   }
-  //
-  //   _getPolyline() async {
-  //     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-  //         googleAPiKey,
-  //         PointLatLng(_originLatitude, _originLongitude),
-  //         PointLatLng(_destLatitude, _destLongitude),
-  //         travelMode: TravelMode.driving,
-  //         wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]);
-  //     if (result.points.isNotEmpty) {
-  //       result.points.forEach((PointLatLng point) {
-  //         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-  //       });
-  //     }
-  //     _addPolyLine();
-  //   }
-  // }
+//   GoogleMapController mapController;
+//   // double _originLatitude = 6.5212402, _originLongitude = 3.3679965;
+//   // double _destLatitude = 6.849660, _destLongitude = 3.648190;
+//   double _originLatitude = 26.48424, _originLongitude = 50.04551;
+//   double _destLatitude = 26.46423, _destLongitude = 50.06358;
+//   Map<MarkerId, Marker> markers = {};
+//   Map<PolylineId, Polyline> polylines = {};
+//   List<LatLng> polylineCoordinates = [];
+//   PolylinePoints polylinePoints = PolylinePoints();
+//   String googleAPiKey = "AIzaSyD_zQR-4DgIbGEQrgv4ENebE430KtB0fOk";
+//
+//   @override
+//   void initState() {
+//     super.initState();
+//
+//     /// origin marker
+//     _addMarker(LatLng(_originLatitude, _originLongitude), "origin",
+//         BitmapDescriptor.defaultMarker);
+//
+//     /// destination marker
+//     _addMarker(LatLng(_destLatitude, _destLongitude), "destination",
+//         BitmapDescriptor.defaultMarkerWithHue(90));
+//     _getPolyline();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return SafeArea(
+//       child: Scaffold(
+//           body: GoogleMap(
+//             initialCameraPosition: CameraPosition(
+//                 target: LatLng(_originLatitude, _originLongitude), zoom: 15),
+//             myLocationEnabled: true,
+//             tiltGesturesEnabled: true,
+//             compassEnabled: true,
+//             scrollGesturesEnabled: true,
+//             zoomGesturesEnabled: true,
+//             onMapCreated: _onMapCreated,
+//             markers: Set<Marker>.of(markers.values),
+//             polylines: Set<Polyline>.of(polylines.values),
+//           )),
+//     );
+//   }
+//
+//   void _onMapCreated(GoogleMapController controller) async {
+//     mapController = controller;
+//   }
+//
+//   _addMarker(LatLng position, String id, BitmapDescriptor descriptor) {
+//     MarkerId markerId = MarkerId(id);
+//     Marker marker =
+//     Marker(markerId: markerId, icon: descriptor, position: position ,);
+//     markers[markerId] = marker;
+//   }
+//
+//   _addPolyLine() {
+//
+//     setState(() {
+//       PolylineId id = PolylineId("poly");
+//       Polyline polyline = Polyline(
+//           patterns: [PatternItem.dash(10), PatternItem.gap(10)],
+//           // startCap: Cap.roundCap,
+//           // endCap: Cap.roundCap,
+//           polylineId: id, color: Colors.red, points: polylineCoordinates);
+//       polylines[id] = polyline;
+//     });
+//   }
+//
+//   _getPolyline() async {
+//     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
+//         googleAPiKey,
+//         PointLatLng(_originLatitude, _originLongitude),
+//         PointLatLng(_destLatitude, _destLongitude),
+//         travelMode: TravelMode.driving,
+//         wayPoints: [PolylineWayPoint(location: "Sabo, Yaba Lagos Nigeria")]);
+//     if (result.points.isNotEmpty) {
+//       result.points.forEach((PointLatLng point) {
+//         polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+//       });
+//     }
+//     _addPolyLine();
+//   }
+// }

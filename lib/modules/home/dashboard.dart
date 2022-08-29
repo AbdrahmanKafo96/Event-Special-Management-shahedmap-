@@ -86,6 +86,9 @@ class _DashboardState extends State<Dashboard> {
 
   Widget dashboardItem(
       BuildContext ctx, String title, IconData icon, String routName) {
+    // var mode=Singleton.getPrefInstance().then((value) {
+    //
+    // });
     return InkWell(
       onTap: () async {
         loc.Location location = loc.Location();

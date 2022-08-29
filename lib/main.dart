@@ -12,11 +12,12 @@ import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/modules/home/menu/menu_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateNewPasswordView.dart';
-import 'package:systemevents/modules/home/settings_screens/ThemeApp.dart';
+import 'package:systemevents/modules/home/settings_screens/AppSettings.dart';
 import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/theme/TheamProvider.dart';
 import 'package:systemevents/theme/theam.dart';
@@ -77,6 +78,9 @@ callbackDispatcher() {
   }
 }
 
+String language="AR";
+//bool  darkMode=false;
+
 Future main() async {
   try {
     WidgetsFlutterBinding.ensureInitialized();
@@ -92,6 +96,9 @@ Future main() async {
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
     final pref = await Singleton.getPrefInstance();
+    language=pref.getString('language');
+    //darkMode=pref.getBool('darkMode');
+
     if (pref.getInt('version_number') == null) pref.setInt('version_number', 0);
 
     if (defaultTargetPlatform == TargetPlatform.android) {
@@ -105,8 +112,11 @@ Future main() async {
         ChangeNotifierProvider<UserAuthProvider>(
           create: (context) => UserAuthProvider(),
         ),
-        ChangeNotifierProvider<ThemeProvider>(
-          create: (context) => ThemeProvider(),
+        // ChangeNotifierProvider<ThemeProvider>(
+        //   create: (context) => ThemeProvider(),
+        // ),
+        ChangeNotifierProvider<DarkThemeProvider>(
+          create: (context) => DarkThemeProvider(),
         ),
       ], child: MyApp(token)),
     );
@@ -125,40 +135,65 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
+  DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+
   @override
   void initState() {
     super.initState();
+    getCurrentAppTheme();
+  }
+
+  void getCurrentAppTheme()   {
+
+
+            themeChangeProvider.darkThemePreference.getTheme().then((value) {
+              setState(() {
+                themeChangeProvider.darkTheme =value;
+              });
+            });
+
   }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      themeMode: Provider.of<ThemeProvider>(context).themeMode,
-      theme: CustomTheme.myTheme(),
-      darkTheme: MyThemes.darkTheme,
+    //final theme=Provider.of<ProviderData>(context);
+    return
+      ChangeNotifierProvider(
+        create: (_) {
+          return themeChangeProvider;
+        },
+        child: Consumer<DarkThemeProvider>(
+          builder: (BuildContext context, value, Widget child) {
+            return MaterialApp(
+              // themeMode: Provider.of<ThemeProvider>(context).themeMode,
+              theme:  Styles.themeData(themeChangeProvider.darkTheme, context),
+              // darkTheme: MyThemes.darkTheme,
 
-      localizationsDelegates: const [
-        GlobalMaterialLocalizations.delegate,
-        GlobalWidgetsLocalizations.delegate,
-        GlobalCupertinoLocalizations.delegate,
-      ],
-      supportedLocales: [
-        Locale('ar', ''), // arabic, no country code
-      ],
-      //theme:,
-      debugShowCheckedModeBanner: false,
-      home: widget.token != null ? HomePage() : LoginUi(),
-      routes: {
-        'About': (context) => About(),
-        'ProfilePage': (context) => ProfilePage(),
-        'ResetPage': (context) => CreateNewPasswordView(),
-        'ThemeApp': (context) => ThemeApp(),
-        'EventSectionOne': (context) => EventSectionOne(),
-        'eventList': (context) => EventsMenu(),
-        'CustomWebView': (context) => CustomWebView(),
-        'response': (context) => ResponsePage(),
-        'successPage': (context) => SuccessPage(),
-      },
-    );
+              localizationsDelegates: const [
+                GlobalMaterialLocalizations.delegate,
+                GlobalWidgetsLocalizations.delegate,
+                GlobalCupertinoLocalizations.delegate,
+              ],
+              supportedLocales: [
+                Locale('ar', ''), // arabic, no country code
+              ],
+              //theme:,
+              debugShowCheckedModeBanner: false,
+              home: widget.token != null ? HomePage() : LoginUi(),
+              routes: {
+                'About': (context) => About(),
+                'ProfilePage': (context) => ProfilePage(),
+                'ResetPage': (context) => CreateNewPasswordView(),
+                'ThemeApp': (context) => AppSettings(),
+                'EventSectionOne': (context) => EventSectionOne(),
+                'eventList': (context) => EventsMenu(),
+                'CustomWebView': (context) => CustomWebView(),
+                'response': (context) => ResponsePage(),
+                'successPage': (context) => SuccessPage(),
+              },
+            );
+          },
+        ),);
+
   }
 }
