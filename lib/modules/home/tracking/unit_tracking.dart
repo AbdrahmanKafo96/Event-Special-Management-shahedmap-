@@ -260,6 +260,15 @@ class _UnitTrackingState extends State<UnitTracking> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C) ,
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+        ),
         title: Text("تتبع السيارة"),
       ),
       body: _kGooglePlex == null

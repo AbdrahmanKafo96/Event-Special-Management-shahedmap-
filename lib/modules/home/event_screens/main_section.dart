@@ -45,6 +45,15 @@ class _EventSectionOneState extends State<EventSectionOne> {
         textDirection: ui.TextDirection.rtl,
         child: Scaffold(
             appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF00695C) ,
+                        Color(0xFF4DB6AC),
+                      ],
+                    )),
+              ),
               title: Text(
                 'حدث جديد',
                 style: TextStyle(fontWeight: FontWeight.bold),

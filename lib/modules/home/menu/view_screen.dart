@@ -43,6 +43,15 @@ class _EventViewState extends State<EventView> {
         textDirection: TextDirection.rtl,
         child: Scaffold(
             appBar: AppBar(
+              flexibleSpace: Container(
+                decoration: const BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [
+                        Color(0xFF00695C) ,
+                        Color(0xFF4DB6AC),
+                      ],
+                    )),
+              ),
               elevation: 0,
               title: Text(
                 '${widget.eventName}',

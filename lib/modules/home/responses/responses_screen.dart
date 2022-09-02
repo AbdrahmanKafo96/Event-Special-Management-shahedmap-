@@ -288,19 +288,15 @@ class _ResponsePageState extends State<ResponsePage> {
       child: Scaffold(
 
         appBar: AppBar(
-          actions: [
-            // IconButton(
-            //     tooltip: 'بحث',
-            //     icon: Icon(
-            //       Icons.search_rounded,
-            //       color: Colors.white,
-            //     ),
-            //     onPressed: () {
-            //       // showSearch(context: context,
-            //       //     delegate: DataSearchSe(listName: listNames,futureList: futureList));
-            //     }),
-
-          ],
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF00695C) ,
+                    Color(0xFF4DB6AC),
+                  ],
+                )),
+          ),
           centerTitle: true,
           elevation: 1.0,
           titleSpacing: 1.0,

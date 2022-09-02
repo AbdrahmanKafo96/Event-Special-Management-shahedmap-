@@ -79,6 +79,15 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Scaffold(
           key: _scaffoldKey,
           appBar: AppBar(
+            flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Color(0xFF00695C) ,
+                      Color(0xFF4DB6AC),
+                    ],
+                  )),
+            ),
             title: Text(
               ' بيانات المستخدم',
               style: TextStyle(fontWeight: FontWeight.bold),

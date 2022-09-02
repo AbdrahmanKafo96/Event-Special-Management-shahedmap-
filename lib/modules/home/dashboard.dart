@@ -12,6 +12,7 @@ import 'package:another_flushbar/flushbar.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:systemevents/main.dart';
 import 'package:location/location.dart' as loc;
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -57,22 +58,24 @@ class _DashboardState extends State<Dashboard> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 2.0),
-        child: GridView.count(
-          crossAxisCount: 2,
-          padding: EdgeInsets.all(3.0),
-          children: <Widget>[
-            dashboardItem(context, "قائمة الاحداث", Icons.list, 'eventList'),
+       padding: EdgeInsets.symmetric(vertical: 20.0, horizontal: 2.0),
+      child: GridView.count(
+        crossAxisCount: 2,
+        shrinkWrap: true,
+        physics: NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.all(1.0),
+        children: <Widget>[
+          dashboardItem(context, "قائمة الأحداث", FontAwesomeIcons.list, 'eventList',Colors.blue ),
+          dashboardItem(
+              context, "تصفح الموقع", FontAwesomeIcons.globeAmericas, 'CustomWebView',Colors.orange),
+          dashboardItem(
+              context, "إبلاغ الجهة", FontAwesomeIcons.users, 'CustomWebView',Colors.greenAccent),
+          if (state == true)
             dashboardItem(
-                context, "تصفح الموقع", Icons.language, 'CustomWebView'),
-            dashboardItem(
-                context, "تواصل مع الجهات", Icons.people, 'CustomWebView'),
-            if (state == true)
-              dashboardItem(
-                  context, "قائمة الاستجابات", Icons.list, 'response'),
-          ],
-        ),
+                context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),dashboardItem(
+                context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),dashboardItem(
+                context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),
+        ],
       ),
     );
   }
@@ -85,7 +88,7 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Widget dashboardItem(
-      BuildContext ctx, String title, IconData icon, String routName) {
+      BuildContext ctx, String title, IconData icon, String routName ,Color color) {
     // var mode=Singleton.getPrefInstance().then((value) {
     //
     // });
@@ -109,7 +112,7 @@ class _DashboardState extends State<Dashboard> {
         if (_permissionGranted == loc.PermissionStatus.denied) {
           _permissionGranted = await location.requestPermission();}
           if (_permissionGranted == loc.PermissionStatus.granted) {
-            if (title == "تواصل مع الجهات") {
+            if (title == "إبلاغ الجهة") {
               createDialog(ctx, "اختيار الصنف والنوع", 'إرسال', (
                   {TextEditingController textEditingController}) async {
                 String type_name =
@@ -148,14 +151,7 @@ class _DashboardState extends State<Dashboard> {
                     longitude == null ||
                     category_name == null ||
                     type_name == null) {
-                  //         ScaffoldMessenger.of(ctx).showSnackBar(SnackBar(
-                  //           key: _scaffoldkey,
-                  //   content: Text(
-                  //     'يجب ان تدخل الصنف والنوع',
-                  //     textDirection: TextDirection.rtl,
-                  //   ),
-                  //   backgroundColor: Colors.orangeAccent,
-                  // ));
+
                   await Flushbar(
                     //  title: 'Hey Ninja',
                     message: 'يجب ان تدخل الصنف والنوع',
@@ -194,7 +190,7 @@ class _DashboardState extends State<Dashboard> {
           }
 
       },
-      child: customCard(icon, title),
+      child: customCard(icon, title ,color),
     );
   }
 

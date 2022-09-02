@@ -41,7 +41,15 @@ class _AppSettingsState extends State<AppSettings> {
     themeChange= Provider.of<DarkThemeProvider>(context);
     return Scaffold(
       //backgroundColor: _darkMode?Colors.black:Colors.white,
-      appBar: AppBar(),
+      appBar: AppBar( flexibleSpace: Container(
+        decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              colors: [
+                Color(0xFF00695C) ,
+                Color(0xFF4DB6AC),
+              ],
+            )),
+      ),),
       body: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,

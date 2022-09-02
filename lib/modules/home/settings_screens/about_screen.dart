@@ -20,7 +20,15 @@ class _AboutState extends State<About>  {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        appBar: AppBar(title: Text("حول التطبيق"),),
+        appBar: AppBar(title: Text("حول التطبيق"), flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C) ,
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+        ),),
         body: Container(
           child:  Padding(
             padding: const EdgeInsets.all(10.0),

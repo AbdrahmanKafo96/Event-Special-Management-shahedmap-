@@ -31,11 +31,10 @@ dependencies:
   date_time_picker: ^2.0.0
   country_picker: ^2.0.0
   contactus: ^1.1.7
-  curved_navigation_bar:
   http:
   smart_select:
   fluttertoast:
-
+  geocoder: ^0.2.1
 #audioplayers:
 #flutter_audio_recorder2:
   path_provider: ^2.0.11

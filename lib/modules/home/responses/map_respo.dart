@@ -68,7 +68,15 @@ class _MappolyState extends State<Mappoly> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        centerTitle: true,
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C) ,
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+        ),
         title: Text('الاستجابة'),
       ),
       body: _kGooglePlex == null

@@ -20,7 +20,7 @@ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/theme/TheamProvider.dart';
-import 'package:systemevents/theme/theam.dart';
+import 'package:systemevents/theme/theme.dart';
 import 'package:systemevents/web_browser/webView.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/login/login_screen.dart';
@@ -78,7 +78,7 @@ callbackDispatcher() {
   }
 }
 
-String language="AR";
+String language = "AR";
 //bool  darkMode=false;
 
 Future main() async {
@@ -96,7 +96,7 @@ Future main() async {
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
     final pref = await Singleton.getPrefInstance();
-    language=pref.getString('language');
+    language = pref.getString('language');
     //darkMode=pref.getBool('darkMode');
 
     if (pref.getInt('version_number') == null) pref.setInt('version_number', 0);
@@ -143,57 +143,56 @@ class _MyAppState extends State<MyApp> {
     getCurrentAppTheme();
   }
 
-  void getCurrentAppTheme()   {
-
-
-            themeChangeProvider.darkThemePreference.getTheme().then((value) {
-              setState(() {
-                themeChangeProvider.darkTheme =value;
-              });
-            });
-
+  void getCurrentAppTheme() {
+    themeChangeProvider.darkThemePreference.getTheme().then((value) {
+      setState(() {
+        themeChangeProvider.darkTheme = value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     //final theme=Provider.of<ProviderData>(context);
-    return
-      ChangeNotifierProvider(
-        create: (_) {
-          return themeChangeProvider;
+    return ChangeNotifierProvider(
+      create: (_) {
+        return themeChangeProvider;
+      },
+      child: Consumer<DarkThemeProvider>(
+        builder: (BuildContext context, value, Widget child) {
+          return MaterialApp(
+            // themeMode: Provider.of<ThemeProvider>(context).themeMode,
+            theme: Styles.themeData(themeChangeProvider.darkTheme, context),
+            // darkTheme: MyThemes.darkTheme,
+
+            localizationsDelegates: const [
+              GlobalMaterialLocalizations.delegate,
+              GlobalWidgetsLocalizations.delegate,
+              GlobalCupertinoLocalizations.delegate,
+            ],
+            supportedLocales: [
+              Locale('ar', ''), // arabic, no country code
+            ],
+            //theme:,
+            debugShowCheckedModeBanner: false,
+            home: Directionality(
+              textDirection: TextDirection.rtl,
+              child: widget.token != null ? HomePage() : LoginUi(),
+            ),
+            routes: {
+              'About': (context) => About(),
+              'ProfilePage': (context) => ProfilePage(),
+              'ResetPage': (context) => CreateNewPasswordView(),
+              'settings': (context) => AppSettings(),
+              'EventSectionOne': (context) => EventSectionOne(),
+              'eventList': (context) => EventsMenu(),
+              'CustomWebView': (context) => CustomWebView(),
+              'response': (context) => ResponsePage(),
+              'successPage': (context) => SuccessPage(),
+            },
+          );
         },
-        child: Consumer<DarkThemeProvider>(
-          builder: (BuildContext context, value, Widget child) {
-            return MaterialApp(
-              // themeMode: Provider.of<ThemeProvider>(context).themeMode,
-              theme:  Styles.themeData(themeChangeProvider.darkTheme, context),
-              // darkTheme: MyThemes.darkTheme,
-
-              localizationsDelegates: const [
-                GlobalMaterialLocalizations.delegate,
-                GlobalWidgetsLocalizations.delegate,
-                GlobalCupertinoLocalizations.delegate,
-              ],
-              supportedLocales: [
-                Locale('ar', ''), // arabic, no country code
-              ],
-              //theme:,
-              debugShowCheckedModeBanner: false,
-              home: widget.token != null ? HomePage() : LoginUi(),
-              routes: {
-                'About': (context) => About(),
-                'ProfilePage': (context) => ProfilePage(),
-                'ResetPage': (context) => CreateNewPasswordView(),
-                'ThemeApp': (context) => AppSettings(),
-                'EventSectionOne': (context) => EventSectionOne(),
-                'eventList': (context) => EventsMenu(),
-                'CustomWebView': (context) => CustomWebView(),
-                'response': (context) => ResponsePage(),
-                'successPage': (context) => SuccessPage(),
-              },
-            );
-          },
-        ),);
-
+      ),
+    );
   }
 }

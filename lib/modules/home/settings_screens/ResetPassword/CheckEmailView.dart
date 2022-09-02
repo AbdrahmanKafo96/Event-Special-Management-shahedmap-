@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -28,7 +27,15 @@ class _CheckEmailViewState extends State<CheckEmailView> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar: AppBar(
-          centerTitle: true,
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF00695C) ,
+                    Color(0xFF4DB6AC),
+                  ],
+                )),
+          ),
           title: Text(
             'رجوع',
             style: TextStyle(color: Colors.white),
@@ -97,52 +104,7 @@ class _CheckEmailViewState extends State<CheckEmailView> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-                        //navigate to create new password view
-                        //  Util.routeToWidget(context, CreateNewPasswordView());
-                        //   if (Platform.isAndroid) {
-                        //     AndroidIntent intent = AndroidIntent(
-                        //       action: 'android.intent.action.MAIN',
-                        //       category: 'android.intent.category.APP_EMAIL',
-                        //     );
-                        //     intent.launch().catchError((e) {
-                        //
-                        //     });
-                        //   } else if (Platform.isIOS) {
-                        //     launch("message://").catchError((e){
-                        //
-                        //     });
-                        //   }
-                        //     WebView(
-                        //     initialUrl: 'https://flutter.dev',
-                        //     javascriptMode: JavascriptMode.unrestricted,
-                        //     onWebViewCreated: (WebViewController webViewController) {
-                        //       _controller.complete(webViewController);
-                        //     },
-                        //     onProgress: (int progress) {
-                        //       print("WebView is loading (progress : $progress%)");
-                        //     },
-                        //     javascriptChannels: <JavascriptChannel>{
-                        //       _toasterJavascriptChannel(context),
-                        //     },
-                        //     navigationDelegate: (NavigationRequest request) {
-                        //       if (request.url.startsWith('https://www.youtube.com/')) {
-                        //         print('blocking navigation to $request}');
-                        //         return NavigationDecision.prevent;
-                        //       }
-                        //       print('allowing navigation to $request');
-                        //       return NavigationDecision.navigate;
-                        //     },
-                        //     onPageStarted: (String url) {
-                        //       print('Page started loading: $url');
-                        //     },
-                        //     onPageFinished: (String url) {
-                        //       print('Page finished loading: $url');
-                        //     },
-                        //     gestureNavigationEnabled: true,
-                        //   );
-                        //   WebView(
-                        //     initialUrl: 'https://flutter.dev',
-                        //   );
+
                         Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewClass()));
                       },
                       child: Text(

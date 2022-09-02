@@ -103,7 +103,15 @@ class _LoginUiState extends State<LoginUi> {
           textDirection: TextDirection.rtl,
           child: Scaffold(
               appBar: AppBar(
-                centerTitle: true,
+                flexibleSpace: Container(
+                  decoration: const BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [
+                          Color(0xFF00695C) ,
+                          Color(0xFF4DB6AC),
+                        ],
+                      )),
+                ),
                 title: Text(
                   val == PageState.login ? " تسجيل الدخول" : 'إنشاء حساب',
                   style: TextStyle(

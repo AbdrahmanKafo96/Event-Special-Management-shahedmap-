@@ -40,7 +40,15 @@ class _CustomWebViewState extends State<CustomWebView> {
     // );
     return Scaffold(
       appBar: AppBar(
-
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C) ,
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+        ),
       ),
       body: WebView(
 

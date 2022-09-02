@@ -12,6 +12,15 @@ class _SuccessPageState extends State<SuccessPage> {
     return Scaffold(
 
       appBar: AppBar(
+        flexibleSpace: Container(
+          decoration: const BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C) ,
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+        ),
         leading:IconButton(
           icon: Icon(Icons.cancel),
           tooltip: 'تخطئ',

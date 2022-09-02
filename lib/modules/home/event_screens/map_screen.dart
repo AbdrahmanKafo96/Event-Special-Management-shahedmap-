@@ -175,6 +175,15 @@ class _MyHomePageState extends State<MapPage> {
         icon: Icon(Icons.location_on),
       ),
         appBar: AppBar(
+          flexibleSpace: Container(
+            decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [
+                    Color(0xFF00695C) ,
+                    Color(0xFF4DB6AC),
+                  ],
+                )),
+          ),
           elevation: 0,
           //backgroundColor: Colors.teal,
           title: Text(

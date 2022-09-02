@@ -2,6 +2,8 @@
 // CategoryClass  Because the name of a Category  affects one of the libraries
 // during import library
 
+import 'package:flutter/material.dart';
+
 class CategoryClass{
     int   category_id;
     String category_name;
@@ -63,4 +65,13 @@ class EventType {
       type_name: json['type_name'],
     );
   }
+}
+class MyList {
+  IconData icon;
+  String title;
+  BuildContext context;
+  String routPage;
+  Color color;
+
+  MyList({this.icon, this.title, this.context, this.routPage, this.color});
 }

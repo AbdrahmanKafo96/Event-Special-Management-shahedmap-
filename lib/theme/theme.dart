@@ -127,7 +127,7 @@ class Styles {
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
           colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light()),
-      scaffoldBackgroundColor:isDarkTheme ? Colors.grey : Color(0xffF1F5FB),
+      scaffoldBackgroundColor:isDarkTheme ? Colors.grey : Colors.white,
       appBarTheme: AppBarTheme(
         titleTextStyle: GoogleFonts.notoSansArabic(
           textStyle: TextStyle(
@@ -136,7 +136,7 @@ class Styles {
               fontSize: 18),
         ),
         iconTheme: IconThemeData(color: Colors.white),
-        color: Color(0xFF5a8f62),
+
         shadowColor: Color(0xFF5a8f62),
         elevation: 1.0,
         centerTitle: true,
