@@ -15,6 +15,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:flutter/services.dart';
+import 'package:systemevents/widgets/custom_drawer.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -25,16 +26,16 @@ class _HomePageState extends State<HomePage> {
   // Position  position;
 
   bool state = false;
-  int selected;
+
   String countryName = "";
   String subAdminArea = "";
   GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
-  List<MyList> mylist = [];
+
 
   @override
   void initState() {
     super.initState();
-    addObj();
+
     _getUserLocation();
     Singleton.getPrefInstance().then((value) {
       if (value.getInt('role_id') == 4) {
@@ -45,12 +46,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  viewPage(BuildContext ctx, String view) {
-    return Navigator.of(ctx).pushNamed(
-      view,
-      arguments: (route) => false,
-    );
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -215,163 +211,11 @@ class _HomePageState extends State<HomePage> {
             Dashboard(),
           ],
         ),
-        drawer: Drawer(
-            backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
-            child: Stack(children: [
-              
-              Positioned(
-                bottom: -120,
-                right: 0,
-                child: Container(
-                  child: Container(
-                    decoration: const BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 0,
-                            blurRadius: 7,
-                            offset: Offset(0, 1), // changes position of shadow
-                          ),
-                        ],
-                        shape: BoxShape.circle,
-                        gradient: LinearGradient(
-                          colors: [
-                            Color(0xFF00695C),
-                            Color(0xFF4DB6AC),
-                          ],
-                        )),
-                    width: 500,
-                    height: 200,
-                  ),
-                ),
-              ),
-              Positioned(
-                top: -120,
-                left: 0,
-                child: Container(
-                  decoration: const BoxDecoration(
-
-                      shape: BoxShape.circle,
-                      gradient: LinearGradient(
-                        colors: [
-                          Color(0xFF00695C),
-                          Color(0xFF4DB6AC),
-                        ],
-                      ),
-                      boxShadow: [
-                        BoxShadow(
-                          spreadRadius: 0,
-                          blurRadius: 7,
-                          offset: Offset(0, 1), // changes position of shadow
-                        ),
-                      ]
-                  ),
-                  width: 500,
-                  height: 200,
-                ),
-              ),
-              Container(
-
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        child: UserAccountsDrawerHeader(
-                          margin: EdgeInsets.zero,
-                          arrowColor: Colors.redAccent,
-                          decoration: BoxDecoration(
-                            color: Color.fromRGBO(255, 255, 255, 0.0),
-                          ),
-                          accountName: Text("Abdulrahman kafu"),
-                          accountEmail: Text("bedootk90@gmail.com"),
-                          currentAccountPicture: CircleAvatar(
-                            //backgroundColor: Colors.orange,
-                            child: Text(
-                              "A",
-                              style: TextStyle(fontSize: 40.0),
-                            ),
-                          ),
-                        ),
-                      ),
-                      ListView.builder(
-// Important: Remove any padding from the ListView.
-                        shrinkWrap: true,
-                        itemCount: mylist.length,
-                        itemBuilder: (context, index) {
-                          return Column(
-                            children: [
-                              ListTile(
-                                shape: RoundedRectangleBorder(
-                                  //  side: BorderSide(color: Colors.white70, width: 1),
-                                  borderRadius:
-                                  BorderRadius.all(Radius.circular(10)),
-                                ),
-                                focusColor: Colors.redAccent,
-
-                                title: Text('${mylist[index].title}'),
-                                leading: Icon(mylist[index].icon),
-                               // tileColor: selected == index ? Colors.blue : Colors.teal.withOpacity(0.4),
-                                onTap: () {
-                                  setState(() {
-                                    selected = index;
-                                  });
-                                  if (mylist[index].routPage == "logout")
-                                    Provider.of<UserAuthProvider>(context,
-                                        listen: false)
-                                        .logout(context);
-                                  else {
-                                    viewPage(mylist[index].context,
-                                        mylist[index].routPage);
-                                  }
-                                },
-                              ),
-                              //    SizedBox(height: 8,),
-                              if(index!=mylist.length-1)
-                              Divider()
-                            ],
-                          );
-                        },
-                      )
-                    ],
-                  ))
-            ])));
+        drawer:CustomDrwaer()
+    );
   }
 
-  void addObj() {
-    mylist.add(MyList(
-        title: 'الاعدادت',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.cog,
-        routPage: "settings"));
 
-    mylist.add(MyList(
-        title: 'الصفحة الشخصية',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.solidUser,
-        routPage: "ProfilePage"));
-
-    mylist.add(MyList(
-        title: 'تعيين كلمة المرور',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.key,
-        routPage: "ResetPage"));
-
-    mylist.add(MyList(
-        title: 'حول التطبيق',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.addressCard,
-        routPage: "About"));
-
-    mylist.add(MyList(
-        title: 'تسجيل الخروج',
-        color: Colors.grey,
-        //  context: context,
-        icon: FontAwesomeIcons.signOut,
-        routPage: "logout"));
-  }
 
   _getUserLocation() async {
     LocationData myLocation;

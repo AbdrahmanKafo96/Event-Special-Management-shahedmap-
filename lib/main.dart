@@ -17,6 +17,7 @@ import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/provider/navigation_provider.dart';
 import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/theme/TheamProvider.dart';
@@ -112,9 +113,9 @@ Future main() async {
         ChangeNotifierProvider<UserAuthProvider>(
           create: (context) => UserAuthProvider(),
         ),
-        // ChangeNotifierProvider<ThemeProvider>(
-        //   create: (context) => ThemeProvider(),
-        // ),
+        ChangeNotifierProvider<NavigationProvider>(
+          create: (context) => NavigationProvider(),
+        ),
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (context) => DarkThemeProvider(),
         ),
@@ -181,6 +182,7 @@ class _MyAppState extends State<MyApp> {
             ),
             routes: {
               'About': (context) => About(),
+              'Home': (context) => HomePage(),
               'ProfilePage': (context) => ProfilePage(),
               'ResetPage': (context) => CreateNewPasswordView(),
               'settings': (context) => AppSettings(),

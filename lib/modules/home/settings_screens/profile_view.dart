@@ -12,6 +12,7 @@ import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/provider/auth_provider.dart';
+import 'package:systemevents/widgets/custom_drawer.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -77,6 +78,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        drawer: CustomDrwaer(),
           key: _scaffoldKey,
           appBar: AppBar(
             flexibleSpace: Container(
@@ -92,14 +94,14 @@ class _ProfilePageState extends State<ProfilePage> {
               ' بيانات المستخدم',
               style: TextStyle(fontWeight: FontWeight.bold),
             ),
-            leading: IconButton(
-              icon: Icon(Icons.arrow_back, color: Colors.white),
-                tooltip: 'رجوع',
-              onPressed: () {
-                  Navigator.of(context).pop();
-
-              }
-            ),
+            // leading: IconButton(
+            //   icon: Icon(Icons.arrow_back, color: Colors.white),
+            //     tooltip: 'رجوع',
+            //   onPressed: () {
+            //       Navigator.of(context).pop();
+            //
+            //   }
+            // ),
             actions: [
               IconButton(
                 tooltip: 'تعديل',

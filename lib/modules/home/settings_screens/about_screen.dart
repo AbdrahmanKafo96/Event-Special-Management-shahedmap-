@@ -1,5 +1,6 @@
 import 'package:contactus/contactus.dart';
 import 'package:flutter/material.dart';
+import 'package:systemevents/widgets/custom_drawer.dart';
 
 class About extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class _AboutState extends State<About>  {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
+        drawer: CustomDrwaer(),
         appBar: AppBar(title: Text("حول التطبيق"), flexibleSpace: Container(
           decoration: const BoxDecoration(
               gradient: LinearGradient(

@@ -6,6 +6,7 @@ import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/change_theme_button_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:systemevents/widgets/custom_drawer.dart';
  
 
 class AppSettings extends StatefulWidget {
@@ -40,6 +41,7 @@ class _AppSettingsState extends State<AppSettings> {
   Widget build(BuildContext context) {
     themeChange= Provider.of<DarkThemeProvider>(context);
     return Scaffold(
+      drawer: CustomDrwaer(),
       //backgroundColor: _darkMode?Colors.black:Colors.white,
       appBar: AppBar( flexibleSpace: Container(
         decoration: const BoxDecoration(

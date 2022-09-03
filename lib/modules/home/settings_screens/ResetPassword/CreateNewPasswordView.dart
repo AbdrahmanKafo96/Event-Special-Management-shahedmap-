@@ -6,6 +6,7 @@ import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/modules/login/validator.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/widgets/custom_drawer.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
   @override
@@ -31,6 +32,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
+          drawer: CustomDrwaer(),
           appBar: AppBar(
             flexibleSpace: Container(
               decoration: const BoxDecoration(
@@ -46,13 +48,13 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
               style: TextStyle(color: Colors.white),
             ),
             //leadingWidth: 30,
-            leading: IconButton(
-
-              icon: Icon(Icons.arrow_back ,color: Colors.white,),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
+            // leading: IconButton(
+            //
+            //   icon: Icon(Icons.arrow_back ,color: Colors.white,),
+            //   onPressed: () {
+            //     Navigator.pop(context);
+            //   },
+            // ),
           ),
           body: Padding(
             padding: const EdgeInsets.all(16.0),
