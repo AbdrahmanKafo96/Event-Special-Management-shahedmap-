@@ -211,7 +211,7 @@ class _HomePageState extends State<HomePage> {
             Dashboard(),
           ],
         ),
-        drawer:CustomDrwaer()
+        drawer:CustomDrawer()
     );
   }
 

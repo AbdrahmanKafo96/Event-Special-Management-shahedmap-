@@ -5,6 +5,7 @@ import 'package:intl/intl.dart' as intl;
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/modules/home/home.dart';
+import 'package:systemevents/modules/home/mainpage.dart';
 import 'package:systemevents/modules/login/login_section.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
@@ -357,7 +358,7 @@ class _LoginUiState extends State<LoginUi> {
                                       Navigator.pushReplacement(
                                           context,
                                           MaterialPageRoute(
-                                              builder: (_) => HomePage()));
+                                              builder: (_) => MainPage()));
                                     });
                                   }
                                 }

@@ -32,7 +32,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
       child: Directionality(
         textDirection: TextDirection.rtl,
         child: Scaffold(
-          drawer: CustomDrwaer(),
+          drawer: CustomDrawer(),
           appBar: AppBar(
             flexibleSpace: Container(
               decoration: const BoxDecoration(

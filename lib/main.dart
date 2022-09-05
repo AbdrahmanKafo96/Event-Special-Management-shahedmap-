@@ -10,6 +10,7 @@ import 'package:systemevents/models/unit.dart';
 import 'package:systemevents/modules/home/Responses/responses_screen.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/home.dart';
+import 'package:systemevents/modules/home/mainpage.dart';
 import 'package:systemevents/modules/home/menu/menu_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateNewPasswordView.dart';
 import 'package:systemevents/modules/home/settings_screens/AppSettings.dart';
@@ -178,7 +179,7 @@ class _MyAppState extends State<MyApp> {
             debugShowCheckedModeBanner: false,
             home: Directionality(
               textDirection: TextDirection.rtl,
-              child: widget.token != null ? HomePage() : LoginUi(),
+              child: widget.token != null ? MainPage() : LoginUi(),
             ),
             routes: {
               'About': (context) => About(),

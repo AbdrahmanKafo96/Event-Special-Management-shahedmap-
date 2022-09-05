@@ -41,7 +41,7 @@ class _AppSettingsState extends State<AppSettings> {
   Widget build(BuildContext context) {
     themeChange= Provider.of<DarkThemeProvider>(context);
     return Scaffold(
-      drawer: CustomDrwaer(),
+      drawer: CustomDrawer(),
       //backgroundColor: _darkMode?Colors.black:Colors.white,
       appBar: AppBar( flexibleSpace: Container(
         decoration: const BoxDecoration(

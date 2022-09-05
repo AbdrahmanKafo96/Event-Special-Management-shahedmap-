@@ -6,70 +6,72 @@ import 'package:systemevents/models/navigation_item.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/navigation_provider.dart';
 
-class CustomDrwaer extends StatefulWidget {
+class CustomDrawer extends StatefulWidget {
   @override
-  State<CustomDrwaer> createState() => _CustomDrwaerState();
+  State<CustomDrawer> createState() => _CustomDrawerState();
 }
-class _CustomDrwaerState extends State<CustomDrwaer> {
+
+class _CustomDrawerState extends State<CustomDrawer> {
   List<MyList> mylist = [];
   int selected;
-  void addObj() {
-    mylist.add(MyList(
-        item: NavigationItem.home,
-        title: 'الصفحة الرئيسية',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.home,
-        routPage: "Home"));
 
-    mylist.add(MyList(
-        item: NavigationItem.settings,
-        title: 'الاعدادت',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.cog,
-        routPage: "settings"));
-
-    mylist.add(MyList(
-        item: NavigationItem.ProfilePage,
-        title: 'الصفحة الشخصية',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.solidUser,
-        routPage: "ProfilePage"));
-
-    mylist.add(MyList(
-        item: NavigationItem.ResetPage,
-        title: 'تعيين كلمة المرور',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.key,
-        routPage: "ResetPage"));
-
-    mylist.add(MyList(
-        item: NavigationItem.About,
-        title: 'حول التطبيق',
-        color: Colors.grey,
-        context: context,
-        icon: FontAwesomeIcons.addressCard,
-        routPage: "About"));
-
-    mylist.add(MyList(
-       // item: NavigationItem.,
-        title: 'تسجيل الخروج',
-        color: Colors.grey,
-        //  context: context,
-        icon: FontAwesomeIcons.signOut,
-        routPage: "logout"));
-  }
+  // void addObj() {
+  //   mylist.add(MyList(
+  //       item: NavigationItem.home,
+  //       title: 'الصفحة الرئيسية',
+  //       color: Colors.grey,
+  //       context: context,
+  //       icon: FontAwesomeIcons.home,
+  //       routPage: "Home"));
+  //
+  //   mylist.add(MyList(
+  //       item: NavigationItem.settings,
+  //       title: 'الاعدادت',
+  //       color: Colors.grey,
+  //       context: context,
+  //       icon: FontAwesomeIcons.cog,
+  //       routPage: "settings"));
+  //
+  //   mylist.add(MyList(
+  //       item: NavigationItem.ProfilePage,
+  //       title: 'الصفحة الشخصية',
+  //       color: Colors.grey,
+  //       context: context,
+  //       icon: FontAwesomeIcons.solidUser,
+  //       routPage: "ProfilePage"));
+  //
+  //   mylist.add(MyList(
+  //       item: NavigationItem.ResetPage,
+  //       title: 'تعيين كلمة المرور',
+  //       color: Colors.grey,
+  //       context: context,
+  //       icon: FontAwesomeIcons.key,
+  //       routPage: "ResetPage"));
+  //
+  //   mylist.add(MyList(
+  //       item: NavigationItem.About,
+  //       title: 'حول التطبيق',
+  //       color: Colors.grey,
+  //       context: context,
+  //       icon: FontAwesomeIcons.addressCard,
+  //       routPage: "About"));
+  //
+  //   mylist.add(MyList(
+  //       // item: NavigationItem.,
+  //       title: 'تسجيل الخروج',
+  //       color: Colors.grey,
+  //       //  context: context,
+  //       icon: FontAwesomeIcons.signOut,
+  //       routPage: "logout"));
+  // }
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-
-    addObj();
+   // addObj();
   }
+
   @override
   Widget build(BuildContext context) {
     return Drawer(
@@ -145,51 +147,141 @@ class _CustomDrwaerState extends State<CustomDrwaer> {
                   ),
                 ),
               ),
-              ListView.builder(
-// Important: Remove any padding from the ListView.
+              ListView(
+                padding: EdgeInsets.only(right: 6,left: 6,top: 6,bottom: 6),
                 shrinkWrap: true,
-                itemCount: mylist.length,
-                itemBuilder: (context, index) {
-                  return Column(
-                    children: [
-                      ListTile(
-                        shape: RoundedRectangleBorder(
-//  side: BorderSide(color: Colors.white70, width: 1),
-                          borderRadius: BorderRadius.all(Radius.circular(10)),
-                        ),
-                        focusColor: Colors.redAccent,
-
-                        title: Text('${mylist[index].title}'),
-                        leading: Icon(mylist[index].icon),
-// tileColor: selected == index ? Colors.blue : Colors.teal.withOpacity(0.4),
-                        onTap: () {
-                          setState(() {
-                            selected = index;
-                          });
-                          if (mylist[index].routPage == "logout")
-                            Provider.of<UserAuthProvider>(context,
-                                    listen: false)
-                                .logout(context);
-                          else {
-                            viewPage(
-                                mylist[index].context, mylist[index].routPage);
-                          }
-                        },
-                      ),
-//    SizedBox(height: 8,),
-                      if (index != mylist.length - 1) Divider()
-                    ],
-                  );
-                },
+                children: <Widget>[
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.home,
+                    text: 'الصفحة الرئيسية',
+                    icon: FontAwesomeIcons.home,
+                  ),
+                  const SizedBox(height: 8),
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.settings,
+                    text: 'الاعدادات',
+                    icon: FontAwesomeIcons.cog,
+                  ),
+                  const SizedBox(height: 8),
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.profilePage,
+                    text: 'الصفحة الشخصية',
+                    icon: FontAwesomeIcons.solidUser,
+                  ),
+                  const SizedBox(height: 8),
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.resetPage,
+                    text: 'تعيين كلمة المرور',
+                    icon: FontAwesomeIcons.key,
+                  ),
+                  const SizedBox(height: 8),
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.about,
+                    text: 'حول التطبيق',
+                    icon: FontAwesomeIcons.addressCard,
+                  ),
+                  const SizedBox(height: 8),
+                  buildMenuItem(
+                    context,
+                    item: NavigationItem.logout,
+                    text: 'تسجيل الخروج',
+                    icon: FontAwesomeIcons.signOut,
+                  ),
+                ],
               )
             ],
           ))
         ]));
   }
+
   viewPage(BuildContext ctx, String view) {
     return Navigator.of(ctx).pushNamed(
       view,
       arguments: (route) => false,
     );
   }
+
+  Widget buildMenuItem(
+    BuildContext context, {
+    NavigationItem item,
+    String text,
+    IconData icon,
+  }) {
+    final provider = Provider.of<NavigationProvider>(context);
+    final currentItem = provider.getNavigationItem;
+    final isSelected = item == currentItem;
+
+    final color = isSelected ? Colors.white : Colors.grey;
+
+    return Material(
+      shape: RoundedRectangleBorder(
+
+          borderRadius: BorderRadius.all(Radius.circular(10))),
+      color: Colors.black.withOpacity(0.7),
+      child: ListTile(
+        shape: RoundedRectangleBorder(
+
+            borderRadius: BorderRadius.all(Radius.circular(10))),
+        selected: isSelected,
+
+        selectedTileColor: Colors.blueGrey,
+        leading: Icon(icon, color: color),
+        title: Text(text, style: TextStyle(color: color, fontSize: 16)),
+        onTap: () => selectItem(context, item),
+      ),
+    );
+  }
+
+  void selectItem(BuildContext context, NavigationItem item) {
+    if(item == NavigationItem.logout){
+      Provider.of<UserAuthProvider>(context,
+      listen: false)
+      .logout(context);
+    }else{
+      final provider = Provider.of<NavigationProvider>(context, listen: false);
+      provider.setNavigationItem(item);
+    }
+  }
 }
+// ListView.builder(
+// // Important: Remove any padding from the ListView.
+// shrinkWrap: true,
+// itemCount: mylist.length,
+// itemBuilder: (context, index) {
+// return Column(
+// children: [
+// ListTile(
+// shape: RoundedRectangleBorder(
+// //  side: BorderSide(color: Colors.white70, width: 1),
+// borderRadius: BorderRadius.all(Radius.circular(10)),
+// ),
+// focusColor: Colors.redAccent,
+//
+// title: Text('${mylist[index].title}'),
+// leading: Icon(mylist[index].icon),
+// // tileColor: selected == index ? Colors.blue : Colors.teal.withOpacity(0.4),
+// onTap: () {
+// setState(() {
+// selected = index;
+// });
+// if (mylist[index].routPage == "logout")
+// Provider.of<UserAuthProvider>(context,
+// listen: false)
+//     .logout(context);
+// else {
+// viewPage(
+// mylist[index].context, mylist[index].routPage);
+// }
+// },
+// ),
+// //    SizedBox(height: 8,),
+// if (index != mylist.length - 1) Divider()
+// ],
+// );
+// },
+// )

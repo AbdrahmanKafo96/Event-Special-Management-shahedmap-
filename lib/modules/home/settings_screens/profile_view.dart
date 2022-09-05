@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:path/path.dart' as p;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -53,7 +54,7 @@ class _ProfilePageState extends State<ProfilePage> {
           {
             state=true;
               _image=null;
-              _uri=witness.image!=null?"http://192.168.1.3:8000${witness.image}":null;
+              _uri=witness.image!=null?"${Singleton.routePath}${witness.image}":null;
               print(_uri);
             setDataForm();
           }
@@ -78,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-        drawer: CustomDrwaer(),
+        drawer: CustomDrawer(),
           key: _scaffoldKey,
           appBar: AppBar(
             flexibleSpace: Container(

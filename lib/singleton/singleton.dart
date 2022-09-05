@@ -7,7 +7,8 @@ class Singleton {
 
   static SharedPreferences _pref;
   static FlutterSecureStorage _storage;
-  static String apiPath="http://192.168.1.3:8000/api";
+  static String apiPath="http://ets.ly/api";
+  static String routePath="http://ets.ly";
   static Language _language;
 
   static Future<SharedPreferences> getPrefInstance() async {

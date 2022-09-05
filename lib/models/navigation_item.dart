@@ -2,8 +2,8 @@
 enum NavigationItem{
   home,
   settings,
-  ProfilePage,
-  ResetPage,
-  About,
-
+  profilePage,
+  resetPage,
+  about,
+  logout
 }
