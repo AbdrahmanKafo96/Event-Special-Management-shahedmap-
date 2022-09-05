@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/customCard.dart';
 import 'package:systemevents/web_browser/webView.dart';
@@ -20,39 +21,35 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  bool state = false;
+
   final Telephony telephony = Telephony.instance;
   String _message = "";
 
   @override
   void initState() {
     super.initState();
-    Singleton.getPrefInstance().then((value) async {
-      if (value.getInt('role_id') == 4) {
-        setState(() {
-          state = true;
-        });
-        LocationPermission permission;
+        if(SharedData.getUserState()){
+          LocationPermission permission;
 
-        Geolocator.checkPermission().then((value) {
-          Geolocator.requestPermission().then((value) {
-            Geolocator.getCurrentPosition(
-                    desiredAccuracy: LocationAccuracy.high)
-                .then((value) {
-              Workmanager().initialize(
-                callbackDispatcher,
-                isInDebugMode: false,
-              );
-              Workmanager().registerPeriodicTask(
-                "1",
-                "fetchBackground",
-                frequency: Duration(minutes: 15),
-              );
+          Geolocator.checkPermission().then((value) {
+            Geolocator.requestPermission().then((value) {
+              Geolocator.getCurrentPosition(
+                  desiredAccuracy: LocationAccuracy.high)
+                  .then((value) {
+                Workmanager().initialize(
+                  callbackDispatcher,
+                  isInDebugMode: false,
+                );
+                Workmanager().registerPeriodicTask(
+                  "1",
+                  "fetchBackground",
+                  frequency: Duration(minutes: 15),
+                );
+              });
             });
           });
-        });
-      }
-    });
+        }
+
   }
 
   @override
@@ -70,10 +67,8 @@ class _DashboardState extends State<Dashboard> {
               context, "تصفح الموقع", FontAwesomeIcons.globeAmericas, 'CustomWebView',Colors.orange),
           dashboardItem(
               context, "إبلاغ الجهة", FontAwesomeIcons.users, 'CustomWebView',Colors.greenAccent),
-          if (state == true)
+          if (SharedData.getUserState())
             dashboardItem(
-                context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),dashboardItem(
-                context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),dashboardItem(
                 context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),
         ],
       ),

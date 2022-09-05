@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/modules/login/login_screen.dart';
 import 'package:systemevents/models/witness.dart';
@@ -67,7 +68,7 @@ class UserAuthProvider extends ChangeNotifier{
               prefs.setInt('user_id', user.user_id);
               prefs.setString('email', responseData['result']['original']['data']["email"]);
               prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
-
+              SharedData.getUserState();
 
               return true ;
             }
@@ -94,7 +95,7 @@ class UserAuthProvider extends ChangeNotifier{
             prefs.setInt('user_id', user.user_id);
             prefs.setString('email', responseData ['result']['original']['data']["email"]);
             prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
-
+            SharedData.getUserState();
             return true ;
           }
         }else
@@ -168,7 +169,8 @@ class UserAuthProvider extends ChangeNotifier{
        await storage.delete(key: 'token',aOptions: Singleton.getAndroidOptions());
        prefs.remove("user_id");
        prefs.remove("email");
-
+       prefs.remove("role_id");
+       SharedData.resetValue();
 
        Navigator.pushReplacement(context,
            MaterialPageRoute(builder: (_) => LoginUi()));

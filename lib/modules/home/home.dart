@@ -8,6 +8,7 @@ import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
@@ -18,6 +19,7 @@ import 'package:flutter/services.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
 
 class HomePage extends StatefulWidget {
+
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -25,7 +27,7 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   // Position  position;
 
-  bool state = false;
+
 
   String countryName = "";
   String subAdminArea = "";
@@ -35,15 +37,8 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     super.initState();
-
     _getUserLocation();
-    Singleton.getPrefInstance().then((value) {
-      if (value.getInt('role_id') == 4) {
-        setState(() {
-          state = true;
-        });
-      }
-    });
+print(SharedData.getUserState());
   }
 
 
@@ -87,7 +82,7 @@ class _HomePageState extends State<HomePage> {
             )),
           ),
           actions: [
-            state == true
+             SharedData.getUserState() == true
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(

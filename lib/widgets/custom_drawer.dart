@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:systemevents/models/navigation_item.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/navigation_provider.dart';
+import 'package:systemevents/shared_data/shareddata.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -164,14 +165,18 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     text: 'الاعدادات',
                     icon: FontAwesomeIcons.cog,
                   ),
+                  if(SharedData.getUserState() == false)
                   const SizedBox(height: 8),
+                  if(SharedData.getUserState() == false)
                   buildMenuItem(
                     context,
                     item: NavigationItem.profilePage,
                     text: 'الصفحة الشخصية',
                     icon: FontAwesomeIcons.solidUser,
                   ),
+                  if(SharedData.getUserState() == false)
                   const SizedBox(height: 8),
+                  if(SharedData.getUserState() == false)
                   buildMenuItem(
                     context,
                     item: NavigationItem.resetPage,

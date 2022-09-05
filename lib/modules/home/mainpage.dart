@@ -7,6 +7,7 @@ import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateN
 import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
 import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
 import 'package:systemevents/provider/navigation_provider.dart';
+import 'package:systemevents/singleton/singleton.dart';
 
 
 
@@ -25,6 +26,7 @@ class _MainPageState extends State<MainPage> {
 
     switch (navigationItem) {
       case NavigationItem.home:
+        Singleton.getPrefInstance();
         return HomePage();
 
       case NavigationItem.settings:
