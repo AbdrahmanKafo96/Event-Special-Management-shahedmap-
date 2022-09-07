@@ -13,7 +13,9 @@ import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:path/path.dart' as p;
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/provider/auth_provider.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -81,28 +83,9 @@ class _ProfilePageState extends State<ProfilePage> {
       child: Scaffold(
         drawer: CustomDrawer(),
           key: _scaffoldKey,
-          appBar: AppBar(
-            flexibleSpace: Container(
-              decoration: const BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      Color(0xFF00695C) ,
-                      Color(0xFF4DB6AC),
-                    ],
-                  )),
-            ),
-            title: Text(
-              ' بيانات المستخدم',
-              style: TextStyle(fontWeight: FontWeight.bold),
-            ),
-            // leading: IconButton(
-            //   icon: Icon(Icons.arrow_back, color: Colors.white),
-            //     tooltip: 'رجوع',
-            //   onPressed: () {
-            //       Navigator.of(context).pop();
-            //
-            //   }
-            // ),
+          appBar: customAppBar(
+             title: ' الصفحة الشخصية ',
+             icon: FontAwesomeIcons.solidUser,
             actions: [
               IconButton(
                 tooltip: 'تعديل',

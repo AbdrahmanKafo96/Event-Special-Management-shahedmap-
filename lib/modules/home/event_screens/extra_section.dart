@@ -5,7 +5,7 @@ import 'package:systemevents/modules/home/event_screens/SuccessPage.dart';
 import 'package:systemevents/modules/home/event_screens/event_screen.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/widgets/customToast.dart';
+import 'package:systemevents/widgets/custom_toast.dart';
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
 import 'package:systemevents/provider/event_provider.dart';

@@ -1,13 +1,14 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:systemevents/models/category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
 import 'package:systemevents/modules/home/responses/map_respo.dart';
  import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 
 class ResponsePage extends StatefulWidget {
   @override
@@ -29,12 +30,7 @@ class _ResponsePageState extends State<ResponsePage> {
     Singleton.getBox().then((value) {
       setState(() {
         user_id=value.get('user_id');
-        Singleton.getStorage().then((storage) {
-          storage.read(
-              key: "token", aOptions: Singleton.getAndroidOptions()).then((value) {
-            print("my token is :${value }");
-          });
-        });
+
         fuList = Provider.of<EventProvider>(context, listen: false)
             .getAllRespons(value.get('user_id'));
       });
@@ -44,34 +40,7 @@ class _ResponsePageState extends State<ResponsePage> {
     });
   }
 
-  // Widget slideRightBackground() {
-  //   return Container(
-  //     color: Colors.green,
-  //     child: Align(
-  //       child: Row(
-  //         mainAxisAlignment: MainAxisAlignment.start,
-  //         children: <Widget>[
-  //           SizedBox(
-  //             width: 20,
-  //           ),
-  //           Icon(
-  //             Icons.edit,
-  //             color: Colors.white,
-  //           ),
-  //           Text(
-  //             "تعديل",
-  //             style: TextStyle(
-  //               color: Colors.white,
-  //               fontWeight: FontWeight.w700,
-  //             ),
-  //             textAlign: TextAlign.left,
-  //           ),
-  //         ],
-  //       ),
-  //       alignment: Alignment.centerLeft,
-  //     ),
-  //   );
-  // }
+
 
   Widget slideLeftBackground() {
     return Container(
@@ -292,24 +261,10 @@ class _ResponsePageState extends State<ResponsePage> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
 
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF00695C) ,
-                    Color(0xFF4DB6AC),
-                  ],
-                )),
+        appBar: customAppBar(
+          title: "الإشعارات" ,
+          icon: FontAwesomeIcons.solidBell
           ),
-          centerTitle: true,
-          elevation: 1.0,
-          titleSpacing: 1.0,
-          title: Text(
-            "الاستجابات" ,
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
         body: generateItemsList(),
       ),
     );

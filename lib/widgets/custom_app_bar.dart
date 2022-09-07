@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'dart:ui' as ui;
+Widget customAppBar(
+    {String title,
+    Color backgroundColor,
+    double elevation = 0.0,
+    double titleSpacing = 1.0,
+    Widget flexibleSpace,
+    Widget leading,
+    List<Widget> actions,
+      IconData icon}) {
+
+    return AppBar(
+      titleSpacing: titleSpacing,
+     actions: actions,
+      leading: leading,
+      flexibleSpace: Container(
+              decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                colors: [
+                  Color(0xFF00695C),
+                  Color(0xFF4DB6AC),
+                ],
+              )),
+            ),
+      title: Text.rich(
+        TextSpan(
+          children:  [
+            TextSpan(text:" $title "),
+
+            WidgetSpan(
+
+                alignment: ui.PlaceholderAlignment.middle,
+                child: Icon(icon, color: Colors.white )),
+          //  TextSpan(text: 'downloads on both stores'),
+          ],
+        ),
+
+        style: TextStyle(
+          fontWeight: FontWeight.bold,
+        ),
+      ),
+      centerTitle: true,
+      elevation: elevation,
+      //leading: IconButton(icon: iconButton, onPressed: () {}),
+      backgroundColor: backgroundColor,
+    );
+
+}

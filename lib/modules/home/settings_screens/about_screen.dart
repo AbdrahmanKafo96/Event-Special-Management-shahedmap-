@@ -1,5 +1,6 @@
 import 'package:contactus/contactus.dart';
 import 'package:flutter/material.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
 
 class About extends StatefulWidget {
@@ -22,15 +23,10 @@ class _AboutState extends State<About>  {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         drawer: CustomDrawer(),
-        appBar: AppBar(title: Text("حول التطبيق"), flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF00695C) ,
-                  Color(0xFF4DB6AC),
-                ],
-              )),
-        ),),
+        appBar: customAppBar(
+          title: " حول التطبيق " ,
+          icon: Icons.people_alt
+           ),
         body: Container(
           child:  Padding(
             padding: const EdgeInsets.all(10.0),

@@ -9,7 +9,7 @@ import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -29,12 +29,13 @@ class _HomePageState extends State<HomePage> {
   String countryName = "";
   String subAdminArea = "";
   GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  GlobalKey _appbarkey = new GlobalKey();
 
   @override
   void initState() {
     super.initState();
     _getUserLocation();
-print(SharedData.getUserState());
+
   }
 
 
@@ -67,43 +68,24 @@ print(SharedData.getUserState());
           ),
           backgroundColor: Colors.green,
         ),
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-              colors: [
-                Color(0xFF00695C),
-                Color(0xFF4DB6AC),
-              ],
-            )),
-          ),
-          actions: [
-             SharedData.getUserState() == true
-                ? Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: Icon(FontAwesomeIcons.locationArrow),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UnitTracking()),
-                        );
-                      },
-                    ),
-                  )
-                : SizedBox.shrink(),
-          ],
-          centerTitle: true,
-          elevation: 0,
-          titleSpacing: 1.0,
-          title: Text(
-            "الصفحة الرئيسية",
-            style: TextStyle(
-              fontWeight: FontWeight.bold,
+          appBar:  customAppBar(title: " الصفحة الرئيسية " , icon: FontAwesomeIcons.home, actions:[
+              SharedData.getUserState() == true
+              ? Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: IconButton(
+              icon: Icon(  Icons.track_changes),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => UnitTracking()),
+                );
+              },
             ),
-          ),
-        ),
+          )
+              : SizedBox.shrink(),
+      ], ),
+
         body: ListView(
           shrinkWrap: true,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -235,9 +217,7 @@ print(SharedData.getUserState());
       countryName = first.countryName;
       subAdminArea = first.addressLine;
     });
-    // print(' countryName=${first.countryName},adminArea= ${first.adminArea},subLocality=${first.subLocality}, '
-    //     '${first.subAdminArea},${first.addressLine}, ${first.featureName},${first.thoroughfare}, '
-    //     'subThoroughfare=${first.subThoroughfare}');
+
     return first;
   }
 }

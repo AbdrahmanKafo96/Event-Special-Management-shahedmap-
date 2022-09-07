@@ -49,7 +49,7 @@ callbackDispatcher() {
           final storage = await Singleton.getStorage();
           String value = await storage.read(
               key: "token", aOptions: Singleton.getAndroidOptions());
-          print("my token ${value}");
+
           Map data = {
             'user_id': box.get('user_id').toString(),
             'lat': userLocation.latitude.toString(),

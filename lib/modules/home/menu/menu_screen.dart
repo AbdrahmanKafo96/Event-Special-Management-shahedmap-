@@ -9,6 +9,8 @@ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class EventsMenu extends StatefulWidget {
   @override
@@ -19,55 +21,52 @@ class _EventsMenuState extends State<EventsMenu> {
   Future<List<Event>> fuList;
   List<Event> futureList = [];
   List<dynamic> listNames = [];
-  bool result =true;
+  bool result = true;
+
   @override
   initState() {
     super.initState();
-    Connectivity().checkConnectivity().then((  value) {
-
-      if(value== ConnectivityResult.none){
+    Connectivity().checkConnectivity().then((value) {
+      if (value == ConnectivityResult.none) {
         setState(() {
-          result=false;
+          result = false;
         });
-
-      }else{
+      } else {
         getData();
         fetchData();
       }
     });
-
   }
-  Future<void> fetchData() async{
+
+  Future<void> fetchData() async {
     // await Future.delayed(Duration(milliseconds: 1500));
     // setState(() {
-      Singleton.getBox().then((value) {
-        setState(() {
-          //  value.getInt('user_id')
-          fuList = Provider.of<EventProvider>(context, listen: false)
-              .fetchAllListByUserId(value.get('user_id'));
-        });
-
+    Singleton.getBox().then((value) {
+      setState(() {
+        //  value.getInt('user_id')
+        fuList = Provider.of<EventProvider>(context, listen: false)
+            .fetchAllListByUserId(value.get('user_id'));
+      });
     });
-
   }
+
   Future<void> getData() {
     var list;
     Singleton.getBox().then((value) async {
       list = await Provider.of<EventProvider>(context, listen: false)
           .searchData(value.get('user_id'));
-            try{
-              if (list != false  )
-                for (int i = 0; i < list.length; i++) {
-                  listNames.add(list[i]['event_name']);
-                  futureList.add(Event(
-                      addede_id: list[i]['addede_id'],
-                      event_name: list[i]['event_name'],
-                      description:list[i]['event_name']==null?"":list[i]['event_name'] ));
-                }
-            }catch(e){
-
-      }
-
+      try {
+        if (list != false)
+          for (int i = 0; i < list.length; i++) {
+            listNames.add(list[i]['event_name']);
+            futureList.add(Event(
+                addede_id: int.parse(list[i]['addede_id']),
+                event_name: list[i]['event_name'],
+                description: list[i]['event_name'] == null
+                    ? ""
+                    : list[i]['event_name']));
+          }
+      } catch (e) {}
     });
   }
 
@@ -112,9 +111,9 @@ class _EventsMenuState extends State<EventsMenu> {
               color: Colors.white,
             ),
             Text(
-              "حذف",
+              "حذف الحدث",
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.red,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.center,
@@ -144,27 +143,27 @@ class _EventsMenuState extends State<EventsMenu> {
               return Text('');
 
             case ConnectionState.waiting:
-              return  ListView.separated(
+              return ListView.separated(
                 itemCount: 5,
-                itemBuilder: (context, index) =>   NewsCardSkelton(),
+                itemBuilder: (context, index) => NewsCardSkelton(),
                 separatorBuilder: (context, index) =>
-                const SizedBox(height: 16),
+                    const SizedBox(height: 16),
               );
 
             case ConnectionState.active:
-              return  ListView.separated(
+              return ListView.separated(
                 itemCount: 5,
-                itemBuilder: (context, index) =>   NewsCardSkelton(),
+                itemBuilder: (context, index) => NewsCardSkelton(),
                 separatorBuilder: (context, index) =>
-                const SizedBox(height: 16),
+                    const SizedBox(height: 16),
               );
 
             case ConnectionState.done:
               return snapshot.hasData
                   ? RefreshIndicator(
-                displacement: 5,
-                    onRefresh:fetchData ,
-                    child: ListView.builder(
+                      displacement: 5,
+                      onRefresh: fetchData,
+                      child: ListView.builder(
                         shrinkWrap: true,
 
                         itemCount: snapshot.data.length,
@@ -174,7 +173,8 @@ class _EventsMenuState extends State<EventsMenu> {
                         itemBuilder: (context, index) {
                           return Dismissible(
                               // ignore: missing_return
-                              confirmDismiss: (DismissDirection direction) async {
+                              confirmDismiss:
+                                  (DismissDirection direction) async {
                                 //  if (direction == DismissDirection.startToEnd) {
                                 final bool res = await showDialog(
                                     context: context,
@@ -182,7 +182,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                       return Directionality(
                                         textDirection: TextDirection.rtl,
                                         child: customAlert(
-                                            snapshot.data[index].addede_id,
+                                            int.parse(snapshot.data[index].addede_id),
                                             snapshot,
                                             index,
                                             context),
@@ -199,112 +199,117 @@ class _EventsMenuState extends State<EventsMenu> {
                               child: Column(
                                 children: [
                                   Container(
-
                                     padding: EdgeInsets.only(top: 8),
                                     child: Card(
-                                      color: Colors.white  ,
+                                      color: Colors.white,
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
-                                          color: Colors.grey.shade50 ,
+                                          color: Colors.grey.shade50,
                                         ),
-                                        borderRadius: BorderRadius.circular(15.0),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
                                       ),
                                       child: ListTile(
-
-
-                                          onTap: () {
-                                            checkInternetConnectivity(context)
-                                                .then((bool value) async {
-                                              if (value) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder: (context) => EventView(
-                                                            eventID: int.parse(snapshot
-                                                                .data[index]
-                                                                .addede_id),
-                                                            eventName: snapshot
-                                                                .data[index]
-                                                                .event_name,
-                                                  )),
-                                                );
-                                              }
-                                            });
-                                          },
-                                          trailing: SizedBox(
-                                            width: 100,
-                                            child: Row(
-                                              children: [
-                                                IconButton(
-                                                  tooltip: 'تعديل الحدث',
+                                        onTap: () {
+                                          checkInternetConnectivity(context)
+                                              .then((bool value) async {
+                                            if (value) {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        EventView(
+                                                          eventID: int.parse(
+                                                              snapshot
+                                                                  .data[index]
+                                                                  .addede_id),
+                                                          eventName: snapshot
+                                                              .data[index]
+                                                              .event_name,
+                                                        )),
+                                              );
+                                            }
+                                          });
+                                        },
+                                        trailing: SizedBox(
+                                          width: 100,
+                                          child: Row(
+                                            children: [
+                                              IconButton(
+                                                tooltip: 'تعديل الحدث',
+                                                icon: Icon(
+                                                  Icons.edit,
+                                                  color: Colors.green,
+                                                ),
+                                                onPressed: () {
+                                                  checkInternetConnectivity(
+                                                          context)
+                                                      .then((bool value) async {
+                                                    if (value) {
+                                                      Navigator.push(
+                                                        context,
+                                                        MaterialPageRoute(
+                                                            builder: (context) => EventView(
+                                                                eventID: int.parse(snapshot
+                                                                    .data[index]
+                                                                    .addede_id),
+                                                                eventName: snapshot
+                                                                    .data[index]
+                                                                    .event_name)),
+                                                      );
+                                                    }
+                                                  });
+                                                },
+                                              ),
+                                              IconButton(
+                                                  tooltip: 'حذف الحدث',
                                                   icon: Icon(
-                                                    Icons.edit,
-                                                    color: Colors.green,
+                                                    Icons.delete,
+                                                    color: Colors.red,
                                                   ),
                                                   onPressed: () {
-                                                    checkInternetConnectivity(context)
-                                                        .then((bool value) async {
+                                                    checkInternetConnectivity(
+                                                            context)
+                                                        .then(
+                                                            (bool value) async {
                                                       if (value) {
-                                                        Navigator.push(
-                                                          context,
-                                                          MaterialPageRoute(
-                                                              builder: (context) =>
-                                                                  EventView(
-                                                                      eventID: snapshot
-                                                                          .data[index]
-                                                                          .addede_id,
-                                                                      eventName: snapshot
-                                                                          .data[index]
-                                                                          .event_name)),
-                                                        );
+                                                        return customAlertForButton(
+                                                            int.parse(snapshot
+                                                                .data[index]
+                                                                .addede_id),
+                                                            snapshot,
+                                                            index,
+                                                            context);
                                                       }
                                                     });
-                                                  },
-                                                ),
-                                                IconButton(
-                                                    tooltip: 'حذف الحدث',
-                                                    icon: Icon(
-                                                      Icons.delete,
-                                                      color: Colors.red,
-                                                    ),
-                                                    onPressed: () {
-                                                      checkInternetConnectivity(
-                                                              context)
-                                                          .then((bool value) async {
-                                                        if (value) {
-                                                          return customAlertForButton(
-                                                              int.parse(snapshot.data[index]
-                                                                  .addede_id),
-                                                              snapshot,
-                                                              index,
-                                                              context);
-                                                        }
-                                                      });
-                                                    })
-                                              ],
-                                            ),
+                                                  })
+                                            ],
                                           ),
-                                          leading: Icon(
-                                            Icons.event_note_rounded,
-                                            size: 30,
-                                            color: Colors.blueGrey,
-                                          ),
-                                          title: Text(
-                                            '${snapshot.data[index].event_name}',
-                                            softWrap: true,
-                                            //overflow: TextOverflow.visible,
-                                            style:
-                                                TextStyle(color: Color(0xFF666666),fontWeight:FontWeight.bold,
-                                                fontSize: 14),
-                                          ),subtitle: Text(
-                                        '${snapshot.data[index].description}',
-                                        softWrap: true,
-                                        //overflow: TextOverflow.visible,
+                                        ),
+                                        leading: Icon(
+                                          Icons.event_note_rounded,
+                                          size: 30,
+                                          color: Colors.blueGrey,
+                                        ),
+                                        title: Text(
+                                          '${snapshot.data[index].event_name}',
+                                          softWrap: true,
+                                          //overflow: TextOverflow.visible,
+                                          style: TextStyle(
+                                              color: Color(0xFF666666),
+                                              fontWeight: FontWeight.bold,
+                                              fontSize: 14),
+                                        ),
+                                        subtitle: Text(
+                                          '${snapshot.data[index].description}',
+                                          softWrap: true,
+                                          //overflow: TextOverflow.visible,
 
-                                        style:
-                                        TextStyle( fontWeight:FontWeight.normal,
-                                            fontSize: 12),
-                                      ),),
+                                          style: TextStyle(
+                                              fontWeight: FontWeight.normal,
+                                              fontSize: 12),
+                                        ),
+                                      ),
                                     ),
                                   ),
                                   // Divider(
@@ -314,19 +319,29 @@ class _EventsMenuState extends State<EventsMenu> {
                               ));
                         },
                       ),
-                  )
+                    )
                   : Container(
-                      child: Center(child: Column(
-                        children: [
-                          Image( image: AssetImage('assets/images/emptyimage.png') ,width: MediaQuery.of(context).size.width,
-                            height: MediaQuery.of(context).size.height*0.4,  ),
-                          Text('يجب ان تنشئ حدث جديد' ,style: Theme.of(context).textTheme.subtitle1,)
-                        ],
-                      ),),
-              );
+                      child: Center(
+                        child: Column(
+                          children: [
+                            Image(
+                              image: AssetImage('assets/images/emptyimage.png'),
+                              width: MediaQuery.of(context).size.width,
+                              height: MediaQuery.of(context).size.height * 0.4,
+                            ),
+                            Text(
+                              'يجب ان تنشئ حدث جديد',
+                              style: Theme.of(context).textTheme.subtitle1,
+                            )
+                          ],
+                        ),
+                      ),
+                    );
             default:
               {
-                return Center(child: Text('انشئ حدث جديد' ,style: Theme.of(context).textTheme.subtitle1));
+                return Center(
+                    child: Text('انشئ حدث جديد',
+                        style: Theme.of(context).textTheme.subtitle1));
               }
           }
           return null; // unreachable
@@ -359,24 +374,29 @@ class _EventsMenuState extends State<EventsMenu> {
             Navigator.of(context).pop();
           },
         ),
-        TextButton(
-          child: Text(
-            "حذف",
-            style: TextStyle(color: Colors.red),
+        Container(
+
+          color: Colors.red,
+          child: TextButton(
+
+            child: Text(
+              "حذف الحدث",
+              style: TextStyle(color: Colors.white),
+            ),
+            onPressed: () {
+              var postId = addede_id;
+
+              Singleton.getBox().then((value) {
+                Provider.of<EventProvider>(context, listen: false)
+                    .deleteEvent(postId, value.get('user_id'));
+              });
+
+              setState(() {
+                snapshot.data.removeAt(index);
+              });
+              Navigator.of(context).pop();
+            },
           ),
-          onPressed: () {
-            var postId = addede_id;
-
-            Singleton.getBox().then((value) {
-              Provider.of<EventProvider>(context, listen: false)
-                  .deleteEvent(postId, value.get('user_id'));
-            });
-
-            setState(() {
-              snapshot.data.removeAt(index);
-            });
-            Navigator.of(context).pop();
-          },
         ),
       ],
     );
@@ -388,43 +408,31 @@ class _EventsMenuState extends State<EventsMenu> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF00695C) ,
-                    Color(0xFF4DB6AC),
-                  ],
-                )),
-          ),
-          actions: [
-            IconButton(
-                tooltip: 'بحث',
-                icon: Icon(
-                  Icons.search_rounded,
-                  color: Colors.white,
+        appBar: customAppBar(actions: [
+          IconButton(
+              tooltip: 'بحث',
+              icon: Icon(
+                Icons.search_rounded,
+                color: Colors.white,
+              ),
+              onPressed: () {
+                showSearch(
+                    context: context,
+                    delegate: DataSearchSe(
+                        listName: listNames, futureList: futureList));
+              }),
+        ], title: " الاحداث ", icon: FontAwesomeIcons.list),
+        body: result == true
+            ? generateItemsList()
+            : Container(
+                child: Center(
+                  child: Image(
+                    image: AssetImage('assets/images/wifi.png'),
+                    width: MediaQuery.of(context).size.width,
+                    height: MediaQuery.of(context).size.height * 0.4,
+                  ),
                 ),
-                onPressed: () {
-                  showSearch(
-                      context: context,
-                      delegate: DataSearchSe(
-                          listName: listNames, futureList: futureList));
-                }),
-          ],
-          centerTitle: true,
-          elevation: 1.0,
-          titleSpacing: 1.0,
-          title: Text(
-            "الاحداث",
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-        ),
-        body:  result==true? generateItemsList():
-        Container(
-          child: Center(child: Image( image: AssetImage('assets/images/wifi.png') ,width: MediaQuery.of(context).size.width,
-            height: MediaQuery.of(context).size.height*0.4,  ),),
-        ),
+              ),
       ),
     );
   }
@@ -470,14 +478,15 @@ class DataSearchSe extends SearchDelegate<String> {
     Map data = {
       'addede_id': eventId.toString(),
     };
-    final storage = await Singleton.getStorage()  ;
-    String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
-    final response =
-        await http.post(Uri.parse('${Singleton.apiPath}/getEvent'), body: data ,headers: {
-          // 'Accept':'application/json',
-          'Authorization' : 'Bearer $value',
-          // 'content-type': 'application/json',
-        } );
+    final storage = await Singleton.getStorage();
+    String value = await storage.read(
+        key: "token", aOptions: Singleton.getAndroidOptions());
+    final response = await http
+        .post(Uri.parse('${Singleton.apiPath}/getEvent'), body: data, headers: {
+      // 'Accept':'application/json',
+      'Authorization': 'Bearer $value',
+      // 'content-type': 'application/json',
+    });
 
     if (response.statusCode == 200) {
       var parsed = json.decode(response.body);
@@ -496,6 +505,7 @@ class DataSearchSe extends SearchDelegate<String> {
       future: fetchSearchedEvent(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
+          print("eventId $eventId");
           return ListView.builder(
               itemCount: 1,
               itemBuilder: (context, index) {
@@ -544,24 +554,26 @@ class DataSearchSe extends SearchDelegate<String> {
                                   });
                                 },
                               ),
-                              IconButton(
-                                  tooltip: 'حذف الحدث',
-                                  icon: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onPressed: () {
-                                    checkInternetConnectivity(context)
-                                        .then((bool value) async {
-                                      if (value) {
-                                        return customAlertForButton(
-                                            snapshot.data[index].addede_id,
-                                            snapshot,
-                                            index,
-                                            context);
-                                      }
-                                    });
-                                  })
+                              // IconButton(
+                              //     tooltip: 'حذف الحدث',
+                              //     icon: Icon(
+                              //       Icons.delete,
+                              //       color: Colors.red,
+                              //     ),
+                              //     onPressed: () {
+                              //       checkInternetConnectivity(context)
+                              //           .then((bool value) async {
+                              //         if (value) {
+                              //           return customAlertForButton(
+                              //               snapshot
+                              //                   .data[index]
+                              //                   .addede_id,
+                              //               snapshot,
+                              //               index,
+                              //               context);
+                              //         }
+                              //       });
+                              //     })
                             ],
                           ),
                         ),
@@ -595,34 +607,30 @@ class DataSearchSe extends SearchDelegate<String> {
         ? listName
         : listName.where((element) => element.startsWith(query)).toList();
 
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-          },
-          child: ListView.builder(
-              itemCount: searchList.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  //leading: Image.network('${imgLinks}'),
-                  leading: Icon(Icons.event_note_rounded),
-                  title: Text("${searchList[index]}"),
-                  onTap: () {
-                    checkInternetConnectivity(context).then((bool value) async {
-                      if (value) {
-                        eventId = futureList[index].addede_id;
-
-                        showResults(context);
-                      }
-                    });
-                  },
-                );
-              })),
-    );
+    return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
+          }
+        },
+        child: ListView.builder(
+            itemCount: searchList.length,
+            itemBuilder: (context, index) {
+              return ListTile(
+                //leading: Image.network('${imgLinks}'),
+                leading: Icon(Icons.event_note_rounded),
+                title: Text("${searchList[index]}"),
+                onTap: () {
+                  checkInternetConnectivity(context).then((bool value) async {
+                    if (value) {
+                      eventId = futureList[index].addede_id;
+                      showResults(context);
+                    }
+                  });
+                },
+              );
+            }));
   }
 
   customAlertForButton(
@@ -630,11 +638,8 @@ class DataSearchSe extends SearchDelegate<String> {
     return showDialog(
         context: context,
         builder: (context) {
-          return Directionality(
-            child: _EventsMenuState()
-                .customAlert(addede_id, snapshot, index, context),
-            textDirection: TextDirection.rtl,
-          );
+          return _EventsMenuState()
+              .customAlert(addede_id, snapshot, index, context);
         });
   }
 }

@@ -3,7 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
-
+import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 class Mappoly extends StatefulWidget {
   double lat, lng;
 
@@ -67,17 +68,9 @@ class _MappolyState extends State<Mappoly> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF00695C) ,
-                  Color(0xFF4DB6AC),
-                ],
-              )),
-        ),
-        title: Text('الاستجابة'),
+      appBar: customAppBar(
+        title: 'موقع الحدث' ,
+        icon: FontAwesomeIcons.bomb
       ),
       body: _kGooglePlex == null
           ? Container(

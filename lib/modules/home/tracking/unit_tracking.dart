@@ -12,6 +12,7 @@ import 'package:systemevents/models/unit.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 
 class UnitTracking extends StatefulWidget {
   const UnitTracking({Key key}) : super(key: key);
@@ -259,17 +260,9 @@ class _UnitTrackingState extends State<UnitTracking> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF00695C) ,
-                  Color(0xFF4DB6AC),
-                ],
-              )),
-        ),
-        title: Text("تتبع السيارة"),
+      appBar: customAppBar( 
+        title: "تتبع الوحدة" ,
+        icon: Icons.track_changes
       ),
       body: _kGooglePlex == null
           ? Container(

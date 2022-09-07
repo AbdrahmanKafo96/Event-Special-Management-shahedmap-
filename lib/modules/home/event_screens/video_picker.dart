@@ -1,7 +1,7 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/widgets/customCard.dart';
+import 'package:systemevents/widgets/custom_card.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:video_compress/video_compress.dart';

@@ -123,7 +123,7 @@ Box box;
                       buildMenuItem(
                         context,
                         item: NavigationItem.settings,
-                        text: 'الاعدادات',
+                        text: 'الإعدادات',
                         icon: FontAwesomeIcons.cog,
                       ),
                       if(SharedData.getUserState() == false)
@@ -142,14 +142,14 @@ Box box;
                           context,
                           item: NavigationItem.resetPage,
                           text: 'تعيين كلمة المرور',
-                          icon: FontAwesomeIcons.key,
+                          icon: Icons.lock_reset,
                         ),
                       const SizedBox(height: 8),
                       buildMenuItem(
                         context,
                         item: NavigationItem.about,
                         text: 'حول التطبيق',
-                        icon: FontAwesomeIcons.addressCard,
+                        icon: Icons.people_alt,
                       ),
                       const SizedBox(height: 8),
                       buildMenuItem(

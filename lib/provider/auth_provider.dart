@@ -7,7 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/widgets/customToast.dart';
+import 'package:systemevents/widgets/custom_toast.dart';
 import 'package:systemevents/modules/login/login_screen.dart';
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/models/user.dart';

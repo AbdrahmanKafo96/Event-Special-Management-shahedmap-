@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:systemevents/provider/language.dart';
 import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/change_theme_button_widget.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
@@ -43,93 +44,68 @@ class _AppSettingsState extends State<AppSettings> {
     return Scaffold(
       drawer: CustomDrawer(),
       //backgroundColor: _darkMode?Colors.black:Colors.white,
-      appBar: AppBar( flexibleSpace: Container(
-        decoration: const BoxDecoration(
-            gradient: LinearGradient(
-              colors: [
-                Color(0xFF00695C) ,
-                Color(0xFF4DB6AC),
-              ],
-            )),
-      ),),
+      appBar:customAppBar(title: "الإعدادات"  ,icon: FontAwesomeIcons.cog),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                margin: const EdgeInsets.all(0),
-                color: Colors.green,
-                child: ListTile(
-                  leading: Icon(
-                    Icons.settings,
-                    color: Colors.white,
-                    size: 33,
-                  ),
-                  title: Text(
-                    _language.hSettings(),
-                    style: Theme.of(context)
-                        .textTheme
-                        .headline4
-                        .copyWith(color: Colors.white),
-                  ),
-                ),
-              ),
-            ),
-            Card(
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(10),
-              ),
-              child: Column(
-                children: [
-                  ListTile(
-                    title: Text("تبديل اللغة"),
-                    leading: Icon(
-                      FontAwesomeIcons.language,
-                      color: Colors.green,
-                    ),
-                    trailing: DropdownButton(
-                      hint: Text("اللغة"),
-                      value: _selectedLanguage,
-                      onChanged: (newVal) {
-                        _box.put("language", newVal);
-                        _language.setLanguage=newVal;
-                        setState(() {
-                          _selectedLanguage = newVal;
-                        });
-                      },
-                      items: _languages.map((lang) {
-                        return DropdownMenuItem(
-                          child: Text(lang),
-                          value: lang,
-                        );
-                      }).toList(),
-                    ),
-                  ),
-                  ListTile(
-                    title: Text("الوضع المظلم"),
-                    leading: Icon(
-                      FontAwesomeIcons.brush,
-                      color: Colors.black,
-                    ),
-                    trailing: Switch(
-                      activeColor: Colors.teal,
-                      value: _darkMode,
-                      onChanged: (val){
-                      //_pref.setBool('darkMode', val);
+        child: Container(
+          padding: EdgeInsets.all(5),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
 
-                        setState(() {
-                          themeChange.darkTheme = val;
-                          _darkMode=val;
-                        });
-                      },
+              Card(
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Column(
+                  children: [
+                    ListTile(
+                      title: Text("تبديل اللغة"),
+                      leading: Icon(
+                        FontAwesomeIcons.language,
+                        color: Colors.green,
+                      ),
+                      trailing: DropdownButton(
+                        hint: Text("اللغة"),
+                        value: _selectedLanguage,
+                        onChanged: (newVal) {
+                          _box.put("language", newVal);
+                          _language.setLanguage=newVal;
+                          setState(() {
+                            _selectedLanguage = newVal;
+                          });
+                        },
+                        items: _languages.map((lang) {
+                          return DropdownMenuItem(
+                            child: Text(lang),
+                            value: lang,
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  )
-                ],
-              ),
-            )
-          ],
+                    ListTile(
+                      title: Text("الوضع المظلم"),
+                      leading: Icon(
+                        FontAwesomeIcons.brush,
+                        color: Colors.black,
+                      ),
+                      trailing: Switch(
+                        activeColor: Colors.teal,
+                        value: _darkMode,
+                        onChanged: (val){
+                        //_pref.setBool('darkMode', val);
+
+                          setState(() {
+                            themeChange.darkTheme = val;
+                            _darkMode=val;
+                          });
+                        },
+                      ),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );
