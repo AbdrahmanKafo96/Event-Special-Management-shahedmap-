@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
@@ -24,10 +25,10 @@ class UserAuthProvider extends ChangeNotifier{
     try {
       final storage = await Singleton.getStorage()  ;
     //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
-      final prefs = await Singleton.getPrefInstance();
+      final box = await Singleton.getBox();
 
 
-      if(prefs !=null){
+      if(box !=null){
         final response =userData['userState'] == 'L' ?
         await http.post(Uri.parse("${Singleton.apiPath}/login"),  body:jsonEncode( userData),
           headers: {
@@ -65,9 +66,9 @@ class UserAuthProvider extends ChangeNotifier{
               await storage.write(key: 'token',
                   value:  responseData['token'] ,aOptions: Singleton.getAndroidOptions());
 
-              prefs.setInt('user_id', user.user_id);
-              prefs.setString('email', responseData['result']['original']['data']["email"]);
-              prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
+              box.put('user_id', user.user_id);
+              box.put('email', responseData['result']['original']['data']["email"]);
+              box.put('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
               SharedData.getUserState();
 
               return true ;
@@ -92,9 +93,9 @@ class UserAuthProvider extends ChangeNotifier{
                 value: user.api_token  ,aOptions: Singleton.getAndroidOptions());
             await storage.write(key: 'token',
                 value:  responseData['token'] ,aOptions: Singleton.getAndroidOptions());
-            prefs.setInt('user_id', user.user_id);
-            prefs.setString('email', responseData ['result']['original']['data']["email"]);
-            prefs.setInt('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
+            box.put('user_id', user.user_id);
+            box.put('email', responseData ['result']['original']['data']["email"]);
+            box.put('role_id', int.parse(responseData ['result']['original']['data']["role_id"].toString()));
             SharedData.getUserState();
             return true ;
           }
@@ -148,7 +149,7 @@ class UserAuthProvider extends ChangeNotifier{
 
   void logout(BuildContext context) async {
    try{
-    SharedPreferences prefs= await Singleton.getPrefInstance();
+    Box box= await Singleton.getBox();
      final storage = await Singleton.getStorage()  ;
      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
 
@@ -167,9 +168,9 @@ class UserAuthProvider extends ChangeNotifier{
 
        await storage.delete(key: 'api_token',aOptions: Singleton.getAndroidOptions());
        await storage.delete(key: 'token',aOptions: Singleton.getAndroidOptions());
-       prefs.remove("user_id");
-       prefs.remove("email");
-       prefs.remove("role_id");
+       box.delete("user_id");
+       box.delete("email");
+       box.delete("role_id");
        SharedData.resetValue();
 
        Navigator.pushReplacement(context,

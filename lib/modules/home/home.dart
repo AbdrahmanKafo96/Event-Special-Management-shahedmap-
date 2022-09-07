@@ -26,13 +26,9 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   // Position  position;
-
-
-
   String countryName = "";
   String subAdminArea = "";
   GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
-
 
   @override
   void initState() {

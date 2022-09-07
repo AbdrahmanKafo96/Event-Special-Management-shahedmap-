@@ -2,7 +2,6 @@ import 'dart:convert';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 import 'package:systemevents/models/event.dart';
 import 'package:systemevents/modules/home/menu/view_screen.dart';
@@ -41,11 +40,11 @@ class _EventsMenuState extends State<EventsMenu> {
   Future<void> fetchData() async{
     // await Future.delayed(Duration(milliseconds: 1500));
     // setState(() {
-      Singleton.getPrefInstance().then((value) {
+      Singleton.getBox().then((value) {
         setState(() {
           //  value.getInt('user_id')
           fuList = Provider.of<EventProvider>(context, listen: false)
-              .fetchAllListByUserId(value.getInt('user_id'));
+              .fetchAllListByUserId(value.get('user_id'));
         });
 
     });
@@ -53,9 +52,9 @@ class _EventsMenuState extends State<EventsMenu> {
   }
   Future<void> getData() {
     var list;
-    Singleton.getPrefInstance().then((value) async {
+    Singleton.getBox().then((value) async {
       list = await Provider.of<EventProvider>(context, listen: false)
-          .searchData(value.getInt('user_id'));
+          .searchData(value.get('user_id'));
             try{
               if (list != false  )
                 for (int i = 0; i < list.length; i++) {
@@ -221,9 +220,9 @@ class _EventsMenuState extends State<EventsMenu> {
                                                   context,
                                                   MaterialPageRoute(
                                                       builder: (context) => EventView(
-                                                            eventID: snapshot
+                                                            eventID: int.parse(snapshot
                                                                 .data[index]
-                                                                .addede_id,
+                                                                .addede_id),
                                                             eventName: snapshot
                                                                 .data[index]
                                                                 .event_name,
@@ -274,8 +273,8 @@ class _EventsMenuState extends State<EventsMenu> {
                                                           .then((bool value) async {
                                                         if (value) {
                                                           return customAlertForButton(
-                                                              snapshot.data[index]
-                                                                  .addede_id,
+                                                              int.parse(snapshot.data[index]
+                                                                  .addede_id),
                                                               snapshot,
                                                               index,
                                                               context);
@@ -368,9 +367,9 @@ class _EventsMenuState extends State<EventsMenu> {
           onPressed: () {
             var postId = addede_id;
 
-            Singleton.getPrefInstance().then((value) {
+            Singleton.getBox().then((value) {
               Provider.of<EventProvider>(context, listen: false)
-                  .deleteEvent(postId, value.getInt('user_id'));
+                  .deleteEvent(postId, value.get('user_id'));
             });
 
             setState(() {

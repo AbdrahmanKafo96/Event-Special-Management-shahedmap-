@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/provider/language.dart';
 import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -18,7 +18,7 @@ class _AppSettingsState extends State<AppSettings> {
   List<String> _languages = ['AR', "EN"];
   String _selectedLanguage;
   bool _darkMode = false;
-  SharedPreferences _pref;
+  Box _box;
   Language _language=Singleton.getLanguage();
   DarkThemePreference darkThemePreference =   DarkThemePreference();
   var themeChange;
@@ -27,11 +27,11 @@ class _AppSettingsState extends State<AppSettings> {
     // TODO: implement initState
     super.initState();
 
-    Singleton.getPrefInstance().then((value) async {
+    Singleton.getBox().then((value) async {
       setState(() {
-        _pref=value;
+        _box=value;
         _language.getLanguage;
-        _darkMode=value.getBool(darkThemePreference.THEME_STATUS);
+        _darkMode=value.get(darkThemePreference.THEME_STATUS);
        // _darkMode=darkMode;
       });
     });
@@ -93,7 +93,7 @@ class _AppSettingsState extends State<AppSettings> {
                       hint: Text("اللغة"),
                       value: _selectedLanguage,
                       onChanged: (newVal) {
-                        _pref.setString("language", newVal);
+                        _box.put("language", newVal);
                         _language.setLanguage=newVal;
                         setState(() {
                           _selectedLanguage = newVal;

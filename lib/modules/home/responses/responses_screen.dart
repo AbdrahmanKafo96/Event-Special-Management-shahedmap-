@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:systemevents/models/category.dart';
 import 'package:systemevents/modules/home/event_screens/map_screen.dart';
@@ -27,12 +26,17 @@ class _ResponsePageState extends State<ResponsePage> {
 
   }
   Future<void> getData()   {
-    Singleton.getPrefInstance().then((value) {
+    Singleton.getBox().then((value) {
       setState(() {
-        user_id=value.getInt('user_id');
-        //  value.getInt('user_id')
+        user_id=value.get('user_id');
+        Singleton.getStorage().then((storage) {
+          storage.read(
+              key: "token", aOptions: Singleton.getAndroidOptions()).then((value) {
+            print("my token is :${value }");
+          });
+        });
         fuList = Provider.of<EventProvider>(context, listen: false)
-            .getAllRespons(value.getInt('user_id'));
+            .getAllRespons(value.get('user_id'));
       });
     });
     Future.delayed(const Duration(seconds: 1), () {
@@ -177,8 +181,9 @@ class _ResponsePageState extends State<ResponsePage> {
                                                     builder: (context) =>
 
                                                         Mappoly(
-                                                            lat: value['data']['lat'] ,
-                                                            lng:value['data']['lng'])),
+                                                            lat: double.parse(value['data']['lat']) ,
+                                                            lng:double.parse(value['data']['lng']))
+                                                ),
                                               );
                                             });
                                           });
@@ -266,9 +271,9 @@ class _ResponsePageState extends State<ResponsePage> {
           onPressed: () {
             var postId = addede_id;
 
-            Singleton.getPrefInstance().then((value) {
+            Singleton.getBox().then((value) {
               Provider.of<EventProvider>(context, listen: false)
-                  .deleteEvent(postId, value.getInt('user_id'));
+                  .deleteEvent(postId, value.get('user_id'));
             });
 
             setState(() {

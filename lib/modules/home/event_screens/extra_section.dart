@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/modules/home/event_screens/SuccessPage.dart';
 import 'package:systemevents/modules/home/event_screens/event_screen.dart';
 import 'package:systemevents/modules/home/home.dart';
@@ -119,8 +119,8 @@ class _EventSectionTowState extends State<EventSectionTow> {
                             listen: false)
                             .event
                             .getDescription!=null  ){
-                          SharedPreferences prefs =
-                          await Singleton.getPrefInstance();
+                          Box box =
+                          await Singleton.getBox();
                           Map userData = Map();
                           userData = {
                             'description': Provider.of<EventProvider>(context,
@@ -133,7 +133,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 .eventType
                                 .type_name
                                 .toString(),
-                            'sender_id': prefs.getInt('user_id').toString(),
+                            'sender_id': box.get('user_id').toString(),
                             'senddate': DateFormat('yyyy-MM-dd')
                                 .format(DateTime.now())
                                 .toString(),

@@ -5,12 +5,12 @@ import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:path/path.dart' as p;
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
@@ -37,8 +37,8 @@ class _ProfilePageState extends State<ProfilePage> {
   Witness witness;
 
   Future<void> getUID() async {
-    SharedPreferences pref = await SharedPreferences.getInstance();
-    String uid = pref.getInt('user_id').toString();
+    Box box = await Singleton.getBox();
+    String uid = box.get('user_id').toString();
     setState(() {
       result = uid;
     });

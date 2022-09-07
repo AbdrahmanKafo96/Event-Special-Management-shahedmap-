@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/models/category.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -6,75 +7,35 @@ import 'package:systemevents/models/navigation_item.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/provider/navigation_provider.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
+import 'package:systemevents/singleton/singleton.dart';
 
 class CustomDrawer extends StatefulWidget {
+
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
   List<MyList> mylist = [];
+
   int selected;
 
-  // void addObj() {
-  //   mylist.add(MyList(
-  //       item: NavigationItem.home,
-  //       title: 'الصفحة الرئيسية',
-  //       color: Colors.grey,
-  //       context: context,
-  //       icon: FontAwesomeIcons.home,
-  //       routPage: "Home"));
-  //
-  //   mylist.add(MyList(
-  //       item: NavigationItem.settings,
-  //       title: 'الاعدادت',
-  //       color: Colors.grey,
-  //       context: context,
-  //       icon: FontAwesomeIcons.cog,
-  //       routPage: "settings"));
-  //
-  //   mylist.add(MyList(
-  //       item: NavigationItem.ProfilePage,
-  //       title: 'الصفحة الشخصية',
-  //       color: Colors.grey,
-  //       context: context,
-  //       icon: FontAwesomeIcons.solidUser,
-  //       routPage: "ProfilePage"));
-  //
-  //   mylist.add(MyList(
-  //       item: NavigationItem.ResetPage,
-  //       title: 'تعيين كلمة المرور',
-  //       color: Colors.grey,
-  //       context: context,
-  //       icon: FontAwesomeIcons.key,
-  //       routPage: "ResetPage"));
-  //
-  //   mylist.add(MyList(
-  //       item: NavigationItem.About,
-  //       title: 'حول التطبيق',
-  //       color: Colors.grey,
-  //       context: context,
-  //       icon: FontAwesomeIcons.addressCard,
-  //       routPage: "About"));
-  //
-  //   mylist.add(MyList(
-  //       // item: NavigationItem.,
-  //       title: 'تسجيل الخروج',
-  //       color: Colors.grey,
-  //       //  context: context,
-  //       icon: FontAwesomeIcons.signOut,
-  //       routPage: "logout"));
-  // }
+Box box;
 
-  @override
+   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-   // addObj();
+    Singleton.getBox().then((Box value) {
+      setState(() {
+        box=value;
+      });
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+
     return Drawer(
         backgroundColor: Color.fromRGBO(255, 255, 255, 0.9),
         child: Stack(children: [
@@ -128,79 +89,79 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           Container(
               child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                child: UserAccountsDrawerHeader(
-                  margin: EdgeInsets.zero,
-                  arrowColor: Colors.redAccent,
-                  decoration: BoxDecoration(
-                    color: Color.fromRGBO(255, 255, 255, 0.0),
-                  ),
-                  accountName: Text("Abdulrahman kafu"),
-                  accountEmail: Text("bedootk90@gmail.com"),
-                  currentAccountPicture: CircleAvatar(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Container(
+                    child: UserAccountsDrawerHeader(
+                      margin: EdgeInsets.zero,
+                      arrowColor: Colors.redAccent,
+                      decoration: BoxDecoration(
+                        color: Color.fromRGBO(255, 255, 255, 0.0),
+                      ),
+                      accountName: Text(" kafu"),
+                      accountEmail: Text("email"),
+                      currentAccountPicture: CircleAvatar(
 //backgroundColor: Colors.orange,
-                    child: Text(
-                      "A",
-                      style: TextStyle(fontSize: 40.0),
+                        child: Text(
+                          "A",
+                          style: TextStyle(fontSize: 40.0),
+                        ),
+                      ),
                     ),
                   ),
-                ),
-              ),
-              ListView(
-                padding: EdgeInsets.only(right: 6,left: 6,top: 6,bottom: 6),
-                shrinkWrap: true,
-                children: <Widget>[
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.home,
-                    text: 'الصفحة الرئيسية',
-                    icon: FontAwesomeIcons.home,
-                  ),
-                  const SizedBox(height: 8),
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.settings,
-                    text: 'الاعدادات',
-                    icon: FontAwesomeIcons.cog,
-                  ),
-                  if(SharedData.getUserState() == false)
-                  const SizedBox(height: 8),
-                  if(SharedData.getUserState() == false)
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.profilePage,
-                    text: 'الصفحة الشخصية',
-                    icon: FontAwesomeIcons.solidUser,
-                  ),
-                  if(SharedData.getUserState() == false)
-                  const SizedBox(height: 8),
-                  if(SharedData.getUserState() == false)
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.resetPage,
-                    text: 'تعيين كلمة المرور',
-                    icon: FontAwesomeIcons.key,
-                  ),
-                  const SizedBox(height: 8),
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.about,
-                    text: 'حول التطبيق',
-                    icon: FontAwesomeIcons.addressCard,
-                  ),
-                  const SizedBox(height: 8),
-                  buildMenuItem(
-                    context,
-                    item: NavigationItem.logout,
-                    text: 'تسجيل الخروج',
-                    icon: FontAwesomeIcons.signOut,
-                  ),
+                  ListView(
+                    padding: EdgeInsets.only(right: 6,left: 6,top: 6,bottom: 6),
+                    shrinkWrap: true,
+                    children: <Widget>[
+                      buildMenuItem(
+                        context,
+                        item: NavigationItem.home,
+                        text: 'الصفحة الرئيسية',
+                        icon: FontAwesomeIcons.home,
+                      ),
+                      const SizedBox(height: 8),
+                      buildMenuItem(
+                        context,
+                        item: NavigationItem.settings,
+                        text: 'الاعدادات',
+                        icon: FontAwesomeIcons.cog,
+                      ),
+                      if(SharedData.getUserState() == false)
+                        const SizedBox(height: 8),
+                      if(SharedData.getUserState() == false)
+                        buildMenuItem(
+                          context,
+                          item: NavigationItem.profilePage,
+                          text: 'الصفحة الشخصية',
+                          icon: FontAwesomeIcons.solidUser,
+                        ),
+                      if(SharedData.getUserState() == false)
+                        const SizedBox(height: 8),
+                      if(SharedData.getUserState() == false)
+                        buildMenuItem(
+                          context,
+                          item: NavigationItem.resetPage,
+                          text: 'تعيين كلمة المرور',
+                          icon: FontAwesomeIcons.key,
+                        ),
+                      const SizedBox(height: 8),
+                      buildMenuItem(
+                        context,
+                        item: NavigationItem.about,
+                        text: 'حول التطبيق',
+                        icon: FontAwesomeIcons.addressCard,
+                      ),
+                      const SizedBox(height: 8),
+                      buildMenuItem(
+                        context,
+                        item: NavigationItem.logout,
+                        text: 'تسجيل الخروج',
+                        icon: FontAwesomeIcons.signOut,
+                      ),
+                    ],
+                  )
                 ],
-              )
-            ],
-          ))
+              ))
         ]));
   }
 
@@ -212,11 +173,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   Widget buildMenuItem(
-    BuildContext context, {
-    NavigationItem item,
-    String text,
-    IconData icon,
-  }) {
+      BuildContext context, {
+        NavigationItem item,
+        String text,
+        IconData icon,
+      }) {
     final provider = Provider.of<NavigationProvider>(context);
     final currentItem = provider.getNavigationItem;
     final isSelected = item == currentItem;
@@ -245,14 +206,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
   void selectItem(BuildContext context, NavigationItem item) {
     if(item == NavigationItem.logout){
       Provider.of<UserAuthProvider>(context,
-      listen: false)
-      .logout(context);
+          listen: false)
+          .logout(context);
     }else{
       final provider = Provider.of<NavigationProvider>(context, listen: false);
       provider.setNavigationItem(item);
     }
   }
 }
+
 // ListView.builder(
 // // Important: Remove any padding from the ListView.
 // shrinkWrap: true,

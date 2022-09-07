@@ -4,6 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
+import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/models/unit.dart';
@@ -42,13 +43,15 @@ callbackDispatcher() {
         case "fetchBackground":
           Position userLocation = await Geolocator.getCurrentPosition(
               desiredAccuracy: LocationAccuracy.high);
+          await Hive.initFlutter();
+          Box box = await Singleton.getBox();
 
-          SharedPreferences prefs = await Singleton.getPrefInstance();
           final storage = await Singleton.getStorage();
           String value = await storage.read(
               key: "token", aOptions: Singleton.getAndroidOptions());
+          print("my token ${value}");
           Map data = {
-            'user_id': prefs.getInt('user_id').toString(),
+            'user_id': box.get('user_id').toString(),
             'lat': userLocation.latitude.toString(),
             'lng': userLocation.longitude.toString(),
           };
@@ -97,11 +100,14 @@ Future main() async {
     token = await storage.read(
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
-    final pref = await Singleton.getPrefInstance();
-    language = pref.getString('language');
+    final box = await Singleton.getBox();
+    print("the value is ${box.get('role_id')}");
+    print("the user id is ${box.get('user_id')}");
+    print("the email is ${box.get('email')}");
+    language = box.get('language');
     //darkMode=pref.getBool('darkMode');
 
-    if (pref.getInt('version_number') == null) pref.setInt('version_number', 0);
+    if (box.get('version_number') == null) box.put('version_number', 0);
 
     if (defaultTargetPlatform == TargetPlatform.android) {
       AndroidGoogleMapsFlutter.useAndroidViewSurface = true;

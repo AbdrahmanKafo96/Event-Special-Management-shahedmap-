@@ -26,7 +26,7 @@ class _MainPageState extends State<MainPage> {
 
     switch (navigationItem) {
       case NavigationItem.home:
-        Singleton.getPrefInstance();
+        Singleton.getBox();
         return HomePage();
 
       case NavigationItem.settings:

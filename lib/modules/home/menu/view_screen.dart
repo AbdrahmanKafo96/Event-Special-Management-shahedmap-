@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/modules/home/menu/image_picker.dart';
 import 'package:systemevents/modules/home/event_screens/video_picker.dart';
 import 'package:systemevents/modules/home/home.dart';
@@ -63,10 +63,10 @@ class _EventViewState extends State<EventView> {
                     iconSize: 24, onPressed: ()  async {
                 checkInternetConnectivity(context).then((bool value) async {
                   if(value){
-                    SharedPreferences prefs = await Singleton.getPrefInstance();
+                    Box box = await Singleton.getBox();
                     Map userData = Map();
                     userData = {
-                      'user_id':prefs.getInt('user_id').toString(),
+                      'user_id':box.get('user_id').toString(),
                       'addede_id': widget.eventID,
                       'description':
                       eventDescController.text.toString(),
@@ -128,13 +128,13 @@ class _EventViewState extends State<EventView> {
                                         onPressed: () {
                                           int postId = widget.eventID;
 
-                                          Singleton.getPrefInstance().then((
+                                          Singleton.getBox().then((
                                               value) {
                                             Provider.of<EventProvider>(
                                                 context, listen: false)
                                                 .deleteEvent(
                                                 postId,
-                                                value.getInt('user_id'));
+                                                value.get('user_id'));
                                           });
                                           Navigator.of(context).pop();
                                           Navigator.of(context).pop();

@@ -1,21 +1,29 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:systemevents/provider/language.dart';
 
 class Singleton {
   Singleton._();
 
-  static SharedPreferences _pref;
-  static FlutterSecureStorage _storage;
-  static String apiPath="http://192.168.1.3:8000/api";
-  static String routePath="http://192.168.1.3:8000";
-  static Language _language;
 
-  static Future<SharedPreferences> getPrefInstance() async {
-    if (_pref == null) {
-      _pref = await SharedPreferences.getInstance();
+  static FlutterSecureStorage _storage;
+  static String apiPath="http://ets.ly/api";
+  static String routePath="http://ets.ly";
+  static Language _language;
+  static Box _boxUserData ,_trackingBox;
+
+  static Future<Box> getBox() async {
+    if (_boxUserData == null) {
+      _boxUserData = await  Hive.openBox("userData") ;
     }
-    return _pref;
+
+    return _boxUserData;
+  }
+  static Future<Box> getTrackingBox() async {
+    if (_trackingBox == null) {
+      _trackingBox = await  Hive.openBox("Tracking") ;
+    }
+    return _trackingBox;
   }
   static Language getLanguage()  {
     if (_language == null) {

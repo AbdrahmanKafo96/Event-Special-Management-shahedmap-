@@ -5,8 +5,9 @@ class SharedData{
   static bool _state ;
   static  bool getUserState()  {
     if (_state == null) {
-      Singleton.getPrefInstance().then((value) {
-        if (value.getInt('role_id') == 4) {
+      Singleton.getBox().then((value) {
+        if (value.get('role_id') == 4) {
+
           _state = true;
         }else{
           _state=false;
@@ -18,4 +19,5 @@ class SharedData{
   static resetValue(){
     _state=null;
   }
+
 }

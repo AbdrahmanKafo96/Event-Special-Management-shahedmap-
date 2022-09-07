@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/widgets/customToast.dart';
 import 'package:systemevents/modules/login/validator.dart';
@@ -196,9 +195,9 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                     checkInternetConnectivity(context).then((
                         bool value) async {
                       if (value) { if(_formKey.currentState.validate()){
-                        var prefs= await Singleton.getPrefInstance();
-                        String email=prefs.getString('email');
-                        int user_id=prefs.getInt('user_id');
+                        var prefs= await Singleton.getBox();
+                        String email=prefs.get('email');
+                        int user_id=prefs.get('user_id');
 
                         var result=  await Provider.of<UserAuthProvider>(context,listen: false).
                         resetPassword(passwordController.text.toString(),confPasswordController.text.toString()

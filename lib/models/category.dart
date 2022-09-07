@@ -20,9 +20,9 @@ class CategoryClass{
 
   factory CategoryClass.fromJson(Map<String, dynamic> json) {
     return CategoryClass(
-      category_id: json['category_id'],
+      category_id: int.parse(json['category_id']),
       category_name: json['category_name'],
-      emergency_phone: json['emergency_phone'],
+      emergency_phone: int.parse(json['emergency_phone']),
     );
   }
 }
@@ -44,8 +44,8 @@ class Respo{
     return Respo(
 
       type_name: json['type_name'],
-      notification_id: json['notification_id'],
-      seen: json['seen'],
+      notification_id: int.parse(json['notification_id']),
+      seen: int.parse(json['seen']),
     );
   }
 
@@ -63,8 +63,8 @@ class EventType {
 
   factory EventType.fromJson(Map<String, dynamic> json) {
     return EventType(
-      category_id: json['category_id'],
-      type_id: json['type_id'],
+      category_id: int.parse(json['category_id']),
+      type_id: int.parse(json['type_id']),
       type_name: json['type_name'],
     );
   }

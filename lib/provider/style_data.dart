@@ -1,6 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:hive/hive.dart';
 import 'package:systemevents/singleton/singleton.dart';
 
  //
@@ -20,13 +20,13 @@ class DarkThemePreference {
      String THEME_STATUS = "THEMESTATUS";
 
   setDarkTheme(bool value) async {
-    SharedPreferences prefs = await Singleton.getPrefInstance();
-    prefs.setBool(THEME_STATUS, value);
+    Box box = await Singleton.getBox();
+    box.put(THEME_STATUS, value);
   }
 
   Future<bool> getTheme() async {
-    SharedPreferences prefs = await Singleton.getPrefInstance();
-    return prefs.getBool(THEME_STATUS) ?? false;
+    Box box = await Singleton.getBox();
+    return box.get(THEME_STATUS) ?? false;
   }
 }
 class DarkThemeProvider with ChangeNotifier {

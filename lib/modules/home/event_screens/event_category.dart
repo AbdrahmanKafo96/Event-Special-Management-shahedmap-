@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+
 import 'package:systemevents/models/category.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -26,7 +26,7 @@ class _EventCategoryState extends State<EventCategory> {
   void initState() {
     super.initState();
     openDB().then((db) {
-      Singleton.getPrefInstance().then((pref) async{
+      Singleton.getBox().then((box) async{
         // SharedPreferences prefs= await Singleton.getPrefInstance();
         // final key = 'token';
         // final value = prefs.get(key ) ?? 0;
@@ -36,7 +36,7 @@ class _EventCategoryState extends State<EventCategory> {
             getCategoryList(0);
             getTypeList(0);
             Map data={
-              'version_number':  pref.getInt('version_number').toString(),
+              'version_number':  box.get('version_number').toString(),
             };
 
             final response =  await http.post(
@@ -62,7 +62,7 @@ class _EventCategoryState extends State<EventCategory> {
                   }
                   getCategoryList(1);
                   getTypeList(1);
-                  pref.setInt('version_number', int.parse(res['data']));
+                  box.put('version_number', int.parse(res['data']));
 
               }
             }

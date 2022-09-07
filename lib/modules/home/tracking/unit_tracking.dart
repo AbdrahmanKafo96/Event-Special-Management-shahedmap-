@@ -105,12 +105,12 @@ class _UnitTrackingState extends State<UnitTracking> {
   void initState() {
     super.initState();
 
-    Hive.openBox("Tracking").then((value) => null);
+      Singleton.getTrackingBox().then((value) => null);
     print("database is opened ");
-    Singleton.getPrefInstance().then((getValue) {
+    Singleton.getBox().then((getValue) {
       getCurrentPosition().then((value) {
         setState(() {
-          senderID = getValue.getInt('user_id');
+          senderID = getValue.get('user_id');
           _kGooglePlex = CameraPosition(
             target: LatLng(currentPosition.latitude, currentPosition.longitude),
             zoom: 14,
@@ -134,7 +134,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
 
   Future<void> _sendLiveLocation() async {
-    var boxTracking = Hive.box('Tracking');
+    var boxTracking = await Singleton.getTrackingBox();
     var location = await _locationTracker.getLocation();
     _newLatitude = location.latitude;
     _newLongitude = location.longitude;
@@ -160,7 +160,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       var location = await _locationTracker.getLocation();
       data = {
         'sender_id': senderID.toString(),
-        'beneficiarie_id': 88.toString(), // ok we will do it soon
+        'beneficiarie_id': 6.toString(), // ok we will do it soon
         'lat': location.latitude.toString(),
         'lng': location.longitude.toString(),
         'distance': distance.toString(),
@@ -185,7 +185,7 @@ class _UnitTrackingState extends State<UnitTracking> {
           } else {
             boxTracking.add(Tracking(
                 senderID: senderID,
-                beneficiarieID: 88,
+                beneficiarieID: 6,
                 lat: location.latitude,
                 lng: location.longitude,
                 distance: distance,
@@ -231,7 +231,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       oldTime = DateTime.now();
 
       timer = Timer.periodic(
-          Duration(seconds: 40), (Timer t) => _sendLiveLocation());
+          Duration(seconds: 5), (Timer t) => _sendLiveLocation());
     });
   }
 
@@ -322,7 +322,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
 
   Future<bool> syncData() async {
-    var boxTracking = await Hive.box('Tracking');
+    var boxTracking = await Singleton.getTrackingBox();
     print("database local is open ");
 
     Tracking tracking;
