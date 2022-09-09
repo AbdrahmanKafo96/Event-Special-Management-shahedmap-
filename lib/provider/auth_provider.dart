@@ -2,16 +2,13 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/widgets/custom_toast.dart';
 import 'package:systemevents/modules/login/login_screen.dart';
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/models/user.dart';
-import 'package:systemevents/services/dio.dart';
 import 'dart:convert'  as convert;
 import 'package:http/http.dart' as http;
 import 'package:systemevents/singleton/singleton.dart';
@@ -23,7 +20,7 @@ class UserAuthProvider extends ChangeNotifier{
   Future<bool> login(Map userData)async {
 
     try {
-      final storage = await Singleton.getStorage()  ;
+      final storage = await Singleton.getStorage() ;
     //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final box = await Singleton.getBox();
 
@@ -150,6 +147,7 @@ class UserAuthProvider extends ChangeNotifier{
   void logout(BuildContext context) async {
    try{
     Box box= await Singleton.getBox();
+
      final storage = await Singleton.getStorage()  ;
      String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
 
@@ -171,6 +169,7 @@ class UserAuthProvider extends ChangeNotifier{
        box.delete("user_id");
        box.delete("email");
        box.delete("role_id");
+       Singleton.clearTracking();
        SharedData.resetValue();
 
        Navigator.pushReplacement(context,

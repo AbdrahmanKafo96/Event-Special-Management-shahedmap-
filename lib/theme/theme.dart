@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'dart:ui';
 
@@ -25,26 +26,7 @@ import 'dart:ui';
 //       backgroundColor: Color(0xFFFFFFFF),
 //       shadowColor: Color(0xFF242b3b),
 //       hintColor: Color(0xFF74767f),
-//       inputDecorationTheme: InputDecorationTheme(
-//         fillColor: Color(0xFFFFFFFF),
-//         isDense: true,
-//         contentPadding: EdgeInsets.all(16),
-//         labelStyle: GoogleFonts.notoSansArabic(
-//             color: Color(0xFF242b3b), fontWeight: FontWeight.bold),
-//         filled: true,
-//         enabledBorder: OutlineInputBorder(
-//           borderSide: BorderSide(color: Colors.blueGrey),
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         disabledBorder: OutlineInputBorder(
-//           borderSide: BorderSide(color: Color(0xFFD3D3D3)),
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//         focusedBorder: OutlineInputBorder(
-//           borderSide: BorderSide(color: Color(0xFFD3D3D3)),
-//           borderRadius: BorderRadius.circular(10),
-//         ),
-//       ),
+
 //       textTheme: TextTheme(
 //           button: GoogleFonts.notoSansArabic(
 //             // textStyle: TextStyle(color: Color(0xFF666666),
@@ -90,23 +72,24 @@ import 'dart:ui';
 
 
 class Styles {
-   static final MaterialColor primarySwatch = MaterialColor(0xff5a8f62, <int, Color>{
-    50: Color(0xffE8F5E9),
-    100: Color(0xffC8E6C9),
-    200: Color(0xffA5D6A7),
-    300: Color(0xff81C784),
-    400: Color(0xff66BB6A),
-    500: Color(0xff4CAF50),
-    600: Color(0xff43A047),
-    700: Color(0xff388E3C),
-    800: Color(0xff2E7D32),
-    900: Color(0xff1B5E20),
+   static final MaterialColor primarySwatch = MaterialColor(0xffFAFAFA, <int, Color>{
+    50: Color(0xffFAFAFA),
+    100: Color(0xffF5F5F5),
+    200: Color(0xffEEEEEE),
+    300: Color(0xffE0E0E0),
+    400: Color(0xffBDBDBD),
+    500: Color(0xff9E9E9E),
+    600: Color(0xff757575),
+    700: Color(0xff616161),
+    800: Color(0xff424242),
+    900: Color(0xff212121),
   });
 
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
 
-      primarySwatch: primarySwatch,
+      iconTheme: IconThemeData(color: Colors.white ,),
+     primarySwatch: primarySwatch,
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
 
       backgroundColor: isDarkTheme ? Colors.red : Color(0xffF1F5FB),
@@ -121,14 +104,67 @@ class Styles {
 
       focusColor: isDarkTheme ? Color(0xff0B2512) : Color(0xffA8DAB5),
       disabledColor: Colors.grey,
-      textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
+      //textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
       cardColor: isDarkTheme ? Color(0xFF151515) : Colors.white,
       canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
           colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light()),
       scaffoldBackgroundColor:isDarkTheme ? Colors.grey : Colors.white,
+            textTheme: TextTheme(
+          button: GoogleFonts.notoSansArabic(
+            // textStyle: TextStyle(color: Color(0xFF666666),
+          ),
+          headline6: GoogleFonts.notoSansArabic(
+            textStyle: TextStyle(
+                color: Color(0xFF666666), fontWeight: FontWeight.bold),
+          ),
+          headline4: GoogleFonts.notoSansArabic(
+            textStyle: TextStyle(
+                color: Color(0xFF666666), fontWeight: FontWeight.bold),
+          ),
+          subtitle1: GoogleFonts.notoSansArabic(
+            textStyle: TextStyle(
+              color: Colors.grey.shade600,
+            ),
+          ),
+          bodyText1: GoogleFonts.notoSansArabic(
+              textStyle: TextStyle(
+                color: Color(0xFFffffff),
+              ))),
+      inputDecorationTheme: InputDecorationTheme(
+
+        suffixStyle: TextStyle(color: Colors.white),
+        iconColor:Color(0xFFFF9800),
+        suffixIconColor:Colors.white,
+        prefixIconColor: Color(0xFFFF9800),
+        fillColor: Color(0xFF575757),
+        isDense: true,
+        contentPadding: EdgeInsets.all(12),
+        hintStyle: TextStyle(color: Colors.grey),
+        labelStyle: GoogleFonts.notoSansArabic(
+         color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
+        filled: true,
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Colors.black),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        disabledBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFD3D3D3)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+        focusedBorder: OutlineInputBorder(
+          borderSide: BorderSide(color: Color(0xFFfd7e14)),
+          borderRadius: BorderRadius.circular(10),
+        ),
+      ),
+
       appBarTheme: AppBarTheme(
+        systemOverlayStyle: SystemUiOverlayStyle(
+          statusBarColor: Colors.grey,
+          statusBarBrightness: Brightness.light,
+           statusBarIconBrightness: Brightness.light,
+        ),
         titleTextStyle: GoogleFonts.notoSansArabic(
           textStyle: TextStyle(
               color: Colors.white,
@@ -137,7 +173,7 @@ class Styles {
         ),
         iconTheme: IconThemeData(color: Colors.white),
 
-        shadowColor: Color(0xFF5a8f62),
+        shadowColor: Color(0xFFFFFFFF),
         elevation: 1.0,
         centerTitle: true,
       ),

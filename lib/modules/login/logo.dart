@@ -10,12 +10,15 @@ class Logo extends StatefulWidget {
 class _LogoState extends State<Logo> {
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10),
-       child: Center(child: Image(
-         image: AssetImage('assets/images/${widget._url}'),
-         width: MediaQuery.of(context).size.width,
-         height: MediaQuery.of(context).size.height*0.4,))
+    return SizedBox(
+      child: Container(
+       // padding: EdgeInsets.all(10),
+
+         child: Center(child: Image(
+           image: AssetImage('assets/images/${widget._url}'),
+           width: MediaQuery.of(context).size.width,
+           height: MediaQuery.of(context).size.height*0.4,))
+      ),
     );
   }
 }

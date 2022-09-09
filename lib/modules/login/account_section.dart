@@ -37,6 +37,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
         LoginForm(),
         SizedBox(height:12,),
         TextFormField(
+          style:  Theme.of(context).textTheme.bodyText1,
           validator: (value){
            // print(Provider.of<UserAuth>(context,listen: false).getPassword.toString() );
             if(value.isEmpty || value==null)
@@ -60,6 +61,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           obscureText: !_passwordVisible,
           controller:passwordConfController,
           decoration: InputDecoration(
+            prefixIcon: Icon(Icons.password,),
               border: OutlineInputBorder(),
               labelText: 'إعادة إدخال كلمة المرور',
               hintText: 'اعد إدخال كلمة المرور',
@@ -71,7 +73,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   _passwordVisible
                       ? Icons.visibility
                       : Icons.visibility_off,
-                  color: Colors.grey,
+
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable
@@ -86,13 +88,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
         ),
         SizedBox(height: 12,),
 
-        SizedBox(height: 12,),
+        // SizedBox(height: 12,),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             Expanded(
            //   flex: 1,
               child: TextFormField(
+                style:  Theme.of(context).textTheme.bodyText1,
                 validator: (value){
                  return  ValidatorClass.isValidName(value);
                 },
@@ -100,7 +103,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   Provider.of<UserAuthProvider>(context,listen: false).user.setFirstName=value;
                 },
                 controller: firstNameController,
-                style: TextStyle(fontSize: 14),
+
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'الاسم الاول',
@@ -112,6 +115,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             Expanded(
             //  flex: 1,
               child: TextFormField(
+                style:  Theme.of(context).textTheme.bodyText1,
                 validator: (value){
                   return  ValidatorClass.isValidName(value);
                 },
@@ -119,7 +123,6 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   Provider.of<UserAuthProvider>(context,listen: false).user.setFatherName=value;
                 },
                 controller: fatherNameController,
-                style: TextStyle(fontSize: 14),
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'اسم الأب',
@@ -129,8 +132,9 @@ class _RegistrationFormState extends State<RegistrationForm> {
             ),
             SizedBox(width: 1,),
             Expanded(
-             // flex: 1,
+             flex: 1,
               child: TextFormField(
+
                 validator: (value){
                   return  ValidatorClass.isValidName(value);
                 },
@@ -138,7 +142,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   Provider.of<UserAuthProvider>(context,listen: false).user.setFamilyName=value;
                 },
                 controller: familyNameController,
-                style: TextStyle(fontSize: 14),
+                style:  Theme.of(context).textTheme.bodyText1,
                 decoration: InputDecoration(
                     border: OutlineInputBorder(),
                     labelText: 'اسم العائلة',
@@ -154,38 +158,36 @@ class _RegistrationFormState extends State<RegistrationForm> {
          children: [
            Expanded(
              flex: 1,
-             child: Directionality(
-             textDirection: ui.TextDirection.rtl,
-               child: DateTimePicker(
-                 validator: (value){
-                   if(value.isEmpty || value ==null)
-                     return "يجب ادخال تاريخ الميلاد";
-                   else
-                     return null;
-                 },
-                 onChanged: (value){
+             child: DateTimePicker(
+               validator: (value){
+                 if(value.isEmpty || value ==null)
+                   return "يجب ادخال تاريخ الميلاد";
+                 else
+                   return null;
+               },
+               onChanged: (value){
 
-                   Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=value;
-                 },
-                // controller: date_of_birthController,
-                 type: DateTimePickerType.date,
-                 cancelText: "لا",
-                 confirmText: 'نعم',
-                 dateMask: 'd MMM, yyyy',
-                 enabled: true,
-                initialValue:"1960-01-01 00:00:00.000"  ,
-                 firstDate: DateTime(1960),
-                 lastDate: DateTime(DateTime.now().year-12),
-                 calendarTitle: 'اختر تاريخ ميلادك',
-                 icon: Icon(Icons.event),
-                 dateLabelText: 'تاريخ الميلاد',
-                 timeLabelText: "ساعة",
-                 textAlign: TextAlign.left ,
-                 autovalidate:true ,
-                 errorFormatText: "ادخل تاريخ صحيح",
-                 errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                 onSaved: (val) => print('the date is $val'),
-               ),
+                 Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=value;
+               },
+              // controller: date_of_birthController,
+               type: DateTimePickerType.date,
+               style: TextStyle(color: Colors.white),
+               cancelText: "لا",
+               confirmText: 'نعم',
+               dateMask: 'd MMM, yyyy',
+               enabled: true,
+              initialValue:"1960-01-01 00:00:00.000"  ,
+               firstDate: DateTime(1960),
+               lastDate: DateTime(DateTime.now().year-12),
+               calendarTitle: 'اختر تاريخ ميلادك',
+               icon: Icon(Icons.event),
+               dateLabelText: 'تاريخ الميلاد',
+               timeLabelText: "ساعة",
+               textAlign: TextAlign.left ,
+               autovalidate:true ,
+               errorFormatText: "ادخل تاريخ صحيح",
+               errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
+               onSaved: (val) => print('the date is $val'),
              ),
            ),
            Expanded(
@@ -209,8 +211,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
                    },
                  );
                },
-               icon: Icon(Icons.language),
-               label: Text(country1!=""?country1:'اختيار الدولة' ),
+               icon: Icon(Icons.language ),
+               label: Text(country1!=""?country1:'اختيار الدولة' ,style: TextStyle(
+                 color: Colors.white
+               ), ),
              ),),
          ],
        ),

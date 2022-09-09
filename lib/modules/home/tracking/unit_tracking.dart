@@ -78,21 +78,21 @@ class _UnitTrackingState extends State<UnitTracking> {
       if (_locationSubscription != null) {
         _locationSubscription.cancel();
       }
-      _locationSubscription =
-          _locationTracker.onLocationChanged.listen((newLocalData) {
-        if (controller != null) {
-          _lat_startpoint = location.latitude;
-          _lng_startpoint = location.longitude;
-
-          controller
-              .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-                  bearing: 0,
-                  target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                  // tilt: 0,
-                  zoom: 18.0)));
-          updateMarkerAndCircle(newLocalData, imageData);
-        }
-      });
+      // _locationSubscription =
+      //     _locationTracker.onLocationChanged.listen((newLocalData) {
+      //   if (controller != null) {
+      //     _lat_startpoint = location.latitude;
+      //     _lng_startpoint = location.longitude;
+      //
+      //     controller
+      //         .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+      //             //bearing: 0,
+      //             target: LatLng(newLocalData.latitude, newLocalData.longitude),
+      //             // tilt: 0,
+      //             zoom: 18.0)));
+      //     updateMarkerAndCircle(newLocalData, imageData);
+      //   }
+      // });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         debugPrint("Permission Denied");
@@ -114,7 +114,7 @@ class _UnitTrackingState extends State<UnitTracking> {
           senderID = getValue.get('user_id');
           _kGooglePlex = CameraPosition(
             target: LatLng(currentPosition.latitude, currentPosition.longitude),
-            zoom: 14,
+            zoom: 18,
           );
           getIniLocation();
         });
@@ -127,7 +127,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   void dispose() {
     super.dispose();
     _kGooglePlex = null;
-    Hive.close();
+    Singleton.closeTracking();
     timer?.cancel();
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
@@ -213,18 +213,17 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
 
   handleTap(LatLng tappedPoint) async {
-    var location = await _locationTracker.getLocation();
-
     setState(() {
-      _destination = null;
       _destination = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        markerId: MarkerId(tappedPoint.toString()),
+        markerId: MarkerId(521.toString()),
         position: tappedPoint,
       );
+    });
+    _lat_endpoint = _destination.position.latitude;
+    _lng_endpoint = _destination.position.longitude;
 
-      _lat_endpoint = _destination.position.latitude;
-      _lng_endpoint = _destination.position.longitude;
+   var location = await _locationTracker.getLocation();
 
       _oldLatitude = location.latitude;
       _oldLongitude = location.longitude;
@@ -233,7 +232,7 @@ class _UnitTrackingState extends State<UnitTracking> {
 
       timer = Timer.periodic(
           Duration(seconds: 5), (Timer t) => _sendLiveLocation());
-    });
+
   }
 
   Future getCurrentPosition() async {
@@ -290,60 +289,86 @@ class _UnitTrackingState extends State<UnitTracking> {
                 _controller.complete(controller);
               },
             ),
-      // floatingActionButton: FloatingActionButton(
-      //     child: Icon(Icons.location_searching),
-      //     onPressed: ()    async {
-      //      getCurrentLocation();
-      //      //  final GoogleMapController controller = await _controller.future;
-      //      //  LocationData currentLocation;
-      //      //  var location = new Location();
-      //      //  try {
-      //      //    currentLocation = await location.getLocation();
-      //      //  } on Exception {
-      //      //    currentLocation = null;
-      //      //  }
-      //      //
-      //      //  controller.animateCamera(CameraUpdate.newCameraPosition(
-      //      //    CameraPosition(
-      //      //      bearing: 0,
-      //      //      target: LatLng(currentLocation.latitude, currentLocation.longitude),
-      //      //      zoom: 15.0,
-      //      //    ),
-      //      //  ));
-      //     }),
+      floatingActionButton: FloatingActionButton(
+          child: Icon(Icons.location_searching),
+          onPressed: ()    async {
+            final GoogleMapController controller = await _controller.future;
+            Uint8List imageData = await getMarker();
+            var location = await _locationTracker.getLocation();
+
+            updateMarkerAndCircle(location, imageData);
+
+            if (_locationSubscription != null) {
+              _locationSubscription.cancel();
+            }
+            _locationSubscription =
+                _locationTracker.onLocationChanged.listen((newLocalData) {
+              if (controller != null) {
+                _lat_startpoint = location.latitude;
+                _lng_startpoint = location.longitude;
+
+                controller
+                    .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                        //bearing: 0,
+                        target: LatLng(newLocalData.latitude, newLocalData.longitude),
+                        // tilt: 0,
+                        zoom: 18.0)));
+                updateMarkerAndCircle(newLocalData, imageData);
+              }
+            });
+           // getCurrentLocation();
+           // //  final GoogleMapController controller = await _controller.future;
+           // //  LocationData currentLocation;
+           // //  var location = new Location();
+           // //  try {
+           // //    currentLocation = await location.getLocation();
+           // //  } on Exception {
+           // //    currentLocation = null;
+           // //  }
+           // //
+           // //  controller.animateCamera(CameraUpdate.newCameraPosition(
+           // //    CameraPosition(
+           // //      bearing: 0,
+           // //      target: LatLng(currentLocation.latitude, currentLocation.longitude),
+           // //      zoom: 15.0,
+           // //    ),
+           // //  ));
+          }),
     );
   }
 
   Future<bool> syncData() async {
-    var boxTracking = await Singleton.getTrackingBox();
-    print("database local is open ");
+      Singleton.getTrackingBox().then((boxTracking){
+        print("database local is open ");
 
-    Tracking tracking;
-    if (boxTracking.length == 0) {
-      print("there is no data to sync ");
-    }
-    if (boxTracking.length > 0) {
-      for (int i = 0; i < boxTracking.length; i++) {
-        tracking = boxTracking.getAt(i);
+        Tracking tracking;
+        if (boxTracking.length == 0) {
+          print("there is no data to sync ");
+        }
+        if (boxTracking.length > 0) {
+          for (int i = 0; i < boxTracking.length; i++) {
+            tracking = boxTracking.getAt(i);
 
-        Map data = {
-          'sender_id': tracking.senderID.toString(),
-          'beneficiarie_id': tracking.beneficiarieID.toString(),
-          'lat': tracking.lat.toString(),
-          'lng': tracking.lng.toString(),
-          'distance': tracking.distance.toString(),
-          'lat_startpoint': tracking.latStartPoint.toString(),
-          'lng_startpoint': tracking.lngStartPoint.toString(),
-          'lat_endpoint': tracking.latEndPoint.toString(),
-          'lng_endpoint': tracking.lngEndPoint.toString(),
-          'time': tracking.time.toString()
-        };
-        print("local item is sent ...");
-        Provider.of<EventProvider>(context, listen: false)
-            .update_position(data);
-      }
-      boxTracking.clear();
-    }
-    return true;
+            Map data = {
+              'sender_id': tracking.senderID.toString(),
+              'beneficiarie_id': tracking.beneficiarieID.toString(),
+              'lat': tracking.lat.toString(),
+              'lng': tracking.lng.toString(),
+              'distance': tracking.distance.toString(),
+              'lat_startpoint': tracking.latStartPoint.toString(),
+              'lng_startpoint': tracking.lngStartPoint.toString(),
+              'lat_endpoint': tracking.latEndPoint.toString(),
+              'lng_endpoint': tracking.lngEndPoint.toString(),
+              'time': tracking.time.toString()
+            };
+            print("local item is sent ...");
+            Provider.of<EventProvider>(context, listen: false)
+                .update_position(data);
+          }
+          boxTracking.clear();
+        }
+        return true;
+      } );
+
   }
 }

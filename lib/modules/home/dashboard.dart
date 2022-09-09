@@ -70,6 +70,8 @@ class _DashboardState extends State<Dashboard> {
           if (SharedData.getUserState())
             dashboardItem(
                 context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),
+          dashboardItem(
+                context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
         ],
       ),
     );

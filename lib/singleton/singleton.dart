@@ -9,6 +9,7 @@ class Singleton {
   static FlutterSecureStorage _storage;
   static String apiPath="http://ets.ly/api";
   static String routePath="http://ets.ly";
+  static const String mapApiKey ="AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk";
   static Language _language;
   static Box _boxUserData ,_trackingBox;
 
@@ -19,11 +20,31 @@ class Singleton {
 
     return _boxUserData;
   }
+  static Future<Box> closeBox() async {
+    if (_boxUserData != null) {
+      _boxUserData.close().then((value) {
+        print("Tracking now is close");
+      }) ;
+    }
+  }
   static Future<Box> getTrackingBox() async {
     if (_trackingBox == null) {
       _trackingBox = await  Hive.openBox("Tracking") ;
     }
     return _trackingBox;
+  }
+  static void  closeTracking() async {
+    if (_trackingBox != null) {
+      _trackingBox.close().then((value) {
+        print("Tracking now is close");
+      }) ;
+    }
+  }static void  clearTracking() async {
+    if (_trackingBox != null) {
+      _trackingBox.clear().then((value) {
+        print("Tracking now is close");
+      }) ;
+    }
   }
   static Language getLanguage()  {
     if (_language == null) {

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 Widget customAppBar(
-    {String title,
+    {String title="",
     Color backgroundColor,
     double elevation = 0.0,
     double titleSpacing = 1.0,
@@ -14,15 +14,16 @@ Widget customAppBar(
       titleSpacing: titleSpacing,
      actions: actions,
       leading: leading,
-      flexibleSpace: Container(
+      flexibleSpace:  Container(
               decoration: const BoxDecoration(
                   gradient: LinearGradient(
                 colors: [
-                  Color(0xFF00695C),
-                  Color(0xFF4DB6AC),
+                  //Color.fromRGBO(36, 36, 36, 0.85),
+                  Color(0xFF424242),
+                  Color(0xff212121),
                 ],
               )),
-            ),
+            ) ,
       title: Text.rich(
         TextSpan(
           children:  [

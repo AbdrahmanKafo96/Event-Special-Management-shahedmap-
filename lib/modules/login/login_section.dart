@@ -20,10 +20,12 @@ class _LoginFormState extends State<LoginForm> {
   @override
   Widget build(BuildContext context) {
     return Column(
+
     children: [
       TextFormField(
         keyboardType:TextInputType.emailAddress  ,
         controller:emailController ,
+
         onChanged: (value){
           Provider.of<UserAuthProvider>(context,listen: false).user.setEmail=emailController.text;
         },
@@ -36,7 +38,9 @@ class _LoginFormState extends State<LoginForm> {
           }
           else return null;
         },
+        style:  Theme.of(context).textTheme.bodyText1,
         decoration: InputDecoration(
+            prefixIcon: Icon(Icons.alternate_email_outlined ),
             border: OutlineInputBorder(),
             labelText: 'البريد الإلكتروني',
             hintText: 'ادخل البريد الإلكتروني'
@@ -44,6 +48,7 @@ class _LoginFormState extends State<LoginForm> {
       ),
       SizedBox(height: 12,),
       TextFormField(
+
         obscureText: !_passwordVisible,
         keyboardType: TextInputType.text,
         validator: (value){
@@ -60,6 +65,8 @@ class _LoginFormState extends State<LoginForm> {
         controller: passwordController,
 
         decoration: InputDecoration(
+            prefixIcon: Icon(Icons.password
+            ),
             suffixIcon: IconButton(
           icon: Icon(
             // Based on passwordVisible state choose the icon

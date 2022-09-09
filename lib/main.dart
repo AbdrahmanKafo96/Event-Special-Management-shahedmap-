@@ -13,6 +13,7 @@ import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/modules/home/mainpage.dart';
 import 'package:systemevents/modules/home/menu/menu_screen.dart';
+import 'package:systemevents/modules/home/search.dart';
 import 'package:systemevents/modules/home/settings_screens/ResetPassword/CreateNewPasswordView.dart';
 import 'package:systemevents/modules/home/settings_screens/AppSettings.dart';
 import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
@@ -189,6 +190,7 @@ class _MyAppState extends State<MyApp> {
             ),
             routes: {
               'About': (context) => About(),
+              'serc': (context) => SearchPlacesScreen(),
               'Home': (context) => HomePage(),
               'ProfilePage': (context) => ProfilePage(),
               'ResetPage': (context) => CreateNewPasswordView(),
