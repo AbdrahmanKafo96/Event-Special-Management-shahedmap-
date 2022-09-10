@@ -70,8 +70,8 @@ class _DashboardState extends State<Dashboard> {
           if (SharedData.getUserState())
             dashboardItem(
                 context, "الإشعارات", FontAwesomeIcons.bell, 'response',Colors.redAccent),
-          dashboardItem(
-                context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
+          // dashboardItem(
+          //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
         ],
       ),
     );
@@ -90,7 +90,14 @@ class _DashboardState extends State<Dashboard> {
     //
     // });
     return InkWell(
+
+      customBorder: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
       onTap: () async {
+
+
+
         loc.Location location = loc.Location();
         bool _serviceEnabled;
         loc.PermissionStatus _permissionGranted;
@@ -187,7 +194,7 @@ class _DashboardState extends State<Dashboard> {
           }
 
       },
-      child: customCard(icon, title ,color),
+      child: customCard(icon, title ,color ,ctx  ),
     );
   }
 

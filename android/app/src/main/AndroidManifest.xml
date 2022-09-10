@@ -39,7 +39,7 @@
     <application
         android:icon="@mipmap/launcher_icon"
 
-        android:label="system events"
+        android:label="Shahed Map"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
         <meta-data

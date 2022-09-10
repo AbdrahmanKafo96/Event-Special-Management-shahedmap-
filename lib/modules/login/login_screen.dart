@@ -64,6 +64,7 @@ class _LoginUiState extends State<LoginUi> {
                 } else
                   return null;
               },
+              style:  Theme.of(context).textTheme.bodyText1,
               decoration: InputDecoration(
                   helperStyle: TextStyle(fontSize: 12),
                   border: OutlineInputBorder(),
@@ -334,11 +335,11 @@ class _LoginUiState extends State<LoginUi> {
                                                         children: <Widget>[
                                                           Container(
                                                             decoration: BoxDecoration(
-                                                                color: Colors.green
-                                                                    .withOpacity(0.3),
+                                                            
                                                                 borderRadius:
                                                                 BorderRadius.circular(
-                                                                    10.0)),
+                                                                    10.0),
+                                                                color:Colors.deepOrangeAccent.withOpacity(0.7) , ) ,
                                                             width: MediaQuery.of(context)
                                                                 .size
                                                                 .width *
@@ -362,7 +363,7 @@ class _LoginUiState extends State<LoginUi> {
                                                                     child:
                                                                     CircularProgressIndicator(
 // value:  ,
-                                                                      color: Colors.orange,
+                                                                      color: Colors.white,
                                                                       strokeWidth: 7.0,
                                                                     ),
                                                                   ),
@@ -374,9 +375,7 @@ class _LoginUiState extends State<LoginUi> {
                                                                   child: Center(
                                                                     child: Text(
                                                                       " قيد الانتظار...",
-                                                                      style: TextStyle(
-                                                                          color:
-                                                                          Colors.orange),
+                                                                      style: Theme.of(context).textTheme.bodyText1,
                                                                     ),
                                                                   ),
                                                                 ),

@@ -55,8 +55,8 @@ Box box;
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFF00695C),
-                        Color(0xFF4DB6AC),
+                        Color(0xFF424242),
+                        Color(0xff212121),
                       ],
                     )),
                 width: 500,
@@ -72,8 +72,8 @@ Box box;
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFF00695C),
-                      Color(0xFF4DB6AC),
+                      Color(0xFF424242),
+                      Color(0xff212121),
                     ],
                   ),
                   boxShadow: [
@@ -99,9 +99,9 @@ Box box;
                         color: Color.fromRGBO(255, 255, 255, 0.0),
                       ),
                       accountName: Text(" kafu"),
-                      accountEmail: Text("email"),
+                      accountEmail: Text("bedoo@gmail.com"),
                       currentAccountPicture: CircleAvatar(
-//backgroundColor: Colors.orange,
+                        backgroundColor: Colors.orange,
                         child: Text(
                           "A",
                           style: TextStyle(fontSize: 40.0),
@@ -195,7 +195,9 @@ Box box;
             borderRadius: BorderRadius.all(Radius.circular(10))),
         selected: isSelected,
 
-        selectedTileColor: Colors.blueGrey,
+        selectedTileColor: Color(0xFFfe6e00),
+        hoverColor: Color(0xFFFF8F00),
+        // tileColor: Color(0xFFFF8F00),
         leading: Icon(icon, color: color),
         title: Text(text, style: TextStyle(color: color, fontSize: 16)),
         onTap: () => selectItem(context, item),

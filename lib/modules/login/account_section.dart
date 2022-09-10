@@ -58,6 +58,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           onChanged: (value){
             Provider.of<UserAuthProvider>(context,listen: false).user.setConfPassword=value;
           },
+
           obscureText: !_passwordVisible,
           controller:passwordConfController,
           decoration: InputDecoration(
@@ -159,6 +160,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
            Expanded(
              flex: 1,
              child: DateTimePicker(
+               style:  Theme.of(context).textTheme.bodyText1,
                validator: (value){
                  if(value.isEmpty || value ==null)
                    return "يجب ادخال تاريخ الميلاد";
@@ -171,7 +173,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                },
               // controller: date_of_birthController,
                type: DateTimePickerType.date,
-               style: TextStyle(color: Colors.white),
+
                cancelText: "لا",
                confirmText: 'نعم',
                dateMask: 'd MMM, yyyy',
@@ -211,6 +213,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                    },
                  );
                },
+
                icon: Icon(Icons.language ),
                label: Text(country1!=""?country1:'اختيار الدولة' ,style: TextStyle(
                  color: Colors.white

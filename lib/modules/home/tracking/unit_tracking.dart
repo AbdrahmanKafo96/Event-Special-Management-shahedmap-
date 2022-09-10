@@ -23,7 +23,7 @@ class UnitTracking extends StatefulWidget {
 
 class _UnitTrackingState extends State<UnitTracking> {
   StreamSubscription _locationSubscription;
-  Location _locationTracker = Location();
+  // Location _locationTracker = Location();
   Marker marker, _destination;
   Map data;
   geo.Position currentPosition;
@@ -44,7 +44,7 @@ class _UnitTrackingState extends State<UnitTracking> {
     return byteData.buffer.asUint8List();
   }
 
-  void updateMarkerAndCircle(LocationData newLocalData, Uint8List imageData) {
+  void updateMarkerAndCircle(geo.Position newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
     setState(() {
       marker = Marker(
@@ -71,9 +71,11 @@ class _UnitTrackingState extends State<UnitTracking> {
     try {
       final GoogleMapController controller = await _controller.future;
       Uint8List imageData = await getMarker();
-      var location = await _locationTracker.getLocation();
-
-      updateMarkerAndCircle(location, imageData);
+   //   var location = await _locationTracker.getLocation();
+      geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
+      print("getIniLocation  position lat ${position.latitude}");
+      print("getIniLocation position _lng  ${position.longitude}");
+      updateMarkerAndCircle(position, imageData);
 
       if (_locationSubscription != null) {
         _locationSubscription.cancel();
@@ -136,10 +138,12 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   Future<void> _sendLiveLocation() async {
     var boxTracking = await Singleton.getTrackingBox();
-    var location = await _locationTracker.getLocation();
-    _newLatitude = location.latitude;
-    _newLongitude = location.longitude;
-
+    // var location = await _locationTracker.getLocation();
+    geo.Position  pos = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
+    _newLatitude = pos.latitude;
+    _newLongitude = pos.longitude;
+    print("_sendLiveLocation  _newLatitude lat ${_newLatitude }");
+    print("_sendLiveLocation _newLongitude _lng  ${_newLongitude  }");
     if (_oldLatitude != null &&
         _oldLongitude != null &&
         _newLatitude != null &&
@@ -157,11 +161,11 @@ class _UnitTrackingState extends State<UnitTracking> {
 
       double totalHours = ((minutes * 60) + seconds + (newTime.hour * 3600)) /
           3600.0; // convert time to hours
-
-      var location = await _locationTracker.getLocation();
+      //var location = await _locationTracker.getLocation();
+      geo.Position  location = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
       data = {
         'sender_id': senderID.toString(),
-        'beneficiarie_id': 6.toString(), // ok we will do it soon
+        'beneficiarie_id': 2.toString(), // ok we will do it soon
         'lat': location.latitude.toString(),
         'lng': location.longitude.toString(),
         'distance': distance.toString(),
@@ -186,7 +190,7 @@ class _UnitTrackingState extends State<UnitTracking> {
           } else {
             boxTracking.add(Tracking(
                 senderID: senderID,
-                beneficiarieID: 6,
+                beneficiarieID:2,
                 lat: location.latitude,
                 lng: location.longitude,
                 distance: distance,
@@ -223,11 +227,12 @@ class _UnitTrackingState extends State<UnitTracking> {
     _lat_endpoint = _destination.position.latitude;
     _lng_endpoint = _destination.position.longitude;
 
-   var location = await _locationTracker.getLocation();
-
+   //var location = await _locationTracker.getLocation();
+    geo.Position  location = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
       _oldLatitude = location.latitude;
       _oldLongitude = location.longitude;
-
+    print("handleTap  _oldLatitude lat ${_oldLatitude}");
+    print("handleTap _oldLongitude _lng  ${_oldLongitude}");
       oldTime = DateTime.now();
 
       timer = Timer.periodic(
@@ -237,8 +242,11 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   Future getCurrentPosition() async {
     currentPosition = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.bestForNavigation);
+        desiredAccuracy: geo.LocationAccuracy.high);
+    print("getCurrentPosition  position lat ${currentPosition.latitude}");
+    print("getCurrentPosition position _lng  ${currentPosition.longitude}");
   }
+
 
   double vincentyGreatCircleDistance(
     double oldLatitude,
@@ -294,28 +302,39 @@ class _UnitTrackingState extends State<UnitTracking> {
           onPressed: ()    async {
             final GoogleMapController controller = await _controller.future;
             Uint8List imageData = await getMarker();
-            var location = await _locationTracker.getLocation();
-
-            updateMarkerAndCircle(location, imageData);
+           // var location = await _locationTracker.getLocation();
+            geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
+            updateMarkerAndCircle(position, imageData);
 
             if (_locationSubscription != null) {
               _locationSubscription.cancel();
             }
-            _locationSubscription =
-                _locationTracker.onLocationChanged.listen((newLocalData) {
-              if (controller != null) {
-                _lat_startpoint = location.latitude;
-                _lng_startpoint = location.longitude;
+            final geo.LocationSettings locationSettings = geo.LocationSettings(
+              accuracy: geo.LocationAccuracy.high,
+              distanceFilter: 100,
+            );
+         //    geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
 
-                controller
-                    .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
-                        //bearing: 0,
-                        target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                        // tilt: 0,
-                        zoom: 18.0)));
-                updateMarkerAndCircle(newLocalData, imageData);
-              }
-            });
+            _locationSubscription   = geo.Geolocator.getPositionStream(locationSettings: locationSettings).listen(
+                    (geo.Position  position) {
+                    if (controller != null) {
+                    _lat_startpoint = position.latitude;
+                    _lng_startpoint = position.longitude;
+                      print("FloatingActionButton _lat_startpoint $_lat_startpoint");
+                      print("FloatingActionButton _lng_startpoint $_lng_startpoint");
+                    controller
+                        .animateCamera(CameraUpdate.newCameraPosition(CameraPosition(
+                    //bearing: 0,
+                    target: LatLng(position.latitude, position.longitude),
+                    // tilt: 0,
+                    zoom: 18.0)));
+                    updateMarkerAndCircle(position, imageData);
+                //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+                }});
+            //     _locationTracker.onLocationChanged.listen((  newLocalData) {
+
+            //   }
+            // });
            // getCurrentLocation();
            // //  final GoogleMapController controller = await _controller.future;
            // //  LocationData currentLocation;

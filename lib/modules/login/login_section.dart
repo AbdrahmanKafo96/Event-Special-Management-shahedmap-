@@ -63,7 +63,7 @@ class _LoginFormState extends State<LoginForm> {
           Provider.of<UserAuthProvider>(context,listen: false).user.setPassword=passwordController.text;
         },
         controller: passwordController,
-
+        style:  Theme.of(context).textTheme.bodyText1,
         decoration: InputDecoration(
             prefixIcon: Icon(Icons.password
             ),

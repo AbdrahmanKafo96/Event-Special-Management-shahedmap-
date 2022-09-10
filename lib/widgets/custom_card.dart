@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-Widget customCard(IconData icon, String title ,Color color) {
-  return  Card(
-      shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(10.0),),
-   // color: color,
-   borderOnForeground: true,
-    elevation:4.0,
-   margin:  EdgeInsets.all(8.0),
+Widget customCard(
+    IconData icon, String title, Color color, BuildContext context  ) {
+  return Card(
+    color:  Colors.black12.withOpacity(0.5),
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(
+        10.0,
+      ),
+    ),
+    // color: color,
+    borderOnForeground: true,
+    elevation: 4.0,
+    margin: EdgeInsets.all(8.0),
     child: Container(
-            margin: EdgeInsets.all(10),
-            padding: EdgeInsets.all(10),
+
+      margin: EdgeInsets.all(10),
+      padding: EdgeInsets.all(10),
       child: Center(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -32,27 +38,30 @@ Widget customCard(IconData icon, String title ,Color color) {
               child: CircleAvatar(
                 // backgroundImage: AssetImage(containerImage,),
                 child: Container(
-              // width: 31,
-                //  height: 31,
-                  child: Icon(icon ,color: Colors.white,)
-                  // child: Image.asset(containerImage,),
-                ),
-              backgroundColor: color,
+                    // width: 31,
+                    //  height: 31,
+                    child: Icon(
+                  icon,
+                  color: Colors.white,
+                )
+                    // child: Image.asset(containerImage,),
+                    ),
+                backgroundColor: color,
                 radius: 30,
               ),
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: <Widget>[
-                Text("$title",
-                    style: GoogleFonts.notoSansArabic(
-                        textStyle: TextStyle(
-                            fontSize: 16.0,
-                            color: Colors.black.withOpacity(0.7),
-                            fontWeight: FontWeight.bold))),
+                Expanded(
+                  child: Text(
+                    "$title",
+                    style: Theme.of(context).textTheme.headline4,
+                  ),
+                ),
                 Icon(
                   Icons.arrow_forward,
-                  color: Colors.black54,
+                  color: Colors.white,
                 )
               ],
             ),

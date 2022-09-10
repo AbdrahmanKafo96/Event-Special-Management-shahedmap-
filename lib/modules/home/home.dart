@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/models/category.dart';
-import 'package:systemevents/models/event.dart';
+ import 'package:systemevents/models/event.dart';
 import 'package:systemevents/modules/home/dashboard.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
-import 'package:systemevents/provider/auth_provider.dart';
-import 'package:systemevents/provider/event_provider.dart';
+ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
@@ -19,7 +17,6 @@ import 'package:flutter/services.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
 
 class HomePage extends StatefulWidget {
-
   @override
   _HomePageState createState() => _HomePageState();
 }
@@ -35,10 +32,7 @@ class _HomePageState extends State<HomePage> {
   void initState() {
     super.initState();
     _getUserLocation();
-
   }
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -62,30 +56,33 @@ class _HomePageState extends State<HomePage> {
           },
           tooltip: 'اضف حدث',
           child: const Icon(
-            Icons.add,
+            FontAwesomeIcons.plus,
             color: Colors.white,
             size: 24,
           ),
-          backgroundColor: Colors.green,
+          backgroundColor: Colors.deepOrange,
         ),
-          appBar:  customAppBar(title: " الصفحة الرئيسية " , icon: FontAwesomeIcons.home, actions:[
-              SharedData.getUserState() == true
-              ? Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: IconButton(
-              icon: Icon(  Icons.track_changes),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => UnitTracking()),
-                );
-              },
-            ),
-          )
-              : SizedBox.shrink(),
-      ], ),
-
+        appBar: customAppBar(
+          title: " الصفحة الرئيسية ",
+          icon: FontAwesomeIcons.home,
+          actions: [
+            SharedData.getUserState() == true
+                ? Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: IconButton(
+                      icon: Icon(Icons.track_changes),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => UnitTracking()),
+                        );
+                      },
+                    ),
+                  )
+                : SizedBox.shrink(),
+          ],
+        ),
         body: ListView(
           shrinkWrap: true,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -107,8 +104,8 @@ class _HomePageState extends State<HomePage> {
                         bottomRight: Radius.circular(25)),
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFF00695C),
-                        Color(0xFF4DB6AC),
+                        Color(0xFF424242),
+                        Color(0xff212121),
                       ],
                     )),
                 padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
@@ -119,7 +116,7 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
                           Text(
-                            "مرحبا أحمد!",
+                            "مرحبا عبدو!",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -184,11 +181,8 @@ class _HomePageState extends State<HomePage> {
             Dashboard(),
           ],
         ),
-        drawer:CustomDrawer()
-    );
+        drawer: CustomDrawer());
   }
-
-
 
   _getUserLocation() async {
     LocationData myLocation;
