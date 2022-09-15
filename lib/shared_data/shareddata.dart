@@ -1,4 +1,6 @@
 import 'package:systemevents/singleton/singleton.dart';
+import '../provider/auth_provider.dart';
+
 
 class SharedData{
 
@@ -6,8 +8,10 @@ class SharedData{
   static  bool getUserState()  {
     if (_state == null) {
       Singleton.getBox().then((value) {
-        if (value.get('role_id') == 4) {
 
+        var user_id= value.get('user_id');
+        if (value.get('role_id') == 4) {
+          UserAuthProvider.getBeneID(user_id);
           _state = true;
         }else{
           _state=false;

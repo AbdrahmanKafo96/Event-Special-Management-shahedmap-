@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 //import 'package:multi_image_picker/multi_image_picker.dart';
@@ -117,7 +118,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                   top: 5,
                   child: InkWell(
                     child: Icon(
-                      Icons.remove_circle,
+                      FontAwesomeIcons.remove,
                       size: 20,
                       color: Colors.red,
                     ),
@@ -162,7 +163,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                   top: 5,
                   child: InkWell(
                     child: Icon(
-                      Icons.remove_circle,
+                      FontAwesomeIcons.remove,
                       size: 20,
                       color: Colors.red,
                     ),
@@ -183,6 +184,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
 
         } else {
           return Card(
+            color: Colors.black54,
             elevation: 5.0,
             child: Wrap(
               spacing: 2,
@@ -192,7 +194,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
               direction: Axis.horizontal,
               children: [
                 IconButton(
-                  icon: Icon(Icons.add_photo_alternate),
+                  icon: Icon(Icons.add_photo_alternate,color: Colors.white,size: 26,),
                   onPressed: () {
 
                     // if (images.length >= 1 && images.length <= 4) {
@@ -205,7 +207,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                 ),
                 Text(
                   "اختر صورة",
-                  style: TextStyle(fontSize: 10),
+                  style: Theme.of(context).textTheme.subtitle2,
                 )
               ],
             ),

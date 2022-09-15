@@ -6,7 +6,7 @@ import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/custom_card.dart';
 import 'package:systemevents/web_browser/webView.dart';
 import 'package:systemevents/widgets/custom_toast.dart';
-import 'package:systemevents/widgets/dialog.dart';
+import 'package:systemevents/widgets/custom_dialog.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:telephony/telephony.dart';
 import 'package:another_flushbar/flushbar.dart';

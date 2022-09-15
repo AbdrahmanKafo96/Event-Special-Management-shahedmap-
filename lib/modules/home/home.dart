@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
  import 'package:systemevents/models/event.dart';
-import 'package:systemevents/modules/home/dashboard.dart';
+import 'package:systemevents/modules/home/dashboard/dashboard.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
  import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/provider/navigation_provider.dart';
 import 'package:systemevents/shared_data/shareddata.dart';
+import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
@@ -15,6 +18,9 @@ import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:flutter/services.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
+import 'package:systemevents/widgets/custom_indecator.dart';
+
+import '../../provider/auth_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -22,37 +28,50 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Position  position;
+  bool loader=false;
   String countryName = "";
   String subAdminArea = "";
   GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
-  GlobalKey _appbarkey = new GlobalKey();
+ // GlobalKey _appbarkey = new GlobalKey();
+  Box box  ;
 
+  var provider  ;
   @override
   void initState() {
     super.initState();
-    _getUserLocation();
-  }
 
+   openBox();
+    _getUserLocation();
+
+  }
+  void openBox()  {
+    Singleton.getBox().then((value){
+      setState(() {
+        box=value;
+        loader=true;
+
+      });
+    });
+  }
   @override
   Widget build(BuildContext context) {
     //   checkInternetConnectivity(context);
     return Scaffold(
         key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
-        // floatingActionButtonLocation: FloatingActionButtonLocation,
+
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-            checkInternetConnectivity(context).then((bool value) async {
-              if (value) {
+             checkInternetConnectivity(context).then((bool value) async {
+             if (value) {
                 Provider.of<EventProvider>(context, listen: false).event =
                     Event();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EventSectionOne()),
                 );
-              }
-            });
+               }
+             });
           },
           tooltip: 'اضف حدث',
           child: const Icon(
@@ -71,7 +90,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(
                       icon: Icon(Icons.track_changes),
-                      onPressed: () {
+                      onPressed: ()  {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -83,7 +102,8 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox.shrink(),
           ],
         ),
-        body: ListView(
+        body: !loader ?customCircularProgressIndicator():
+        ListView(
           shrinkWrap: true,
           // mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -99,15 +119,19 @@ class _HomePageState extends State<HomePage> {
               elevation: 2.0,
               child: Container(
                 decoration: BoxDecoration(
+               //   color: Color(0xFF424250),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(25),
                         bottomRight: Radius.circular(25)),
                     gradient: LinearGradient(
+                      // begin: Alignment.topCenter,
+                      // end: Alignment(0.8, 1),
                       colors: [
-                        Color(0xFF424242),
-                        Color(0xff212121),
+                        Color(0xFF424250),
+                        Color(0xff33333d),
                       ],
-                    )),
+                    )
+                ),
                 padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
                 child: Center(
                   child: Column(
@@ -116,7 +140,7 @@ class _HomePageState extends State<HomePage> {
                       Row(
                         children: [
                           Text(
-                            "مرحبا عبدو!",
+                            "مرحبا ${box.get('unitname')}!",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 24,
@@ -204,14 +228,18 @@ class _HomePageState extends State<HomePage> {
     //currentLocation = myLocation;
     final coordinates =
         new Coordinates(myLocation.latitude, myLocation.longitude);
-    var addresses =
-        await Geocoder.local.findAddressesFromCoordinates(coordinates);
-    var first = addresses.first;
-    setState(() {
-      countryName = first.countryName;
-      subAdminArea = first.addressLine;
+    var first;
+    var addresses;
+      Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
+       setState(() {
+         addresses =value;
+         first = addresses.first;
+         countryName = first.countryName;
+         subAdminArea = first.addressLine;
+       });
     });
-
     return first;
   }
+
+
 }

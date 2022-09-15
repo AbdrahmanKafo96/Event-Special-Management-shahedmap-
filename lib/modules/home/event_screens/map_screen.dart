@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:location/location.dart';
 import 'package:provider/provider.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/custom_toast.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:flutter/services.dart';
@@ -149,155 +150,144 @@ class _MyHomePageState extends State<MapPage> {
 
   @override
   Widget build(BuildContext context) {
-    return   Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
-        floatingActionButton:  FloatingActionButton.extended(
-        onPressed:()async{
-          final GoogleMapController controller = await _cController.future;
-          LocationData currentLocation;
-          var location = new Location();
-          try {
-            currentLocation = await location.getLocation();
-          } on Exception {
-            currentLocation = null;
-          }
+    return   Scaffold(
+      floatingActionButton:  FloatingActionButton.extended(
+      onPressed:()async{
+        final GoogleMapController controller = await _cController.future;
+        LocationData currentLocation;
+        var location = new Location();
+        try {
+          currentLocation = await location.getLocation();
+        } on Exception {
+          currentLocation = null;
+        }
 
-          controller.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-              bearing: 0,
-              target: LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 15.0,
-            ),
-          ));
-        },
-        label: Text('الموقع الحالي'),
-        icon: Icon(Icons.location_on),
-      ),
-        appBar: AppBar(
-          flexibleSpace: Container(
-            decoration: const BoxDecoration(
-                gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF00695C) ,
-                    Color(0xFF4DB6AC),
-                  ],
-                )),
+        controller.animateCamera(CameraUpdate.newCameraPosition(
+          CameraPosition(
+            bearing: 0,
+            target: LatLng(currentLocation.latitude, currentLocation.longitude),
+            zoom: 15.0,
           ),
-          elevation: 0,
-          //backgroundColor: Colors.teal,
-          title: Text(
-            "حدد موقع الحدث",
-            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          leading:PopupMenuButton(
-            itemBuilder: (builder) {
-              return <PopupMenuEntry<int>>[
-                PopupMenuItem<int>(
-                  value: 0,
-                  child: Text('Hybrid'),
-                ),
-                PopupMenuItem<int>(
-                  value: 1,
-                  child: Text('Normal'),
-                ),
-                PopupMenuItem<int>(
-                  value: 2,
-                  child: Text('Satellite'),
-                ),
-                PopupMenuItem<int>(
-                  value: 3,
-                  child: Text('Terrain'),
-                ),
-              ];
-            },
-            onSelected: (value) {
-              switch (value) {
-                case 0:
-                  setState(() {
-                    maptype = MapType.hybrid;
-                  });
-                  break;
-                case 1:
-                  setState(() {
-                    maptype = MapType.normal;
-                  });
-                  break;
-                case 2:
-                  setState(() {
-                    maptype = MapType.satellite;
-                  });
-                  break;
-                case 3:
-                  setState(() {
-                    maptype = MapType.terrain;
-                  });
-                  break;
-              }
-            },
-          ),
+        ));
+      },
+        hoverColor: Color(0xFFFF8F00),
+        backgroundColor: Color(0xFFfe6e00),
+      label: Text('الموقع الحالي', style: Theme.of(context).textTheme.bodyText1,),
 
-          actions: [
-            IconButton(icon: Icon(Icons.add_location ,color: Colors.white ,),
-              onPressed: (){
+      icon: Icon(Icons.location_on , color: Colors.white,),
+    ),
+      appBar: customAppBar(
 
-                if(Provider.of<EventProvider>(context, listen: false).event.getLat ==null
-                    &&
-                    Provider.of<EventProvider>(context, listen: false).event.getLng==null
-                ){
-                  showShortToast('يجب تحديد موقع الحدث', Colors.orange);
-                }else{
-                  customAlertForButton(context);
-                }
-              },),
-          ],
-        ),
-        body: Padding(
-          padding: const EdgeInsets.only(top: 8.0),
-          child: Stack(
-            children: [
 
-              GoogleMap(
-             //  polylines: myPolyline.toSet(),
-                layoutDirection: TextDirection.rtl,
-                onLongPress: (val){
-                 setState(() {
-                   myMarker.removeAt(0);
-                   Provider.of<EventProvider>(context, listen: false).event.tappedPoint=null;
-                   Provider.of<EventProvider>(context, listen: false).event.setLat=null;
-                   Provider.of<EventProvider>(context, listen: false).event.setLng=null;
-                 });
-                },
-                myLocationButtonEnabled: false,
-                mapType: maptype,
-                onTap: handleTap,
-                initialCameraPosition:
-                    CameraPosition(target:widget.lat!=null? LatLng(widget.lat, widget.lng):
-                    LatLng(26.3351, 17.2283) , zoom: widget.lat!=null?15:5),
-                onMapCreated: (GoogleMapController controller) {
-                  _cController.complete(controller );
-                },
-                myLocationEnabled: true,
-                markers: Set<Marker>.of(myMarker),
+        //backgroundColor: Colors.teal,
+        title: "حدد موقع الحدث",
+        leading:PopupMenuButton(
+          itemBuilder: (builder) {
+            return <PopupMenuEntry<int>>[
+              PopupMenuItem<int>(
+                value: 0,
+                child: Text('Hybrid'),
               ),
-              Positioned(
-                top: 0,
-                right: 0,
-                child: IconButton(
-                  hoverColor: Colors.grey,
-                  highlightColor: Colors.grey,
-                  icon: Icon(Icons.arrow_back ,color: Colors.black87,),
-                  onPressed: (){
-                    Provider.of<EventProvider>(context, listen: false).event.setLat =
-                    null;
-                    Provider.of<EventProvider>(context, listen: false).event.setLng =
-                   null;
+              PopupMenuItem<int>(
+                value: 1,
+                child: Text('Normal'),
+              ),
+              PopupMenuItem<int>(
+                value: 2,
+                child: Text('Satellite'),
+              ),
+              PopupMenuItem<int>(
+                value: 3,
+                child: Text('Terrain'),
+              ),
+            ];
+          },
+          onSelected: (value) {
+            switch (value) {
+              case 0:
+                setState(() {
+                  maptype = MapType.hybrid;
+                });
+                break;
+              case 1:
+                setState(() {
+                  maptype = MapType.normal;
+                });
+                break;
+              case 2:
+                setState(() {
+                  maptype = MapType.satellite;
+                });
+                break;
+              case 3:
+                setState(() {
+                  maptype = MapType.terrain;
+                });
+                break;
+            }
+          },
+        ),
 
-                    Provider.of<EventProvider>(context, listen: false).event.tappedPoint=null;
-                    Navigator.of(context).pop();
-                  },),),
-            ],
-          ),
+        actions: [
+          IconButton(icon: Icon(Icons.add_location ,color: Colors.white ,),
+            onPressed: (){
+
+              if(Provider.of<EventProvider>(context, listen: false).event.getLat ==null
+                  &&
+                  Provider.of<EventProvider>(context, listen: false).event.getLng==null
+              ){
+                showShortToast('يجب تحديد موقع الحدث', Colors.orange);
+              }else{
+                customAlertForButton(context);
+              }
+            },),
+        ],
+      ),
+      body: Padding(
+        padding: const EdgeInsets.only(top: 8.0),
+        child: Stack(
+          children: [
+
+            GoogleMap(
+           //  polylines: myPolyline.toSet(),
+              layoutDirection: TextDirection.rtl,
+              onLongPress: (val){
+               setState(() {
+                 myMarker.removeAt(0);
+                 Provider.of<EventProvider>(context, listen: false).event.tappedPoint=null;
+                 Provider.of<EventProvider>(context, listen: false).event.setLat=null;
+                 Provider.of<EventProvider>(context, listen: false).event.setLng=null;
+               });
+              },
+              myLocationButtonEnabled: false,
+              mapType: maptype,
+              onTap: handleTap,
+              initialCameraPosition:
+                  CameraPosition(target:widget.lat!=null? LatLng(widget.lat, widget.lng):
+                  LatLng(26.3351, 17.2283) , zoom: widget.lat!=null?15:5),
+              onMapCreated: (GoogleMapController controller) {
+                _cController.complete(controller );
+              },
+              myLocationEnabled: true,
+              markers: Set<Marker>.of(myMarker),
+            ),
+            Positioned(
+              top: 0,
+              right: 0,
+              child: IconButton(
+                hoverColor: Colors.grey,
+                highlightColor: Colors.grey,
+                icon: Icon(Icons.arrow_back ,color: Colors.black87,),
+                onPressed: (){
+                  Provider.of<EventProvider>(context, listen: false).event.setLat =
+                  null;
+                  Provider.of<EventProvider>(context, listen: false).event.setLng =
+                 null;
+
+                  Provider.of<EventProvider>(context, listen: false).event.tappedPoint=null;
+                  Navigator.of(context).pop();
+                },),),
+          ],
         ),
       ),
     );

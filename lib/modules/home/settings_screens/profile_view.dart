@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
+import 'package:hovering/hovering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
@@ -13,6 +14,7 @@ import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:path/path.dart' as p;
 import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/provider/auth_provider.dart';
+import 'package:systemevents/widgets/custom_Text_Field.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -28,15 +30,18 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File _image;
   final picker = ImagePicker();
-  String _uri ;
+  String _uri;
+
   var result;
   var firstNameCon = TextEditingController();
   var fatherNameCon = TextEditingController();
   var lastNameCon = TextEditingController();
   var dateCon = TextEditingController(text: "1960-01-01 00:00:00.000");
-  String country1="";
+  String country1 = "";
   bool state = false;
   Witness witness;
+
+  bool siwtchPage = false;
 
   Future<void> getUID() async {
     Box box = await Singleton.getBox();
@@ -49,52 +54,53 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-  getUID().then((value) => checkState(result).then((Witness value){
-    setState(() {
-        witness=value;
-        if(value !=null)
-          {
-            state=true;
-              _image=null;
-              _uri=witness.image!=null?"${Singleton.routePath}${witness.image}":null;
+    getUID().then((value) => checkState(result).then((Witness value) {
+          setState(() {
+            witness = value;
+            if (value != null) {
+              state = true;
+              _image = null;
+              _uri = witness.image != null
+                  ? "${Singleton.routePath}${witness.image}"
+                  : null;
               print(_uri);
-            setDataForm();
-          }
-    });
-   }));
+              setDataForm();
+            }
+          });
+        }));
   }
+
   @override
   void dispose() {
     super.dispose();
-     firstNameCon.dispose();
-      fatherNameCon.dispose();
-     lastNameCon.dispose();
-     dateCon.dispose();
-      _uri =null;
-     country1=null;
-     witness=null;
-     _image=null;
+    firstNameCon.dispose();
+    fatherNameCon.dispose();
+    lastNameCon.dispose();
+    dateCon.dispose();
+    _uri = null;
+    country1 = null;
+    witness = null;
+    _image = null;
   }
+
   @override
   Widget build(BuildContext context) {
     checkInternetConnectivity(context);
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return Scaffold(
         drawer: CustomDrawer(),
-          key: _scaffoldKey,
-          appBar: customAppBar(
-             title: ' الصفحة الشخصية ',
-             icon: FontAwesomeIcons.solidUser,
-            actions: [
-              IconButton(
-                tooltip: 'تعديل',
-                onPressed: () {
-                  checkInternetConnectivity(context).then((
-                      bool value) async {
-                    if (value) { var form = _formKey.currentState;
+        key: _scaffoldKey,
+        appBar: customAppBar(
+          title: ' الصفحة الشخصية ',
+          icon: FontAwesomeIcons.solidUser,
+          actions: [
+            IconButton(
+              tooltip: 'تعديل',
+              onPressed: () {
+                checkInternetConnectivity(context).then((bool value) async {
+                  if (value) {
+                    var form = _formKey.currentState;
                     if (form.validate()) {
-                      state==true?updateForm(context): saveData(context);
+                      state == true ? updateForm(context) : saveData(context);
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                         content: Text(
@@ -104,330 +110,492 @@ class _ProfilePageState extends State<ProfilePage> {
                         ),
                         backgroundColor: Colors.red,
                       ));
-                    }}});
-
-                },
-                icon: Icon(
-                  state == true ? Icons.edit : Icons.save,
+                    }
+                  }
+                });
+              },
+              icon: Icon(
+                state == true ? Icons.edit : Icons.save,
+                color: Colors.white,
+              ),
+            )
+          ],
+        ),
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: pickImage,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2)
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: state != true
+                                          ? "حمل الصورة الشخصية"
+                                          : "",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 12)),
+                                  WidgetSpan(
+                                    child: state != true
+                                        ? Icon(Icons.perm_media_sharp)
+                                        : Image.asset('assets/images/upload.png'),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            backgroundColor: Colors.white,
+                            backgroundImage: _image == null
+                                ? _uri != null
+                                    ? NetworkImage(_uri)
+                                    : null
+                                : FileImage(_image),
+                            radius: 80,
+                            key: ValueKey(new Random().nextInt(100)),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                decoration: const BoxDecoration(
                   color: Colors.white,
+                ),
+              ),
+              Positioned(
+                left: 0,
+                bottom: 0,
+                child: Hero(
+                  tag: 'bottom_sheet',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      // color: Color(0xff424250),
+                      gradient: LinearGradient(
+                        colors: [
+                          //Color.fromRGBO(36, 36, 36, 0.85),
+                          Color(0xFF424250),
+                          Color(0xff33333d),
+                        ],
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 2.5,
+                          blurRadius: 2,
+                          color: Color(0xFFECEFF1),
+                        ),
+                      ],
+
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)),
+                    ),
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    width: MediaQuery.of(context).size.width,
+                    child: siwtchPage
+                        ? ListView(
+                            shrinkWrap: true,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(20.0),
+                                child: Form(
+                                  key: _formKey,
+                                  child: Column(
+                                    children: [
+                                      customTextFormField(
+
+                                        context,
+                                        autofocus:true ,
+                                        editingController: firstNameCon,
+                                        textAlign: TextAlign.right,
+                                        keyboardType: TextInputType.text,
+                                        validator: (value) => value.isEmpty
+                                            ? 'الاسم الاول مطلوب'
+                                            : null,
+                                        prefixIcon: Icon(
+                                          Icons.drive_file_rename_outline,
+                                          color: Colors.teal,
+                                        ),
+                                        labelText: "الاسم الاول",
+                                        hintText: "ادخل اسم الاول",
+                                      ),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      customTextFormField(context,
+                                          autofocus:true ,
+                                          editingController: fatherNameCon,
+                                          textAlign: TextAlign.right,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) => value.isEmpty
+                                              ? 'اسم الاب مطلوب'
+                                              : null,
+                                          prefixIcon: Icon(
+                                            Icons.drive_file_rename_outline,
+                                            color: Colors.teal,
+                                          ),
+                                          labelText: "اسم الاب",
+                                          hintText: "ادخل اسم الاب"),
+                                      SizedBox(
+                                        height: 12,
+                                      ),
+                                      customTextFormField(context,
+                                          autofocus:true ,
+                                          editingController: lastNameCon,
+                                          textAlign: TextAlign.right,
+                                          keyboardType: TextInputType.text,
+                                          validator: (value) => value.isEmpty
+                                              ? 'لقب العائلة مطلوب'
+                                              : null,
+                                          prefixIcon: Icon(
+                                            Icons.drive_file_rename_outline,
+                                            color: Colors.teal,
+                                          ),
+                                          labelText: "لقب العائلة",
+                                          hintText: "ادخل لقب العائلة"),
+                                      SizedBox(
+                                        height: 24,
+                                      ),
+                                      Row(
+                                        children: [
+                                          Expanded(
+                                            flex: 1,
+                                            child: DateTimePicker(
+                                              style: TextStyle(
+                                                  color: Colors.white),
+                                              validator: (value) {
+                                                if (value.isEmpty ||
+                                                    value == null)
+                                                  return "يجب ادخال تاريخ الميلاد";
+                                                else
+                                                  return null;
+                                              },
+                                              onChanged: (value) {
+                                                Provider.of<UserAuthProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .user
+                                                    .setDate_of_birth = value;
+                                              },
+                                              controller: dateCon,
+                                              // controller: date_of_birthController,
+                                              type: DateTimePickerType.date,
+                                              cancelText: "لا",
+                                              confirmText: 'نعم',
+                                              dateMask: 'd MMM, yyyy',
+                                              //  initialValue:dateCon.text  ,
+                                              firstDate: DateTime(1930),
+                                              lastDate: DateTime(
+                                                  DateTime.now().year - 12),
+                                              calendarTitle:
+                                                  'اختر تاريخ ميلادك',
+                                              icon: Icon(Icons.event),
+                                              dateLabelText: 'تاريخ الميلاد',
+                                              timeLabelText: "ساعة",
+                                              textAlign: TextAlign.left,
+                                              autovalidate: true,
+                                              errorFormatText:
+                                                  "ادخل تاريخ صحيح",
+                                              errorInvalidText:
+                                                  'تأكد من ادخال تاريخ صحيح',
+
+                                              // validator: (val) {
+                                              //   print('the date on validation $val ');
+                                              //   return null;
+                                              // },
+                                              onSaved: (val) => print(
+                                                  'the date on save $val'),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFfe6e00),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: HoverButton(
+                                  onpressed: () {
+                                    setState(() {
+                                      siwtchPage = !siwtchPage;
+                                    });
+                                  },
+                                  splashColor: Color(0xFFFF8F00),
+                                  hoverTextColor: Color(0xFFFF8F00),
+                                  highlightColor: Color(0xFFFF8F00),
+                                  color: Color(0xFFfe6e00),
+                                  child: Center(
+                                      child: Text(
+                                    'تعديل البيانات الشخصية',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  )),
+                                ),
+                              )
+                            ],
+                          )
+                        : ListView(
+                            padding: EdgeInsets.all(10),
+                            children: [
+                              ListTile(
+                                title: Text(
+                                  "الاسم الاول",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  "اسم الاب",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  "لقب العائلة",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  "تاريخ الميلاد",
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.date_range,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFfe6e00),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: HoverButton(
+                                  onpressed: () {
+                                    setState(() {
+                                      siwtchPage = !siwtchPage;
+                                    });
+                                  },
+                                  splashColor: Color(0xFFFF8F00),
+                                  hoverTextColor: Color(0xFFFF8F00),
+                                  highlightColor: Color(0xFFFF8F00),
+                                  color: Color(0xFFfe6e00),
+                                  child: Center(
+                                      child: Text(
+                                    'تعديل البيانات الشخصية',
+                                    style:
+                                        Theme.of(context).textTheme.subtitle2,
+                                  )),
+                                ),
+                              )
+                            ],
+                          ),
+                  ),
                 ),
               )
             ],
           ),
-          body: Directionality(
-            textDirection: TextDirection.rtl,
-            child: Container(
-              margin: EdgeInsets.all(10),
-              padding: EdgeInsets.all(10),
-              child: SingleChildScrollView(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: pickImage,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 5,
-                                    color: Colors.grey,
-                                    spreadRadius: 5)
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: state != true?"حمل الصورة الشخصية":"",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 12)),
-                                    WidgetSpan(
-                                      child: state != true?Icon(Icons.perm_media_sharp):SizedBox.shrink(),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              backgroundColor: Colors.white,
-                              foregroundColor: Colors.green,
-
-                              backgroundImage: _image == null ?
-                                      _uri != null?
-                                        NetworkImage(_uri)
-                                      :   null
-                                  :
-                              FileImage(_image),
-                              radius: 80,
-                              key: ValueKey(new Random().nextInt(100)),
-                            ),
-                          ),
-                        ),
-
-                      ],
-                    ),
-
-                    SizedBox(
-                      height: 12,
-                    ),
-                    Form(
-                      key: _formKey,
-                      child: Column(
-                        children: [
-                          TextFormField(
-                            controller: firstNameCon,
-                            textAlign: TextAlign.right,
-                            keyboardType: TextInputType.text,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.singleLineFormatter
-                            ],
-
-                            validator: (value) =>
-                                value.isEmpty ? 'الاسم الاول مطلوب' : null,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(
-
-                                  Icons.drive_file_rename_outline,
-                                  color: Colors.teal,
-                                ),
-                                labelText: "الاسم الاول",
-                                hintText: "ادخل اسم الاول"),
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          TextFormField(
-                            controller: fatherNameCon,
-                            textAlign: TextAlign.right,
-                            keyboardType: TextInputType.text,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.singleLineFormatter
-                            ],
-
-                            validator: (value) =>
-                                value.isEmpty ? 'اسم الاب مطلوب' : null,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.drive_file_rename_outline,
-                                  color: Colors.teal,
-                                ),
-                                labelText: "اسم الاب",
-                                hintText: "ادخل اسم الاب"),
-                          ),
-                          SizedBox(
-                            height: 12,
-                          ),
-                          TextFormField(
-                            controller: lastNameCon,
-                            textAlign: TextAlign.right,
-                            keyboardType: TextInputType.text,
-                            inputFormatters: <TextInputFormatter>[
-                              FilteringTextInputFormatter.singleLineFormatter
-                            ],
-
-                            validator: (value) =>
-                                value.isEmpty ? 'لقب العائلة مطلوب' : null,
-                            decoration: InputDecoration(
-                                prefixIcon: Icon(
-                                  Icons.drive_file_rename_outline,
-                                  color: Colors.teal,
-                                ),
-                                labelText: "لقب العائلة",
-                                hintText: "ادخل لقب العائلة"),
-                          ),
-                          SizedBox(height: 24,),
-                          Row(
-                            children: [
-                              Expanded(
-                                flex: 1,
-                                child: Directionality(
-                                  textDirection: TextDirection.rtl,
-                                  child: DateTimePicker(
-                                    validator: (value){
-                                      if(value.isEmpty || value ==null)
-                                        return "يجب ادخال تاريخ الميلاد";
-                                      else
-                                        return null;
-                                    },
-                                    onChanged: (value){
-
-                                      Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=value;
-                                    },
-                                    controller: dateCon,
-                                    // controller: date_of_birthController,
-                                    type: DateTimePickerType.date,
-                                    cancelText: "لا",
-                                    confirmText: 'نعم',
-                                    dateMask: 'd MMM, yyyy',
-                                  //  initialValue:dateCon.text  ,
-                                    firstDate: DateTime(1930),
-                                    lastDate: DateTime(DateTime.now().year-12),
-                                    calendarTitle: 'اختر تاريخ ميلادك',
-                                    icon: Icon(Icons.event),
-                                    dateLabelText: 'تاريخ الميلاد',
-                                    timeLabelText: "ساعة",
-                                    textAlign: TextAlign.left ,
-                                    autovalidate:true ,
-                                    errorFormatText: "ادخل تاريخ صحيح",
-                                    errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-
-
-                                    // validator: (val) {
-                                    //   print('the date on validation $val ');
-                                    //   return null;
-                                    // },
-                                    onSaved: (val) => print('the date on save $val'),
-                                  ),
-                                ),
-                              ),
-                              // Expanded(
-                              //   flex: 1,
-                              //   child: TextButton.icon(
-                              //
-                              //     onPressed: () {
-                              //       showCountryPicker(
-                              //
-                              //         context: context,
-                              //         //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                              //         exclude: <String>['KN', 'MF'],
-                              //         //Optional. Shows phone code before the country name.
-                              //         showPhoneCode: true,
-                              //
-                              //         onSelect: (Country country) {
-                              //           // countryController=country.displayName;
-                              //           Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=country.displayNameNoCountryCode;
-                              //           setState(() {
-                              //             country1=country.displayNameNoCountryCode.toString();
-                              //           });
-                              //         },
-                              //       );
-                              //     },
-                              //     icon: Icon(Icons.language),
-                              //     label: Text(country1!=""?country1:'اختيار الدولة' ),
-                              //   ),),
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          )),
-    );
+        ));
   }
 
   void pickImage() async {
+    var image =
+        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+    if (image != null) if (image.path != "")
+      setState(() {
+        _image = File(image.path);
 
-    var image = await picker.getImage(source: ImageSource.gallery, imageQuality: 50 );
-   if(image!=null)
-    if(image.path!="")
-    setState(() {
-      _image = File(image.path);
-
-      Provider.of<UserAuthProvider>(context,listen: false).user.profilePicture=_image;
-      _uri=null;
-    });
-
+        Provider.of<UserAuthProvider>(context, listen: false)
+            .user
+            .profilePicture = _image;
+        _uri = null;
+      });
   }
 
-
-
   Future<void> saveData(BuildContext context) async {
-    try{
+    try {
       //await uploadImage(context);
 
-      if (result != null  ) {
-
-        Map data={
-          'user_id':result.toString(),
-          'first_name':firstNameCon.text ,
+      if (result != null) {
+        Map data = {
+          'user_id': result.toString(),
+          'first_name': firstNameCon.text,
           'father_name': fatherNameCon.text,
-          'family_name':lastNameCon.text,
-          'country': Provider.of<UserAuthProvider>(context,listen: false).user.getCountry.toString(),
-          'date_of_birth': Provider.of<UserAuthProvider>(context,listen: false).user.getDate_of_birth.toString(),
+          'family_name': lastNameCon.text,
+          'country': Provider.of<UserAuthProvider>(context, listen: false)
+              .user
+              .getCountry
+              .toString(),
+          'date_of_birth': Provider.of<UserAuthProvider>(context, listen: false)
+              .user
+              .getDate_of_birth
+              .toString(),
         };
 
-        bool res =await Provider.of<UserAuthProvider>(context,listen: false).saveProfileData(data);
-        if(res==true)
+        bool res = await Provider.of<UserAuthProvider>(context, listen: false)
+            .saveProfileData(data);
+        if (res == true)
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-          content: Text('تمت عملية الحفظ بنجاح', textDirection: TextDirection.rtl,),backgroundColor: Colors.green,
-        ));
-        else{
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-            content: Text('حدثت مشكلة', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
+            content: Text(
+              'تمت عملية الحفظ بنجاح',
+              textDirection: TextDirection.rtl,
+            ),
+            backgroundColor: Colors.green,
+          ));
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'حدثت مشكلة',
+              textDirection: TextDirection.rtl,
+            ),
+            backgroundColor: Colors.orange,
           ));
         }
-
-      }// end if stm
-    }catch(ex){
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-        content: Text('حدثت مشكلة', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
+      } // end if stm
+    } catch (ex) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'حدثت مشكلة',
+          textDirection: TextDirection.rtl,
+        ),
+        backgroundColor: Colors.orange,
       ));
     }
   }
 
-  void setDataForm( ) {
-    firstNameCon.text=witness!=null?witness.first_name:"";
-    fatherNameCon.text=witness!=null?witness.father_name:"";
-    lastNameCon.text=witness!=null?witness.family_name:"";
-    dateCon.text=witness!=null?(witness.date_of_birth ):"1960-01-01 00:00:00.000";
-     witness!=null?Provider.of<UserAuthProvider>(context,listen: false).user.setDate_of_birth=dateCon.text
-    :Provider.of<UserAuthProvider>(context,listen: false).
-     user.setDate_of_birth="1960-01-01 00:00:00.000";
+  void setDataForm() {
+    firstNameCon.text = witness != null ? witness.first_name : "";
+    fatherNameCon.text = witness != null ? witness.father_name : "";
+    lastNameCon.text = witness != null ? witness.family_name : "";
+    dateCon.text =
+        witness != null ? (witness.date_of_birth) : "1960-01-01 00:00:00.000";
+    witness != null
+        ? Provider.of<UserAuthProvider>(context, listen: false)
+            .user
+            .setDate_of_birth = dateCon.text
+        : Provider.of<UserAuthProvider>(context, listen: false)
+            .user
+            .setDate_of_birth = "1960-01-01 00:00:00.000";
 
-    country1=witness!=null?witness.country:"";
-    witness!=null?
-    Provider.of<UserAuthProvider>(context,listen: false).user.setCountry=witness.country:
-    Provider.of<UserAuthProvider>(context,listen: false).user.setCountry="";
-    _image=null;
-
+    country1 = witness != null ? witness.country : "";
+    witness != null
+        ? Provider.of<UserAuthProvider>(context, listen: false)
+            .user
+            .setCountry = witness.country
+        : Provider.of<UserAuthProvider>(context, listen: false)
+            .user
+            .setCountry = "";
+    _image = null;
   }
 
   Future<void> updateForm(BuildContext context) async {
-    try{
+    try {
       //await uploadImage(context);
 
-      if (result != null  ) {
-
-        Map data={
-          'user_id':result.toString(),
-          'first_name':firstNameCon.text ,
+      if (result != null) {
+        Map data = {
+          'user_id': result.toString(),
+          'first_name': firstNameCon.text,
           'father_name': fatherNameCon.text,
-          'family_name':lastNameCon.text,
-          'country': Provider.of<UserAuthProvider>(context,listen: false).user.getCountry.toString(),
-          'date_of_birth': Provider.of<UserAuthProvider>(context,listen: false).user.getDate_of_birth.toString(),
+          'family_name': lastNameCon.text,
+          'country': Provider.of<UserAuthProvider>(context, listen: false)
+              .user
+              .getCountry
+              .toString(),
+          'date_of_birth': Provider.of<UserAuthProvider>(context, listen: false)
+              .user
+              .getDate_of_birth
+              .toString(),
         };
 
-         bool res = await Provider.of<UserAuthProvider>(context,listen: false)
-             .updateProfileData(data);
-        if(res==true)
-
+        bool res = await Provider.of<UserAuthProvider>(context, listen: false)
+            .updateProfileData(data);
+        if (res == true)
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text('تمت عملية التحديث بنجاح', textDirection: TextDirection.rtl,),backgroundColor: Colors.green,
+            content: Text(
+              'تمت عملية التحديث بنجاح',
+              textDirection: TextDirection.rtl,
+            ),
+            backgroundColor: Colors.green,
           ));
-        else{
-          ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-            content: Text('حدثت مشكلة1', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
+        else {
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(
+              'حدثت مشكلة1',
+              textDirection: TextDirection.rtl,
+            ),
+            backgroundColor: Colors.orange,
           ));
         }
-
-      }// end if stm
-    }catch(ex){
-      ScaffoldMessenger.of(context).showSnackBar( SnackBar(
-        content: Text('حدثت مشكلة2', textDirection: TextDirection.rtl,),backgroundColor: Colors.orange,
+      } // end if stm
+    } catch (ex) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          'حدثت مشكلة2',
+          textDirection: TextDirection.rtl,
+        ),
+        backgroundColor: Colors.orange,
       ));
     }
-
   }
 
-  Future<Witness> checkState(result) async{
-    Witness res= await  Provider.of<UserAuthProvider>(context,listen: false).checkState(result);
-     return res;
+  Future<Witness> checkState(result) async {
+    Witness res = await Provider.of<UserAuthProvider>(context, listen: false)
+        .checkState(result);
+    return res;
   }
 }

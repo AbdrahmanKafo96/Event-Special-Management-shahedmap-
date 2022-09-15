@@ -16,21 +16,22 @@ Widget customAppBar(
       leading: leading,
       flexibleSpace:  Container(
               decoration: const BoxDecoration(
+
                   gradient: LinearGradient(
-                colors: [
-                  //Color.fromRGBO(36, 36, 36, 0.85),
-                  Color(0xFF424242),
-                  Color(0xff212121),
-                ],
-              )),
-            ) ,
+
+
+                    colors: [
+                      Color(0xFF424250),
+                      Color(0xff33333d),
+                    ],
+              ),
+            ),
+           ) ,
       title: Text.rich(
         TextSpan(
           children:  [
             TextSpan(text:" $title "),
-
             WidgetSpan(
-
                 alignment: ui.PlaceholderAlignment.middle,
                 child: Icon(icon, color: Colors.white )),
           //  TextSpan(text: 'downloads on both stores'),

@@ -17,7 +17,6 @@ class Singleton {
     if (_boxUserData == null) {
       _boxUserData = await  Hive.openBox("userData") ;
     }
-
     return _boxUserData;
   }
   static Future<Box> closeBox() async {

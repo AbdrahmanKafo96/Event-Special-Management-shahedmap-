@@ -65,12 +65,12 @@ dependencies:
   another_flushbar: ^1.10.28
   mockito: ^5.1.0
   font_awesome_flutter: ^10.1.0
+  video_compress: ^3.1.1
 
-
-  video_compress:
-    git:
-      url: https://github.com/jonataslaw/VideoCompress.git
-      ref: master
+#  video_compress:
+#    git:
+#      url: https://github.com/jonataslaw/VideoCompress.git
+#      ref: master
 
 dev_dependencies:
   flutter_test:

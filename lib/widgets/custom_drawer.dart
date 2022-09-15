@@ -13,26 +13,30 @@ class CustomDrawer extends StatefulWidget {
 
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
+
+
 }
 
 class _CustomDrawerState extends State<CustomDrawer> {
-  List<MyList> mylist = [];
 
-  int selected;
 
-Box box;
-
+String email="";
+String username=" ";
    @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    Singleton.getBox().then((Box value) {
-      setState(() {
-        box=value;
-      });
-    });
-  }
+    openBox();
 
+  }
+void openBox()  {
+  Singleton.getBox().then((value){
+    setState(() {
+       email=value.get('email');
+       username = username+value.get('unitname').toString();
+    });
+  });
+}
   @override
   Widget build(BuildContext context) {
 
@@ -55,8 +59,8 @@ Box box;
                     shape: BoxShape.circle,
                     gradient: LinearGradient(
                       colors: [
-                        Color(0xFF424242),
-                        Color(0xff212121),
+                        Color(0xFF424250),
+                        Color(0xff33333d),
                       ],
                     )),
                 width: 500,
@@ -72,8 +76,8 @@ Box box;
                   shape: BoxShape.circle,
                   gradient: LinearGradient(
                     colors: [
-                      Color(0xFF424242),
-                      Color(0xff212121),
+                      Color(0xFF424250),
+                      Color(0xff33333d),
                     ],
                   ),
                   boxShadow: [
@@ -98,12 +102,12 @@ Box box;
                       decoration: BoxDecoration(
                         color: Color.fromRGBO(255, 255, 255, 0.0),
                       ),
-                      accountName: Text(" kafu"),
-                      accountEmail: Text("bedoo@gmail.com"),
+                      accountName: Text("$username"),
+                      accountEmail: Text("$email"),
                       currentAccountPicture: CircleAvatar(
                         backgroundColor: Colors.orange,
                         child: Text(
-                          "A",
+                          "${username[0].toUpperCase()}",
                           style: TextStyle(fontSize: 40.0),
                         ),
                       ),
@@ -185,10 +189,11 @@ Box box;
     final color = isSelected ? Colors.white : Colors.grey;
 
     return Material(
+
       shape: RoundedRectangleBorder(
 
           borderRadius: BorderRadius.all(Radius.circular(10))),
-      color: Colors.black.withOpacity(0.7),
+      color: Color(0xFF424250),
       child: ListTile(
         shape: RoundedRectangleBorder(
 

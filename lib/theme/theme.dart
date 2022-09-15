@@ -121,7 +121,7 @@ class Styles {
           ),
           headline4: GoogleFonts.notoSansArabic(
             textStyle: TextStyle(
-              fontSize: 14.0,
+              fontSize: 15.0,
                 color: Colors.white, fontWeight: FontWeight.bold),
           ),
           subtitle1: GoogleFonts.notoSansArabic(
@@ -129,23 +129,31 @@ class Styles {
               color: Colors.grey.shade600,
             ),
           ),
+          subtitle2: GoogleFonts.notoSansArabic(
+            textStyle: TextStyle(
+            color: Colors.white ,
+            ),),
           bodyText1: GoogleFonts.notoSansArabic(
               textStyle: TextStyle(
+                fontSize: 14.0,
                 color: Color(0xFFffffff),
               ))),
+      
       inputDecorationTheme: InputDecorationTheme(
 
         suffixStyle: TextStyle(color: Colors.white),
         iconColor:Color(0xFFFF9800),
         suffixIconColor:Colors.white,
         prefixIconColor: Color(0xFFFF9800),
-        fillColor: Color(0xFF575757),
+        fillColor: Color(0xFF5a565f),
         isDense: true,
         contentPadding: EdgeInsets.all(12),
-        hintStyle: TextStyle(color: Colors.grey),
+        hintStyle: TextStyle(color: Colors.white),
         labelStyle: GoogleFonts.notoSansArabic(
+
          color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
         filled: true,
+
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(10),

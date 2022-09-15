@@ -9,7 +9,7 @@ import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/custom_toast.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/dialog.dart';
+import 'package:systemevents/widgets/custom_dialog.dart';
 
 class EventView extends StatefulWidget {
   int eventID;String eventName;
@@ -41,6 +41,7 @@ class _EventViewState extends State<EventView> {
       onWillPop: () async => false,
       child: Scaffold(
           appBar: customAppBar(
+            elevation: 1.0,
             title:'${widget.eventName}',
             actions: [
               IconButton(
@@ -144,111 +145,134 @@ class _EventViewState extends State<EventView> {
           body: _response == null
               ? Center(
                   child: CircularProgressIndicator(
-                    backgroundColor: Colors.green,
+                    color: Colors.white,
+                    strokeWidth: 7.0,
                   ),
                 )
               : ListView(
                   shrinkWrap: true,
                   children: [
                     Container(
+                      padding: EdgeInsets.all(5),
+
                       height: MediaQuery.of(context).size.height * 0.5,
                       child: Stack(
                         //mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
-                          Container(
-                            height: MediaQuery.of(context).size.height * 0.3,
-                            clipBehavior: Clip.hardEdge,
-                            decoration: BoxDecoration(
-                              color: Color(0xFF5a8f62),
-                              boxShadow: [BoxShadow(blurRadius: 1.0)],
-                              borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(30),
-                                  bottomRight: Radius.circular(30)),
-                            ),
-                          ),
-                          Positioned(
-                            top: 10,
-                            right: 15,
-                            left: 15,
-                            //     bottom: MediaQuery.of(context).size.height * 0.10,
-                            child: Center(
-                              child: Container(
-                                clipBehavior: Clip.hardEdge,
-                                decoration: BoxDecoration(
-                                  boxShadow: <BoxShadow>[
-                                    BoxShadow(
-                                        color: Colors.green.withOpacity(0.5),
-                                        blurRadius: 7.0,
-                                        offset: Offset(0.0, 0.50))
-                                  ],
-                                  color: Colors.white,
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(50),
-                                      topRight: Radius.circular(50),
-                                      bottomLeft: Radius.circular(50),
-                                      bottomRight: Radius.circular(50)),
-                                ),
-                                height:
-                                    MediaQuery.of(context).size.width * 0.75,
-                                width: MediaQuery.of(context).size.width * 0.75,
-                                child: Card(
-                                  elevation: 0,
-                                  child: Column(
-                                    children: [
-                                      count>0?
-                                      MyCustomImage(
-                                          count: count, updateList: imgList , eventID: widget.eventID)
-                                          :MyCustomImage(),
-                                       _response['data']['video'] != null
-                                           ? VideoPicker(oldVideo: video , eventID: widget.eventID)
-                                           : VideoPicker(),
-                                    ],
-                                  ),
-                                ),
-                              ),
-                            ),
-                          )
+                          _response['data']['video'] != null
+                              ? VideoPicker(oldVideo: video , eventID: widget.eventID)
+                              : VideoPicker(),
+
+                        //  Card(
+                         //   color: Colors.orange,
+                         // elevation: 1.0,
+                         // child:
+                          // child: Column(
+                          //   children: [
+                          //     // count>0?
+                          //     // MyCustomImage(
+                          //     //     count: count, updateList: imgList , eventID: widget.eventID)
+                          //     //     :MyCustomImage(),
+                          //
+                          //   ],
+                          // ),
+                       // ),
+
+                          // Container(
+                          //   height: MediaQuery.of(context).size.height * 0.2,
+                          //   clipBehavior: Clip.hardEdge,
+                          //   decoration: BoxDecoration(
+                          //       gradient: LinearGradient(
+                          //         colors: [
+                          //           //Color.fromRGBO(36, 36, 36, 0.85),
+                          //           Color(0xFF424242),
+                          //           Color(0xff212121),
+                          //         ],
+                          //       ),
+                          //     boxShadow: [BoxShadow(blurRadius: 1.0)],
+                          //     borderRadius: BorderRadius.only(
+                          //         bottomLeft: Radius.circular(30),
+                          //         bottomRight: Radius.circular(30)),
+                          //   ),
+                          // ),
+                          // Positioned(
+                          //   top: 10,
+                          //   right: 15,
+                          //   left: 15,
+                          //   //     bottom: MediaQuery.of(context).size.height * 0.10,
+                          //   child: Center(
+                          //     child: Container(
+                          //       clipBehavior: Clip.hardEdge,
+                          //       decoration: BoxDecoration(
+                          //         boxShadow: <BoxShadow>[
+                          //           BoxShadow(
+                          //               color: Colors.white12.withOpacity(0.5),
+                          //               blurRadius: 7.0,
+                          //               offset: Offset(0.0, 0.50))
+                          //         ],
+                          //         color: Colors.white,
+                          //         borderRadius: BorderRadius.only(
+                          //             topLeft: Radius.circular(50),
+                          //             topRight: Radius.circular(50),
+                          //             bottomLeft: Radius.circular(50),
+                          //             bottomRight: Radius.circular(50)),
+                          //       ),
+                          //       height:
+                          //           MediaQuery.of(context).size.width * 0.75,
+                          //       width: MediaQuery.of(context).size.width * 0.75,
+                          //
+                          //     ),
+                          //   ),
+                          // )
                         ],
                       ),
                     ),
-                    Container(
-                      padding: EdgeInsets.all(10),
-                      //  height: 250,
-                      height: MediaQuery.of(context).size.height * 0.3,
+                    count>0?
+                    MyCustomImage(
+                        count: count, updateList: imgList , eventID: widget.eventID)
+                        :MyCustomImage(),
+                    Card(
+                      elevation: 1.0,
+                      color: Colors.red,
+                      child: Container(
+                        padding: EdgeInsets.all(10),
+                        //  height: 250,
+                        height: MediaQuery.of(context).size.height * 0.3,
 
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
 
-                          ListTile(
-                            title: Text(
-                              'الوصف',
-                              style: TextStyle(fontWeight: FontWeight.bold),
-                            ),
-                            leading: Icon(Icons.description),
-                            trailing: IconButton(
-                              tooltip: "تعديل الوصف",
-                              icon: Icon(
-                                Icons.edit,
-                                color: Colors.green,
+                            ListTile(
+                              title: Text(
+                                'الوصف',
+                                style: TextStyle(fontWeight: FontWeight.bold),
                               ),
-                              onPressed: () {
+                              leading: Icon(Icons.description),
+                              trailing: IconButton(
+                                tooltip: "تعديل الوصف",
+                                icon: Icon(
+                                  Icons.edit,
+                                  color: Colors.green,
+                                ),
+                                onPressed: () {
 
-                                createDialog(context, 'تعديل الوصف' ,"نعم" ,
-                                ({TextEditingController textEditingController}){
-                                   Navigator.of(context).pop(textEditingController.text);
-                                })
-                                    .then((value) {
+                                  createDialog(context, 'تعديل الوصف' ,"نعم" ,
+                                  ({TextEditingController textEditingController}){
+                                     Navigator.of(context).pop(textEditingController.text);
+                                  })
+                                      .then((value) {
 
-                                  eventDescController.text = value;
-                                });
-                              },
-                            ),
-                            subtitle: Text(
-                                eventDescController.text.isEmpty?"لا يوجد وصف":eventDescController.text
-                            ),
-                          )
-                        ],
+                                    eventDescController.text = value;
+                                  });
+                                },
+                              ),
+                              subtitle: Text(
+                                  eventDescController.text.isEmpty?"لا يوجد وصف":eventDescController.text
+                              ),
+                            )
+                          ],
+                        ),
                       ),
                     )
                   ],

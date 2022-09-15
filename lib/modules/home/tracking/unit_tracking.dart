@@ -80,6 +80,8 @@ class _UnitTrackingState extends State<UnitTracking> {
       if (_locationSubscription != null) {
         _locationSubscription.cancel();
       }
+          _lat_startpoint = position.latitude;
+          _lng_startpoint = position.longitude;
       // _locationSubscription =
       //     _locationTracker.onLocationChanged.listen((newLocalData) {
       //   if (controller != null) {
@@ -103,17 +105,18 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
 
   int senderID;
-
+int beneficiarie_id;
   @override
   void initState() {
     super.initState();
 
       Singleton.getTrackingBox().then((value) => null);
-    print("database is opened ");
     Singleton.getBox().then((getValue) {
       getCurrentPosition().then((value) {
         setState(() {
+
           senderID = getValue.get('user_id');
+          beneficiarie_id = int.parse(getValue.get('beneficiarie_id'));
           _kGooglePlex = CameraPosition(
             target: LatLng(currentPosition.latitude, currentPosition.longitude),
             zoom: 18,
@@ -165,7 +168,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       geo.Position  location = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
       data = {
         'sender_id': senderID.toString(),
-        'beneficiarie_id': 2.toString(), // ok we will do it soon
+        'beneficiarie_id': beneficiarie_id.toString(), // ok we will do it soon
         'lat': location.latitude.toString(),
         'lng': location.longitude.toString(),
         'distance': distance.toString(),
@@ -177,12 +180,12 @@ class _UnitTrackingState extends State<UnitTracking> {
       };
 
       checkInternetConnectivity(context).then((bool value) async {
-        if (true) //distance > 4
+        if (distance > 4.0) //distance > 4
         {
+          print("distance: ${distance}");
           if (value) // phone is connected ...
           {
             await syncData().then((value) {
-              print("now its time to upload data");
               Provider.of<EventProvider>(context, listen: false)
                   .update_position(data);
             }); // for sync local data
@@ -190,7 +193,7 @@ class _UnitTrackingState extends State<UnitTracking> {
           } else {
             boxTracking.add(Tracking(
                 senderID: senderID,
-                beneficiarieID:2,
+                beneficiarieID:beneficiarie_id,
                 lat: location.latitude,
                 lng: location.longitude,
                 distance: distance,
@@ -199,7 +202,6 @@ class _UnitTrackingState extends State<UnitTracking> {
                 latEndPoint: _lat_endpoint,
                 lngEndPoint: _lng_endpoint,
                 time: totalHours));
-            print("item is saved in local database ");
           }
         }
       });

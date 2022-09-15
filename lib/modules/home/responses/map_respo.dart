@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:systemevents/widgets/custom_indecator.dart';
 class Mappoly extends StatefulWidget {
   double lat, lng;
 
@@ -74,11 +75,7 @@ class _MappolyState extends State<Mappoly> {
         icon: FontAwesomeIcons.bomb
       ),
       body: _kGooglePlex == null
-          ? Container(
-              child: Center(
-                  child: CircularProgressIndicator(
-              color: Colors.green,
-            )))
+          ?customCircularProgressIndicator()
           : GoogleMap(
               padding: EdgeInsets.only(top: 135),
               myLocationButtonEnabled: true,

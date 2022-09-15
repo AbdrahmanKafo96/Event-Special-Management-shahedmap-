@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:systemevents/modules/home/home.dart';
+import 'package:systemevents/widgets/custom_app_bar.dart';
 
 class SuccessPage extends StatefulWidget {
   @override
@@ -11,16 +12,8 @@ class _SuccessPageState extends State<SuccessPage> {
   Widget build(BuildContext context) {
     return Scaffold(
 
-      appBar: AppBar(
-        flexibleSpace: Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  Color(0xFF00695C) ,
-                  Color(0xFF4DB6AC),
-                ],
-              )),
-        ),
+      appBar: customAppBar(
+
         leading:IconButton(
           icon: Icon(Icons.cancel),
           tooltip: 'تخطئ',
