@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:hovering/hovering.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/widgets/custom_Text_Field.dart';
@@ -35,35 +36,42 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
           drawer: CustomDrawer(),
-          appBar:
-              customAppBar(title: 'تعيين كلمة المرور', icon: Icons.lock_reset),
-          body: Padding(
+          appBar: customAppBar(context,
+              title: 'تعيين كلمة المرور', icon: Icons.lock_reset),
+          body: Container(
+            height: double.maxFinite,
+            decoration: BoxDecoration(
+                color: Color(0xff424250),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(24),
+                )),
+            margin: EdgeInsets.all(10),
             padding: const EdgeInsets.all(16.0),
             child: Form(
               key: _formKey,
-              child: ListView(
-                shrinkWrap: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   SizedBox(
                     height: 16,
                   ),
                   Text(
                     'إنشاء كلمة مرور',
-                    style: Theme.of(context).textTheme.headline4,
+                    style: Theme.of(context).textTheme.headline3,
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   Text(
                     'يجب أن تكون كلمة المرور الجديدة مختلفة عن كلمة المرور السابقة المستخدمة.',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.subtitle2,
                   ),
                   SizedBox(
                     height: 16,
                   ),
                   Text(
                     'كلمة مرور',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(
                     height: 4,
@@ -106,7 +114,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   ),
                   Text(
                     'إعادة ادخال كلمة المرور',
-                    style: Theme.of(context).textTheme.subtitle1,
+                    style: Theme.of(context).textTheme.bodyText1,
                   ),
                   SizedBox(
                     height: 4,
@@ -167,40 +175,54 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                   SizedBox(
                     height: 16,
                   ),
-                  ElevatedButton(
-                    onPressed: () async {
-                      checkInternetConnectivity(context)
-                          .then((bool value) async {
-                        if (value) {
-                          if (_formKey.currentState.validate()) {
-                            var prefs = await Singleton.getBox();
-                            String email = prefs.get('email');
-                            int user_id = prefs.get('user_id');
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      height: 50,
+                      width: MediaQuery.of(context).size.width * 0.75,
+                      decoration:
+                          BoxDecoration(borderRadius: BorderRadius.circular(20)),
+                      child: HoverButton(
+                        splashColor: Color(0xFFFF8F00),
+                        hoverTextColor: Color(0xFFFF8F00),
+                        highlightColor: Color(0xFFFF8F00),
+                        color: Color(0xFFfe6e00),
+                        onpressed: () async {
+                          checkInternetConnectivity(context)
+                              .then((bool value) async {
+                            if (value) {
+                              if (_formKey.currentState.validate()) {
+                                var prefs = await Singleton.getBox();
+                                String email = prefs.get('email');
+                                int user_id = prefs.get('user_id');
 
-                            var result = await Provider.of<UserAuthProvider>(
-                                    context,
-                                    listen: false)
-                                .resetPassword(
-                                    passwordController.text.toString(),
-                                    confPasswordController.text.toString(),
-                                    user_id.toString(),
-                                    email,
-                                    context);
-                            if (result == true) {
-                              Navigator.of(context).pop();
-                              showShortToast(
-                                  'تم تغيير كلمة المرور بنجاح', Colors.green);
-                            } else {
-                              showShortToast('حاول تغيير كلمة المرور مرة اخرى',
-                                  Colors.red);
+                                var result = await Provider.of<UserAuthProvider>(
+                                        context,
+                                        listen: false)
+                                    .resetPassword(
+                                        passwordController.text.toString(),
+                                        confPasswordController.text.toString(),
+                                        user_id.toString(),
+                                        email,
+                                        context);
+                                if (result == true) {
+                                  // Navigator.of(context).pop();
+                                  showShortToast(
+                                      'تم تغيير كلمة المرور بنجاح', Colors.green);
+                                } else {
+                                  showShortToast(
+                                      'حاول تغيير كلمة المرور مرة اخرى',
+                                      Colors.red);
+                                }
+                              }
                             }
-                          }
-                        }
-                      });
-                    },
-                    child: Text(
-                      'إعادة ضبط كلمة المرور',
-                      style: TextStyle(fontSize: 16),
+                          });
+                        },
+                        child: Text(
+                          'إعادة ضبط كلمة المرور',
+                          style: Theme.of(context).textTheme.headline4,
+                        ),
+                      ),
                     ),
                   ),
                 ],

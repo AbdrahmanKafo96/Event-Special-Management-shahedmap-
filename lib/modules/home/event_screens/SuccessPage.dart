@@ -13,7 +13,8 @@ class _SuccessPageState extends State<SuccessPage> {
     return Scaffold(
 
       appBar: customAppBar(
-
+        context,
+        title: 'نجاح العملية',
         leading:IconButton(
           icon: Icon(Icons.cancel),
           tooltip: 'تخطئ',
@@ -42,7 +43,7 @@ class _SuccessPageState extends State<SuccessPage> {
                   width:  MediaQuery.of(context).size.width,
                 ),
 
-              Text("تم إرسال الحدث بنجاح",style: Theme.of(context).textTheme.headline6,)
+              Text("تم إرسال الحدث بنجاح",style: Theme.of(context).textTheme.headline4,)
             ],
           ),
         )

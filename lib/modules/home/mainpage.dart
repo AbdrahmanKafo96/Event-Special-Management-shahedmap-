@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hive/hive.dart';
-import 'package:provider/provider.dart';
+ import 'package:provider/provider.dart';
 import 'package:systemevents/models/navigation_item.dart';
 import 'package:systemevents/modules/home/home.dart';
 import 'package:systemevents/modules/home/settings_screens/app_settings.dart';

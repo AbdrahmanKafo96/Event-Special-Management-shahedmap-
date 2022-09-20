@@ -1,18 +1,14 @@
 import 'dart:io';
 import 'dart:math';
-import 'package:country_picker/country_picker.dart';
-import 'package:date_time_picker/date_time_picker.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:hive/hive.dart';
+ import 'package:date_time_picker/date_time_picker.dart';
+ import 'package:flutter/material.dart';
+ import 'package:hive/hive.dart';
 import 'package:hovering/hovering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:path/path.dart' as p;
-import 'package:systemevents/models/witness.dart';
+ import 'package:systemevents/models/witness.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'package:systemevents/widgets/custom_Text_Field.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
@@ -40,10 +36,14 @@ class _ProfilePageState extends State<ProfilePage> {
   String country1 = "";
   bool state = false;
   Witness witness;
+  ImagePicker _picker = ImagePicker();
+  bool switchPage = false,
+      showTextFiled1 = false,
+      showTextFiled2= false,
+      showTextFiled3 = false,
+      showTextFiled4 = false;
 
-  bool siwtchPage = false;
-
-  Future<void> getUID() async {
+      Future<void> getUID() async {
     Box box = await Singleton.getBox();
     String uid = box.get('user_id').toString();
     setState(() {
@@ -82,44 +82,58 @@ class _ProfilePageState extends State<ProfilePage> {
     witness = null;
     _image = null;
   }
+  SizedBox addPaddingWhenKeyboardAppears() {
+    final viewInsets = EdgeInsets.fromWindowPadding(
+      WidgetsBinding.instance .window.viewInsets,
+      WidgetsBinding.instance .window.devicePixelRatio,
+    );
 
+    final bottomOffset = viewInsets.bottom;
+    const hiddenKeyboard = 0.0; // Always 0 if keyboard is not opened
+    final isNeedPadding = bottomOffset != hiddenKeyboard;
+
+    return SizedBox(height: isNeedPadding ? bottomOffset : hiddenKeyboard);
+  }
   @override
   Widget build(BuildContext context) {
+
     checkInternetConnectivity(context);
     return Scaffold(
+        resizeToAvoidBottomInset: false,
         drawer: CustomDrawer(),
         key: _scaffoldKey,
         appBar: customAppBar(
+          context,
           title: ' الصفحة الشخصية ',
           icon: FontAwesomeIcons.solidUser,
-          actions: [
-            IconButton(
-              tooltip: 'تعديل',
-              onPressed: () {
-                checkInternetConnectivity(context).then((bool value) async {
-                  if (value) {
-                    var form = _formKey.currentState;
-                    if (form.validate()) {
-                      state == true ? updateForm(context) : saveData(context);
-                    } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                        content: Text(
-                          'من فضلك املاء حقول المستخدم',
-                          //textDirection: TextDirection.rtl,
-                          textAlign: TextAlign.center,
-                        ),
-                        backgroundColor: Colors.red,
-                      ));
-                    }
-                  }
-                });
-              },
-              icon: Icon(
-                state == true ? Icons.edit : Icons.save,
-                color: Colors.white,
-              ),
-            )
-          ],
+         // actions: [
+            // IconButton(
+            //   tooltip: 'تعديل',
+            //   onPressed: () {
+            //     checkInternetConnectivity(context).then((bool value) async {
+            //       if (value) {
+            //         var form = _formKey.currentState;
+            //         if (form.validate()) {
+            //           state == true ? updateForm(context) : saveData(context);
+            //         } else {
+            //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            //             content: Text(
+            //               'من فضلك املاء حقول المستخدم',
+            //               //textDirection: TextDirection.rtl,
+            //               textAlign: TextAlign.center,
+            //             ),
+            //             backgroundColor: Colors.red,
+            //           ));
+            //         }
+            //       }
+            //     });
+            //   },
+            //   icon: Icon(
+            //     state == true ? FontAwesomeIcons.edit : Icons.save,
+            //     color: Colors.white,
+            //   ),
+            // )
+         // ],
         ),
         body: SafeArea(
           child: Stack(
@@ -210,9 +224,13 @@ class _ProfilePageState extends State<ProfilePage> {
                     ),
                     height: MediaQuery.of(context).size.height * 0.55,
                     width: MediaQuery.of(context).size.width,
-                    child: siwtchPage
-                        ? ListView(
-                            shrinkWrap: true,
+                    child: switchPage
+                        ? SingleChildScrollView(
+                      child:  ConstrainedBox(
+                        constraints: BoxConstraints(
+                        minHeight: MediaQuery.of(context).size.height * 0.75,
+                        ),
+                       child: Column(
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(20.0),
@@ -220,7 +238,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   key: _formKey,
                                   child: Column(
                                     children: [
-                                      customTextFormField(
+                                   showTextFiled1?   customTextFormField(
 
                                         context,
                                         autofocus:true ,
@@ -236,11 +254,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                         ),
                                         labelText: "الاسم الاول",
                                         hintText: "ادخل اسم الاول",
-                                      ),
+                                      ):SizedBox.shrink(),
                                       SizedBox(
                                         height: 12,
                                       ),
-                                      customTextFormField(context,
+                                     showTextFiled2? customTextFormField(context,
                                           autofocus:true ,
                                           editingController: fatherNameCon,
                                           textAlign: TextAlign.right,
@@ -253,11 +271,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                             color: Colors.teal,
                                           ),
                                           labelText: "اسم الاب",
-                                          hintText: "ادخل اسم الاب"),
+                                          hintText: "ادخل اسم الاب"):SizedBox.shrink(),
                                       SizedBox(
                                         height: 12,
                                       ),
-                                      customTextFormField(context,
+                                   showTextFiled3?   customTextFormField(context,
                                           autofocus:true ,
                                           editingController: lastNameCon,
                                           textAlign: TextAlign.right,
@@ -270,7 +288,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             color: Colors.teal,
                                           ),
                                           labelText: "لقب العائلة",
-                                          hintText: "ادخل لقب العائلة"),
+                                          hintText: "ادخل لقب العائلة"):SizedBox.shrink(),
                                       SizedBox(
                                         height: 24,
                                       ),
@@ -278,9 +296,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                         children: [
                                           Expanded(
                                             flex: 1,
-                                            child: DateTimePicker(
-                                              style: TextStyle(
-                                                  color: Colors.white),
+                                            child: showTextFiled4?DateTimePicker(
+                                              style: Theme.of(context).textTheme.bodyText1,
                                               validator: (value) {
                                                 if (value.isEmpty ||
                                                     value == null)
@@ -323,7 +340,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               // },
                                               onSaved: (val) => print(
                                                   'the date on save $val'),
-                                            ),
+                                            ):SizedBox.shrink(),
                                           ),
                                         ],
                                       ),
@@ -340,8 +357,30 @@ class _ProfilePageState extends State<ProfilePage> {
                                     borderRadius: BorderRadius.circular(20)),
                                 child: HoverButton(
                                   onpressed: () {
-                                    setState(() {
-                                      siwtchPage = !siwtchPage;
+
+                                    checkInternetConnectivity(context).then((bool value) async {
+                                      if (value) {
+                                        var form = _formKey.currentState;
+                                        if (form.validate()) {
+                                          state == true ? updateForm(context) : saveData(context);
+                                          setState(() {
+                                            switchPage = !switchPage;
+                                            showTextFiled1 = false;
+                                            showTextFiled2 = false;
+                                            showTextFiled3 = false;
+                                            showTextFiled4 = false;
+                                          });
+                                        } else {
+                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                                            content: Text(
+                                              'من فضلك املاء حقول المستخدم',
+                                              //textDirection: TextDirection.rtl,
+                                              textAlign: TextAlign.center,
+                                            ),
+                                            backgroundColor: Colors.red,
+                                          ));
+                                        }
+                                      }
                                     });
                                   },
                                   splashColor: Color(0xFFFF8F00),
@@ -349,19 +388,43 @@ class _ProfilePageState extends State<ProfilePage> {
                                   highlightColor: Color(0xFFFF8F00),
                                   color: Color(0xFFfe6e00),
                                   child: Center(
-                                      child: Text(
-                                    'تعديل البيانات الشخصية',
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2,
-                                  )),
+                                      child: Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 3, right: 2, left: 2),
+                                              child: Icon(
+                                                state == true ? FontAwesomeIcons.penToSquare : Icons.save,
+
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                              ),
+                                            ),
+                                            Text(
+                                              'تعديل البيانات الشخصية',
+                                              style:
+                                              Theme.of(context).textTheme.headline4,
+                                            )
+                                          ])),
                                 ),
-                              )
+                              ),
+                              addPaddingWhenKeyboardAppears(),
                             ],
-                          )
+                          )))
                         : ListView(
                             padding: EdgeInsets.all(10),
+
                             children: [
                               ListTile(
+                                onTap: (){
+                                  setState(() {
+                                    showTextFiled1=!showTextFiled1;
+                                    switchPage=!switchPage;
+                                  });
+                                },
                                 title: Text(
                                   "الاسم الاول",
                                   style: Theme.of(context).textTheme.headline4,
@@ -376,6 +439,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
+                                onTap: (){
+                                  setState(() {
+                                    showTextFiled2=!showTextFiled2;
+                                    switchPage=!switchPage;
+                                  });
+                                },
                                 title: Text(
                                   "اسم الاب",
                                   style: Theme.of(context).textTheme.headline4,
@@ -390,6 +459,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
+                                onTap: (){
+                                  setState(() {
+                                    showTextFiled3=!showTextFiled3;
+                                    switchPage=!switchPage;
+                                  });
+                                },
                                 title: Text(
                                   "لقب العائلة",
                                   style: Theme.of(context).textTheme.headline4,
@@ -404,6 +479,12 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
+                                onTap: (){
+                                  setState(() {
+                                    showTextFiled4=!showTextFiled4;
+                                    switchPage=!switchPage;
+                                  });
+                                },
                                 title: Text(
                                   "تاريخ الميلاد",
                                   style: Theme.of(context).textTheme.headline4,
@@ -427,19 +508,39 @@ class _ProfilePageState extends State<ProfilePage> {
                                 child: HoverButton(
                                   onpressed: () {
                                     setState(() {
-                                      siwtchPage = !siwtchPage;
+                                      switchPage = !switchPage;
+                                      showTextFiled1 = true;
+                                      showTextFiled2 =true;
+                                      showTextFiled3 = true;
+                                      showTextFiled4 = true;
                                     });
+
                                   },
                                   splashColor: Color(0xFFFF8F00),
                                   hoverTextColor: Color(0xFFFF8F00),
                                   highlightColor: Color(0xFFFF8F00),
                                   color: Color(0xFFfe6e00),
                                   child: Center(
-                                      child: Text(
-                                    'تعديل البيانات الشخصية',
-                                    style:
-                                        Theme.of(context).textTheme.subtitle2,
-                                  )),
+                                      child:  Row(
+                                          mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                          children: [
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  bottom: 3, right: 2, left: 2),
+                                              child: Icon(
+                                                state == true ? FontAwesomeIcons.penToSquare : Icons.save,
+                                                color: Theme.of(context)
+                                                    .iconTheme
+                                                    .color,
+                                              ),
+                                            ),
+                                          Text(
+                                            'تعديل البيانات الشخصية',
+                                            style:
+                                            Theme.of(context).textTheme.headline4,
+                                          )
+                                          ])),
                                 ),
                               )
                             ],
@@ -454,7 +555,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void pickImage() async {
     var image =
-        await picker.getImage(source: ImageSource.gallery, imageQuality: 50);
+        await _picker.pickImage(source: ImageSource.gallery,imageQuality: 50);
     if (image != null) if (image.path != "")
       setState(() {
         _image = File(image.path);

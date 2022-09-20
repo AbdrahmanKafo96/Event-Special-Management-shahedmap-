@@ -41,6 +41,7 @@ class _EventViewState extends State<EventView> {
       onWillPop: () async => false,
       child: Scaffold(
           appBar: customAppBar(
+            context,
             elevation: 1.0,
             title:'${widget.eventName}',
             actions: [
@@ -88,47 +89,51 @@ class _EventViewState extends State<EventView> {
                     checkInternetConnectivity(context).then((
                         bool value) async {
                       if (value) {
-                        return showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                content: Text(" هل انت متأكد من حذف الحدث؟ "),
+                        return customReusableShowDialog(
+                             context,
+                                 " هل انت متأكد من حذف الحدث؟ ",
+                               // widget: Text(" هل انت متأكد من حذف الحدث؟ "),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text(
                                       "إلغاء",
-                                      style: TextStyle(
-                                          color: Colors.black,
-                                          fontSize: 12),
+                                      style: TextStyle(color: Colors.white),
                                     ),
                                     onPressed: () {
                                       Navigator.of(context).pop();
                                     },
                                   ),
-                                  TextButton(
-                                    child: Text(
-                                      "حذف الحدث",
-                                      style: TextStyle(color: Colors.red),
+                                  Container(
+                                    decoration: BoxDecoration(
+                                      color: Colors.red,
+                                      borderRadius: BorderRadius.all(Radius.circular(5)),
                                     ),
-                                    onPressed: () {
-                                      int postId = widget.eventID;
 
-                                      Singleton.getBox().then((
-                                          value) {
-                                        Provider.of<EventProvider>(
-                                            context, listen: false)
-                                            .deleteEvent(
-                                            postId,
-                                            value.get('user_id'));
-                                      });
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                      Navigator.of(context).pop();
-                                    },
+                                    child: TextButton(
+                                      child: Text(
+                                        "حذف الحدث",
+                                        style: TextStyle(color: Colors.white),
+                                      ),
+                                      onPressed: () {
+                                        int postId = widget.eventID;
+
+                                        Singleton.getBox().then((
+                                            value) async{
+                                         await  Provider.of<EventProvider>(
+                                              context, listen: false)
+                                              .deleteEvent(
+                                              postId,
+                                              value.get('user_id'));
+                                        });
+                                        Navigator.of(context).pop();
+                                        Navigator.of(context).pop();
+                                       // Navigator.of(context).pop();
+                                      },
+                                    ),
                                   ),
                                 ],
                               );
-                            });
+
                       }
                     });
                   })
@@ -154,127 +159,42 @@ class _EventViewState extends State<EventView> {
                   children: [
                     Container(
                       padding: EdgeInsets.all(5),
-
-                      height: MediaQuery.of(context).size.height * 0.5,
-                      child: Stack(
-                        //mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          _response['data']['video'] != null
+                        child:  _response['data']['video'] != null
                               ? VideoPicker(oldVideo: video , eventID: widget.eventID)
                               : VideoPicker(),
 
-                        //  Card(
-                         //   color: Colors.orange,
-                         // elevation: 1.0,
-                         // child:
-                          // child: Column(
-                          //   children: [
-                          //     // count>0?
-                          //     // MyCustomImage(
-                          //     //     count: count, updateList: imgList , eventID: widget.eventID)
-                          //     //     :MyCustomImage(),
-                          //
-                          //   ],
-                          // ),
-                       // ),
-
-                          // Container(
-                          //   height: MediaQuery.of(context).size.height * 0.2,
-                          //   clipBehavior: Clip.hardEdge,
-                          //   decoration: BoxDecoration(
-                          //       gradient: LinearGradient(
-                          //         colors: [
-                          //           //Color.fromRGBO(36, 36, 36, 0.85),
-                          //           Color(0xFF424242),
-                          //           Color(0xff212121),
-                          //         ],
-                          //       ),
-                          //     boxShadow: [BoxShadow(blurRadius: 1.0)],
-                          //     borderRadius: BorderRadius.only(
-                          //         bottomLeft: Radius.circular(30),
-                          //         bottomRight: Radius.circular(30)),
-                          //   ),
-                          // ),
-                          // Positioned(
-                          //   top: 10,
-                          //   right: 15,
-                          //   left: 15,
-                          //   //     bottom: MediaQuery.of(context).size.height * 0.10,
-                          //   child: Center(
-                          //     child: Container(
-                          //       clipBehavior: Clip.hardEdge,
-                          //       decoration: BoxDecoration(
-                          //         boxShadow: <BoxShadow>[
-                          //           BoxShadow(
-                          //               color: Colors.white12.withOpacity(0.5),
-                          //               blurRadius: 7.0,
-                          //               offset: Offset(0.0, 0.50))
-                          //         ],
-                          //         color: Colors.white,
-                          //         borderRadius: BorderRadius.only(
-                          //             topLeft: Radius.circular(50),
-                          //             topRight: Radius.circular(50),
-                          //             bottomLeft: Radius.circular(50),
-                          //             bottomRight: Radius.circular(50)),
-                          //       ),
-                          //       height:
-                          //           MediaQuery.of(context).size.width * 0.75,
-                          //       width: MediaQuery.of(context).size.width * 0.75,
-                          //
-                          //     ),
-                          //   ),
-                          // )
-                        ],
-                      ),
                     ),
-                    count>0?
-                    MyCustomImage(
-                        count: count, updateList: imgList , eventID: widget.eventID)
-                        :MyCustomImage(),
-                    Card(
-                      elevation: 1.0,
-                      color: Colors.red,
-                      child: Container(
-                        padding: EdgeInsets.all(10),
-                        //  height: 250,
-                        height: MediaQuery.of(context).size.height * 0.3,
+                    Container(
+                      margin: EdgeInsets.all(5),
+                      child: Card(
+                        shadowColor:Color(0xff424250),
+                        elevation: 0.5,
+                        color: Color(0xff424250),
+                        shape:  RoundedRectangleBorder(
 
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-
-                            ListTile(
-                              title: Text(
-                                'الوصف',
-                                style: TextStyle(fontWeight: FontWeight.bold),
+                          //  side: BorderSide(color: Colors.gr, width: 1),
+                          borderRadius: BorderRadius.all(Radius.circular(24),)
+                        ),
+                        child: Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text("اضف صور" ,style: Theme.of(context).textTheme.headline4,),
+                              Padding(padding: EdgeInsets.only(right: 5,left: 5),
+                                child:Text("يمكن إضافة 4 صور فقط" ,style: Theme.of(context).textTheme.subtitle1,),
                               ),
-                              leading: Icon(Icons.description),
-                              trailing: IconButton(
-                                tooltip: "تعديل الوصف",
-                                icon: Icon(
-                                  Icons.edit,
-                                  color: Colors.green,
-                                ),
-                                onPressed: () {
-
-                                  createDialog(context, 'تعديل الوصف' ,"نعم" ,
-                                  ({TextEditingController textEditingController}){
-                                     Navigator.of(context).pop(textEditingController.text);
-                                  })
-                                      .then((value) {
-
-                                    eventDescController.text = value;
-                                  });
-                                },
-                              ),
-                              subtitle: Text(
-                                  eventDescController.text.isEmpty?"لا يوجد وصف":eventDescController.text
-                              ),
-                            )
-                          ],
+                              count>0?
+                              MyCustomImage(
+                                  count: count, updateList: imgList , eventID: widget.eventID)
+                                  :MyCustomImage(),
+                            ],
+                          ),
                         ),
                       ),
                     )
+
+
                   ],
                 )),
     );

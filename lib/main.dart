@@ -1,16 +1,14 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-import 'package:hive/hive.dart';
+ import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:systemevents/models/unit.dart';
+import 'package:hive/hive.dart';
+ import 'package:provider/provider.dart';
+ import 'package:systemevents/models/unit.dart';
 import 'package:systemevents/modules/home/Responses/responses_screen.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/home.dart';
+import 'package:systemevents/modules/home/informauthorities/inform.dart';
 import 'package:systemevents/modules/home/mainpage.dart';
 import 'package:systemevents/modules/home/menu/menu_screen.dart';
 import 'package:systemevents/modules/home/search.dart';
@@ -23,19 +21,18 @@ import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/provider/navigation_provider.dart';
 import 'package:systemevents/provider/style_data.dart';
 import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/theme/TheamProvider.dart';
 import 'package:systemevents/theme/theme.dart';
 import 'package:systemevents/web_browser/webView.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/authentications/login_screen.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_localizations/flutter_localizations.dart';
+ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:systemevents/notification/notification.dart' as notif;
-import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart' as path;
+import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
+import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
 callbackDispatcher() {
   try {
@@ -66,14 +63,9 @@ callbackDispatcher() {
               });
 
           if (response.statusCode == 200) {
-            var parsed = json.decode(response.body);
+             json.decode(response.body);
             notif.Notification notification = new notif.Notification();
             notification.showNotificationWithoutSound("تم إرسال موقع الوحدة");
-            // if(parsed['message']=='success'){
-            //    // return true;
-            // } else {
-            //     //return false;
-            // }
           }
           break;
       }
@@ -102,17 +94,16 @@ Future main() async {
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
     final box = await Singleton.getBox();
-    print("the value is ${box.get('role_id')}");
-    print("the user id is ${box.get('user_id')}");
-    print("the email is ${box.get('email')}");
-    print("the email is ${box.get('beneficiarie_id')}");
+
     language = box.get('language');
     //darkMode=pref.getBool('darkMode');
 
     if (box.get('version_number') == null) box.put('version_number', 0);
 
-    if (defaultTargetPlatform == TargetPlatform.android) {
-      AndroidGoogleMapsFlutter.useAndroidViewSurface = true;
+    final GoogleMapsFlutterPlatform mapsImplementation =
+        GoogleMapsFlutterPlatform.instance;
+    if (mapsImplementation is GoogleMapsFlutterAndroid) {
+      mapsImplementation.useAndroidViewSurface = true;
     }
     runApp(
       MultiProvider(providers: [
@@ -128,23 +119,23 @@ Future main() async {
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (context) => DarkThemeProvider(),
         ),
-      ], child: MyApp(token)),
+      ], child: ShahedApp(token)),
     );
   } catch (e) {
     print(e);
   }
 }
 
-class MyApp extends StatefulWidget {
+class ShahedApp extends StatefulWidget {
   String token;
 
-  MyApp(this.token);
+  ShahedApp(this.token);
 
   @override
-  State<MyApp> createState() => _MyAppState();
+  State<ShahedApp> createState() => _ShahedAppState();
 }
 
-class _MyAppState extends State<MyApp> {
+class _ShahedAppState extends State<ShahedApp> {
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
 
   @override
@@ -191,6 +182,7 @@ class _MyAppState extends State<MyApp> {
             ),
             routes: {
               'About': (context) => About(),
+              'Inform': (context) => InformEntity(),
               'serc': (context) => SearchPlacesScreen(),
               'Home': (context) => HomePage(),
               'ProfilePage': (context) => ProfilePage(),

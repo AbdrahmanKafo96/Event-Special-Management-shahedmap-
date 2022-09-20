@@ -3,9 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:systemevents/models/category.dart';
-import 'package:systemevents/modules/home/event_screens/map_screen.dart';
-import 'package:systemevents/modules/home/responses/map_respo.dart';
- import 'package:systemevents/provider/event_provider.dart';
+ import 'package:systemevents/modules/home/responses/map_respo.dart';
+import 'package:systemevents/provider/event_provider.dart';
 import 'package:systemevents/shimmer/shimmer.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
@@ -17,30 +16,26 @@ class ResponsePage extends StatefulWidget {
 
 class _ResponsePageState extends State<ResponsePage> {
   Future<List<Respo>> fuList;
-  List<Respo>   futureList=[];
+  List<Respo> futureList = [];
   int user_id;
 
   @override
   initState() {
     super.initState();
-     getData();
-
+    getData();
   }
-  Future<void> getData()   {
+
+  Future<void> getData() {
     Singleton.getBox().then((value) {
       setState(() {
-        user_id=value.get('user_id');
+        user_id = value.get('user_id');
 
         fuList = Provider.of<EventProvider>(context, listen: false)
             .getAllRespons(value.get('user_id'));
       });
     });
-    Future.delayed(const Duration(seconds: 1), () {
-
-    });
+    Future.delayed(const Duration(seconds: 1), () {});
   }
-
-
 
   Widget slideLeftBackground() {
     return Container(
@@ -75,7 +70,7 @@ class _ResponsePageState extends State<ResponsePage> {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
       child: FutureBuilder<List<Respo>>(
-          future: fuList ,
+          future: fuList,
           builder: (context, snapshot) {
             // if(!snapshot.hasData){
             //   return Center(child: CircularProgressIndicator());
@@ -84,124 +79,137 @@ class _ResponsePageState extends State<ResponsePage> {
             // if ( snapshot.data==null)
             //   return Center(child: Text('قم بإنشاء حدث جديد'));
             switch (snapshot.connectionState) {
+
               case ConnectionState.none:
                 return Text('');
 
               case ConnectionState.waiting:
-                return  ListView.separated(
+                return ListView.separated(
                   itemCount: 5,
-                  itemBuilder: (context, index) =>   NewsCardSkelton(),
+                  itemBuilder: (context, index) => NewsCardSkelton(),
                   separatorBuilder: (context, index) =>
-                  const SizedBox(height: 16),
+                      const SizedBox(height: 16),
                 );
 
               case ConnectionState.active:
-                return  ListView.separated(
+                return ListView.separated(
                   itemCount: 5,
-                  itemBuilder: (context, index) =>   NewsCardSkelton(),
+                  itemBuilder: (context, index) => NewsCardSkelton(),
                   separatorBuilder: (context, index) =>
-                  const SizedBox(height: 16),
+                      const SizedBox(height: 16),
                 );
 
               case ConnectionState.done:
-                return snapshot.hasData
+                print("snapshot.hasData ${snapshot.hasData}");
+                return snapshot.hasData && snapshot.data.length>0
                     ? RefreshIndicator(
-                  displacement: 5,
-                      onRefresh: getData,
-                      child: ListView.builder(
-                        shrinkWrap: true,
+                        displacement: 5,
+                        onRefresh: getData,
+                        child: ListView.builder(
+                          shrinkWrap: true,
 
-                        itemCount: snapshot.data.length,
-                        // separatorBuilder: (context, index) => Divider(
-                        //   color: Colors.black,
-                        // ),
-                        itemBuilder: (context, index) {
-                         return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                             InkWell(
-
-
-                                onTap: (){},
-                                child: Ink(
-
-                                   child: Card(
-                                     color: snapshot.data[index].seen==0 ?Colors.grey.withOpacity(0.5):
-                                     Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      side: BorderSide(
-                                        color: Colors.green.shade300,
-                                      ),
-                                      borderRadius: BorderRadius.circular(15.0),
-                                    ),
-                                    child: ListTile(
-                                        onTap: () {
-                                          Provider.of<EventProvider>(context, listen: false)
-                                              .updateNoti( user_id,snapshot.data[index].notification_id).
-                                          then((value){
-                                            Provider.of<EventProvider>(context, listen: false)
-                                                .getRespo( user_id,snapshot.data[index].notification_id).then((value){
-                                              print(value['data']['lat']);
-                                              print(value['data']['lng']);
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-
-                                                        Mappoly(
-                                                            lat: double.parse(value['data']['lat']) ,
-                                                            lng:double.parse(value['data']['lng']))
-                                                ),
-                                              );
-                                            });
-                                          });
-
-                                        },
-                                        // trailing: IconButton(
-                                        //     tooltip: 'حذف الحدث',
-                                        //     icon: Icon(
-                                        //       Icons.delete,
-                                        //       color: Colors.red,
-                                        //     ),
-                                        //     onPressed: () {
-                                        //       // return customAlertForButton(
-                                        //       //     snapshot
-                                        //       //         .data[index].addede_id,
-                                        //       //     snapshot,
-                                        //       //     index,
-                                        //       //     context);
-                                        //     }),
-
-                                        leading: Icon(
-                                          Icons.event_note_rounded,
-                                          size: 30,
-                                          color: Colors.blueGrey,
+                          itemCount: snapshot.data.length,
+                          // separatorBuilder: (context, index) => Divider(
+                          //   color: Colors.black,
+                          // ),
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  InkWell(
+                                    onTap: () {},
+                                    child: Ink(
+                                      child: Card(
+                                        color: snapshot.data[index].seen == 0
+                                            ? Colors.grey.withOpacity(0.5)
+                                            : Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          side: BorderSide(
+                                            color: Colors.green.shade300,
+                                          ),
+                                          borderRadius:
+                                              BorderRadius.circular(15.0),
                                         ),
-                                        title: Text(
-                                          '${snapshot.data[index].type_name}',
-                                          style:
-                                          TextStyle(color: Color(0xFF666666)),
-                                        )),
+                                        child: ListTile(
+                                            onTap: () {
+                                              Provider.of<EventProvider>(
+                                                      context,
+                                                      listen: false)
+                                                  .updateNoti(
+                                                      user_id,
+                                                      snapshot.data[index]
+                                                          .notification_id)
+                                                  .then((value) {
+                                                Provider.of<EventProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .getRespo(
+                                                        user_id,
+                                                        snapshot.data[index]
+                                                            .notification_id)
+                                                    .then((value) {
+                                                  print(value['data']['lat']);
+                                                  print(value['data']['lng']);
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) => Mappoly(
+                                                            lat: double.parse(
+                                                                value['data']
+                                                                    ['lat']),
+                                                            lng: double.parse(
+                                                                value['data']
+                                                                    ['lng']))),
+                                                  );
+                                                });
+                                              });
+                                            },
+                                            // trailing: IconButton(
+                                            //     tooltip: 'حذف الحدث',
+                                            //     icon: Icon(
+                                            //       Icons.delete,
+                                            //       color: Colors.red,
+                                            //     ),
+                                            //     onPressed: () {
+                                            //       // return customAlertForButton(
+                                            //       //     snapshot
+                                            //       //         .data[index].addede_id,
+                                            //       //     snapshot,
+                                            //       //     index,
+                                            //       //     context);
+                                            //     }),
+
+                                            leading: Icon(
+                                              Icons.event_note_rounded,
+                                              size: 30,
+                                              color: Colors.blueGrey,
+                                            ),
+                                            title: Text(
+                                              '${snapshot.data[index].type_name}',
+                                              style: TextStyle(
+                                                  color: Color(0xFF666666)),
+                                            )),
+                                      ),
+                                    ),
                                   ),
-                                ),
-
-                            ),
-
-                          ],
+                                ],
+                              ),
+                            );
+                          },
                         ),
-                      );
-
-                  },
-                ),
-                    )
-                    : Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
-                    default:
-                      {
-                        return Center(child: Text('لا توجد إستجابات للعرض' ,style: Theme.of(context).textTheme.subtitle1));
-                      }
+                      )
+                    : Center(
+                        child: Text('لا توجد إستجابات للعرض',
+                            style:TextStyle(color: Colors.black54)));
+              default:
+                {
+                  return Center(
+                      child: Text('لا توجد إستجابات للعرض',
+                          style: TextStyle(color: Colors.black54)));
+                }
             }
-            return null; // unreachable
+
           }),
     );
   }
@@ -260,15 +268,10 @@ class _ResponsePageState extends State<ResponsePage> {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: Scaffold(
-
-        appBar: customAppBar(
-          title: "الإشعارات" ,
-          icon: FontAwesomeIcons.solidBell
-          ),
+        appBar:
+            customAppBar(context,title: "الإشعارات", icon: FontAwesomeIcons.solidBell),
         body: generateItemsList(),
       ),
     );
   }
 }
-
-

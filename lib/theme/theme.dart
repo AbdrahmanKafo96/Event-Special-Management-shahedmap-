@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'dart:ui';
 
 //  this old theme for app
 //
@@ -67,12 +66,11 @@ import 'dart:ui';
 //   }
 // }
 
-
 // this new theme for app
 
-
 class Styles {
-   static final MaterialColor primarySwatch = MaterialColor(0xffFAFAFA, <int, Color>{
+  static final MaterialColor primarySwatch =
+      MaterialColor(0xffFAFAFA, <int, Color>{
     50: Color(0xffFAFAFA),
     100: Color(0xffF5F5F5),
     200: Color(0xffEEEEEE),
@@ -87,9 +85,10 @@ class Styles {
 
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
-
-      iconTheme: IconThemeData(color: Colors.white ,),
-     primarySwatch: primarySwatch,
+      iconTheme: IconThemeData(
+        color: Colors.white,
+      ),
+      primarySwatch: primarySwatch,
       primaryColor: isDarkTheme ? Colors.black : Colors.white,
 
       backgroundColor: isDarkTheme ? Colors.red : Color(0xffF1F5FB),
@@ -99,7 +98,7 @@ class Styles {
 
       hintColor: isDarkTheme ? Color(0xff280C0B) : Color(0xffEECED3),
 
-      highlightColor:   Color(0xFFFF8F00)  ,
+      highlightColor: Color(0xFFFF8F00),
       hoverColor: isDarkTheme ? Color(0xff3A3A3B) : Color(0xff4285F4),
 
       focusColor: Color(0xFFFF8F00),
@@ -110,50 +109,55 @@ class Styles {
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
           colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light()),
-      scaffoldBackgroundColor:isDarkTheme ? Colors.grey : Colors.white,
-            textTheme: TextTheme(
-          button: GoogleFonts.notoSansArabic(
+      scaffoldBackgroundColor: isDarkTheme ? Colors.grey : Colors.white,
+      textTheme: TextTheme(
+        button: GoogleFonts.notoSansArabic(
             // textStyle: TextStyle(color: Color(0xFF666666),
-          ),
-          headline6: GoogleFonts.notoSansArabic(
-            textStyle: TextStyle(
-                color: Color(0xFF666666), fontWeight: FontWeight.bold),
-          ),
-          headline4: GoogleFonts.notoSansArabic(
-            textStyle: TextStyle(
-              fontSize: 15.0,
-                color: Colors.white, fontWeight: FontWeight.bold),
-          ),
-          subtitle1: GoogleFonts.notoSansArabic(
-            textStyle: TextStyle(
-              color: Colors.grey.shade600,
             ),
+        headline3: GoogleFonts.notoSansArabic(
+          textStyle:
+          TextStyle(fontSize: 18,color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        headline6: GoogleFonts.notoSansArabic(
+          textStyle:
+              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        headline4: GoogleFonts.notoSansArabic(
+          textStyle: TextStyle(
+              fontSize: 16.0, color: Colors.white, fontWeight: FontWeight.bold),
+        ),
+        subtitle1: GoogleFonts.notoSansArabic(
+          textStyle: TextStyle(
+            fontSize: 14.0,
+            color: Colors.grey.shade100,
           ),
-          subtitle2: GoogleFonts.notoSansArabic(
+        ),
+        subtitle2: GoogleFonts.notoSansArabic(
+          textStyle: TextStyle(
+            fontSize: 12.0,
+            color: Colors.white,
+          ),
+        ),
+        bodyText1: GoogleFonts.notoSansArabic(
             textStyle: TextStyle(
-            color: Colors.white ,
-            ),),
-          bodyText1: GoogleFonts.notoSansArabic(
-              textStyle: TextStyle(
-                fontSize: 14.0,
-                color: Color(0xFFffffff),
-              ))),
-      
+          fontSize: 14.0,
+          color: Color(0xFFffffff),
+        )),
+      ),
+
       inputDecorationTheme: InputDecorationTheme(
 
         suffixStyle: TextStyle(color: Colors.white),
-        iconColor:Color(0xFFFF9800),
-        suffixIconColor:Colors.white,
+        iconColor: Color(0xFFFF9800),
+        suffixIconColor: Colors.white,
         prefixIconColor: Color(0xFFFF9800),
         fillColor: Color(0xFF5a565f),
         isDense: true,
         contentPadding: EdgeInsets.all(12),
         hintStyle: TextStyle(color: Colors.white),
         labelStyle: GoogleFonts.notoSansArabic(
-
-         color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
+            color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
         filled: true,
-
         enabledBorder: OutlineInputBorder(
           borderSide: BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(10),
@@ -168,25 +172,25 @@ class Styles {
         ),
       ),
 
+
+
       appBarTheme: AppBarTheme(
+
         systemOverlayStyle: SystemUiOverlayStyle(
           statusBarColor: Colors.grey,
           statusBarBrightness: Brightness.light,
-           statusBarIconBrightness: Brightness.light,
+          statusBarIconBrightness: Brightness.light,
         ),
         titleTextStyle: GoogleFonts.notoSansArabic(
           textStyle: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.bold,
-              fontSize: 18),
+              color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
-        iconTheme: IconThemeData(color: Colors.white),
 
+        iconTheme: IconThemeData(color: Colors.white),
         shadowColor: Color(0xFFFFFFFF),
         elevation: 1.0,
         centerTitle: true,
       ),
     );
-
   }
 }

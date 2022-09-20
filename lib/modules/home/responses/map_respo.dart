@@ -71,6 +71,7 @@ class _MappolyState extends State<Mappoly> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: customAppBar(
+          context,
         title: 'موقع الحدث' ,
         icon: FontAwesomeIcons.bomb
       ),

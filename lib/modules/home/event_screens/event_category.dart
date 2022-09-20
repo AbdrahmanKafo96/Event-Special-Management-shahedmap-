@@ -217,51 +217,60 @@ class _EventCategoryState extends State<EventCategory> {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-       mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
+    return Container(
+      decoration: BoxDecoration(
+        color: Color(0xff424250),
+        borderRadius: BorderRadius.circular(24),
+      ),
+      padding: EdgeInsets.only(top: 10,bottom: 10,left: 2, right: 2),
+
+      child: Column(
+
+          mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: Container(
-              padding: EdgeInsets.only(left: 4,right: 4),
+              padding: EdgeInsets.only(left: 10,right: 10),
               decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey,width: 1),
+                color: Color(0xff424250),
+                border: Border.all(color: Colors.orange,width: 1),
                 borderRadius: BorderRadius.circular(15),
               ),
-              child:DropdownButton<String>(
-                //  hint: Text(dropdownName),
+              child:DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  hint: Text("اختار الصنف",
+                      style:Theme.of(context).textTheme.bodyText1),
+                  iconEnabledColor: Colors.white,
+                  dropdownColor: Colors.deepOrange,
+                  icon: Icon(Icons.arrow_drop_down),
+                  iconSize: 24,
+                  isExpanded: true,
+                  // style: TextStyle(
+                  //     color: Colors.black,
+                  //     fontSize: 16
+                  // ),
+                  value: dropdownValue1,
 
-                dropdownColor: Colors.white,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 18,
-                isExpanded: true,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16
-                ),
-                value: dropdownValue1,
+                  onChanged: (String value){
+                    setState(() {
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event.categoryClass.category_name =
+                          gategoryList.where((el) {
+                            return el.category_id.toString()==value;
+                          }).toList()[0].category_name ;
 
-                onChanged: (String value){
-                  setState(() {
-                    Provider.of<EventProvider>(context, listen: false)
-                        .event.categoryClass.category_name =
-                        gategoryList.where((el) {
-                          return el.category_id.toString()==value;
-                        }).toList()[0].category_name ;
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event.categoryClass.emergency_phone =
+                          gategoryList.where((el) {
+                            return el.category_id.toString()==value;
+                          }).toList()[0].emergency_phone ;
 
-                    Provider.of<EventProvider>(context, listen: false)
-                        .event.categoryClass.emergency_phone =
-                        gategoryList.where((el) {
-                          return el.category_id.toString()==value;
-                        }).toList()[0].emergency_phone ;
+                      dropdownValue1=value ;
 
-                    dropdownValue1=value ;
-
-                     Provider.of<EventProvider>
-                      (context, listen: false).event.categoryClass.category_id=
-                       int.parse(dropdownValue1.toString());
+                      Provider.of<EventProvider>
+                        (context, listen: false).event.categoryClass.category_id=
+                          int.parse(dropdownValue1.toString());
 
                       subTypesList.clear();
                       subTypesList.insert(0, EventType(type_id: 0 ,type_name:'اختار النوع' ,category_id: 0 )) ;
@@ -269,67 +278,72 @@ class _EventCategoryState extends State<EventCategory> {
                       dropdownName2=subTypesList.first.type_name ;
 
                       subTypesList.addAll(typesList.where((element) =>
-                     element.category_id==int.parse(dropdownValue1.toString())).toList());
-                  });
-                },
-                items: gategoryList.map((CategoryClass data){
-                  return DropdownMenuItem<String>(
-                    value: data.category_id.toString(),
-                    child: Text(data.category_name ,style:  TextStyle(fontSize: 12), ),
-                  );
-                }).toList(),
-              ) ,
+                      element.category_id==int.parse(dropdownValue1.toString())).toList());
+                    });
+                  },
+                  items: gategoryList.map((CategoryClass data){
+                    return DropdownMenuItem<String>(
+                      value: data.category_id.toString(),
+                      child: Text(data.category_name ,style:Theme.of(context).textTheme.bodyText1 ),
+                    );
+                  }).toList(),
+                ) ,
+              )
             ),
           ),
-        ),
-        int.parse(dropdownValue1)>0 ?
-         Expanded(
-          flex: 1,
-          child: Padding(
-            padding: const EdgeInsets.all(2.0),
-            child: Container(
-              padding: EdgeInsets.only(left: 4,right: 4),
-              decoration: BoxDecoration(
-                border: Border.all(color: Colors.grey,width: 1),
-                borderRadius: BorderRadius.circular(15),
-              ),
-              child:DropdownButton<String>(
-                //  hint: Text(dropdownName),
-                dropdownColor: Colors.white,
-                icon: Icon(Icons.arrow_drop_down),
-                iconSize: 18,
-                isExpanded: true,
-                style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 16
-                ),
-                value: dropdownValue2,
+          SizedBox(height: 12,),
+          int.parse(dropdownValue1)>0 ?
+           Padding(
+             padding: const EdgeInsets.all(8.0),
+             child: Container(
+               padding: EdgeInsets.only(left: 10,right: 10),
+               decoration: BoxDecoration(
+                 color: Color(0xff424250),
+                 border: Border.all(color: Colors.orange,width: 1),
+                 borderRadius: BorderRadius.circular(15),
+               ),
+               child:DropdownButtonHideUnderline(
+                 child: DropdownButton<String>(
+                   hint: Text("اختار النوع",
+                   style:Theme.of(context).textTheme.bodyText1 ),
+                   dropdownColor: Colors.deepOrange,
+                   iconEnabledColor: Colors.white,
+                   icon: Icon(Icons.arrow_drop_down),
+                   iconSize: 24,
+                   isExpanded: true,
+                   style: TextStyle(
+                       color: Colors.green,
+                       fontSize: 19
+                   ),
 
-                onChanged: (String value){
-                  setState(() {
-                      dropdownValue2=value;
+                   value: dropdownValue2,
 
-                      Provider.of<EventProvider>(context, listen: false).event.eventType.type_name =
-                          subTypesList.where((el) {
-                       return el.type_id.toString()==value;
-                      }).toList()[0].type_name ;
+                   onChanged: (String value){
+                     setState(() {
+                       dropdownValue2=value;
 
-                      Provider.of<EventProvider>
-                       (context, listen: false).event.eventType.type_id=int.parse(dropdownValue2.toString() );
-                  });
-                },
-                items:
-                subTypesList.map((EventType data){
-                  return DropdownMenuItem<String>(
-                    value: data.type_id.toString(),
-                    child: Text(data.type_name ,style: TextStyle(fontSize: 12) ),
-                  );
-                }).toList(),
-              ) ,
-            ),
-          ),
-        ):SizedBox.shrink()
-      ],
+                       Provider.of<EventProvider>(context, listen: false).event.eventType.type_name =
+                           subTypesList.where((el) {
+                             return el.type_id.toString()==value;
+                           }).toList()[0].type_name ;
+
+                       Provider.of<EventProvider>
+                         (context, listen: false).event.eventType.type_id=int.parse(dropdownValue2.toString() );
+                     });
+                   },
+                   items:
+                   subTypesList.map((EventType data){
+                     return DropdownMenuItem<String>(
+                       value: data.type_id.toString(),
+                       child: Text(data.type_name ,style:Theme.of(context).textTheme.bodyText1),
+                     );
+                   }).toList(),
+                 ),
+               )
+             ),
+           ):SizedBox.shrink()
+        ],
+      ),
     );
   }
 }

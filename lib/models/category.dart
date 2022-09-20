@@ -3,9 +3,7 @@
 // during import library
 
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:systemevents/models/navigation_item.dart';
-import 'package:systemevents/provider/navigation_provider.dart';
 
 class CategoryClass{
     int   category_id;

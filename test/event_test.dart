@@ -1,9 +1,8 @@
-import 'dart:io';
-
+// import 'dart:io';
 import 'package:mockito/annotations.dart';
 import 'package:systemevents/provider/event_provider.dart';
 import 'package:test/test.dart';
-import 'package:image_picker/image_picker.dart';
+// import 'package:image_picker/image_picker.dart';
 
 @GenerateMocks([EventProvider])
 void main() {

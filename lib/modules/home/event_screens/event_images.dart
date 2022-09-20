@@ -4,6 +4,7 @@ import 'dart:io';
  import 'package:provider/provider.dart';
  import 'package:systemevents/models/image.dart';
 import 'package:systemevents/provider/event_provider.dart';
+import 'package:systemevents/widgets/custom_modal_bottomsheet.dart';
 
 class PickImages extends StatefulWidget {
   int count ;
@@ -14,44 +15,9 @@ class PickImages extends StatefulWidget {
 }
 
 class _PickImagesState extends State<PickImages> {
-//   File _image;
-//   List<XFile> _imageFileList ;
-//   List<Asset> images = List<Asset>();
+
   ImagePicker _picker = ImagePicker();
 
-
-  void _showPicker(context ,int index) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return Directionality(
-            textDirection: TextDirection.rtl,
-            child: SafeArea(
-              child: Container(
-                child:   Wrap(
-                  children: <Widget>[
-                      ListTile(
-                        leading:   Icon(Icons.photo_library),
-                        title:   Text('مكتبة الصور'),
-                        onTap: () {
-                          _imgFromGallery(index);
-                          Navigator.of(context).pop();
-                        }),
-                      ListTile(
-                      leading:   Icon(Icons.photo_camera),
-                      title:   Text('الكميرا'),
-                      onTap: () {
-                        _imgFromCamera(index);
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          );
-        });
-  }
   int subValue=0;
   List images =  [];
   static List<XFile> _imageFile = <XFile>[];
@@ -179,28 +145,29 @@ class _PickImagesState extends State<PickImages> {
             ),
           );
         } else {
-          return Card(
-
-            elevation: 5.0,
-            child: Wrap(
-              spacing:2,
-              runSpacing: -10,
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              direction: Axis.horizontal,
-              children: [
-                IconButton(
-                  icon: Icon(Icons.add_photo_alternate),
-                  onPressed: () {
-                    if(images.length>=1 && images.length<=4){
-                      _showPicker(context,index);
-                    }else{
-                      // we can put a message here if the list is full.
-                    }
-                  },
-                ),
-                Text("اختر صورة",style: TextStyle(fontSize: 10),)
-              ],
+          return InkWell(
+            onTap: () {
+              if(images.length>=1 && images.length<=4){
+                // _showPicker(context,index);
+                showPicker(context ,_imgFromGallery, _imgFromCamera ,  index: index );
+              }else{
+                // we can put a message here if the list is full.
+              }
+            },
+            child: Card(
+              color: Colors.black54,
+              elevation: 5.0,
+              child: Wrap(
+                spacing: 2,
+                runSpacing: -10,
+                alignment: WrapAlignment.center,
+                crossAxisAlignment: WrapCrossAlignment.center,
+                direction: Axis.horizontal,
+                children: [
+                 Icon(Icons.add_photo_alternate, size: 32,),
+                  Text("اختر صورة",style: Theme.of(context).textTheme.subtitle2,)
+                ],
+              ),
             ),
           );
         }

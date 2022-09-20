@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:hive/hive.dart';
+ import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
  import 'package:systemevents/models/event.dart';
 import 'package:systemevents/modules/home/dashboard/dashboard.dart';
 import 'package:systemevents/modules/home/event_screens/main_section.dart';
 import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
  import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/provider/navigation_provider.dart';
-import 'package:systemevents/shared_data/shareddata.dart';
+ import 'package:systemevents/shared_data/shareddata.dart';
 import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/notification/notification.dart' as notif;
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:flutter/services.dart';
 import 'package:systemevents/widgets/custom_drawer.dart';
 import 'package:systemevents/widgets/custom_indecator.dart';
-
-import '../../provider/auth_provider.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -82,8 +77,9 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: Colors.deepOrange,
         ),
         appBar: customAppBar(
+          context,
           title: " الصفحة الرئيسية ",
-          icon: FontAwesomeIcons.home,
+          icon: FontAwesomeIcons.house,
           actions: [
             SharedData.getUserState() == true
                 ? Padding(
@@ -119,18 +115,18 @@ class _HomePageState extends State<HomePage> {
               elevation: 2.0,
               child: Container(
                 decoration: BoxDecoration(
-               //   color: Color(0xFF424250),
+                  color:Color(0xff33333d),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(25),
                         bottomRight: Radius.circular(25)),
-                    gradient: LinearGradient(
-                      // begin: Alignment.topCenter,
-                      // end: Alignment(0.8, 1),
-                      colors: [
-                        Color(0xFF424250),
-                        Color(0xff33333d),
-                      ],
-                    )
+                    // gradient: LinearGradient(
+                    //   // begin: Alignment.topCenter,
+                    //   // end: Alignment(0.8, 1),
+                    //   colors: [
+                    //     Color(0xFF424250),
+                    //     Color(0xff33333d),
+                    //   ],
+                    // )
                 ),
                 padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
                 child: Center(

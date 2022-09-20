@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
@@ -274,6 +273,7 @@ class UserAuthProvider extends ChangeNotifier {
         Map data = {
           'user_id': result.toString(),
         };
+        final box = await Singleton.getBox();
         final storage = await Singleton.getStorage();
         String value = await storage.read(
             key: "token", aOptions: Singleton.getAndroidOptions());
@@ -289,6 +289,8 @@ class UserAuthProvider extends ChangeNotifier {
           var res = jsonDecode(response.body);
 
           if (res['message'] == 'success') {
+            print("res['data']['first_name'] ${res['data']['first_name']}");
+            box.put('unitname', res['data']['first_name']);
             return Witness.fromJson(res['data']);
           } else {
             return null;
@@ -358,9 +360,17 @@ class UserAuthProvider extends ChangeNotifier {
         );
         if (response.statusCode == 200) {
           var res = jsonDecode(response.body);
-          showShortToast('تحقق من البريد الالكتروني', Colors.orange);
+          print(res['error']['email']);
+          if (res['error']['email'].toString() ==
+              "[القيمة المحددة email غير موجودة.]") {
+            showShortToast('تأكد من صحة البريد المدخل', Colors.orange);
+            return;
+          }
+
+          showShortToast('تحقق من بريدك', Colors.green);
+          return;
         } else {
-          showShortToast(' ', Colors.orange);
+          showShortToast('هناك مشكلة في الخادم', Colors.orange);
           return null;
         }
       }
@@ -369,7 +379,6 @@ class UserAuthProvider extends ChangeNotifier {
 
   static Future<void> getBeneID(var result) async {
     try {
-
       if (result != null) {
         Map data = {
           'user_id': result.toString(),
@@ -378,7 +387,6 @@ class UserAuthProvider extends ChangeNotifier {
         final storage = await Singleton.getStorage();
         String value = await storage.read(
             key: "token", aOptions: Singleton.getAndroidOptions());
-
 
         final response = await http.post(
           Uri.parse("${Singleton.apiPath}/findBenID"),
@@ -393,7 +401,6 @@ class UserAuthProvider extends ChangeNotifier {
           print("response.statusCode ${response.statusCode}");
           box.put('beneficiarie_id', res['data']['beneficiarie_id']);
           box.put('unitname', res['data']['name']);
-
         } else {
           showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
           return null;

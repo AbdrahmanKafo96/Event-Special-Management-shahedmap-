@@ -1,4 +1,3 @@
-import 'package:intl/intl.dart';
 import 'package:country_picker/country_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
@@ -7,7 +6,6 @@ import 'package:systemevents/modules/authentications/login_section.dart';
 import 'package:systemevents/modules/authentications/validator.dart';
 import 'package:systemevents/provider/auth_provider.dart';
 import 'dart:ui' as ui;
-
 import 'package:systemevents/widgets/custom_Text_Field.dart';
 
 class RegistrationForm extends StatefulWidget {
@@ -163,41 +161,76 @@ class _RegistrationFormState extends State<RegistrationForm> {
         Row(
           children: [
             Expanded(
-              flex: 1,
-              child: DateTimePicker(
-                style: Theme.of(context).textTheme.bodyText1,
-                validator: (value) {
-                  if (value.isEmpty || value == null)
-                    return "يجب ادخال تاريخ الميلاد";
-                  else
-                    return null;
-                },
-                onChanged: (value) {
-                  Provider.of<UserAuthProvider>(context, listen: false)
-                      .user
-                      .setDate_of_birth = value;
-                },
-                // controller: date_of_birthController,
-                type: DateTimePickerType.date,
+                flex: 1,
+                child: DateTimePicker(
+                  style: TextStyle(
+                    color: Colors.deepOrange
+                  ),
+                  validator: (value) {
+                    if (value.isEmpty || value == null)
+                      return "يجب ادخال تاريخ الميلاد";
+                    else
+                      return null;
+                  },
+                  onChanged: (value) {
+                    print(value);
+                    Provider.of<UserAuthProvider>(context, listen: false)
+                        .user
+                        .setDate_of_birth = value;
+                  },
+                  // controller: date_of_birthController,
+                  type: DateTimePickerType.date,
 
-                cancelText: "لا",
-                confirmText: 'نعم',
-                dateMask: 'd MMM, yyyy',
-                enabled: true,
-                initialValue: "1960-01-01 00:00:00.000",
-                firstDate: DateTime(1960),
-                lastDate: DateTime(DateTime.now().year - 12),
-                calendarTitle: 'اختر تاريخ ميلادك',
-                icon: Icon(Icons.event),
-                dateLabelText: 'تاريخ الميلاد',
-                timeLabelText: "ساعة",
-                textAlign: TextAlign.left,
-                autovalidate: true,
-                errorFormatText: "ادخل تاريخ صحيح",
-                errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                onSaved: (val) => print('the date is $val'),
-              ),
-            ),
+                  cancelText: "إلغاء",
+                  confirmText: 'حسناً',
+                  dateMask: 'd MMM, yyyy',
+                  enabled: true,
+                  initialValue: "1960-01-01 00:00:00.000",
+                  firstDate: DateTime(1960),
+                  lastDate: DateTime(DateTime.now().year - 12),
+                  calendarTitle: 'اختر تاريخ ميلادك',
+                  icon: Icon(Icons.event),
+                  dateLabelText: 'تاريخ الميلاد',
+                  timeLabelText: "ساعة",
+                  textAlign: TextAlign.left,
+                  autovalidate: true,
+                  errorFormatText: "ادخل تاريخ صحيح",
+                  errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
+                  onSaved: (val) => print('the date is $val'),
+                ) ),
+                // child: InkWell(
+                //   child: Icon(Icons.date_range),
+                //   onTap: () async {
+                //
+                //  // var result=await    showDatePicker(
+                //  //
+                //  //        errorFormatText: "ادخل تاريخ صحيح",
+                //  //        errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
+                //  //      builder: (context, child) {
+                //  //        return Theme(
+                //  //          data: Theme.of(context).copyWith(
+                //  //            colorScheme: ColorScheme.light(
+                //  //              primary: Colors.yellow, // header background color
+                //  //              onPrimary: Colors.black, // header text color
+                //  //              onSurface: Colors.green, // body text color
+                //  //            ),
+                //  //            textButtonTheme: TextButtonThemeData(
+                //  //              style: TextButton.styleFrom(
+                //  //                primary: Colors.red, // button text color
+                //  //              ),
+                //  //            ),
+                //  //          ),
+                //  //          child: child,
+                //  //        );
+                //  //      }, context: context,
+                //  //        initialDate: DateTime.parse("1960-01-01 00:00:00.000"),
+                //  //        firstDate: DateTime(1960),
+                //  //        lastDate: DateTime(DateTime.now().year - 12),
+                //  //
+                //  //    );
+                //  // print("result ${result}");
+                //   },
+                // )),
             Expanded(
               flex: 1,
               child: TextButton.icon(

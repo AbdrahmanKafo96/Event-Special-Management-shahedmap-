@@ -10,6 +10,7 @@ import 'package:systemevents/singleton/singleton.dart';
 import 'package:systemevents/widgets/checkInternet.dart';
 import 'package:systemevents/widgets/custom_Text_Field.dart';
 import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:systemevents/widgets/custom_dialog.dart';
 import 'package:systemevents/widgets/custom_toast.dart';
 import 'package:systemevents/modules/authentications/validator.dart';
 import 'package:systemevents/provider/auth_provider.dart';
@@ -34,67 +35,7 @@ class _LoginUiState extends State<LoginUi> {
   }
 
   TextEditingController emailController = TextEditingController();
-
-  Future<void> _displayTextInputDialog(BuildContext context) async {
-    final _formKey = GlobalKey<FormState>();
-    return showDialog(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            'طلب كلمة مرور جديدة',
-            style: TextStyle(fontSize: 14),
-          ),
-          content: Form(
-            key: _formKey,
-            child: customTextFormField(context,
-                keyboardType: TextInputType.emailAddress,
-                editingController: emailController, onChanged: (value) {
-              Provider.of<UserAuthProvider>(context, listen: false)
-                  .user
-                  .setEmail = emailController.text;
-            }, validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'البريد الالكتروني مطلوب';
-              } else if (!ValidatorClass.isValidEmail(value)) {
-                return 'البريد الالكتروني غير صالح تحقق من المدخلات';
-              } else
-                return null;
-            },
-                helperStyle: TextStyle(fontSize: 12),
-                labelText: 'البريد الإلكتروني',
-                hintText: 'ادخل البريد الإلكتروني'),
-          ),
-          actions: <Widget>[
-            TextButton(
-              child: Text(
-                'لا',
-                style: TextStyle(fontSize: 12),
-              ),
-              onPressed: () {
-                Navigator.pop(context);
-              },
-            ),
-            TextButton(
-              //color: Colors.green,
-              child: Text(
-                'ارسال طلب',
-                style: TextStyle(fontSize: 12),
-              ),
-              onPressed: () {
-                if (_formKey.currentState.validate()) ;
-                {
-                  Provider.of<UserAuthProvider>(context, listen: false)
-                      .forgotpassword(emailController.text.toString());
-                  Navigator.pop(context);
-                }
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
+  TextEditingController recoverAccountController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -102,27 +43,19 @@ class _LoginUiState extends State<LoginUi> {
         onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
         child: Scaffold(
             appBar: customAppBar(
+              context,
               title: val == PageState.login ? " تسجيل الدخول" : 'إنشاء حساب',
             ),
             body: SafeArea(
               child: Stack(
                 children: [
                   Container(
-                    decoration: const BoxDecoration(
-                     color: Color(0XFF424250)
-                    ),
+                    decoration: const BoxDecoration(color: Color(0xff33333d)),
                     height: double.infinity,
-                    // decoration: BoxDecoration(
-                    //   color: Colors.black,
-                    //   // image: DecorationImage(
-                    //   //   image: AssetImage("assets/images/univ.jpg"),
-                    //   //   fit: BoxFit.cover,
-                    //   // ),
-                    // ),
-                    //     color: Colors.white,
+
                     child: Card(
                       margin: EdgeInsets.all(10),
-                      color: Color(0XFF33333d),
+                      color: Color(0xFF424250),
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
                           color: Colors.grey.withOpacity(0.5),
@@ -150,8 +83,70 @@ class _LoginUiState extends State<LoginUi> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     TextButton(
+
                                       onPressed: () {
-                                        _displayTextInputDialog(context);
+                                        final formKey = GlobalKey<FormState>();
+                                        customReusableShowDialog(
+                                          context,
+                                          'طلب كلمة مرور جديدة',
+                                          widget: Form(
+                                            key:  formKey ,
+                                            child: customTextFormField(context,
+                                                keyboardType: TextInputType.emailAddress,
+                                                editingController: recoverAccountController,
+                                                onChanged: (value) {
+                                                  Provider.of<UserAuthProvider>(context, listen: false)
+                                                      .user
+                                                      .setEmail = emailController.text;
+                                                },
+                                                validator: (value) {
+                                                  if (value == null || value.isEmpty) {
+                                                    return 'البريد الالكتروني مطلوب';
+                                                  } else if (!ValidatorClass.isValidEmail(value)) {
+                                                    return ' تحقق من المدخلات';
+                                                  } else
+                                                    return null;
+                                                },
+                                                //onTap: onTap,
+                                               // helperStyle: helperStyle,
+                                                labelText: 'البريد الإلكتروني',
+                                                hintText: 'ادخل البريد الإلكتروني'),
+                                          ),
+                                         // formKey: formKey,
+
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'لا',
+                                                style: TextStyle(fontSize: 12,color: Colors.white),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                            ),
+                                            Container(
+                                              decoration: BoxDecoration(
+                                                color: Colors.deepOrange,
+                                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                              ), child: TextButton(
+                                                //color: Colors.green,
+                                                child: Text(
+                                                  'ارسال طلب',
+                                                  style: TextStyle(fontSize: 12),
+                                                ),
+                                                onPressed: () {
+
+                                                   if ( formKey.currentState.validate())
+                                                  {
+                                                    Provider.of<UserAuthProvider>(context, listen: false)
+                                                        .forgotpassword(recoverAccountController.text.toString());
+                                                    Navigator.pop(context);
+                                                  }
+                                                },
+                                              ),
+                                            ),
+                                          ],
+                                        );
                                       },
                                       child: Row(
                                         children: [
@@ -159,7 +154,7 @@ class _LoginUiState extends State<LoginUi> {
                                             padding: EdgeInsets.only(
                                                 bottom: 5, right: 1, left: 1),
                                             child:
-                                                Icon(Icons.lock_reset_outlined),
+                                                Icon(Icons.lock_reset_outlined ,color: Colors.white,),
                                           ),
                                           Text(
                                             'نسيت كلمة المرور!',
@@ -188,7 +183,7 @@ class _LoginUiState extends State<LoginUi> {
                                           Padding(
                                             padding: EdgeInsets.only(
                                                 bottom: 5, right: 1, left: 1),
-                                            child: Icon(Icons.person),
+                                            child: Icon(Icons.person,color: Colors.white,),
                                           ),
                                           Text(
                                             val == PageState.reg
@@ -456,7 +451,7 @@ class _LoginUiState extends State<LoginUi> {
                                             padding: EdgeInsets.only(
                                                 bottom: 3, right: 2, left: 2),
                                             child: Icon(
-                                              FontAwesomeIcons.signIn,
+                                              FontAwesomeIcons.arrowRightFromBracket,
                                               color: Theme.of(context)
                                                   .iconTheme
                                                   .color,
@@ -466,10 +461,7 @@ class _LoginUiState extends State<LoginUi> {
                                             val == PageState.reg
                                                 ? "إنشاء حساب"
                                                 : 'تسجيل الدخول',
-                                            style: TextStyle(
-                                                color: Colors.white,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.bold),
+                                            style: Theme.of(context).textTheme.headline4,
                                           ),
                                         ]),
                                   ),

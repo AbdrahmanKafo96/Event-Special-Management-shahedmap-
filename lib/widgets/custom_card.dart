@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 Widget customCard(
     IconData icon, String title, Color color, BuildContext context  ) {
   return Container(
 
     child: Card(
-      color: Color(0xff33333d),
+      color: Color(0xFF424250),
      // color:  Colors.black12.withOpacity(0.5),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(

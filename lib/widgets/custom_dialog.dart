@@ -1,34 +1,30 @@
 import 'package:flutter/material.dart';
- import 'package:systemevents/modules/home/event_screens/event_category.dart';
 
-Future<String> createDialog(BuildContext context, String value , String btnTitle ,
-    dynamic Function( {TextEditingController textEditingController} ) f ,{int num }) {
-  TextEditingController textEditingController = TextEditingController();
-
+Future<dynamic> customReusableShowDialog(
+    BuildContext context, String header,
+    {TextEditingController textController,
+    ValueChanged<String> onChanged,
+    TextInputType keyboardType,
+    FormFieldValidator<String> validator,
+    VoidCallback onTap,
+    String labelText,
+    String hintText,
+    TextStyle helperStyle,
+    Key formKey,
+    List<Widget> actions,
+    Widget widget}) async {
   return showDialog(
-      context: context,
-      builder: (context) {
-        return Directionality(
-          textDirection: TextDirection.rtl,
-          child: AlertDialog(
-            title: Text(
-              value,
-              style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-            ),
-            content:num ==null?TextField(
-              decoration: InputDecoration(hintText: 'ادخل نص جديد'),
-              controller: textEditingController,
-            ): Container(child: EventCategory(),height: 100,),
-            actions: [
-              MaterialButton(
-                  color: Colors.green,
-                  child: Text(btnTitle),
-                  onPressed: ()=>f(textEditingController: textEditingController),
-               //    onPressed: () {
-               //      Navigator.of(context).pop(textEditingController.text);
-               //    }
-            )],
-          ),
-        );
-      });
+    context: context,
+    builder: (context) {
+      return AlertDialog(
+        backgroundColor: Color(0xff33333d),
+        title: Text(
+          header,
+          style: Theme.of(context).textTheme.bodyText1,
+        ),
+        content: widget,
+        actions: actions,
+      );
+    },
+  );
 }

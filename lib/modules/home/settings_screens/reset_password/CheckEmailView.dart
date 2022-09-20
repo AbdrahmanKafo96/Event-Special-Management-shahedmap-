@@ -1,10 +1,7 @@
 import 'dart:async';
 import 'dart:io';
-import 'package:android_intent/android_intent.dart';
 import 'package:flutter/material.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-import 'CreateNewPasswordView.dart';
 
 class CheckEmailView extends StatefulWidget {
   //const CheckEmailView({Key? key}) : super(key: key);
@@ -14,13 +11,15 @@ class CheckEmailView extends StatefulWidget {
 
 class _CheckEmailViewState extends State<CheckEmailView> {
   final Completer<WebViewController> _controller =
-  Completer<WebViewController>();
+      Completer<WebViewController>();
+
   @override
   void initState() {
     super.initState();
     // Enable hybrid composition.
     if (Platform.isAndroid) WebView.platform = SurfaceAndroidWebView();
   }
+
   @override
   Widget build(BuildContext context) {
     return Directionality(
@@ -30,11 +29,11 @@ class _CheckEmailViewState extends State<CheckEmailView> {
           flexibleSpace: Container(
             decoration: const BoxDecoration(
                 gradient: LinearGradient(
-                  colors: [
-                    Color(0xFF00695C) ,
-                    Color(0xFF4DB6AC),
-                  ],
-                )),
+              colors: [
+                Color(0xFF00695C),
+                Color(0xFF4DB6AC),
+              ],
+            )),
           ),
           title: Text(
             'رجوع',
@@ -42,7 +41,10 @@ class _CheckEmailViewState extends State<CheckEmailView> {
           ),
           // leadingWidth: 25,
           leading: IconButton(
-            icon: Icon(Icons.arrow_back ,color: Colors.white,),
+            icon: Icon(
+              Icons.arrow_back,
+              color: Colors.white,
+            ),
             onPressed: () {},
           ),
           actions: [
@@ -104,8 +106,10 @@ class _CheckEmailViewState extends State<CheckEmailView> {
                     width: 200,
                     child: ElevatedButton(
                       onPressed: () {
-
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => WebViewClass()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => WebViewClass()));
                       },
                       child: Text(
                         'افتح تطبيق البريد الالكتروني',
@@ -120,7 +124,8 @@ class _CheckEmailViewState extends State<CheckEmailView> {
                     onPressed: () {},
                     child: Text(
                       'تخطي ، سيتم التأكيد لاحقًا',
-                      style: TextStyle(fontSize: 20, color: Colors.grey.shade600),
+                      style:
+                          TextStyle(fontSize: 20, color: Colors.grey.shade600),
                     ),
                   ),
                 ],
@@ -128,15 +133,14 @@ class _CheckEmailViewState extends State<CheckEmailView> {
               Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: [
-                  Text('لم تستلم البريد الإلكتروني؟ تحقق من البريد العشوائي(spam)الخاص بك'),
+                  Text(
+                      'لم تستلم البريد الإلكتروني؟ تحقق من البريد العشوائي(spam)الخاص بك'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text('or'),
                       TextButton(
-                        onPressed: (){
-
-                        },
+                        onPressed: () {},
                         child: Text('جرب بريد إللكتروني اخر'),
                       ),
                     ],
@@ -149,9 +153,8 @@ class _CheckEmailViewState extends State<CheckEmailView> {
       ),
     );
   }
-
-
 }
+
 class WebViewClass extends StatefulWidget {
   @override
   _WebViewClassState createState() => _WebViewClassState();
@@ -159,6 +162,7 @@ class WebViewClass extends StatefulWidget {
 
 class _WebViewClassState extends State<WebViewClass> {
   Completer<WebViewController> _controller = Completer<WebViewController>();
+
   JavascriptChannel _toasterJavascriptChannel(BuildContext context) {
     return JavascriptChannel(
         name: 'Toaster',
@@ -169,6 +173,7 @@ class _WebViewClassState extends State<WebViewClass> {
           );
         });
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -181,7 +186,7 @@ class _WebViewClassState extends State<WebViewClass> {
         //     _controller.complete(webViewController);
         //   },
         // ),
-        body:WebView(
+        body: WebView(
           initialUrl: 'https://accounts.google.com/',
           javascriptMode: JavascriptMode.unrestricted,
           onWebViewCreated: (WebViewController webViewController) {
@@ -208,7 +213,6 @@ class _WebViewClassState extends State<WebViewClass> {
             print('Page finished loading: $url');
           },
           gestureNavigationEnabled: true,
-        )
-    );
+        ));
   }
 }

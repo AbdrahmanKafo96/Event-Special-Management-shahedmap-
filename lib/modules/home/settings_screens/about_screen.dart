@@ -24,6 +24,7 @@ class _AboutState extends State<About>  {
       child: Scaffold(
         drawer: CustomDrawer(),
         appBar: customAppBar(
+          context,
           title: " حول التطبيق " ,
           icon: Icons.people_alt
            ),

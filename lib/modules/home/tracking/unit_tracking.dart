@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:great_circle_distance_calculator/great_circle_distance_calculator.dart';
-import 'package:hive/hive.dart';
-import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:systemevents/models/unit.dart';
 import 'package:systemevents/provider/event_provider.dart';
@@ -269,7 +267,8 @@ int beneficiarie_id;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar( 
+      appBar: customAppBar(
+          context,
         title: "تتبع الوحدة" ,
         icon: Icons.track_changes
       ),
