@@ -2,11 +2,11 @@ import 'package:country_picker/country_picker.dart';
 import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/modules/authentications/login_section.dart';
-import 'package:systemevents/modules/authentications/validator.dart';
-import 'package:systemevents/provider/auth_provider.dart';
+import 'package:shahed/modules/authentications/login_section.dart';
+import 'package:shahed/modules/authentications/validator.dart';
+import 'package:shahed/provider/auth_provider.dart';
 import 'dart:ui' as ui;
-import 'package:systemevents/widgets/custom_Text_Field.dart';
+import 'package:shahed/widgets/custom_Text_Field.dart';
 
 class RegistrationForm extends StatefulWidget {
   @override

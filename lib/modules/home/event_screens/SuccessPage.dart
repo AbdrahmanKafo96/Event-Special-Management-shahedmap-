@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:systemevents/modules/home/home.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
 
 class SuccessPage extends StatefulWidget {
   @override

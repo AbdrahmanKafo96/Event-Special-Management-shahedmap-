@@ -1,6 +1,6 @@
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
-import 'package:systemevents/provider/language.dart';
+import 'package:shahed/provider/language.dart';
 
 class Singleton {
   Singleton._();

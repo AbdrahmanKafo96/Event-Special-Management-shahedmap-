@@ -3,7 +3,7 @@
 // during import library
 
 import 'package:flutter/material.dart';
-import 'package:systemevents/models/navigation_item.dart';
+import 'package:shahed/models/navigation_item.dart';
 
 class CategoryClass{
     int   category_id;

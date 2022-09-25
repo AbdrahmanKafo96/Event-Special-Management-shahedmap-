@@ -1,11 +1,11 @@
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/modules/authentications/logo.dart';
-import 'package:systemevents/modules/home/event_screens/event_category.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/custom_toast.dart';
+import 'package:shahed/modules/authentications/logo.dart';
+import 'package:shahed/modules/home/event_screens/event_category.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_toast.dart';
 import 'package:telephony/telephony.dart';
 import 'package:location/location.dart' as loc;
 

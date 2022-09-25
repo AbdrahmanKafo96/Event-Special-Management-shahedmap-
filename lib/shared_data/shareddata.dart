@@ -1,4 +1,4 @@
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/singleton/singleton.dart';
 import '../provider/auth_provider.dart';
 
 

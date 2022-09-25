@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import 'package:systemevents/models/category.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
+import 'package:shahed/models/category.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/checkInternet.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:convert'  as convert;
 import 'package:http/http.dart' as http;

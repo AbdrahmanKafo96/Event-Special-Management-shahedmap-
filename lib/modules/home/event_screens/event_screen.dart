@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/widgets/custom_Text_Field.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/widgets/custom_Text_Field.dart';
 
 class EventForm extends StatefulWidget {
   @override

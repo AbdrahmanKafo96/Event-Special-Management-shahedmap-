@@ -1,15 +1,15 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/models/event.dart';
-import 'package:systemevents/modules/home/menu/view_screen.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/shimmer/shimmer.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:shahed/models/event.dart';
+import 'package:shahed/modules/home/menu/view_screen.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shimmer/shimmer.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/checkInternet.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:systemevents/widgets/custom_dialog.dart';
+import 'package:shahed/widgets/custom_dialog.dart';
 import 'search.dart';
 
 class EventsMenu extends StatefulWidget {

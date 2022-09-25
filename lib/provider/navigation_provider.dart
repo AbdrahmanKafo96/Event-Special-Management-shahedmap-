@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:systemevents/models/navigation_item.dart';
+import 'package:shahed/models/navigation_item.dart';
 
 class NavigationProvider extends ChangeNotifier {
   NavigationItem _navigationItem = NavigationItem.home;
@@ -16,6 +16,10 @@ class NavigationProvider extends ChangeNotifier {
   void setNavigationItem(NavigationItem navigationItem) {
     _navigationItem = navigationItem;
     notifyListeners();
+  }
+  void reset( ) {
+    _navigationItem = NavigationItem.home;
+    //notifyListeners();
   }
 
   NavigationItem get getNavigationItem => _navigationItem;

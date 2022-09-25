@@ -4,16 +4,18 @@ import 'package:hovering/hovering.dart';
 import 'package:intl/intl.dart' as intl;
 import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/modules/home/mainpage.dart';
-import 'package:systemevents/modules/authentications/login_section.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/widgets/custom_Text_Field.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/custom_dialog.dart';
-import 'package:systemevents/widgets/custom_toast.dart';
-import 'package:systemevents/modules/authentications/validator.dart';
-import 'package:systemevents/provider/auth_provider.dart';
+import 'package:shahed/modules/home/mainpage.dart';
+import 'package:shahed/modules/authentications/login_section.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/checkInternet.dart';
+import 'package:shahed/widgets/custom_Text_Field.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_dialog.dart';
+import 'package:shahed/widgets/custom_toast.dart';
+import 'package:shahed/modules/authentications/validator.dart';
+import 'package:shahed/provider/auth_provider.dart';
+import '../../models/navigation_item.dart';
+import '../../provider/navigation_provider.dart';
 import 'account_section.dart';
 import 'logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -426,8 +428,11 @@ class _LoginUiState extends State<LoginUi> {
                                               await Singleton.getBox();
                                               Future.delayed(
                                                   Duration(seconds: 3), () {
+
                                                 Navigator.pop(
                                                     context); //pop dialog
+                                                // final provider = Provider.of<NavigationProvider>(context);
+                                                // provider.setNavigationItem(NavigationItem.home);
                                                 Navigator.pushReplacement(
                                                     context,
                                                     MaterialPageRoute(

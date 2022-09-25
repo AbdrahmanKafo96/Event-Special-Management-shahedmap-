@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/provider/language.dart';
-import 'package:systemevents/provider/style_data.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
+import 'package:shahed/provider/language.dart';
+import 'package:shahed/provider/style_data.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:systemevents/widgets/custom_drawer.dart';
+import 'package:shahed/widgets/custom_drawer.dart';
  
 
 class AppSettings extends StatefulWidget {

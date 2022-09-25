@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/modules/home/event_screens/event_images.dart';
-import 'package:systemevents/modules/home/event_screens/extra_section.dart';
-import 'package:systemevents/modules/home/event_screens/map_screen.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/provider/event_provider.dart';
+import 'package:shahed/modules/home/event_screens/event_images.dart';
+import 'package:shahed/modules/home/event_screens/extra_section.dart';
+import 'package:shahed/modules/home/event_screens/map_screen.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/provider/event_provider.dart';
 import 'event_category.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';

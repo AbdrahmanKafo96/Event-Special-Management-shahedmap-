@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
- import 'package:hive/hive.dart';
+import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
- import 'package:systemevents/models/event.dart';
-import 'package:systemevents/modules/home/dashboard/dashboard.dart';
-import 'package:systemevents/modules/home/event_screens/main_section.dart';
-import 'package:systemevents/modules/home/tracking/unit_tracking.dart';
- import 'package:systemevents/provider/event_provider.dart';
- import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
- import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:shahed/models/event.dart';
+import 'package:shahed/modules/home/dashboard/dashboard.dart';
+import 'package:shahed/modules/home/event_screens/main_section.dart';
+import 'package:shahed/modules/home/tracking/unit_tracking.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/checkInternet.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:geocoder/geocoder.dart';
 import 'package:flutter/services.dart';
-import 'package:systemevents/widgets/custom_drawer.dart';
-import 'package:systemevents/widgets/custom_indecator.dart';
+import 'package:shahed/widgets/custom_drawer.dart';
+import 'package:shahed/widgets/custom_indecator.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -23,50 +23,51 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  bool loader=false;
+  bool loader = false;
   String countryName = "";
   String subAdminArea = "";
   GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
- // GlobalKey _appbarkey = new GlobalKey();
-  Box box  ;
 
-  var provider  ;
+  // GlobalKey _appbarkey = new GlobalKey();
+  Box box;
+
+  var provider;
+
   @override
   void initState() {
     super.initState();
 
-   openBox();
+    openBox();
     _getUserLocation();
-
   }
-  void openBox()  {
-    Singleton.getBox().then((value){
-      setState(() {
-        box=value;
-        loader=true;
 
+  void openBox() {
+    Singleton.getBox().then((value) {
+      setState(() {
+        box = value;
+        loader = true;
       });
     });
   }
+
   @override
   Widget build(BuildContext context) {
     //   checkInternetConnectivity(context);
     return Scaffold(
         key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
-
         floatingActionButton: FloatingActionButton(
           onPressed: () {
-             checkInternetConnectivity(context).then((bool value) async {
-             if (value) {
+            checkInternetConnectivity(context).then((bool value) async {
+              if (value) {
                 Provider.of<EventProvider>(context, listen: false).event =
                     Event();
                 Navigator.push(
                   context,
                   MaterialPageRoute(builder: (context) => EventSectionOne()),
                 );
-               }
-             });
+              }
+            });
           },
           tooltip: 'اضف حدث',
           child: const Icon(
@@ -86,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(
                       icon: Icon(Icons.track_changes),
-                      onPressed: ()  {
+                      onPressed: () {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
@@ -98,109 +99,110 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox.shrink(),
           ],
         ),
-        body: !loader ?customCircularProgressIndicator():
-        ListView(
-          shrinkWrap: true,
-          // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Card(
-              margin: EdgeInsets.zero,
-              shape: RoundedRectangleBorder(
-                //  side: BorderSide(color: Colors.white70, width: 1),
-                borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(25),
-                    bottomRight: Radius.circular(25)),
-              ),
-              //  color:Color(0xFF5a8f62),
-              elevation: 2.0,
-              child: Container(
-                decoration: BoxDecoration(
-                  color:Color(0xff33333d),
-                    borderRadius: BorderRadius.only(
-                        bottomLeft: Radius.circular(25),
-                        bottomRight: Radius.circular(25)),
-                    // gradient: LinearGradient(
-                    //   // begin: Alignment.topCenter,
-                    //   // end: Alignment(0.8, 1),
-                    //   colors: [
-                    //     Color(0xFF424250),
-                    //     Color(0xff33333d),
-                    //   ],
-                    // )
-                ),
-                padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
-                child: Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Row(
-                        children: [
-                          Text(
-                            "مرحبا ${box.get('unitname')}!",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ],
+        body: !loader
+            ? customCircularProgressIndicator()
+            : ListView(
+                shrinkWrap: true,
+                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Card(
+                    margin: EdgeInsets.zero,
+                    shape: RoundedRectangleBorder(
+                      //  side: BorderSide(color: Colors.white70, width: 1),
+                      borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(25),
+                          bottomRight: Radius.circular(25)),
+                    ),
+                    //  color:Color(0xFF5a8f62),
+                    elevation: 2.0,
+                    child: Container(
+                      decoration: BoxDecoration(
+                        color: Color(0xff33333d),
+                        borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(25),
+                            bottomRight: Radius.circular(25)),
+                        // gradient: LinearGradient(
+                        //   // begin: Alignment.topCenter,
+                        //   // end: Alignment(0.8, 1),
+                        //   colors: [
+                        //     Color(0xFF424250),
+                        //     Color(0xff33333d),
+                        //   ],
+                        // )
                       ),
-                      SizedBox(
-                        height: 24,
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Icon(
-                            FontAwesomeIcons.globe,
-                            color: Colors.white,
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Text(
-                            "$countryName",
-                            style: TextStyle(color: Colors.white),
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Row(
-                        children: [
-                          SizedBox(
-                            width: 12,
-                          ),
-                          Icon(
-                            FontAwesomeIcons.locationCrosshairs,
-                            color: Colors.redAccent,
-                          ),
-                          SizedBox(
-                            width: 12,
-                          ),
-                          SizedBox(
-                            width: 200,
-                            child: Text(
-                              subAdminArea,
-                              style: TextStyle(color: Colors.white),
-                              overflow: TextOverflow.fade,
-                              maxLines: 1,
-                              softWrap: false,
+                      padding: EdgeInsets.only(right: 10, bottom: 10, left: 10),
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "مرحبا ${box.get('unitname')}!",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              ],
                             ),
-                          ),
-                        ],
+                            SizedBox(
+                              height: 24,
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Icon(
+                                  FontAwesomeIcons.globe,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Text(
+                                  "$countryName",
+                                  style: TextStyle(color: Colors.white),
+                                  overflow: TextOverflow.ellipsis,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: 12,
+                            ),
+                            Row(
+                              children: [
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Icon(
+                                  FontAwesomeIcons.locationCrosshairs,
+                                  color: Colors.redAccent,
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                SizedBox(
+                                  width: 200,
+                                  child: Text(
+                                    subAdminArea,
+                                    style: TextStyle(color: Colors.white),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ],
+                    ),
                   ),
-                ),
+                  Dashboard(),
+                ],
               ),
-            ),
-            Dashboard(),
-          ],
-        ),
         drawer: CustomDrawer());
   }
 
@@ -226,16 +228,14 @@ class _HomePageState extends State<HomePage> {
         new Coordinates(myLocation.latitude, myLocation.longitude);
     var first;
     var addresses;
-      Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
-       setState(() {
-         addresses =value;
-         first = addresses.first;
-         countryName = first.countryName;
-         subAdminArea = first.addressLine;
-       });
+    Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
+      setState(() {
+        addresses = value;
+        first = addresses.first;
+        countryName = first.countryName;
+        subAdminArea = first.addressLine;
+      });
     });
     return first;
   }
-
-
 }

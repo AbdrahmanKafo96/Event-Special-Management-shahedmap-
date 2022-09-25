@@ -3,15 +3,15 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:hovering/hovering.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/modules/home/event_screens/SuccessPage.dart';
-import 'package:systemevents/modules/home/event_screens/event_screen.dart';
-import 'package:systemevents/modules/home/event_screens/video_picker.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/custom_toast.dart';
+import 'package:shahed/modules/home/event_screens/SuccessPage.dart';
+import 'package:shahed/modules/home/event_screens/event_screen.dart';
+import 'package:shahed/modules/home/event_screens/video_picker.dart';
+import 'package:shahed/widgets/checkInternet.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_toast.dart';
 import 'package:intl/intl.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class EventSectionTow extends StatefulWidget {
   @override
@@ -135,13 +135,13 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 ],
                               ),
                         onpressed: () async {
-                          if (isLoading) return;
+                          //if (isLoading) return;
 
-                          setState(() => isLoading = true);
-                          await Future.delayed(Duration(seconds: 3));
                           checkInternetConnectivity(context)
                               .then((bool value) async {
                             if (value) {
+
+                            //  await Future.delayed(Duration(seconds: 3 ),);
                               if (Provider.of<EventProvider>(context,
                                               listen: false)
                                           .event
@@ -152,6 +152,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                           .event
                                           .getDescription !=
                                       null) {
+                                setState(() => isLoading = true);
                                 Box box = await Singleton.getBox();
                                 Map userData = Map();
                                 userData = {
@@ -194,7 +195,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                         context,
                                         listen: false)
                                     .addEvent(userData);
-
+                                setState(() => isLoading = false);
                                 if (result) {
                                   Navigator.pushAndRemoveUntil(
                                     context,

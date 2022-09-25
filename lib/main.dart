@@ -1,34 +1,34 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
- import 'package:flutter/material.dart';
+import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
- import 'package:provider/provider.dart';
- import 'package:systemevents/models/unit.dart';
-import 'package:systemevents/modules/home/Responses/responses_screen.dart';
-import 'package:systemevents/modules/home/event_screens/main_section.dart';
-import 'package:systemevents/modules/home/home.dart';
-import 'package:systemevents/modules/home/informauthorities/inform.dart';
-import 'package:systemevents/modules/home/mainpage.dart';
-import 'package:systemevents/modules/home/menu/menu_screen.dart';
-import 'package:systemevents/modules/home/search.dart';
-import 'package:systemevents/modules/home/settings_screens/app_settings.dart';
-import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
-import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
-import 'package:systemevents/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
-import 'package:systemevents/provider/auth_provider.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/provider/navigation_provider.dart';
-import 'package:systemevents/provider/style_data.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/theme/theme.dart';
-import 'package:systemevents/web_browser/webView.dart';
+import 'package:provider/provider.dart';
+import 'package:shahed/models/unit.dart';
+import 'package:shahed/modules/home/Responses/responses_screen.dart';
+import 'package:shahed/modules/home/event_screens/main_section.dart';
+import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/modules/home/informauthorities/inform.dart';
+import 'package:shahed/modules/home/mainpage.dart';
+import 'package:shahed/modules/home/menu/menu_screen.dart';
+import 'package:shahed/modules/home/search.dart';
+import 'package:shahed/modules/home/settings_screens/app_settings.dart';
+import 'package:shahed/modules/home/settings_screens/about_screen.dart';
+import 'package:shahed/modules/home/settings_screens/profile_view.dart';
+import 'package:shahed/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
+import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/provider/navigation_provider.dart';
+import 'package:shahed/provider/style_data.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/theme/theme.dart';
+import 'package:shahed/web_browser/webView.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/authentications/login_screen.dart';
- import 'package:flutter_localizations/flutter_localizations.dart';
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:systemevents/notification/notification.dart' as notif;
+import 'package:shahed/notification/notification.dart' as notif;
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart' as path;
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
@@ -63,7 +63,7 @@ callbackDispatcher() {
               });
 
           if (response.statusCode == 200) {
-             json.decode(response.body);
+            json.decode(response.body);
             notif.Notification notification = new notif.Notification();
             notification.showNotificationWithoutSound("تم إرسال موقع الوحدة");
           }
@@ -106,7 +106,8 @@ Future main() async {
       mapsImplementation.useAndroidViewSurface = true;
     }
     runApp(
-      MultiProvider(providers: [
+      MultiProvider(
+          providers: [
         ChangeNotifierProvider<EventProvider>(
           create: (context) => EventProvider(),
         ),

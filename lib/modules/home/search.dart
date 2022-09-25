@@ -3,7 +3,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class SearchPlacesScreen extends StatefulWidget {
   const SearchPlacesScreen({Key  key}) : super(key: key);

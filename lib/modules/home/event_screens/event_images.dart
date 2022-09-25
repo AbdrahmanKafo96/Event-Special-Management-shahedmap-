@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
  import 'package:provider/provider.dart';
- import 'package:systemevents/models/image.dart';
-import 'package:systemevents/provider/event_provider.dart';
-import 'package:systemevents/widgets/custom_modal_bottomsheet.dart';
+ import 'package:shahed/models/image.dart';
+import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
 class PickImages extends StatefulWidget {
   int count ;

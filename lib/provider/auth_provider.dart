@@ -3,14 +3,14 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
-import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/widgets/custom_toast.dart';
-import 'package:systemevents/modules/authentications/login_screen.dart';
-import 'package:systemevents/models/witness.dart';
-import 'package:systemevents/models/user.dart';
+import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/widgets/custom_toast.dart';
+import 'package:shahed/modules/authentications/login_screen.dart';
+import 'package:shahed/models/witness.dart';
+import 'package:shahed/models/user.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class UserAuthProvider extends ChangeNotifier {
   User user = User();

@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:systemevents/models/navigation_item.dart';
-import 'package:systemevents/provider/auth_provider.dart';
-import 'package:systemevents/provider/navigation_provider.dart';
-import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/models/navigation_item.dart';
+import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/provider/navigation_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class CustomDrawer extends StatefulWidget {
   @override
@@ -18,7 +18,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     openBox();
   }
@@ -126,7 +125,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     icon: FontAwesomeIcons.gear,
                   ),
                   if (SharedData.getUserState() == false)
-                    const SizedBox(height: 8),
+                       const SizedBox(height: 8),
                   if (SharedData.getUserState() == false)
                     buildMenuItem(
                       context,
@@ -204,6 +203,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   void selectItem(BuildContext context, NavigationItem item) {
     if (item == NavigationItem.logout) {
+      final provider = Provider.of<NavigationProvider>(context, listen: false);
+      provider.reset();
       Provider.of<UserAuthProvider>(context, listen: false).logout(context);
     } else {
       final provider = Provider.of<NavigationProvider>(context, listen: false);

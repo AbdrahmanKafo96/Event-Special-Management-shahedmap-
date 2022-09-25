@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:systemevents/shared_data/shareddata.dart';
-import 'package:systemevents/widgets/custom_card.dart';
+import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/widgets/custom_card.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:telephony/telephony.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:systemevents/main.dart';
+import 'package:shahed/main.dart';
 import 'package:location/location.dart' as loc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 

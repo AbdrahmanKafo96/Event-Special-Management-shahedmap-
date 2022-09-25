@@ -1,7 +1,7 @@
 import 'package:contactus/contactus.dart';
 import 'package:flutter/material.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/custom_drawer.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_drawer.dart';
 
 class About extends StatefulWidget {
   @override

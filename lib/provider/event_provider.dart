@@ -2,10 +2,10 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:systemevents/widgets/custom_toast.dart';
-import 'package:systemevents/models/category.dart';
-import 'package:systemevents/models/event.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/widgets/custom_toast.dart';
+import 'package:shahed/models/category.dart';
+import 'package:shahed/models/event.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class EventProvider extends ChangeNotifier {
   Event event = Event();

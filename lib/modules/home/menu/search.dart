@@ -1,9 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:systemevents/models/event.dart';
-import 'package:systemevents/modules/home/menu/view_screen.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
+import 'package:shahed/models/event.dart';
+import 'package:shahed/modules/home/menu/view_screen.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/checkInternet.dart';
 import 'package:http/http.dart' as http;
 
 class DataSearchSe extends SearchDelegate<String> {

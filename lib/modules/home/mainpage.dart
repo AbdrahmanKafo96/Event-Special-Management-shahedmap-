@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
- import 'package:provider/provider.dart';
-import 'package:systemevents/models/navigation_item.dart';
-import 'package:systemevents/modules/home/home.dart';
-import 'package:systemevents/modules/home/settings_screens/app_settings.dart';
-import 'package:systemevents/modules/home/settings_screens/about_screen.dart';
-import 'package:systemevents/modules/home/settings_screens/profile_view.dart';
-import 'package:systemevents/provider/navigation_provider.dart';
-
+import 'package:provider/provider.dart';
+import 'package:shahed/models/navigation_item.dart';
+import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/modules/home/settings_screens/app_settings.dart';
+import 'package:shahed/modules/home/settings_screens/about_screen.dart';
+import 'package:shahed/modules/home/settings_screens/profile_view.dart';
+import 'package:shahed/provider/navigation_provider.dart';
 import 'settings_screens/reset_password/CreateNewPasswordView.dart';
-
-
 
 
 class MainPage extends StatefulWidget {

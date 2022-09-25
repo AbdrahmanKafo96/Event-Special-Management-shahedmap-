@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:systemevents/singleton/singleton.dart';
+import 'package:shahed/singleton/singleton.dart';
 
  //
 // class ProviderData extends ChangeNotifier{

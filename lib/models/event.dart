@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:image_picker/image_picker.dart';
-import 'package:systemevents/models/category.dart';
+import 'package:shahed/models/category.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Event {

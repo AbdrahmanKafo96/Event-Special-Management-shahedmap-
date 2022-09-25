@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
 import 'package:provider/provider.dart';
-import 'package:systemevents/widgets/checkInternet.dart';
-import 'package:systemevents/widgets/custom_Text_Field.dart';
-import 'package:systemevents/widgets/custom_app_bar.dart';
-import 'package:systemevents/widgets/custom_toast.dart';
-import 'package:systemevents/modules/authentications/validator.dart';
-import 'package:systemevents/provider/auth_provider.dart';
-import 'package:systemevents/singleton/singleton.dart';
-import 'package:systemevents/widgets/custom_drawer.dart';
+import 'package:shahed/widgets/checkInternet.dart';
+import 'package:shahed/widgets/custom_Text_Field.dart';
+import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_toast.dart';
+import 'package:shahed/modules/authentications/validator.dart';
+import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/custom_drawer.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
   @override
