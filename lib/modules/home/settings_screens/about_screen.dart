@@ -2,6 +2,7 @@ import 'package:contactus/contactus.dart';
 import 'package:flutter/material.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
+import '../../../shared_data/shareddata.dart';
 
 class About extends StatefulWidget {
   @override
@@ -25,19 +26,19 @@ class _AboutState extends State<About>  {
         drawer: CustomDrawer(),
         appBar: customAppBar(
           context,
-          title: " حول التطبيق " ,
+          title: SharedData.getGlobalLang().aboutApp(),
           icon: Icons.people_alt
            ),
         body: Container(
           child:  Padding(
             padding: const EdgeInsets.all(10.0),
-            child: ContactUs(
-              logo: AssetImage('assets/images/programmerlogo.png'),
-              email: 'abdrahmankafo@gmail.com',
+            child:   ContactUs(
+              logo: const AssetImage('assets/images/programmerlogo.png'),
+              email:   'abdrahmankafo@gmail.com',
               companyName: '',
               githubUserName: 'AbdrahmanKafo96',
               linkedinURL: 'https://www.linkedin.com/in/abdrahman-kafo-945b331b5/',
-              tagLine: 'معلومات فريق التطوير',
+              tagLine: SharedData.getGlobalLang().infoDevelopmentTeam(),
               twitterHandle: ' ',
               textColor: Colors.black,
               cardColor: Colors.white,

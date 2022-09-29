@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:geocoder2/geocoder2.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/models/event.dart';
@@ -12,10 +13,10 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
-import 'package:geocoder/geocoder.dart';
 import 'package:flutter/services.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
+import 'package:weather/weather.dart' as we;
 
 class HomePage extends StatefulWidget {
   @override
@@ -26,17 +27,16 @@ class _HomePageState extends State<HomePage> {
   bool loader = false;
   String countryName = "";
   String subAdminArea = "";
-  GlobalKey<ScaffoldState> _scaffoldkey = new GlobalKey<ScaffoldState>();
+  String weather = "";
+  GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
-  // GlobalKey _appbarkey = new GlobalKey();
+
+  // GlobalKey _appbarkey = GlobalKey();
   Box box;
-
   var provider;
-
   @override
   void initState() {
     super.initState();
-
     openBox();
     _getUserLocation();
   }
@@ -69,7 +69,7 @@ class _HomePageState extends State<HomePage> {
               }
             });
           },
-          tooltip: 'اضف حدث',
+          tooltip: SharedData.getGlobalLang().addEvent(),
           child: const Icon(
             FontAwesomeIcons.plus,
             color: Colors.white,
@@ -79,7 +79,7 @@ class _HomePageState extends State<HomePage> {
         ),
         appBar: customAppBar(
           context,
-          title: " الصفحة الرئيسية ",
+          title: SharedData.getGlobalLang().homePage(),
           icon: FontAwesomeIcons.house,
           actions: [
             SharedData.getUserState() == true
@@ -138,7 +138,7 @@ class _HomePageState extends State<HomePage> {
                             Row(
                               children: [
                                 Text(
-                                  "مرحبا ${box.get('unitname')}!",
+                                  " ${SharedData.getGlobalLang().Hello()} ${box.get('unitname')}!",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 24,
@@ -165,6 +165,21 @@ class _HomePageState extends State<HomePage> {
                                   "$countryName",
                                   style: TextStyle(color: Colors.white),
                                   overflow: TextOverflow.ellipsis,
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Icon(
+                                  FontAwesomeIcons.temperatureThreeQuarters,
+                                  color: Colors.white,
+                                ),
+                                SizedBox(
+                                  width: 12,
+                                ),
+                                Text(
+                                  "${weather}",
+                                  style: TextStyle(color: Colors.white),
+                                  // overflow: TextOverflow.ellipsis,
                                 ),
                               ],
                             ),
@@ -209,7 +224,7 @@ class _HomePageState extends State<HomePage> {
   _getUserLocation() async {
     LocationData myLocation;
     String error;
-    Location location = new Location();
+    Location location = Location();
     try {
       myLocation = await location.getLocation();
     } on PlatformException catch (e) {
@@ -223,19 +238,19 @@ class _HomePageState extends State<HomePage> {
       }
       myLocation = null;
     }
-    //currentLocation = myLocation;
-    final coordinates =
-        new Coordinates(myLocation.latitude, myLocation.longitude);
-    var first;
-    var addresses;
-    Geocoder.local.findAddressesFromCoordinates(coordinates).then((value) {
-      setState(() {
-        addresses = value;
-        first = addresses.first;
-        countryName = first.countryName;
-        subAdminArea = first.addressLine;
-      });
+
+    we.WeatherFactory wf = Singleton.getWeatherFactory();
+    we.Weather w = await wf.currentWeatherByLocation(
+        myLocation.latitude, myLocation.longitude);
+
+    GeoData data = await Geocoder2.getDataFromCoordinates(
+        latitude: myLocation.latitude,
+        longitude: myLocation.longitude,
+        googleMapApiKey: "${Singleton.mapApiKey}");
+    setState(() {
+      countryName = data.country;
+      subAdminArea = data.address;
+      weather = w.temperature.celsius.toInt().toString();
     });
-    return first;
   }
 }

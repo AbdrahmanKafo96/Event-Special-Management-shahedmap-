@@ -8,6 +8,8 @@ import 'package:shahed/provider/auth_provider.dart';
 import 'dart:ui' as ui;
 import 'package:shahed/widgets/custom_Text_Field.dart';
 
+import '../../shared_data/shareddata.dart';
+
 class RegistrationForm extends StatefulWidget {
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -44,13 +46,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
           context,
           validator: (value) {
             // print(Provider.of<UserAuth>(context,listen: false).getPassword.toString() );
-            if (value.isEmpty || value == null) return "هذا الحقل مطلوب";
+            if (value.isEmpty || value == null) return  SharedData.getGlobalLang().thisFieldIsRequired();
 
             if (Provider.of<UserAuthProvider>(context, listen: false)
                     .user
                     .getPassword ==
                 null) {
-              return "يجب ان تدخل كلمة المرور قبل التأكيد";
+              return  SharedData.getGlobalLang().passwordAlertConfirming();
             } else if (Provider.of<UserAuthProvider>(context, listen: false)
                     .user
                     .getPassword
@@ -58,7 +60,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 passwordConfController.text.toString()) {
               return null;
             } else {
-              return "لا تتطابق كلمتا المرور اللتان تم إدخالهما. يُرجى إعادة المحاولة.";
+              return  SharedData.getGlobalLang().passwordsAlertNotConfirming();
             }
           },
           onChanged: (value) {
@@ -71,8 +73,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
           prefixIcon: Icon(
             Icons.password,
           ),
-          labelText: 'إعادة إدخال كلمة المرور',
-          hintText: 'اعد إدخال كلمة المرور',
+          labelText: SharedData.getGlobalLang().reEnterPassword(),
+          hintText: SharedData.getGlobalLang().reEnterPassword(),
           suffixIcon: IconButton(
             icon: Icon(
               // Based on passwordVisible state choose the icon
@@ -107,7 +109,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                       .setFirstName = value;
                 },
                 editingController: firstNameController,
-                labelText: 'الاسم الاول',
+                labelText: SharedData.getGlobalLang().firstName(),
                 // hintText: 'Enter valid mail id as abc@gmail.com'
               ),
             ),
@@ -128,7 +130,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 },
                 editingController: fatherNameController,
 
-                labelText: 'اسم الأب',
+                labelText: SharedData.getGlobalLang().middleName(),
                 // hintText: 'Enter valid mail id as abc@gmail.com'
               ),
             ),
@@ -149,7 +151,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 },
                 editingController: familyNameController,
 
-                labelText: 'اسم العائلة',
+                labelText: SharedData.getGlobalLang().familyName(),
                 //hintText: 'Enter valid mail id as abc@gmail.com'
               ),
             ),
@@ -168,7 +170,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   ),
                   validator: (value) {
                     if (value.isEmpty || value == null)
-                      return "يجب ادخال تاريخ الميلاد";
+                      return SharedData.getGlobalLang().dateBirthIsRequired();
                     else
                       return null;
                   },
@@ -181,56 +183,24 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   // controller: date_of_birthController,
                   type: DateTimePickerType.date,
 
-                  cancelText: "إلغاء",
-                  confirmText: 'حسناً',
+                  cancelText: SharedData.getGlobalLang().cancel(),
+                  confirmText: SharedData.getGlobalLang().okay(),
                   dateMask: 'd MMM, yyyy',
                   enabled: true,
                   initialValue: "1960-01-01 00:00:00.000",
                   firstDate: DateTime(1960),
                   lastDate: DateTime(DateTime.now().year - 12),
-                  calendarTitle: 'اختر تاريخ ميلادك',
+                  calendarTitle: SharedData.getGlobalLang().chooseYourDateBirth(),
                   icon: Icon(Icons.event),
-                  dateLabelText: 'تاريخ الميلاد',
-                  timeLabelText: "ساعة",
+                  dateLabelText: SharedData.getGlobalLang().dateOfBirth(),
+                  timeLabelText: SharedData.getGlobalLang().clock(),
                   textAlign: TextAlign.left,
                   autovalidate: true,
-                  errorFormatText: "ادخل تاريخ صحيح",
-                  errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
+                  errorFormatText: SharedData.getGlobalLang().enterCorrectData(),
+                  errorInvalidText: SharedData.getGlobalLang().validDate(),
                   onSaved: (val) => print('the date is $val'),
                 ) ),
-                // child: InkWell(
-                //   child: Icon(Icons.date_range),
-                //   onTap: () async {
-                //
-                //  // var result=await    showDatePicker(
-                //  //
-                //  //        errorFormatText: "ادخل تاريخ صحيح",
-                //  //        errorInvalidText: 'تأكد من ادخال تاريخ صحيح',
-                //  //      builder: (context, child) {
-                //  //        return Theme(
-                //  //          data: Theme.of(context).copyWith(
-                //  //            colorScheme: ColorScheme.light(
-                //  //              primary: Colors.yellow, // header background color
-                //  //              onPrimary: Colors.black, // header text color
-                //  //              onSurface: Colors.green, // body text color
-                //  //            ),
-                //  //            textButtonTheme: TextButtonThemeData(
-                //  //              style: TextButton.styleFrom(
-                //  //                primary: Colors.red, // button text color
-                //  //              ),
-                //  //            ),
-                //  //          ),
-                //  //          child: child,
-                //  //        );
-                //  //      }, context: context,
-                //  //        initialDate: DateTime.parse("1960-01-01 00:00:00.000"),
-                //  //        firstDate: DateTime(1960),
-                //  //        lastDate: DateTime(DateTime.now().year - 12),
-                //  //
-                //  //    );
-                //  // print("result ${result}");
-                //   },
-                // )),
+
             Expanded(
               flex: 1,
               child: TextButton.icon(
@@ -255,7 +225,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 },
                 icon: Icon(Icons.language),
                 label: Text(
-                  country1 != "" ? country1 : 'اختيار الدولة',
+                  country1 != "" ? country1 : SharedData.getGlobalLang().chooseCountry(),
                   style: TextStyle(color: Colors.white),
                 ),
               ),

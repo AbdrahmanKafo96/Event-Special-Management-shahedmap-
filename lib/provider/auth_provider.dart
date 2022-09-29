@@ -46,17 +46,17 @@ class UserAuthProvider extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
-          print(responseData);
+
           if (userData['userState'] == 'L') {
             if (responseData['message'] ==
                 "تحقق من البريد الالكتروني وكلمة المرور") {
               showShortToast(
-                  'تحقق من البريد الالكتروني وكلمة المرور', Colors.red);
+                  SharedData.getGlobalLang().checkEmailPassword(), Colors.red);
               return false;
             } else if (responseData['message'] ==
                 "لاتستطيع تسجيل الدخول لان حسابك محظور") {
               showShortToast(
-                  "لاتستطيع تسجيل الدخول لان حسابك محظور", Colors.red);
+                 SharedData.getGlobalLang().blockUserMessage() , Colors.red);
               return false;
             } else {
               user.user_id =
@@ -86,16 +86,16 @@ class UserAuthProvider extends ChangeNotifier {
               return true;
             }
           }
-          //مرحبا بك
+          //تحتاج تعديل الان 9\29\20222
 
           if (responseData['status'] == "failed") {
             //print(responseData['error'].toString());
-            if (responseData['error'].toString() ==
-                "{email: [قيمة حقل email مُستخدمة من قبل.]}")
+            if (responseData['error']['email'][0].toString() ==
+                "The email has already been taken.")
               showShortToast(
-                  'عفوا البريد الالكتروني مستخدم من قبل', Colors.red);
+                  SharedData.getGlobalLang().emailAlreadyUsed(), Colors.red);
             else {
-              showShortToast('عفوا تأكد من المدخلات', Colors.red);
+              showShortToast(SharedData.getGlobalLang().pleaseCheckYourInputs(), Colors.red);
             }
             return false;
           } else {
@@ -123,7 +123,7 @@ class UserAuthProvider extends ChangeNotifier {
             return true;
           }
         } else {
-          showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
+          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
           return false;
         }
       }
@@ -166,7 +166,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
       }
     } catch (e) {}
   }
@@ -214,7 +214,7 @@ class UserAuthProvider extends ChangeNotifier {
         Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (_) => LoginUi()));
       } else {
-        showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
       }
     } catch (e) {
       print(e);
@@ -254,7 +254,7 @@ class UserAuthProvider extends ChangeNotifier {
         if (responseData['message'] == 'success') {
           return true;
         } else {
-          showShortToast('لم تتم عملية الحفظ بنجاح', Colors.orange);
+          showShortToast(SharedData.getGlobalLang().saveWasNotSuccessful(), Colors.orange);
           return false;
         }
       } else {
@@ -296,7 +296,7 @@ class UserAuthProvider extends ChangeNotifier {
             return null;
           }
         } else {
-          showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
+          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
           return null;
         }
       }
@@ -338,7 +338,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast('لم تستطع الوصول للخادم حاول مرة اخرى', Colors.orange);
+        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {
@@ -370,7 +370,7 @@ class UserAuthProvider extends ChangeNotifier {
           showShortToast('تحقق من بريدك', Colors.green);
           return;
         } else {
-          showShortToast('هناك مشكلة في الخادم', Colors.orange);
+          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
           return null;
         }
       }
@@ -402,7 +402,7 @@ class UserAuthProvider extends ChangeNotifier {
           box.put('beneficiarie_id', res['data']['beneficiarie_id']);
           box.put('unitname', res['data']['name']);
         } else {
-          showShortToast('لم تستطع الوصول لنظام حاول مرة اخرى', Colors.orange);
+          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
           return null;
         }
       }

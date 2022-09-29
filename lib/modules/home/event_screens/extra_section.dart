@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/event_screens/SuccessPage.dart';
 import 'package:shahed/modules/home/event_screens/event_screen.dart';
 import 'package:shahed/modules/home/event_screens/video_picker.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_toast.dart';
@@ -29,9 +30,9 @@ class _EventSectionTowState extends State<EventSectionTow> {
           resizeToAvoidBottomInset: false,
           appBar: customAppBar(
             context,
-            title: 'بيانات الحدث',
+            title: SharedData.getGlobalLang().eventData(),
             leading: IconButton(
-              tooltip: 'اغلاق',
+              tooltip: SharedData.getGlobalLang().close(),
               icon: Icon(Icons.clear),
               onPressed: () {
                 Provider.of<EventProvider>(context, listen: false)
@@ -67,7 +68,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                 child: Column(
                   children: [
                     Text(
-                      "إضافة وصف الحدث",
+                      SharedData.getGlobalLang().addDescription(),
                       style: Theme.of(context).textTheme.headline6,
                     ),
                     Expanded(
@@ -110,7 +111,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                     width: 12,
                                   ),
                                   Text(
-                                    "انتظر من فضلك...",
+                                  SharedData.getGlobalLang().waitMessage(),
                                     style:
                                         Theme.of(context).textTheme.headline4,
                                   )
@@ -128,7 +129,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                     width: 12,
                                   ),
                                   Text(
-                                    'إرسال الحدث',
+                                    SharedData.getGlobalLang().sendEvent(),
                                     style:
                                         Theme.of(context).textTheme.headline4,
                                   )
@@ -206,7 +207,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 } else {}
                               } else {
                                 showShortToast(
-                                    'من فضلك ادخل وصف الحدث', Colors.red);
+                                    SharedData.getGlobalLang().descRequired(), Colors.red);
                               }
                             }
                           });

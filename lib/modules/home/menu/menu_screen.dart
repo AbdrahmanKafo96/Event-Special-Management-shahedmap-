@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/modules/home/menu/view_screen.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
@@ -155,7 +156,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                       child: Row(
                                         children: [
                                           IconButton(
-                                            tooltip: 'تعديل الحدث',
+                                            tooltip: SharedData.getGlobalLang().updateEvent(),
                                             icon: Icon(
                                               Icons.edit,
                                               color: Colors.green,
@@ -181,7 +182,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                             },
                                           ),
                                           IconButton(
-                                              tooltip: 'حذف الحدث',
+                                              tooltip: SharedData.getGlobalLang().deleteEvent(),
                                               icon: Icon(
                                                 Icons.delete,
                                                 color: Colors.red,
@@ -245,7 +246,7 @@ class _EventsMenuState extends State<EventsMenu> {
                               height: MediaQuery.of(context).size.height * 0.4,
                             ),
                             Text(
-                              'يجب ان تنشئ حدث جديد',
+                              SharedData.getGlobalLang().mustCreateNewEvent(),
                               style: Theme.of(context).textTheme.subtitle1,
                             )
                           ],
@@ -255,7 +256,7 @@ class _EventsMenuState extends State<EventsMenu> {
             default:
               {
                 return Center(
-                    child: Text('انشئ حدث جديد',
+                    child: Text(SharedData.getGlobalLang().createNewEvent(),
                         style: Theme.of(context).textTheme.subtitle1));
               }
           }
@@ -267,12 +268,12 @@ class _EventsMenuState extends State<EventsMenu> {
       AsyncSnapshot snapshot, int index, BuildContext context) async {
     return await customReusableShowDialog(
       context,
-      'حذف الحدث',
-      widget: Text("؟هل انت متأكد من حذف الحدث "),
+      SharedData.getGlobalLang().deleteEvent(),
+      widget: Text(SharedData.getGlobalLang().alertDeleteEvent()),
       actions: <Widget>[
         TextButton(
           child: Text(
-            "إلغاء",
+            SharedData.getGlobalLang().cancel(),
             style: TextStyle(color: Colors.grey),
           ),
           onPressed: () {
@@ -286,7 +287,7 @@ class _EventsMenuState extends State<EventsMenu> {
           ),
           child: TextButton(
             child: Text(
-              "حذف الحدث",
+              SharedData.getGlobalLang().deleteEvent(),
               style: TextStyle(color: Colors.white),
             ),
             onPressed: () {
@@ -313,7 +314,7 @@ class _EventsMenuState extends State<EventsMenu> {
       appBar: customAppBar(context,actions: [
         IconButton(
             color: Colors.red,
-            tooltip: 'بحث',
+            tooltip: SharedData.getGlobalLang().search(),
             icon: Icon(
               Icons.search_rounded,
               color: Colors.white,
@@ -324,7 +325,7 @@ class _EventsMenuState extends State<EventsMenu> {
                   delegate: DataSearchSe(
                       listName: listNames, futureList: futureList));
             }),
-      ], title: " الاحداث ", icon: FontAwesomeIcons.list),
+      ], title: SharedData.getGlobalLang().events(), icon: FontAwesomeIcons.list),
       body: result == true
           ? generateItemsList()
           : Container(

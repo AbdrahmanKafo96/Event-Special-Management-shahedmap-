@@ -1,9 +1,16 @@
+import 'package:shahed/provider/language.dart';
 import 'package:shahed/singleton/singleton.dart';
 import '../provider/auth_provider.dart';
 
 
 class SharedData{
-
+ static Language _language ;
+  static Language getGlobalLang(){
+   if(_language==null){
+     _language = Singleton.getLanguage();
+   }
+    return _language;
+  }
   static bool _state ;
   static  bool getUserState()   {
     if (_state == null) {

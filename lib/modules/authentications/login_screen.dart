@@ -6,6 +6,7 @@ import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/modules/authentications/login_section.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
@@ -14,8 +15,6 @@ import 'package:shahed/widgets/custom_dialog.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/modules/authentications/validator.dart';
 import 'package:shahed/provider/auth_provider.dart';
-import '../../models/navigation_item.dart';
-import '../../provider/navigation_provider.dart';
 import 'account_section.dart';
 import 'logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -46,7 +45,9 @@ class _LoginUiState extends State<LoginUi> {
         child: Scaffold(
             appBar: customAppBar(
               context,
-              title: val == PageState.login ? " تسجيل الدخول" : 'إنشاء حساب',
+              title: val == PageState.login
+                  ? SharedData.getGlobalLang().login()
+                  : SharedData.getGlobalLang().createAccount(),
             ),
             body: SafeArea(
               child: Stack(
@@ -54,7 +55,6 @@ class _LoginUiState extends State<LoginUi> {
                   Container(
                     decoration: const BoxDecoration(color: Color(0xff33333d)),
                     height: double.infinity,
-
                     child: Card(
                       margin: EdgeInsets.all(10),
                       color: Color(0xFF424250),
@@ -67,11 +67,6 @@ class _LoginUiState extends State<LoginUi> {
                       ),
                       child: Container(
                           padding: EdgeInsets.all(10),
-                          // margin: EdgeInsets.all(20),
-                          // decoration: BoxDecoration(
-                          //     color: Color.fromRGBO(36, 36, 36, 0.85),
-                          //     borderRadius: BorderRadius.circular(25)
-                          // ),
                           child: SingleChildScrollView(
                             child: Form(
                               key: _formKey,
@@ -85,42 +80,59 @@ class _LoginUiState extends State<LoginUi> {
                                       MainAxisAlignment.spaceAround,
                                   children: [
                                     TextButton(
-
                                       onPressed: () {
                                         final formKey = GlobalKey<FormState>();
                                         customReusableShowDialog(
                                           context,
-                                          'طلب كلمة مرور جديدة',
+                                          SharedData.getGlobalLang()
+                                              .requestNewPassword(),
                                           widget: Form(
-                                            key:  formKey ,
+                                            key: formKey,
                                             child: customTextFormField(context,
-                                                keyboardType: TextInputType.emailAddress,
-                                                editingController: recoverAccountController,
+                                                keyboardType:
+                                                    TextInputType.emailAddress,
+                                                editingController:
+                                                    recoverAccountController,
                                                 onChanged: (value) {
-                                                  Provider.of<UserAuthProvider>(context, listen: false)
+                                              Provider.of<UserAuthProvider>(
+                                                          context,
+                                                          listen: false)
                                                       .user
-                                                      .setEmail = emailController.text;
-                                                },
-                                                validator: (value) {
-                                                  if (value == null || value.isEmpty) {
-                                                    return 'البريد الالكتروني مطلوب';
-                                                  } else if (!ValidatorClass.isValidEmail(value)) {
-                                                    return ' تحقق من المدخلات';
-                                                  } else
-                                                    return null;
-                                                },
+                                                      .setEmail =
+                                                  emailController.text;
+                                            }, validator: (value) {
+                                              if (value == null ||
+                                                  value.isEmpty) {
+                                                return SharedData
+                                                        .getGlobalLang()
+                                                    .emailRequired();
+                                              } else if (!ValidatorClass
+                                                  .isValidEmail(value)) {
+                                                return SharedData
+                                                        .getGlobalLang()
+                                                    .emailNotValid();
+                                              } else
+                                                return null;
+                                            },
                                                 //onTap: onTap,
-                                               // helperStyle: helperStyle,
-                                                labelText: 'البريد الإلكتروني',
-                                                hintText: 'ادخل البريد الإلكتروني'),
+                                                // helperStyle: helperStyle,
+                                                labelText:
+                                                    SharedData.getGlobalLang()
+                                                        .email(),
+                                                hintText:
+                                                    SharedData.getGlobalLang()
+                                                        .enterYourEmail()),
                                           ),
-                                         // formKey: formKey,
+                                          // formKey: formKey,
 
                                           actions: <Widget>[
                                             TextButton(
                                               child: Text(
-                                                'لا',
-                                                style: TextStyle(fontSize: 12,color: Colors.white),
+                                                SharedData.getGlobalLang()
+                                                    .cancel(),
+                                                style: TextStyle(
+                                                    fontSize: 12,
+                                                    color: Colors.white),
                                               ),
                                               onPressed: () {
                                                 Navigator.pop(context);
@@ -129,19 +141,27 @@ class _LoginUiState extends State<LoginUi> {
                                             Container(
                                               decoration: BoxDecoration(
                                                 color: Colors.deepOrange,
-                                                borderRadius: BorderRadius.all(Radius.circular(5)),
-                                              ), child: TextButton(
+                                                borderRadius: BorderRadius.all(
+                                                    Radius.circular(5)),
+                                              ),
+                                              child: TextButton(
                                                 //color: Colors.green,
                                                 child: Text(
-                                                  'ارسال طلب',
-                                                  style: TextStyle(fontSize: 12),
+                                                  SharedData.getGlobalLang()
+                                                      .sendRequest(),
+                                                  style:
+                                                      TextStyle(fontSize: 12),
                                                 ),
                                                 onPressed: () {
-
-                                                   if ( formKey.currentState.validate())
-                                                  {
-                                                    Provider.of<UserAuthProvider>(context, listen: false)
-                                                        .forgotpassword(recoverAccountController.text.toString());
+                                                  if (formKey.currentState
+                                                      .validate()) {
+                                                    Provider.of<UserAuthProvider>(
+                                                            context,
+                                                            listen: false)
+                                                        .forgotpassword(
+                                                            recoverAccountController
+                                                                .text
+                                                                .toString());
                                                     Navigator.pop(context);
                                                   }
                                                 },
@@ -155,11 +175,14 @@ class _LoginUiState extends State<LoginUi> {
                                           Padding(
                                             padding: EdgeInsets.only(
                                                 bottom: 5, right: 1, left: 1),
-                                            child:
-                                                Icon(Icons.lock_reset_outlined ,color: Colors.white,),
+                                            child: Icon(
+                                              Icons.lock_reset_outlined,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           Text(
-                                            'نسيت كلمة المرور!',
+                                            SharedData.getGlobalLang()
+                                                .forgetYourPassword(),
                                             style: TextStyle(
                                               color: Colors.orange,
                                               fontSize: 14,
@@ -185,12 +208,17 @@ class _LoginUiState extends State<LoginUi> {
                                           Padding(
                                             padding: EdgeInsets.only(
                                                 bottom: 5, right: 1, left: 1),
-                                            child: Icon(Icons.person,color: Colors.white,),
+                                            child: Icon(
+                                              Icons.person,
+                                              color: Colors.white,
+                                            ),
                                           ),
                                           Text(
                                             val == PageState.reg
-                                                ? "لدي حساب!"
-                                                : 'لا تملك حساب!',
+                                                ? SharedData.getGlobalLang()
+                                                    .hasAccount()
+                                                : SharedData.getGlobalLang()
+                                                    .hasNoAccount(),
                                             style: TextStyle(
                                               color: Colors.orange,
                                               fontSize: 14,
@@ -200,10 +228,6 @@ class _LoginUiState extends State<LoginUi> {
                                           ),
                                         ],
                                       ),
-//                                       child: Text(
-//                                         val == PageState.reg ? "لدي حساب!" : 'لا تملك حساب!',
-
-//                                       ),
                                     ),
                                   ],
                                 ),
@@ -321,7 +345,8 @@ class _LoginUiState extends State<LoginUi> {
                                                     .format(DateTime.now())
                                                     .toString()) {
                                           showShortToast(
-                                              'رجاء ادخل تاريخ الميلاد',
+                                              SharedData.getGlobalLang()
+                                                  .dateBirthIsRequired(),
                                               Colors.orange);
                                         }
                                         if (Provider.of<UserAuthProvider>(
@@ -330,7 +355,9 @@ class _LoginUiState extends State<LoginUi> {
                                                 .user
                                                 .getCountry ==
                                             null) {
-                                          showShortToast('رجاء ادخل اسم الدولة',
+                                          showShortToast(
+                                              SharedData.getGlobalLang()
+                                                  .countryRequired(),
                                               Colors.orange);
                                         }
                                       }
@@ -409,7 +436,9 @@ class _LoginUiState extends State<LoginUi> {
                                                                     top: 25.0),
                                                                 child: Center(
                                                                   child: Text(
-                                                                    " قيد الانتظار...",
+                                                                    SharedData
+                                                                            .getGlobalLang()
+                                                                        .waitMessage(),
                                                                     style: Theme.of(
                                                                             context)
                                                                         .textTheme
@@ -428,7 +457,6 @@ class _LoginUiState extends State<LoginUi> {
                                               await Singleton.getBox();
                                               Future.delayed(
                                                   Duration(seconds: 3), () {
-
                                                 Navigator.pop(
                                                     context); //pop dialog
                                                 // final provider = Provider.of<NavigationProvider>(context);
@@ -456,7 +484,8 @@ class _LoginUiState extends State<LoginUi> {
                                             padding: EdgeInsets.only(
                                                 bottom: 3, right: 2, left: 2),
                                             child: Icon(
-                                              FontAwesomeIcons.arrowRightFromBracket,
+                                              FontAwesomeIcons
+                                                  .arrowRightFromBracket,
                                               color: Theme.of(context)
                                                   .iconTheme
                                                   .color,
@@ -464,9 +493,13 @@ class _LoginUiState extends State<LoginUi> {
                                           ),
                                           Text(
                                             val == PageState.reg
-                                                ? "إنشاء حساب"
-                                                : 'تسجيل الدخول',
-                                            style: Theme.of(context).textTheme.headline4,
+                                                ? SharedData.getGlobalLang()
+                                                    .createAccount()
+                                                : SharedData.getGlobalLang()
+                                                    .login(),
+                                            style: Theme.of(context)
+                                                .textTheme
+                                                .headline4,
                                           ),
                                         ]),
                                   ),

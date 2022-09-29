@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -72,7 +73,7 @@ class _MappolyState extends State<Mappoly> {
     return Scaffold(
       appBar: customAppBar(
           context,
-        title: 'موقع الحدث' ,
+        title: SharedData.getGlobalLang().eventLocation() ,
         icon: FontAwesomeIcons.bomb
       ),
       body: _kGooglePlex == null

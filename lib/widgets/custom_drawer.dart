@@ -16,6 +16,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   String email = "";
   String username = " ";
 
+
   @override
   void initState() {
     super.initState();
@@ -26,7 +27,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
     Singleton.getBox().then((value) {
       setState(() {
         email = value.get('email');
-        username =  value.get('unitname').toString();
+        username = value.get('unitname').toString();
       });
     });
   }
@@ -34,7 +35,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-        backgroundColor:Colors.transparent.withOpacity(0.5) ,
+        backgroundColor: Colors.transparent.withOpacity(0.5),
         child: Stack(children: [
           // Positioned(
           //   bottom: -120,
@@ -67,7 +68,6 @@ class _CustomDrawerState extends State<CustomDrawer> {
             child: Container(
               decoration: const BoxDecoration(
                   shape: BoxShape.circle,
-
                   gradient: LinearGradient(
                     colors: [
                       Color(0xFF424250),
@@ -96,8 +96,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   decoration: BoxDecoration(
                     color: Color.fromRGBO(255, 255, 255, 0.0),
                   ),
-                  accountName: Text("$username" ,style: Theme.of(context).textTheme.bodyText1,),
-                  accountEmail: Text("$email" ,style: Theme.of(context).textTheme.bodyText1,),
+                  accountName: Text(
+                    "$username",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
+                  accountEmail: Text(
+                    "$email",
+                    style: Theme.of(context).textTheme.bodyText1,
+                  ),
                   currentAccountPicture: CircleAvatar(
                     backgroundColor: Colors.orange,
                     child: Text(
@@ -114,23 +120,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
                   buildMenuItem(
                     context,
                     item: NavigationItem.home,
-                    text: 'الصفحة الرئيسية',
+                    text: SharedData.getGlobalLang().homePage(),
                     icon: FontAwesomeIcons.house,
                   ),
                   const SizedBox(height: 8),
                   buildMenuItem(
                     context,
                     item: NavigationItem.settings,
-                    text: 'الإعدادات',
+                    text: SharedData.getGlobalLang().settingsHeading(),
                     icon: FontAwesomeIcons.gear,
                   ),
                   if (SharedData.getUserState() == false)
-                       const SizedBox(height: 8),
+                    const SizedBox(height: 8),
                   if (SharedData.getUserState() == false)
                     buildMenuItem(
                       context,
                       item: NavigationItem.profilePage,
-                      text: 'الصفحة الشخصية',
+                      text: SharedData.getGlobalLang().profilePage(),
                       icon: FontAwesomeIcons.solidUser,
                     ),
                   if (SharedData.getUserState() == false)
@@ -139,21 +145,21 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     buildMenuItem(
                       context,
                       item: NavigationItem.resetPage,
-                      text: 'تعيين كلمة المرور',
+                      text: SharedData.getGlobalLang().resetPassword(),
                       icon: Icons.lock_reset,
                     ),
                   const SizedBox(height: 8),
                   buildMenuItem(
                     context,
                     item: NavigationItem.about,
-                    text: 'حول التطبيق',
+                    text: SharedData.getGlobalLang().aboutApp(),
                     icon: Icons.people_alt,
                   ),
                   const SizedBox(height: 8),
                   buildMenuItem(
                     context,
                     item: NavigationItem.logout,
-                    text: 'تسجيل الخروج',
+                    text: SharedData.getGlobalLang().logout(),
                     icon: FontAwesomeIcons.arrowRightFromBracket,
                   ),
                 ],
@@ -212,41 +218,3 @@ class _CustomDrawerState extends State<CustomDrawer> {
     }
   }
 }
-
-// ListView.builder(
-// // Important: Remove any padding from the ListView.
-// shrinkWrap: true,
-// itemCount: mylist.length,
-// itemBuilder: (context, index) {
-// return Column(
-// children: [
-// ListTile(
-// shape: RoundedRectangleBorder(
-// //  side: BorderSide(color: Colors.white70, width: 1),
-// borderRadius: BorderRadius.all(Radius.circular(10)),
-// ),
-// focusColor: Colors.redAccent,
-//
-// title: Text('${mylist[index].title}'),
-// leading: Icon(mylist[index].icon),
-// // tileColor: selected == index ? Colors.blue : Colors.teal.withOpacity(0.4),
-// onTap: () {
-// setState(() {
-// selected = index;
-// });
-// if (mylist[index].routPage == "logout")
-// Provider.of<UserAuthProvider>(context,
-// listen: false)
-//     .logout(context);
-// else {
-// viewPage(
-// mylist[index].context, mylist[index].routPage);
-// }
-// },
-// ),
-// //    SizedBox(height: 8,),
-// if (index != mylist.length - 1) Divider()
-// ],
-// );
-// },
-// )

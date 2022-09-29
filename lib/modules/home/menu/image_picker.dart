@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:provider/provider.dart';
 import 'package:shahed/models/image.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
 class MyCustomImage extends StatefulWidget {
@@ -159,7 +160,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                   },
                 ),
                 Text(
-                  "اختر صورة",
+                  SharedData.getGlobalLang().pickImage(),
                   style: Theme.of(context).textTheme.subtitle2,
                 )
               ],

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 
 class SuccessPage extends StatefulWidget {
@@ -14,10 +15,10 @@ class _SuccessPageState extends State<SuccessPage> {
 
       appBar: customAppBar(
         context,
-        title: 'نجاح العملية',
+        title:  SharedData.getGlobalLang().operationSuccess(),
         leading:IconButton(
           icon: Icon(Icons.cancel),
-          tooltip: 'تخطئ',
+          tooltip: SharedData.getGlobalLang().skip() ,
           onPressed: (){
             Navigator.pushAndRemoveUntil(
               context,
@@ -43,7 +44,7 @@ class _SuccessPageState extends State<SuccessPage> {
                   width:  MediaQuery.of(context).size.width,
                 ),
 
-              Text("تم إرسال الحدث بنجاح",style: Theme.of(context).textTheme.headline4,)
+              Text(SharedData.getGlobalLang().sentEvenSuccessfully(),style: Theme.of(context).textTheme.headline4,)
             ],
           ),
         )

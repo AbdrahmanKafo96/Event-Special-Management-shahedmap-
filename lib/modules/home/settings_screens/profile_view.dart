@@ -1,19 +1,22 @@
 import 'dart:io';
 import 'dart:math';
- import 'package:date_time_picker/date_time_picker.dart';
- import 'package:flutter/material.dart';
- import 'package:hive/hive.dart';
+import 'package:date_time_picker/date_time_picker.dart';
+import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:hovering/hovering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
+import 'package:shahed/provider/language.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
- import 'package:shahed/models/witness.dart';
+import 'package:shahed/models/witness.dart';
 import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+
+import '../../../shared_data/shareddata.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -26,8 +29,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File _image;
   final picker = ImagePicker();
-  String _uri;
-
+  String _uri; 
   var result;
   var firstNameCon = TextEditingController();
   var fatherNameCon = TextEditingController();
@@ -39,11 +41,11 @@ class _ProfilePageState extends State<ProfilePage> {
   ImagePicker _picker = ImagePicker();
   bool switchPage = false,
       showTextFiled1 = false,
-      showTextFiled2= false,
+      showTextFiled2 = false,
       showTextFiled3 = false,
       showTextFiled4 = false;
 
-      Future<void> getUID() async {
+  Future<void> getUID() async {
     Box box = await Singleton.getBox();
     String uid = box.get('user_id').toString();
     setState(() {
@@ -82,10 +84,11 @@ class _ProfilePageState extends State<ProfilePage> {
     witness = null;
     _image = null;
   }
+
   SizedBox addPaddingWhenKeyboardAppears() {
     final viewInsets = EdgeInsets.fromWindowPadding(
-      WidgetsBinding.instance .window.viewInsets,
-      WidgetsBinding.instance .window.devicePixelRatio,
+      WidgetsBinding.instance.window.viewInsets,
+      WidgetsBinding.instance.window.devicePixelRatio,
     );
 
     final bottomOffset = viewInsets.bottom;
@@ -94,9 +97,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return SizedBox(height: isNeedPadding ? bottomOffset : hiddenKeyboard);
   }
+
   @override
   Widget build(BuildContext context) {
-
     checkInternetConnectivity(context);
     return Scaffold(
         resizeToAvoidBottomInset: false,
@@ -104,36 +107,8 @@ class _ProfilePageState extends State<ProfilePage> {
         key: _scaffoldKey,
         appBar: customAppBar(
           context,
-          title: ' الصفحة الشخصية ',
+          title: SharedData.getGlobalLang().profilePage(),
           icon: FontAwesomeIcons.solidUser,
-         // actions: [
-            // IconButton(
-            //   tooltip: 'تعديل',
-            //   onPressed: () {
-            //     checkInternetConnectivity(context).then((bool value) async {
-            //       if (value) {
-            //         var form = _formKey.currentState;
-            //         if (form.validate()) {
-            //           state == true ? updateForm(context) : saveData(context);
-            //         } else {
-            //           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            //             content: Text(
-            //               'من فضلك املاء حقول المستخدم',
-            //               //textDirection: TextDirection.rtl,
-            //               textAlign: TextAlign.center,
-            //             ),
-            //             backgroundColor: Colors.red,
-            //           ));
-            //         }
-            //       }
-            //     });
-            //   },
-            //   icon: Icon(
-            //     state == true ? FontAwesomeIcons.edit : Icons.save,
-            //     color: Colors.white,
-            //   ),
-            // )
-         // ],
         ),
         body: SafeArea(
           child: Stack(
@@ -172,7 +147,8 @@ class _ProfilePageState extends State<ProfilePage> {
                                   WidgetSpan(
                                     child: state != true
                                         ? Icon(Icons.perm_media_sharp)
-                                        : Image.asset('assets/images/upload.png'),
+                                        : Image.asset(
+                                            'assets/images/upload.png'),
                                   ),
                                 ],
                               ),
@@ -226,207 +202,250 @@ class _ProfilePageState extends State<ProfilePage> {
                     width: MediaQuery.of(context).size.width,
                     child: switchPage
                         ? SingleChildScrollView(
-                      child:  ConstrainedBox(
-                        constraints: BoxConstraints(
-                        minHeight: MediaQuery.of(context).size.height * 0.75,
-                        ),
-                       child: Column(
-                            children: [
-                              Padding(
-                                padding: const EdgeInsets.all(20.0),
-                                child: Form(
-                                  key: _formKey,
-                                  child: Column(
-                                    children: [
-                                   showTextFiled1?   customTextFormField(
-
-                                        context,
-                                        autofocus:true ,
-                                        editingController: firstNameCon,
-                                        textAlign: TextAlign.right,
-                                        keyboardType: TextInputType.text,
-                                        validator: (value) => value.isEmpty
-                                            ? 'الاسم الاول مطلوب'
-                                            : null,
-                                        prefixIcon: Icon(
-                                          Icons.drive_file_rename_outline,
-                                          color: Colors.teal,
-                                        ),
-                                        labelText: "الاسم الاول",
-                                        hintText: "ادخل اسم الاول",
-                                      ):SizedBox.shrink(),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                     showTextFiled2? customTextFormField(context,
-                                          autofocus:true ,
-                                          editingController: fatherNameCon,
-                                          textAlign: TextAlign.right,
-                                          keyboardType: TextInputType.text,
-                                          validator: (value) => value.isEmpty
-                                              ? 'اسم الاب مطلوب'
-                                              : null,
-                                          prefixIcon: Icon(
-                                            Icons.drive_file_rename_outline,
-                                            color: Colors.teal,
-                                          ),
-                                          labelText: "اسم الاب",
-                                          hintText: "ادخل اسم الاب"):SizedBox.shrink(),
-                                      SizedBox(
-                                        height: 12,
-                                      ),
-                                   showTextFiled3?   customTextFormField(context,
-                                          autofocus:true ,
-                                          editingController: lastNameCon,
-                                          textAlign: TextAlign.right,
-                                          keyboardType: TextInputType.text,
-                                          validator: (value) => value.isEmpty
-                                              ? 'لقب العائلة مطلوب'
-                                              : null,
-                                          prefixIcon: Icon(
-                                            Icons.drive_file_rename_outline,
-                                            color: Colors.teal,
-                                          ),
-                                          labelText: "لقب العائلة",
-                                          hintText: "ادخل لقب العائلة"):SizedBox.shrink(),
-                                      SizedBox(
-                                        height: 24,
-                                      ),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            flex: 1,
-                                            child: showTextFiled4?DateTimePicker(
-                                              style: Theme.of(context).textTheme.bodyText1,
-                                              validator: (value) {
-                                                if (value.isEmpty ||
-                                                    value == null)
-                                                  return "يجب ادخال تاريخ الميلاد";
-                                                else
-                                                  return null;
-                                              },
-                                              onChanged: (value) {
-                                                Provider.of<UserAuthProvider>(
-                                                        context,
-                                                        listen: false)
-                                                    .user
-                                                    .setDate_of_birth = value;
-                                              },
-                                              controller: dateCon,
-                                              // controller: date_of_birthController,
-                                              type: DateTimePickerType.date,
-                                              cancelText: "لا",
-                                              confirmText: 'نعم',
-                                              dateMask: 'd MMM, yyyy',
-                                              //  initialValue:dateCon.text  ,
-                                              firstDate: DateTime(1930),
-                                              lastDate: DateTime(
-                                                  DateTime.now().year - 12),
-                                              calendarTitle:
-                                                  'اختر تاريخ ميلادك',
-                                              icon: Icon(Icons.event),
-                                              dateLabelText: 'تاريخ الميلاد',
-                                              timeLabelText: "ساعة",
-                                              textAlign: TextAlign.left,
-                                              autovalidate: true,
-                                              errorFormatText:
-                                                  "ادخل تاريخ صحيح",
-                                              errorInvalidText:
-                                                  'تأكد من ادخال تاريخ صحيح',
-
-                                              // validator: (val) {
-                                              //   print('the date on validation $val ');
-                                              //   return null;
-                                              // },
-                                              onSaved: (val) => print(
-                                                  'the date on save $val'),
-                                            ):SizedBox.shrink(),
-                                          ),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
+                            child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight:
+                                      MediaQuery.of(context).size.height * 0.75,
                                 ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(10),
-                                height: 50,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFfe6e00),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: HoverButton(
-                                  onpressed: () {
-
-                                    checkInternetConnectivity(context).then((bool value) async {
-                                      if (value) {
-                                        var form = _formKey.currentState;
-                                        if (form.validate()) {
-                                          state == true ? updateForm(context) : saveData(context);
-                                          setState(() {
-                                            switchPage = !switchPage;
-                                            showTextFiled1 = false;
-                                            showTextFiled2 = false;
-                                            showTextFiled3 = false;
-                                            showTextFiled4 = false;
-                                          });
-                                        } else {
-                                          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                            content: Text(
-                                              'من فضلك املاء حقول المستخدم',
-                                              //textDirection: TextDirection.rtl,
-                                              textAlign: TextAlign.center,
-                                            ),
-                                            backgroundColor: Colors.red,
-                                          ));
-                                        }
-                                      }
-                                    });
-                                  },
-                                  splashColor: Color(0xFFFF8F00),
-                                  hoverTextColor: Color(0xFFFF8F00),
-                                  highlightColor: Color(0xFFFF8F00),
-                                  color: Color(0xFFfe6e00),
-                                  child: Center(
-                                      child: Row(
-                                          mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 3, right: 2, left: 2),
-                                              child: Icon(
-                                                state == true ? FontAwesomeIcons.penToSquare : Icons.save,
-
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color,
-                                              ),
+                                            showTextFiled1
+                                                ? customTextFormField(
+                                                    context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        firstNameCon,
+                                                    textAlign: TextAlign.right,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) => value
+                                                            .isEmpty
+                                                        ? SharedData.getGlobalLang().firstNameIsRequired()
+                                                        : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData.getGlobalLang().firstName(),
+                                                    hintText: SharedData.getGlobalLang().enterFirstName(),
+                                                  )
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 12,
                                             ),
-                                            Text(
-                                              'تعديل البيانات الشخصية',
-                                              style:
-                                              Theme.of(context).textTheme.headline4,
-                                            )
-                                          ])),
-                                ),
-                              ),
-                              addPaddingWhenKeyboardAppears(),
-                            ],
-                          )))
+                                            showTextFiled2
+                                                ? customTextFormField(context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        fatherNameCon,
+                                                    textAlign: TextAlign.right,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) =>
+                                                        value.isEmpty
+                                                            ?SharedData.getGlobalLang().middleNameRequired()
+                                                            : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData.getGlobalLang().middleName(),
+                                                    hintText: SharedData.getGlobalLang().enterMiddleName())
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            showTextFiled3
+                                                ? customTextFormField(context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        lastNameCon,
+                                                    textAlign: TextAlign.right,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) => value
+                                                            .isEmpty
+                                                        ? SharedData.getGlobalLang().familyNameRequired()
+                                                        : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData.getGlobalLang().familyName(),
+                                                    hintText:
+                                                       SharedData.getGlobalLang().enterFamilyName())
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 24,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: showTextFiled4
+                                                      ? DateTimePicker(
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          validator: (value) {
+                                                            if (value.isEmpty ||
+                                                                value == null)
+                                                              return SharedData.getGlobalLang().dateBirthIsRequired();
+                                                            else
+                                                              return null;
+                                                          },
+                                                          onChanged: (value) {
+                                                            Provider.of<UserAuthProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .user
+                                                                    .setDate_of_birth =
+                                                                value;
+                                                          },
+                                                          controller: dateCon,
+                                                          // controller: date_of_birthController,
+                                                          type:
+                                                              DateTimePickerType
+                                                                  .date,
+                                                          cancelText: SharedData.getGlobalLang().no(),
+                                                          confirmText: SharedData.getGlobalLang().okay(),
+                                                          dateMask:
+                                                              'd MMM, yyyy',
+                                                          //  initialValue:dateCon.text  ,
+                                                          firstDate:
+                                                              DateTime(1930),
+                                                          lastDate: DateTime(
+                                                              DateTime.now()
+                                                                      .year -
+                                                                  12),
+                                                          calendarTitle:
+                                                               SharedData.getGlobalLang().chooseYourDateBirth(),
+                                                          icon:
+                                                              Icon(Icons.event),
+                                                          dateLabelText:
+                                                              SharedData.getGlobalLang().dateOfBirth(),
+                                                          timeLabelText: SharedData.getGlobalLang().clock(),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          autovalidate: true,
+                                                          errorFormatText:
+                                                              SharedData.getGlobalLang().enterCorrectData(),
+                                                          errorInvalidText:
+                                                               SharedData.getGlobalLang().validDate(),
+
+                                                          // validator: (val) {
+                                                          //   print('the date on validation $val ');
+                                                          //   return null;
+                                                          // },
+                                                          onSaved: (val) => print(
+                                                              'the date on save $val'),
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.all(10),
+                                      height: 50,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFfe6e00),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: HoverButton(
+                                        onpressed: () {
+                                          checkInternetConnectivity(context)
+                                              .then((bool value) async {
+                                            if (value) {
+                                              var form = _formKey.currentState;
+                                              if (form.validate()) {
+                                                state == true
+                                                    ? updateForm(context)
+                                                    : saveData(context);
+                                                setState(() {
+                                                  switchPage = !switchPage;
+                                                  showTextFiled1 = false;
+                                                  showTextFiled2 = false;
+                                                  showTextFiled3 = false;
+                                                  showTextFiled4 = false;
+                                                });
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                    SharedData.getGlobalLang().fillFields(),
+                                                    //textDirection: TextDirection.rtl,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  backgroundColor: Colors.red,
+                                                ));
+                                              }
+                                            }
+                                          });
+                                        },
+                                        splashColor: Color(0xFFFF8F00),
+                                        hoverTextColor: Color(0xFFFF8F00),
+                                        highlightColor: Color(0xFFFF8F00),
+                                        color: Color(0xFFfe6e00),
+                                        child: Center(
+                                            child: Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                              Padding(
+                                                padding: EdgeInsets.only(
+                                                    bottom: 3,
+                                                    right: 2,
+                                                    left: 2),
+                                                child: Icon(
+                                                  state == true
+                                                      ? FontAwesomeIcons
+                                                          .penToSquare
+                                                      : Icons.save,
+                                                  color: Theme.of(context)
+                                                      .iconTheme
+                                                      .color,
+                                                ),
+                                              ),
+                                              Text(
+                                                SharedData.getGlobalLang().editPersonalData(),
+                                                style: Theme.of(context)
+                                                    .textTheme
+                                                    .headline4,
+                                              )
+                                            ])),
+                                      ),
+                                    ),
+                                    addPaddingWhenKeyboardAppears(),
+                                  ],
+                                )))
                         : ListView(
                             padding: EdgeInsets.all(10),
-
                             children: [
                               ListTile(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    showTextFiled1=!showTextFiled1;
-                                    switchPage=!switchPage;
+                                    showTextFiled1 = !showTextFiled1;
+                                    switchPage = !switchPage;
                                   });
                                 },
                                 title: Text(
-                                  "الاسم الاول",
+                                 SharedData.getGlobalLang().firstName(),
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 leading: Icon(
@@ -439,14 +458,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    showTextFiled2=!showTextFiled2;
-                                    switchPage=!switchPage;
+                                    showTextFiled2 = !showTextFiled2;
+                                    switchPage = !switchPage;
                                   });
                                 },
                                 title: Text(
-                                  "اسم الاب",
+                                  SharedData.getGlobalLang().middleName(),
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 leading: Icon(
@@ -459,14 +478,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    showTextFiled3=!showTextFiled3;
-                                    switchPage=!switchPage;
+                                    showTextFiled3 = !showTextFiled3;
+                                    switchPage = !switchPage;
                                   });
                                 },
                                 title: Text(
-                                  "لقب العائلة",
+                                  SharedData.getGlobalLang().familyName(),
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 leading: Icon(
@@ -479,14 +498,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                               ),
                               ListTile(
-                                onTap: (){
+                                onTap: () {
                                   setState(() {
-                                    showTextFiled4=!showTextFiled4;
-                                    switchPage=!switchPage;
+                                    showTextFiled4 = !showTextFiled4;
+                                    switchPage = !switchPage;
                                   });
                                 },
                                 title: Text(
-                                  "تاريخ الميلاد",
+                                  SharedData.getGlobalLang().dateOfBirth(),
                                   style: Theme.of(context).textTheme.headline4,
                                 ),
                                 leading: Icon(
@@ -510,37 +529,39 @@ class _ProfilePageState extends State<ProfilePage> {
                                     setState(() {
                                       switchPage = !switchPage;
                                       showTextFiled1 = true;
-                                      showTextFiled2 =true;
+                                      showTextFiled2 = true;
                                       showTextFiled3 = true;
                                       showTextFiled4 = true;
                                     });
-
                                   },
                                   splashColor: Color(0xFFFF8F00),
                                   hoverTextColor: Color(0xFFFF8F00),
                                   highlightColor: Color(0xFFFF8F00),
                                   color: Color(0xFFfe6e00),
                                   child: Center(
-                                      child:  Row(
+                                      child: Row(
                                           mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                              MainAxisAlignment.center,
                                           children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 3, right: 2, left: 2),
-                                              child: Icon(
-                                                state == true ? FontAwesomeIcons.penToSquare : Icons.save,
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color,
-                                              ),
-                                            ),
-                                          Text(
-                                            'تعديل البيانات الشخصية',
-                                            style:
-                                            Theme.of(context).textTheme.headline4,
-                                          )
-                                          ])),
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: 3, right: 2, left: 2),
+                                          child: Icon(
+                                            state == true
+                                                ? FontAwesomeIcons.penToSquare
+                                                : Icons.save,
+                                            color: Theme.of(context)
+                                                .iconTheme
+                                                .color,
+                                          ),
+                                        ),
+                                        Text(
+                                          SharedData.getGlobalLang().editPersonalData(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
+                                        )
+                                      ])),
                                 ),
                               )
                             ],
@@ -555,7 +576,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   void pickImage() async {
     var image =
-        await _picker.pickImage(source: ImageSource.gallery,imageQuality: 50);
+        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 50);
     if (image != null) if (image.path != "")
       setState(() {
         _image = File(image.path);
@@ -592,7 +613,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (res == true)
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              'تمت عملية الحفظ بنجاح',
+              SharedData.getGlobalLang().savedSuccessfully(),
               textDirection: TextDirection.rtl,
             ),
             backgroundColor: Colors.green,
@@ -600,7 +621,7 @@ class _ProfilePageState extends State<ProfilePage> {
         else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              'حدثت مشكلة',
+              SharedData.getGlobalLang().saveWasNotSuccessful(),
               textDirection: TextDirection.rtl,
             ),
             backgroundColor: Colors.orange,
@@ -610,7 +631,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (ex) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'حدثت مشكلة',
+          SharedData.getGlobalLang().saveWasNotSuccessful(),
           textDirection: TextDirection.rtl,
         ),
         backgroundColor: Colors.orange,
@@ -668,7 +689,7 @@ class _ProfilePageState extends State<ProfilePage> {
         if (res == true)
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              'تمت عملية التحديث بنجاح',
+              SharedData.getGlobalLang().updateSuccessfully(),
               textDirection: TextDirection.rtl,
             ),
             backgroundColor: Colors.green,
@@ -676,7 +697,7 @@ class _ProfilePageState extends State<ProfilePage> {
         else {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(
             content: Text(
-              'حدثت مشكلة1',
+              SharedData.getGlobalLang().saveWasNotSuccessful(),
               textDirection: TextDirection.rtl,
             ),
             backgroundColor: Colors.orange,
@@ -686,7 +707,7 @@ class _ProfilePageState extends State<ProfilePage> {
     } catch (ex) {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         content: Text(
-          'حدثت مشكلة2',
+          SharedData.getGlobalLang().saveWasNotSuccessful(),
           textDirection: TextDirection.rtl,
         ),
         backgroundColor: Colors.orange,

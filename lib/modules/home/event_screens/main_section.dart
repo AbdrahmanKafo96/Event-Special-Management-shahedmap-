@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/event_screens/event_images.dart';
 import 'package:shahed/modules/home/event_screens/extra_section.dart';
 import 'package:shahed/modules/home/event_screens/map_screen.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'event_category.dart';
@@ -52,9 +53,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
       child: Scaffold(
           appBar: customAppBar(
             context,
-            title: 'حدث جديد',
+            title: SharedData.getGlobalLang().newEvent(),
             leading: IconButton(
-              tooltip: 'إلغاء الحدث',
+              tooltip: SharedData.getGlobalLang().cancel(),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Provider.of<EventProvider>(context, listen: false)
@@ -66,10 +67,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
             actions: [
               IconButton(
                   onPressed: () {
-                    // تحتاج تعديل
 
                     if (lat == null) {
-                      errorMessage1 = 'يجب ان تختار موقع الحدث';
+                      errorMessage1 = SharedData.getGlobalLang().locationRequired();
                       setState(() {
                         myColor = Colors.red;
                       });
@@ -87,7 +87,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 .event
                                 .categoryClass
                                 .category_name ==
-                            'اختار الصنف' ||
+                            SharedData.getGlobalLang().chooseCategory() ||
                         Provider.of<EventProvider>(context, listen: false)
                                 .event
                                 .categoryClass
@@ -100,9 +100,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
                       Provider.of<EventProvider>(context, listen: false)
                           .event
                           .eventType
-                          .type_name = 'اختار النوع';
+                          .type_name = SharedData.getGlobalLang().chooseType();
 
-                      errorMessage2 = 'يجب ان تختار الصنف';
+                      errorMessage2 = SharedData.getGlobalLang().categoryRequired();
                       setState(() {
                         myColor = Colors.red;
                       });
@@ -121,13 +121,13 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 .event
                                 .eventType
                                 .type_name ==
-                            'اختار النوع' ||
+                            SharedData.getGlobalLang().chooseType() ||
                         Provider.of<EventProvider>(context, listen: false)
                                 .event
                                 .eventType
                                 .type_name ==
                             "") {
-                      errorMessage3 = 'يجب ان تختار النوع ';
+                      errorMessage3 = SharedData.getGlobalLang().typeRequired();
                       setState(() {
                         myColor = Colors.red;
                       });
@@ -150,7 +150,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 .getXFile
                                 .length ==
                             0) {
-                      errorMessage4 = 'يجب ان ترفق صورة للحدث';
+                      errorMessage4 = SharedData.getGlobalLang().imageRequired();
                       setState(() {
                         myColor = Colors.red;
                       });
@@ -169,7 +169,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                               EventSectionTow()));
                     }
                   },
-                  tooltip: 'التالي',
+                  tooltip: SharedData.getGlobalLang().next(),
                   icon: Icon(
                     Icons.check,
                   ))
@@ -206,7 +206,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         Row(
                           children: [
                             Text(
-                              lng == null ? 'حدد موقع الحدث' : "عدل موقع الحدث",
+                              lng == null ? SharedData.getGlobalLang().pickLocation() :SharedData.getGlobalLang().modifyLocation() ,
                               style: Theme.of(context).textTheme.headline6,
                             ),
                           ],
@@ -279,7 +279,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         Row(
                           children: [
                             Text(
-                              "اختيار الصنف والنوع",
+                              SharedData.getGlobalLang().chooseCategoryType(),
                               style: Theme.of(context).textTheme.headline6,
                             ),
                           ],
@@ -294,7 +294,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         Row(
                           children: [
                             Text(
-                              "إضافة صور",
+                              SharedData.getGlobalLang().addImages(),
                               style: Theme.of(context).textTheme.headline6,
                             ),
                           ],
@@ -321,14 +321,14 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    "اضف صور",
+                                    SharedData.getGlobalLang().pickImages(),
                                     style:
                                         Theme.of(context).textTheme.headline4,
                                   ),
                                   Padding(
                                     padding: EdgeInsets.only(right: 5, left: 5),
                                     child: Text(
-                                      "يمكن إضافة 4 صور فقط",
+                                      SharedData.getGlobalLang().imageMessage(),
                                       style:
                                           Theme.of(context).textTheme.subtitle1,
                                     ),

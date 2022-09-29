@@ -5,6 +5,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/models/category.dart';
  import 'package:shahed/modules/home/responses/map_respo.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
@@ -49,7 +50,7 @@ class _ResponsePageState extends State<ResponsePage> {
               color: Colors.white,
             ),
             Text(
-              "حذف",
+              SharedData.getGlobalLang().delete(),
               style: TextStyle(
                 color: Colors.white,
                 fontWeight: FontWeight.w700,
@@ -165,21 +166,6 @@ class _ResponsePageState extends State<ResponsePage> {
                                                 });
                                               });
                                             },
-                                            // trailing: IconButton(
-                                            //     tooltip: 'حذف الحدث',
-                                            //     icon: Icon(
-                                            //       Icons.delete,
-                                            //       color: Colors.red,
-                                            //     ),
-                                            //     onPressed: () {
-                                            //       // return customAlertForButton(
-                                            //       //     snapshot
-                                            //       //         .data[index].addede_id,
-                                            //       //     snapshot,
-                                            //       //     index,
-                                            //       //     context);
-                                            //     }),
-
                                             leading: Icon(
                                               Icons.event_note_rounded,
                                               size: 30,
@@ -200,12 +186,12 @@ class _ResponsePageState extends State<ResponsePage> {
                         ),
                       )
                     : Center(
-                        child: Text('لا توجد إستجابات للعرض',
+                        child: Text( SharedData.getGlobalLang().noNotifications(),
                             style:TextStyle(color: Colors.black54)));
               default:
                 {
                   return Center(
-                      child: Text('لا توجد إستجابات للعرض',
+                      child: Text(SharedData.getGlobalLang().noNotifications(),
                           style: TextStyle(color: Colors.black54)));
                 }
             }
@@ -229,11 +215,11 @@ class _ResponsePageState extends State<ResponsePage> {
   AlertDialog customAlert(
       int addede_id, AsyncSnapshot snapshot, int index, BuildContext context) {
     return AlertDialog(
-      content: Text("؟هل انت متأكد من حذف الحدث "),
+      content: Text(SharedData.getGlobalLang().alertDeleteEvent()),
       actions: <Widget>[
         TextButton(
           child: Text(
-            "إلغاء",
+            SharedData.getGlobalLang().cancel(),
             style: TextStyle(color: Colors.black),
           ),
           onPressed: () {
@@ -242,7 +228,7 @@ class _ResponsePageState extends State<ResponsePage> {
         ),
         TextButton(
           child: Text(
-            "حذف",
+            SharedData.getGlobalLang().delete(),
             style: TextStyle(color: Colors.red),
           ),
           onPressed: () {
@@ -269,7 +255,7 @@ class _ResponsePageState extends State<ResponsePage> {
       textDirection: TextDirection.rtl,
       child: Scaffold(
         appBar:
-            customAppBar(context,title: "الإشعارات", icon: FontAwesomeIcons.solidBell),
+            customAppBar(context,title: SharedData.getGlobalLang().notifications(), icon: FontAwesomeIcons.solidBell),
         body: generateItemsList(),
       ),
     );

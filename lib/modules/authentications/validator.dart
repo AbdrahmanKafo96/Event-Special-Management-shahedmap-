@@ -1,27 +1,29 @@
-
+import 'package:shahed/provider/language.dart';
+import 'package:shahed/singleton/singleton.dart';
 
 class ValidatorClass {
+  static Language language = Singleton.getLanguage();
 
-  static bool isValidEmail(String email){
-
-    bool emailValid = RegExp(r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+").hasMatch(email);
+  static bool isValidEmail(String email) {
+    bool emailValid = RegExp(
+            r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+        .hasMatch(email);
 
     return emailValid;
   }
-  static String isValidName(String value){
-    if(value.isEmpty || value==null){
-      return "هذا الحقل مطلوب";
-    }
-    else{
-      if(value.length<=14 && value.length>=3)
-      {
-        if( RegExp(r'^[A-Za-zء-ي]+(?:[ _-][A-Za-zء-ي]+)*$').hasMatch(value))
+
+  static String isValidName(String value) {
+    if (value.isEmpty || value == null) {
+      return language.thisFieldIsRequired();
+    } else {
+      if (value.length <= 14 && value.length >= 3) {
+        if (RegExp(r'^[A-Za-zء-ي]+(?:[ _-][A-Za-zء-ي]+)*$').hasMatch(value))
           return null;
-        else{
-          return "يجب ادخال الاسم بشكل صحيح";
+        else {
+          return language.nameMustBeCorrectly();
         }
-      }
-      else return 'يجب ادخال الاسم بشكل صحيح';
+      } else
+        return language.nameMustBeCorrectly();
     }
   }
 
@@ -32,18 +34,18 @@ class ValidatorClass {
         numbers = "(.*[0-9].*)",
         specialChars = "(.*[@,#,\$,%,].*\$)";
 
-    if(password ==null || password.isEmpty)
-      isValid="هذا الحقل مطلوب";
+    if (password == null || password.isEmpty)
+      isValid = language.thisFieldIsRequired();
     else if (password.length > 24 || password.length < 6)
-      isValid ="يجب أن يكون طول كلمة المرور أقل من 24 وأكثر من 6 خانات ";
+      isValid =  language.passwordContainLessThan24Error();
     else if (!RegExp(upperCaseChars).hasMatch(password))
-      isValid = "يجب أن تحتوي كلمة المرور على حرف واحد كبير على الأقل";
+      isValid = language.passwordContainCapitalLetterError();
     else if (!RegExp(lowerCaseChars).hasMatch(password))
-      isValid = "يجب أن تحتوي كلمة المرور على حرف صغير واحد على الأقل";
+      isValid = language.passwordContainLowercaseLetterError();
     else if (!RegExp(numbers).hasMatch(password))
-      isValid = "يجب أن تحتوي كلمة المرور على رقم واحد على الأقل";
-     else if (!RegExp(specialChars).hasMatch(password))
-       isValid = "يجب أن تحتوي كلمة المرور على رمز خاص واحد على الأقل مثال:@";
+      isValid = language.passwordContainAtLeastOneNumberError();
+    else if (!RegExp(specialChars).hasMatch(password))
+      isValid = language.passwordContainAtLeastSpecialCharacterError();
     else
       isValid = "";
     return isValid;

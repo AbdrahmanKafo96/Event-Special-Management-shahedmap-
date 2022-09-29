@@ -1,13 +1,13 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
- import 'package:provider/provider.dart';
- import 'package:image_picker/image_picker.dart';
+import 'package:provider/provider.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 import 'package:shahed/widgets/custom_toast.dart';
- import 'package:video_player/video_player.dart';
-
+import 'package:video_player/video_player.dart';
 
 class VideoPicker extends StatefulWidget {
   String oldVideo = "";
@@ -24,8 +24,6 @@ class _VideoPickerState extends State<VideoPicker> {
   XFile video;
 
   ImagePicker _picker = ImagePicker();
-
-
 
   @override
   void initState() {
@@ -123,7 +121,7 @@ class _VideoPickerState extends State<VideoPicker> {
                   child: InkWell(
                     child: customUploadVideo(),
                     onTap: () {
-                        showPicker(context ,_imgFromGallery, _imgFromCamera);
+                      showPicker(context, _imgFromGallery, _imgFromCamera);
                     },
                   ),
                 )
@@ -195,8 +193,8 @@ class _VideoPickerState extends State<VideoPicker> {
     if (_controller != null) _controller.dispose();
   }
 
-    _imgFromGallery() async {
-    XFile videofile = await _picker.pickVideo(source: ImageSource.gallery );
+  _imgFromGallery() async {
+    XFile videofile = await _picker.pickVideo(source: ImageSource.gallery);
     if (videofile == null) {
       return;
     } else {
@@ -211,21 +209,20 @@ class _VideoPickerState extends State<VideoPicker> {
               .setVideoFile = file;
         });
       } else {
-        showShortToast("حجم الملف اكبر من 10 ميجا", Colors.orange);
+        showShortToast(SharedData.getGlobalLang().alertSizeFile(), Colors.orange);
       }
     }
   }
 
   Future _imgFromCamera() async {
-    XFile videofile = await _picker.pickVideo(
-        source: ImageSource.camera );
+    XFile videofile = await _picker.pickVideo(source: ImageSource.camera);
 
     if (videofile == null) {
       return;
     } else {
       File file = File(videofile.path);
       print("file path  ${file.path}");
-      print("file.lengthSync() ${file.lengthSync() }");
+      print("file.lengthSync() ${file.lengthSync()}");
       if (file.lengthSync() < 10000000) {
         //10MB
         setState(() {
@@ -236,7 +233,7 @@ class _VideoPickerState extends State<VideoPicker> {
               .setVideoFile = file;
         });
       } else {
-        showShortToast("حجم الملف اكبر من 10 ميجا", Colors.orange);
+        showShortToast(SharedData.getGlobalLang().alertSizeFile(), Colors.orange);
       }
     }
   }
@@ -280,11 +277,11 @@ class _VideoPickerState extends State<VideoPicker> {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   Text(
-                    "اضف فيديو",
+                    SharedData.getGlobalLang().addVideo(),
                     style: Theme.of(context).textTheme.headline4,
                   ),
                   Text(
-                    "قم بالتقاط فيديو للحادثة",
+                      SharedData.getGlobalLang().pickVideo(),
                     style: Theme.of(context).textTheme.subtitle1,
                   ),
                 ],

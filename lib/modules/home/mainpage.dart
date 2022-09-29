@@ -8,7 +8,6 @@ import 'package:shahed/modules/home/settings_screens/profile_view.dart';
 import 'package:shahed/provider/navigation_provider.dart';
 import 'settings_screens/reset_password/CreateNewPasswordView.dart';
 
-
 class MainPage extends StatefulWidget {
   @override
   _MainPageState createState() => _MainPageState();
@@ -22,25 +21,21 @@ class _MainPageState extends State<MainPage> {
     final provider = Provider.of<NavigationProvider>(context);
     final navigationItem = provider.getNavigationItem;
 
+    switch (navigationItem) {
+      case NavigationItem.home:
+        return HomePage();
 
-       switch (navigationItem) {
-         case NavigationItem.home:
+      case NavigationItem.settings:
+        return AppSettings();
 
-           return HomePage();
+      case NavigationItem.profilePage:
+        return ProfilePage();
 
-         case NavigationItem.settings:
-           return AppSettings();
+      case NavigationItem.resetPage:
+        return CreateNewPasswordView();
 
-         case NavigationItem.profilePage:
-           return ProfilePage();
-
-         case NavigationItem.resetPage:
-           return CreateNewPasswordView();
-
-         case NavigationItem.about:
-           return About();
-       }
-
-
+      case NavigationItem.about:
+        return About();
+    }
   }
 }

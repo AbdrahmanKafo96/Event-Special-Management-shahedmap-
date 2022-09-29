@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/menu/image_picker.dart';
 import 'package:shahed/modules/home/event_screens/video_picker.dart';
 import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_toast.dart';
@@ -66,21 +67,21 @@ class _EventViewState extends State<EventView> {
                   await Provider.of<EventProvider>(context, listen: false)
                       .updateEvent(userData );
                   if (result) {
-                    showShortToast('تمت  عملية التعديل بنجاح', Colors.green);
+                    showShortToast(SharedData.getGlobalLang().updateSuccessfully(), Colors.green);
                     Navigator.pushAndRemoveUntil(
                       context,
                       MaterialPageRoute(builder: (context) => HomePage()),
                           (Route<dynamic> route) => false,
                     );
                   } else {
-                    showShortToast('لم تتم عملية التعديل بنجاح', Colors.green);
+                    showShortToast(SharedData.getGlobalLang().updateWasNotSuccessful(), Colors.orange);
                   }
                 }
 
-              });}, tooltip: 'حفظ التعديل',
+              });}, tooltip:SharedData.getGlobalLang().saveUpdates(),
                   icon: Icon(Icons.edit)),
               IconButton(
-                  tooltip: 'حذف الحدث',
+                  tooltip: SharedData.getGlobalLang().delete(),
                   icon: Icon(
                     Icons.delete,
                     color: Colors.white,
@@ -91,12 +92,12 @@ class _EventViewState extends State<EventView> {
                       if (value) {
                         return customReusableShowDialog(
                              context,
-                                 " هل انت متأكد من حذف الحدث؟ ",
+                                 SharedData.getGlobalLang().alertDeleteEvent(),
                                // widget: Text(" هل انت متأكد من حذف الحدث؟ "),
                                 actions: <Widget>[
                                   TextButton(
                                     child: Text(
-                                      "إلغاء",
+                                     SharedData.getGlobalLang().cancel(),
                                       style: TextStyle(color: Colors.white),
                                     ),
                                     onPressed: () {
@@ -111,7 +112,7 @@ class _EventViewState extends State<EventView> {
 
                                     child: TextButton(
                                       child: Text(
-                                        "حذف الحدث",
+                                        SharedData.getGlobalLang().deleteEvent(),
                                         style: TextStyle(color: Colors.white),
                                       ),
                                       onPressed: () {
@@ -139,7 +140,7 @@ class _EventViewState extends State<EventView> {
                   })
             ],
             leading: IconButton(
-              tooltip: 'رجوع',
+              tooltip: SharedData.getGlobalLang().back(),
               icon: Icon(Icons.arrow_back),
               onPressed: () {
                 Provider.of<EventProvider>(context, listen: false).event.nullAll() ;
@@ -180,9 +181,9 @@ class _EventViewState extends State<EventView> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text("اضف صور" ,style: Theme.of(context).textTheme.headline4,),
+                              Text(SharedData.getGlobalLang().pickImages() ,style: Theme.of(context).textTheme.headline4,),
                               Padding(padding: EdgeInsets.only(right: 5,left: 5),
-                                child:Text("يمكن إضافة 4 صور فقط" ,style: Theme.of(context).textTheme.subtitle1,),
+                                child:Text(SharedData.getGlobalLang().imageMessage() ,style: Theme.of(context).textTheme.subtitle1,),
                               ),
                               count>0?
                               MyCustomImage(
@@ -200,34 +201,6 @@ class _EventViewState extends State<EventView> {
     );
   }
 
-  // Future<String> createDialog(BuildContext context, String value) {
-  //   TextEditingController textEditingController = TextEditingController();
-  //   return showDialog(
-  //       context: context,
-  //       builder: (context) {
-  //         return Directionality(
-  //           textDirection: TextDirection.rtl,
-  //           child: AlertDialog(
-  //             title: Text(
-  //               value,
-  //               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14),
-  //             ),
-  //             content: TextField(
-  //               decoration: InputDecoration(hintText: 'ادخل نص جديد'),
-  //               controller: textEditingController,
-  //             ),
-  //             actions: [
-  //               MaterialButton(
-  //                   color: Colors.green,
-  //                   child: Text("تعديل"),
-  //                   onPressed: () {
-  //                     Navigator.of(context).pop(textEditingController.text);
-  //                   })
-  //             ],
-  //           ),
-  //         );
-  //       });
-  // }
 
   Future<void> setDataInView() async {
     await Provider.of<EventProvider>(context, listen: false)
@@ -256,9 +229,3 @@ class _EventViewState extends State<EventView> {
     });
   }
 }
-
-// Expanded(
-// flex: 2,
-// child: Container(
-// ),
-// ),

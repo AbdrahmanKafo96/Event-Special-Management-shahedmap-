@@ -52,14 +52,14 @@ class _DashboardState extends State<Dashboard> {
         physics: NeverScrollableScrollPhysics(),
         padding: EdgeInsets.all(1.0),
         children: <Widget>[
-          dashboardItem(context, "قائمة الأحداث", FontAwesomeIcons.list,
+          dashboardItem(context, SharedData.getGlobalLang().eventList(), FontAwesomeIcons.list,
               'eventList', Colors.blue),
-          dashboardItem(context, "تصفح الموقع", FontAwesomeIcons.earthAmericas,
-              'CustomWebView', Colors.orange),
-          dashboardItem(context, "إبلاغ الجهة", FontAwesomeIcons.users,
+          // dashboardItem(context, "تصفح الموقع", FontAwesomeIcons.earthAmericas,
+          //     'CustomWebView', Colors.orange),
+          dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.users,
               'Inform', Colors.greenAccent),
           if (SharedData.getUserState())
-            dashboardItem(context, "الإشعارات", FontAwesomeIcons.bell,
+            dashboardItem(context, SharedData.getGlobalLang().notifications(), FontAwesomeIcons.bell,
                 'response', Colors.redAccent),
           // dashboardItem(
           //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),

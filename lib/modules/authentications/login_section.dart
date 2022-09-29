@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/modules/authentications/validator.dart';
 import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
 
 class LoginForm extends StatefulWidget {
@@ -27,21 +28,20 @@ class _LoginFormState extends State<LoginForm> {
       children: [
         customTextFormField(context,
             keyboardType: TextInputType.emailAddress,
-
             editingController: emailController, onChanged: (value) {
           Provider.of<UserAuthProvider>(context, listen: false).user.setEmail =
               emailController.text;
         }, validator: (value) {
           if (value == null || value.isEmpty) {
-            return 'البريد الالكتروني مطلوب';
+            return SharedData.getGlobalLang().emailRequired();
           } else if (!ValidatorClass.isValidEmail(value)) {
-            return 'البريد الالكتروني غير صالح تحقق من المدخلات';
+            return SharedData.getGlobalLang().emailNotValid();
           } else
             return null;
         },
             prefixIcon: Icon(Icons.alternate_email_outlined),
-            labelText: 'البريد الإلكتروني',
-            hintText: 'ادخل البريد الإلكتروني'),
+            labelText: SharedData.getGlobalLang().email(),
+            hintText: SharedData.getGlobalLang().enterYourEmail()),
         SizedBox(
           height: 12,
         ),
@@ -75,8 +75,8 @@ class _LoginFormState extends State<LoginForm> {
                 });
               },
             ),
-            labelText: 'كلمة المرور',
-            hintText: 'ادخل كلمة المرور'),
+            labelText: SharedData.getGlobalLang().password(),
+            hintText:  SharedData.getGlobalLang().enterPassword()),
       ],
     );
   }

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/modules/authentications/logo.dart';
 import 'package:shahed/modules/home/event_screens/event_category.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:telephony/telephony.dart';
@@ -17,7 +18,7 @@ class InformEntity extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: customAppBar(context,title: "إبلاغ جهة", actions: [
+      appBar: customAppBar(context,title:  SharedData.getGlobalLang().notifyAgency(), actions: [
         IconButton(
           icon: Icon(Icons.how_to_vote),
           onPressed: () async {
@@ -56,7 +57,7 @@ class InformEntity extends StatelessWidget {
                 type_name == null) {
               await Flushbar(
                 //  title: 'Hey Ninja',
-                message: 'يجب ان تدخل الصنف والنوع',
+                message: SharedData.getGlobalLang().categoryTypeAreRequired(),
                 backgroundColor: Colors.orange,
                 duration: Duration(seconds: 3),
               ).show(context);
@@ -66,7 +67,7 @@ class InformEntity extends StatelessWidget {
                 message: message,
                 // statusListener: listener,
               );
-              showShortToast('تحقق من تطبيق الرسائل', Colors.green);
+              showShortToast(SharedData.getGlobalLang().checkMessagesApp(), Colors.green);
               Provider.of<EventProvider>(context, listen: false)
                   .event
                   .eventType
@@ -84,7 +85,7 @@ class InformEntity extends StatelessWidget {
               Navigator.pop(context);
             }
           },
-          tooltip: 'ارسال بلاغ',
+          tooltip: SharedData.getGlobalLang().sendReport(),
         )
       ]),
       body: Container(
@@ -95,12 +96,12 @@ class InformEntity extends StatelessWidget {
             children: [
               Logo('sendreport.png' ,height: 100,),
               Text(
-                "تواصل مع الجهات",
+                SharedData.getGlobalLang().ContactGovernmentAgencies(),
                 style: Theme.of(context).textTheme.subtitle1,
               ),
               SizedBox(height: 10,),
               Text(
-                "قم باختيار الصنف والنوع",
+                SharedData.getGlobalLang().chooseCategoryType(),
                 style: Theme.of(context).textTheme.headline4,
               ),
               EventCategory(),

@@ -63,10 +63,8 @@ class EventProvider extends ChangeNotifier {
         }
         if (res['message'] == 'لاتستطيع ارسال حدث لان حسابك محظور') {
           showShortToast('لاتستطيع ارسال حدث لان حسابك محظور', Colors.red);
-
           return false;
         }
-
         if (res['status'] == 'success') {
           event.dropAll();
           //event=Event();
@@ -97,15 +95,16 @@ class EventProvider extends ChangeNotifier {
       );
 
       if (response.statusCode == 200) {
-        if(jsonDecode(response.body)==1){
+        if (jsonDecode(response.body) == 1) {
           return 'se';
         }
-        return  'unse' ;
+        return 'unse';
       } else {
         throw Exception('Failed to delete post.');
       }
     } catch (e) {}
   }
+
   Future deleteEvent(int addede_id, int sender_id) async {
     try {
       final storage = await Singleton.getStorage();
@@ -147,8 +146,7 @@ class EventProvider extends ChangeNotifier {
       request.fields['addede_id'] = userData['addede_id'].toString();
       request.fields['event_name'] = userData['event_name'];
 
-      if( event.getXFile!= null)
-      if (event.getXFile.length > 0 ) {
+      if (event.getXFile != null) if (event.getXFile.length > 0) {
         if (event.getXFile[0] != null)
           request.files.add(http.MultipartFile(
               'image1',
@@ -185,7 +183,7 @@ class EventProvider extends ChangeNotifier {
             File(event.getVideoFile.path).lengthSync(),
             filename: event.getVideoFile.path.split("/").last));
 
-       var response = await request.send();
+      var response = await request.send();
 
       if (response.statusCode == 200) {
         final respStr = await response.stream.bytesToString();
@@ -520,6 +518,4 @@ class EventProvider extends ChangeNotifier {
       }
     } catch (e) {}
   }
-
-
 }

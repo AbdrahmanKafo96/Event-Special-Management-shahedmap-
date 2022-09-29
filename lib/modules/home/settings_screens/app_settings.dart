@@ -7,7 +7,6 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
- 
 
 class AppSettings extends StatefulWidget {
   @override
@@ -21,7 +20,7 @@ class _AppSettingsState extends State<AppSettings> {
   Box _box;
   Language _language=Singleton.getLanguage();
   DarkThemePreference darkThemePreference =   DarkThemePreference();
-  var themeChange;
+  var themeChange ;
   @override
   void initState() {
     // TODO: implement initState
@@ -39,11 +38,13 @@ class _AppSettingsState extends State<AppSettings> {
 
   @override
   Widget build(BuildContext context) {
+
     themeChange= Provider.of<DarkThemeProvider>(context);
+
     return Scaffold(
       drawer: CustomDrawer(),
       //backgroundColor: _darkMode?Colors.black:Colors.white,
-      appBar:customAppBar(context,title: "الإعدادات"  ,icon: FontAwesomeIcons.gear),
+      appBar:customAppBar(context,title:_language.settingsHeading()  ,icon: FontAwesomeIcons.gear),
       body: SingleChildScrollView(
         child: Container(
           padding: EdgeInsets.all(5),
@@ -59,20 +60,23 @@ class _AppSettingsState extends State<AppSettings> {
                 child: Column(
                   children: [
                     ListTile(
-                      title: Text("تبديل اللغة" , style: Theme.of(context).textTheme.headline4,),
+                      title: Text(_language.changeLanguage() , style: Theme.of(context).textTheme.headline4,),
                       leading: Icon(
                         FontAwesomeIcons.language,
                         color: Colors.green,
                       ),
                       trailing: DropdownButton(
-                        hint: Text("اللغة" , style: Theme.of(context).textTheme.bodyText1,),
+                        dropdownColor: Colors.deepOrange,
+                        hint: Text(_language.languages() , style: Theme.of(context).textTheme.bodyText1,),
                         value: _selectedLanguage,
                         onChanged: (newVal) {
+                          print(newVal);
                           _box.put("language", newVal);
                           _language.setLanguage=newVal;
                           setState(() {
                             _selectedLanguage = newVal;
                           });
+                          print(newVal);
                         },
                         items: _languages.map((lang) {
                           return DropdownMenuItem(
@@ -83,7 +87,7 @@ class _AppSettingsState extends State<AppSettings> {
                       ),
                     ),
                     ListTile(
-                      title: Text("الوضع المظلم" , style: Theme.of(context).textTheme.headline4,),
+                      title: Text(_language.darkMode() , style: Theme.of(context).textTheme.headline4,),
                       leading: Icon(
                         FontAwesomeIcons.brush,
                         color: Colors.black,

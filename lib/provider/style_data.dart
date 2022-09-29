@@ -3,18 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:shahed/singleton/singleton.dart';
 
- //
-// class ProviderData extends ChangeNotifier{
-//
-//   ThemeData _themeData=darkMode? ThemeData.dark():ThemeData.light();
-//
-//   ThemeData get getThemeData => _themeData;
-//
-//   set setThemeData(ThemeData value) {
-//     _themeData = value;
-//     notifyListeners();
-//   }
-// }
 
 class DarkThemePreference {
      String THEME_STATUS = "THEMESTATUS";

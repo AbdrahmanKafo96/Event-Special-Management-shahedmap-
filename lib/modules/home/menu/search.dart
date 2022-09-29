@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/modules/home/menu/view_screen.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:http/http.dart' as http;
@@ -15,14 +16,14 @@ class DataSearchSe extends SearchDelegate<String> {
   DataSearchSe({this.listName, this.futureList});
 
   @override
-  String get searchFieldLabel => 'بحث باسم الحدث';
+  String get searchFieldLabel => SharedData.getGlobalLang().searchByName();
 
   @override
   List<Widget> buildActions(BuildContext context) {
     // action for appbar
     return [
       IconButton(
-          tooltip: 'إلغاء البحث',
+          tooltip: SharedData.getGlobalLang().cancelSearch(),
           icon: Icon(
             Icons.clear,
           ),
@@ -34,7 +35,7 @@ class DataSearchSe extends SearchDelegate<String> {
   Widget buildLeading(BuildContext context) {
     // icon leading
     return IconButton(
-        tooltip: "رجوع",
+        tooltip: SharedData.getGlobalLang().back(),
         icon: Icon(
           Icons.arrow_back,
           color: Colors.black,
@@ -118,7 +119,7 @@ class DataSearchSe extends SearchDelegate<String> {
                                   child: Row(
                                     children: [
                                       IconButton(
-                                        tooltip: 'تعديل الحدث',
+                                        tooltip: SharedData.getGlobalLang().updateEvent(),
                                         icon: Icon(
                                           Icons.edit,
                                           color: Colors.green,
