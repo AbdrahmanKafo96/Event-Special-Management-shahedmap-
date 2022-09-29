@@ -8,6 +8,8 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
+
+import '../../../widgets/customDirectionality.dart';
 class Mappoly extends StatefulWidget {
   double lat, lng;
 
@@ -70,28 +72,28 @@ class _MappolyState extends State<Mappoly> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(
-          context,
-        title: SharedData.getGlobalLang().eventLocation() ,
-        icon: FontAwesomeIcons.bomb
-      ),
-      body: _kGooglePlex == null
-          ?customCircularProgressIndicator()
-          : GoogleMap(
-              padding: EdgeInsets.only(top: 135),
-              myLocationButtonEnabled: true,
-              myLocationEnabled: true,
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                _controller.complete(controller);
-                mapController = controller;
-                _getPolyline(widget.lat, widget.lng);
-              },
-              polylines: Set<Polyline>.of(polylines.values),
-              markers: Set<Marker>.of(markers.values),
-            ),
+    return  Scaffold(
+        appBar: customAppBar(
+            context,
+          title: SharedData.getGlobalLang().eventLocation() ,
+          icon: FontAwesomeIcons.bomb
+        ),
+        body: _kGooglePlex == null
+            ?customCircularProgressIndicator()
+            : GoogleMap(
+                padding: EdgeInsets.only(top: 135),
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+                mapType: MapType.normal,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  _controller.complete(controller);
+                  mapController = controller;
+                  _getPolyline(widget.lat, widget.lng);
+                },
+                polylines: Set<Polyline>.of(polylines.values),
+                markers: Set<Marker>.of(markers.values),
+              ),
     );
   }
 

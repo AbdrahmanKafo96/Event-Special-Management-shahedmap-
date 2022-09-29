@@ -22,9 +22,7 @@ class _CheckEmailViewState extends State<CheckEmailView> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return  Scaffold(
         appBar: AppBar(
           flexibleSpace: Container(
             decoration: const BoxDecoration(
@@ -150,7 +148,6 @@ class _CheckEmailViewState extends State<CheckEmailView> {
             ],
           ),
         ),
-      ),
     );
   }
 }

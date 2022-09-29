@@ -21,9 +21,11 @@ import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:shahed/provider/navigation_provider.dart';
 import 'package:shahed/provider/style_data.dart';
+import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/theme/theme.dart';
 import 'package:shahed/web_browser/webView.dart';
+import 'package:shahed/widgets/customDirectionality.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/authentications/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -95,8 +97,13 @@ Future main() async {
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
     final box = await Singleton.getBox();
-
-    language = box.get('language');
+    print(box.containsKey('language'));
+    if (box.containsKey('language')) {
+      language = box.get('language');
+    } else {
+      box.put('language', 'AR');
+      language = box.get('language');
+    }
     //darkMode=pref.getBool('darkMode');
 
     if (box.get('version_number') == null) box.put('version_number', 0);
@@ -106,9 +113,9 @@ Future main() async {
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       mapsImplementation.useAndroidViewSurface = true;
     }
+    SharedData.getGlobalLang().setLanguage = language;
     runApp(
-      MultiProvider(
-          providers: [
+      MultiProvider(providers: [
         ChangeNotifierProvider<EventProvider>(
           create: (context) => EventProvider(),
         ),
@@ -120,10 +127,11 @@ Future main() async {
         ),
         ChangeNotifierProvider<DarkThemeProvider>(
           create: (context) => DarkThemeProvider(),
-        ),ChangeNotifierProvider<Language>(
+        ),
+        ChangeNotifierProvider<Language>(
           create: (context) => Language(),
         ),
-      ], child: ShahedApp(token)),
+      ], child: ShahedApp(token, language)),
     );
   } catch (e) {
     print(e);
@@ -132,8 +140,13 @@ Future main() async {
 
 class ShahedApp extends StatefulWidget {
   String token;
+  String language;
 
-  ShahedApp(this.token);
+  ShahedApp(this.token, this.language);
+
+  static void restartApp(BuildContext context) {
+    context.findAncestorStateOfType<_ShahedAppState>().restartApp();
+  }
 
   @override
   State<ShahedApp> createState() => _ShahedAppState();
@@ -141,6 +154,13 @@ class ShahedApp extends StatefulWidget {
 
 class _ShahedAppState extends State<ShahedApp> {
   DarkThemeProvider themeChangeProvider = new DarkThemeProvider();
+  Key key = UniqueKey();
+
+  void restartApp() {
+    setState(() {
+      key = UniqueKey();
+    });
+  }
 
   @override
   void initState() {
@@ -176,14 +196,17 @@ class _ShahedAppState extends State<ShahedApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: [
-              Locale('ar', ''), // arabic, no country code
+              Locale('ar', ''), Locale("en", "US"), // arabic, no country code
+              // arabic, no country code
             ],
+
             //theme:,
             debugShowCheckedModeBanner: false,
-            home: Directionality(
-              textDirection: TextDirection.rtl,
-              child: widget.token != null ? MainPage() : LoginUi(),
-            ),
+            home: KeyedSubtree(
+                key: key,
+                child: customDirectionality(
+                    child: widget.token != null ? MainPage() : LoginUi())),
+
             routes: {
               'About': (context) => About(),
               'Inform': (context) => InformEntity(),

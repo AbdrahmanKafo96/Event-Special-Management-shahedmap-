@@ -11,6 +11,7 @@ import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_dialog.dart';
+import '../../../widgets/customDirectionality.dart';
 import 'search.dart';
 
 class EventsMenu extends StatefulWidget {
@@ -309,34 +310,36 @@ class _EventsMenuState extends State<EventsMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      appBar: customAppBar(context,actions: [
-        IconButton(
-            color: Colors.red,
-            tooltip: SharedData.getGlobalLang().search(),
-            icon: Icon(
-              Icons.search_rounded,
-              color: Colors.white,
-            ),
-            onPressed: () {
-              showSearch(
-                  context: context,
-                  delegate: DataSearchSe(
-                      listName: listNames, futureList: futureList));
-            }),
-      ], title: SharedData.getGlobalLang().events(), icon: FontAwesomeIcons.list),
-      body: result == true
-          ? generateItemsList()
-          : Container(
-              child: Center(
-                child: Image(
-                  image: AssetImage('assets/images/wifi.png'),
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height * 0.4,
+    return   customDirectionality(
+      child: Scaffold(
+          resizeToAvoidBottomInset: false,
+          appBar: customAppBar(context,actions: [
+            IconButton(
+                color: Colors.red,
+                tooltip: SharedData.getGlobalLang().search(),
+                icon: Icon(
+                  Icons.search_rounded,
+                  color: Colors.white,
                 ),
-              ),
-            ),
+                onPressed: () {
+                  showSearch(
+                      context: context,
+                      delegate: DataSearchSe(
+                          listName: listNames, futureList: futureList));
+                }),
+          ], title: SharedData.getGlobalLang().events(), icon: FontAwesomeIcons.list),
+          body: result == true
+              ? generateItemsList()
+              : Container(
+                  child: Center(
+                    child: Image(
+                      image: AssetImage('assets/images/wifi.png'),
+                      width: MediaQuery.of(context).size.width,
+                      height: MediaQuery.of(context).size.height * 0.4,
+                    ),
+                  ),
+                ),
+      ),
     );
   }
 }

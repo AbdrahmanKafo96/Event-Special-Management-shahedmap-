@@ -89,7 +89,6 @@ class UserAuthProvider extends ChangeNotifier {
           //تحتاج تعديل الان 9\29\20222
 
           if (responseData['status'] == "failed") {
-            //print(responseData['error'].toString());
             if (responseData['error']['email'][0].toString() ==
                 "The email has already been taken.")
               showShortToast(
@@ -258,7 +257,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast('خطاء', Colors.orange);
+        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {
@@ -289,7 +288,6 @@ class UserAuthProvider extends ChangeNotifier {
           var res = jsonDecode(response.body);
 
           if (res['message'] == 'success') {
-            print("res['data']['first_name'] ${res['data']['first_name']}");
             box.put('unitname', res['data']['first_name']);
             return Witness.fromJson(res['data']);
           } else {
@@ -360,14 +358,14 @@ class UserAuthProvider extends ChangeNotifier {
         );
         if (response.statusCode == 200) {
           var res = jsonDecode(response.body);
-          print(res['error']['email']);
-          if (res['error']['email'].toString() ==
-              "[القيمة المحددة email غير موجودة.]") {
-            showShortToast('تأكد من صحة البريد المدخل', Colors.orange);
+
+          if (res['error']['email'][0].toString() ==
+              "The selected email is invalid.") {
+            showShortToast(SharedData.getGlobalLang().checkEmailInput(), Colors.orange);
             return;
           }
 
-          showShortToast('تحقق من بريدك', Colors.green);
+          showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.green);
           return;
         } else {
           showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
@@ -398,7 +396,6 @@ class UserAuthProvider extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           var res = jsonDecode(response.body);
-          print("response.statusCode ${response.statusCode}");
           box.put('beneficiarie_id', res['data']['beneficiarie_id']);
           box.put('unitname', res['data']['name']);
         } else {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shahed/modules/home/home.dart';
 import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 
 class SuccessPage extends StatefulWidget {
@@ -11,43 +12,44 @@ class SuccessPage extends StatefulWidget {
 class _SuccessPageState extends State<SuccessPage> {
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-
-      appBar: customAppBar(
-        context,
-        title:  SharedData.getGlobalLang().operationSuccess(),
-        leading:IconButton(
-          icon: Icon(Icons.cancel),
-          tooltip: SharedData.getGlobalLang().skip() ,
-          onPressed: (){
-            Navigator.pushAndRemoveUntil(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => HomePage()),
-                  (Route<dynamic> route) => false,
-            );
-          },
-        ),
-      ),
-      body: Center(
-        child: Container(
-          color: Color(0xFFf7f7f7),
-          height: MediaQuery.of(context).size.height,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-
-               Image.asset(
-                  "assets/images/success.gif",
-                 // height: MediaQuery.of(context).size.height/2,
-                  width:  MediaQuery.of(context).size.width,
-                ),
-
-              Text(SharedData.getGlobalLang().sentEvenSuccessfully(),style: Theme.of(context).textTheme.headline4,)
-            ],
+    return  customDirectionality(
+      child: Scaffold(
+          appBar: customAppBar(
+            context,
+            title:  SharedData.getGlobalLang().operationSuccess(),
+            leading:IconButton(
+              icon: Icon(Icons.cancel),
+              tooltip: SharedData.getGlobalLang().skip() ,
+              onPressed: (){
+                Navigator.pushAndRemoveUntil(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => HomePage()),
+                      (Route<dynamic> route) => false,
+                );
+              },
+            ),
           ),
-        )
+          body: Center(
+            child: Container(
+              color: Color(0xFFf7f7f7),
+              height: MediaQuery.of(context).size.height,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+
+
+                   Image.asset(
+                      "assets/images/success.gif",
+                     // height: MediaQuery.of(context).size.height/2,
+                      width:  MediaQuery.of(context).size.width,
+                    ),
+
+                  Text(SharedData.getGlobalLang().sentEvenSuccessfully(),style: Theme.of(context).textTheme.headline4,)
+                ],
+              ),
+            )
+          ),
       ),
     );
   }

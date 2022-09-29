@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shahed/widgets/customDirectionality.dart';
 
 Future<dynamic> customReusableShowDialog(
     BuildContext context, String header,
@@ -16,14 +17,16 @@ Future<dynamic> customReusableShowDialog(
   return showDialog(
     context: context,
     builder: (context) {
-      return AlertDialog(
-        backgroundColor: Color(0xff33333d),
-        title: Text(
-          header,
-          style: Theme.of(context).textTheme.bodyText1,
+      return customDirectionality(
+        child: AlertDialog(
+          backgroundColor: Color(0xff33333d),
+          title: Text(
+            header,
+            style: Theme.of(context).textTheme.bodyText1,
+          ),
+          content: widget,
+          actions: actions,
         ),
-        content: widget,
-        actions: actions,
       );
     },
   );

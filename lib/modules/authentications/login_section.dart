@@ -24,60 +24,60 @@ class _LoginFormState extends State<LoginForm> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        customTextFormField(context,
-            keyboardType: TextInputType.emailAddress,
-            editingController: emailController, onChanged: (value) {
-          Provider.of<UserAuthProvider>(context, listen: false).user.setEmail =
-              emailController.text;
-        }, validator: (value) {
-          if (value == null || value.isEmpty) {
-            return SharedData.getGlobalLang().emailRequired();
-          } else if (!ValidatorClass.isValidEmail(value)) {
-            return SharedData.getGlobalLang().emailNotValid();
-          } else
-            return null;
-        },
-            prefixIcon: Icon(Icons.alternate_email_outlined),
-            labelText: SharedData.getGlobalLang().email(),
-            hintText: SharedData.getGlobalLang().enterYourEmail()),
-        SizedBox(
-          height: 12,
-        ),
-        customTextFormField(context,
-            obsecure: !_passwordVisible,
-            keyboardType: TextInputType.text,
-            validator: (value) {
-            String result = ValidatorClass.isValidPassword(value);
-            if (result == "")
+    return   Column(
+        children: [
+          customTextFormField(context,
+              keyboardType: TextInputType.emailAddress,
+              editingController: emailController, onChanged: (value) {
+            Provider.of<UserAuthProvider>(context, listen: false).user.setEmail =
+                emailController.text;
+          }, validator: (value) {
+            if (value == null || value.isEmpty) {
+              return SharedData.getGlobalLang().emailRequired();
+            } else if (!ValidatorClass.isValidEmail(value)) {
+              return SharedData.getGlobalLang().emailNotValid();
+            } else
               return null;
-            else {
-              return result;
-            }
-        }, onChanged: (value) {
-          Provider.of<UserAuthProvider>(context, listen: false)
-              .user
-              .setPassword = passwordController.text;
-        },
-            editingController: passwordController,
-            prefixIcon: Icon(Icons.password),
-            suffixIcon: IconButton(
-              icon: Icon(
-                // Based on passwordVisible state choose the icon
-                _passwordVisible ? Icons.visibility : Icons.visibility_off,
-                color: Colors.grey,
+          },
+              prefixIcon: Icon(Icons.alternate_email_outlined),
+              labelText: SharedData.getGlobalLang().email(),
+              hintText: SharedData.getGlobalLang().enterYourEmail()),
+          SizedBox(
+            height: 12,
+          ),
+          customTextFormField(context,
+              obsecure: !_passwordVisible,
+              keyboardType: TextInputType.text,
+              validator: (value) {
+              String result = ValidatorClass.isValidPassword(value);
+              if (result == "")
+                return null;
+              else {
+                return result;
+              }
+          }, onChanged: (value) {
+            Provider.of<UserAuthProvider>(context, listen: false)
+                .user
+                .setPassword = passwordController.text;
+          },
+              editingController: passwordController,
+              prefixIcon: Icon(Icons.password),
+              suffixIcon: IconButton(
+                icon: Icon(
+                  // Based on passwordVisible state choose the icon
+                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  color: Colors.grey,
+                ),
+                onPressed: () {
+                  // Update the state i.e. toogle the state of passwordVisible variable
+                  setState(() {
+                    _passwordVisible = !_passwordVisible;
+                  });
+                },
               ),
-              onPressed: () {
-                // Update the state i.e. toogle the state of passwordVisible variable
-                setState(() {
-                  _passwordVisible = !_passwordVisible;
-                });
-              },
-            ),
-            labelText: SharedData.getGlobalLang().password(),
-            hintText:  SharedData.getGlobalLang().enterPassword()),
-      ],
+              labelText: SharedData.getGlobalLang().password(),
+              hintText:  SharedData.getGlobalLang().enterPassword()),
+        ],
     );
   }
 

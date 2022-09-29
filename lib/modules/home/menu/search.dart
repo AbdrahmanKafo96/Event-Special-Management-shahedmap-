@@ -7,6 +7,8 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:http/http.dart' as http;
 
+import '../../../widgets/customDirectionality.dart';
+
 class DataSearchSe extends SearchDelegate<String> {
   List<dynamic> listName;
   List<Event> futureList;
@@ -77,90 +79,92 @@ class DataSearchSe extends SearchDelegate<String> {
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
           print("eventId $eventId");
-          return ListView.builder(
-              itemCount: 1,
-              itemBuilder: (context, index) {
-                return Column(
-                  children: [
-                    Container(
-                        decoration: BoxDecoration(
-                          color: Colors.white,
-                          borderRadius: BorderRadius.circular(15.0),
-                        ),
-                        padding: EdgeInsets.only(top: 8),
-                        child: Card(
-                            color: Color(0xFF424250),
-                            shape: RoundedRectangleBorder(
-                              side: BorderSide(
-                                color: Color(0xFF424250),
-                              ),
+          return customDirectionality(
+            child: ListView.builder(
+                itemCount: 1,
+                itemBuilder: (context, index) {
+                  return   Column(
+                      children: [
+                        Container(
+                            decoration: BoxDecoration(
+                              color: Colors.white,
                               borderRadius: BorderRadius.circular(15.0),
                             ),
-                            child: ListTile(
-                                onTap: () {
-                                  checkInternetConnectivity(context)
-                                      .then((bool value) async {
-                                    if (value) {
-                                      Navigator.push(
-                                        context,
-                                        MaterialPageRoute(
-                                            builder: (context) => EventView(
-                                                  eventID: eventId,
-                                                  eventName:
-                                                      snapshot.data['data']
-                                                          ['event_name'],
-                                                )),
-                                      );
-                                    }
-                                  });
-                                },
-                                trailing: SizedBox(
-                                  width: 100,
-                                  child: Row(
-                                    children: [
-                                      IconButton(
-                                        tooltip: SharedData.getGlobalLang().updateEvent(),
-                                        icon: Icon(
-                                          Icons.edit,
-                                          color: Colors.green,
-                                        ),
-                                        onPressed: () {
-                                          checkInternetConnectivity(context)
-                                              .then((bool value) async {
-                                            if (value) {
-                                              Navigator.push(
-                                                context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        EventView(
-                                                            eventID: eventId,
-                                                            eventName: snapshot
-                                                                        .data[
-                                                                    'data'][
-                                                                'event_name'])),
-                                              );
-                                            }
-                                          });
-                                        },
-                                      ),
-                                    ],
+                            padding: EdgeInsets.only(top: 8),
+                            child: Card(
+                                color: Color(0xFF424250),
+                                shape: RoundedRectangleBorder(
+                                  side: BorderSide(
+                                    color: Color(0xFF424250),
                                   ),
+                                  borderRadius: BorderRadius.circular(15.0),
                                 ),
-                                leading: Icon(
-                                  Icons.event_note_rounded,
-                                  size: 30,
-                                  color: Colors.grey.shade200,
-                                ),
-                                title: Text(
-                                  '${snapshot.data['data']['event_name']}',
-                                  style: Theme.of(context).textTheme.bodyText1,
-                                )))),
-                    Divider(
-                      color: Colors.grey,
-                    )
-                  ],
-                );
-              });
+                                child: ListTile(
+                                    onTap: () {
+                                      checkInternetConnectivity(context)
+                                          .then((bool value) async {
+                                        if (value) {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) => EventView(
+                                                      eventID: eventId,
+                                                      eventName:
+                                                          snapshot.data['data']
+                                                              ['event_name'],
+                                                    )),
+                                          );
+                                        }
+                                      });
+                                    },
+                                    trailing: SizedBox(
+                                      width: 100,
+                                      child: Row(
+                                        children: [
+                                          IconButton(
+                                            tooltip: SharedData.getGlobalLang().updateEvent(),
+                                            icon: Icon(
+                                              Icons.edit,
+                                              color: Colors.green,
+                                            ),
+                                            onPressed: () {
+                                              checkInternetConnectivity(context)
+                                                  .then((bool value) async {
+                                                if (value) {
+                                                  Navigator.push(
+                                                    context,
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            EventView(
+                                                                eventID: eventId,
+                                                                eventName: snapshot
+                                                                            .data[
+                                                                        'data'][
+                                                                    'event_name'])),
+                                                  );
+                                                }
+                                              });
+                                            },
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    leading: Icon(
+                                      Icons.event_note_rounded,
+                                      size: 30,
+                                      color: Colors.grey.shade200,
+                                    ),
+                                    title: Text(
+                                      '${snapshot.data['data']['event_name']}',
+                                      style: Theme.of(context).textTheme.bodyText1,
+                                    )))),
+                        Divider(
+                          color: Colors.grey,
+                        )
+                      ],
+                  );
+                }),
+          );
         }
         return Center(
           child: CircularProgressIndicator(),
@@ -183,44 +187,46 @@ class DataSearchSe extends SearchDelegate<String> {
             currentFocus.unfocus();
           }
         },
-        child: ListView.builder(
-            itemCount: searchList.length,
-            itemBuilder: (context, index) {
-              return Container(
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(15.0),
-                  ),
-                  padding: EdgeInsets.only(top: 8),
-                  child: Card(
-                      color: Color(0xFF424250),
-                      shape: RoundedRectangleBorder(
-                        side: BorderSide(
-                          color: Color(0xFF424250),
+
+          child: ListView.builder(
+              itemCount: searchList.length,
+              itemBuilder: (context, index) {
+                return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(15.0),
+                    ),
+                    padding: EdgeInsets.only(top: 8),
+                    child: Card(
+                        color: Color(0xFF424250),
+                        shape: RoundedRectangleBorder(
+                          side: BorderSide(
+                            color: Color(0xFF424250),
+                          ),
+                          borderRadius: BorderRadius.circular(15.0),
                         ),
-                        borderRadius: BorderRadius.circular(15.0),
-                      ),
-                      child: ListTile(
-                        // tileColor: Color(0xFF424250),
-                        //leading: Image.network('${imgLinks}'),
-                        leading: Icon(
-                          Icons.event_note_rounded,
-                          color: Colors.grey.shade200,
-                        ),
-                        title: Text(
-                          "${searchList[index]}",
-                          style: Theme.of(context).textTheme.headline4,
-                        ),
-                        onTap: () {
-                          checkInternetConnectivity(context)
-                              .then((bool value) async {
-                            if (value) {
-                              eventId = futureList[index].addede_id;
-                              showResults(context);
-                            }
-                          });
-                        },
-                      )));
-            }));
+                        child: ListTile(
+                          // tileColor: Color(0xFF424250),
+                          //leading: Image.network('${imgLinks}'),
+                          leading: Icon(
+                            Icons.event_note_rounded,
+                            color: Colors.grey.shade200,
+                          ),
+                          title: Text(
+                            "${searchList[index]}",
+                            style: Theme.of(context).textTheme.headline4,
+                          ),
+                          onTap: () {
+                            checkInternetConnectivity(context)
+                                .then((bool value) async {
+                              if (value) {
+                                eventId = futureList[index].addede_id;
+                                showResults(context);
+                              }
+                            });
+                          },
+                        )));
+              }
+        ) );
   }
 }

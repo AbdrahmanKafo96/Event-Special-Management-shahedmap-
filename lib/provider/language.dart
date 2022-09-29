@@ -825,11 +825,11 @@ class Language extends ChangeNotifier {
 
   String pickVideo() {
     if (getLanguage == "AR") {
-      return "قم بالتقاط فيديو للحادثة";
+      return "قم بالتقاط فيديو للحادثة(اختياري)";
     } else if (getLanguage == "EN") {
-      return "Pick video for event";
+      return "Pick video for event (optional)";
     } else {
-      return "قم بالتقاط فيديو للحادثة";
+      return "قم بالتقاط فيديو للحادثة(اختياري)";
     }
   }
 
@@ -994,7 +994,7 @@ class Language extends ChangeNotifier {
     if (getLanguage == "AR") {
       return 'نسيت كلمة المرور!';
     } else if (getLanguage == "EN") {
-      return 'Forget your password!';
+      return 'Forget password!';
     } else {
       return 'نسيت كلمة المرور!';
     }
@@ -1020,7 +1020,7 @@ class Language extends ChangeNotifier {
     if (getLanguage == "AR") {
       return 'لا تملك حساب!';
     } else if (getLanguage == "EN") {
-      return 'Do not have an account!';
+      return 'I don\'t have an account';
     } else {
       return 'لا تملك حساب!';
     }
@@ -1115,20 +1115,21 @@ class Language extends ChangeNotifier {
     if (getLanguage == "AR") {
       return "تم تحديث موقع الحدث بنجاح" ;
     } else if (getLanguage == "EN") {
-      return "The event site has been successfully updated";
+      return "The event location has been successfully updated";
     } else {
       return "تم تحديث موقع الحدث بنجاح";
     }
   }
-  String eventData() {
-    if (getLanguage == "AR") {
-      return "بيانات الحدث" ;
-    } else if (getLanguage == "EN") {
-      return "Event data";
-    } else {
-      return "بيانات الحدث";
-    }
-  } String close() {
+  // String eventData() {
+  //   if (getLanguage == "AR") {
+  //     return "بيانات الحدث" ;
+  //   } else if (getLanguage == "EN") {
+  //     return "Event data";
+  //   } else {
+  //     return "بيانات الحدث";
+  //   }
+  // }
+  String close() {
     if (getLanguage == "AR") {
       return "إغلاق" ;
     } else if (getLanguage == "EN") {
@@ -1167,7 +1168,7 @@ class Language extends ChangeNotifier {
     if (getLanguage == "AR") {
       return 'حدث جديد' ;
     } else if (getLanguage == "EN") {
-      return "Description is required";
+      return "New Event";
     } else {
       return 'حدث جديد';
     }
@@ -1248,6 +1249,22 @@ class Language extends ChangeNotifier {
       return  "You cannot login because your account is banned";
     } else {
       return "لاتستطيع تسجيل الدخول لان حسابك محظور";
+    }}
+    String  blockEventMessage() {
+    if (getLanguage == "AR") {
+      return "لاتستطيع ارسال حدث لان حسابك محظور" ;
+    } else if (getLanguage == "EN") {
+      return  "You can't save an event because your account is banned";
+    } else {
+      return "لاتستطيع ارسال حدث لان حسابك محظور";
+    }
+  }String  blockEditEventMessage() {
+    if (getLanguage == "AR") {
+      return 'لاتستطيع تعديل الحدث لان حسابك محظور' ;
+    } else if (getLanguage == "EN") {
+      return  "You can't edit an event because your account is banned";
+    } else {
+      return 'لاتستطيع تعديل الحدث لان حسابك محظور';
     }
   }String  emailAlreadyUsed() {
     if (getLanguage == "AR") {
@@ -1274,6 +1291,23 @@ class Language extends ChangeNotifier {
       return   'There is a problem with the server, try again';
     } else {
       return 'هناك مشكلة في الخادم';
+    }
+  }
+  String  checkInbox() {
+    if (getLanguage == "AR") {
+      return 'تحقق من بريدك';
+    } else if (getLanguage == "EN") {
+      return   'Check your mail inbox';
+    } else {
+      return 'تحقق من بريدك';
+    }
+  }String  checkEmailInput() {
+    if (getLanguage == "AR") {
+      return 'تأكد من صحة البريد المدخل';
+    } else if (getLanguage == "EN") {
+      return   'your email not valid';
+    } else {
+      return 'تأكد من صحة البريد المدخل';
     }
   }
 

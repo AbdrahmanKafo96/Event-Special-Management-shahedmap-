@@ -7,6 +7,7 @@ import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
+import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/customPopupMenuEntry.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_dialog.dart';
@@ -88,281 +89,283 @@ class _MyHomePageState extends State<MapMarker> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () async {
-          final GoogleMapController controller = await _cController.future;
-          LocationData currentLocation;
-          var location = Location();
-          try {
-            currentLocation = await location.getLocation();
-          } on Exception {
-            currentLocation = null;
-          }
+    return   customDirectionality(
+      child: Scaffold(
+          floatingActionButton: FloatingActionButton.extended(
+            onPressed: () async {
+              final GoogleMapController controller = await _cController.future;
+              LocationData currentLocation;
+              var location = Location();
+              try {
+                currentLocation = await location.getLocation();
+              } on Exception {
+                currentLocation = null;
+              }
 
-          controller.animateCamera(CameraUpdate.newCameraPosition(
-            CameraPosition(
-              bearing: 0,
-              target:
-                  LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 15.0,
+              controller.animateCamera(CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  bearing: 0,
+                  target:
+                      LatLng(currentLocation.latitude, currentLocation.longitude),
+                  zoom: 15.0,
+                ),
+              ));
+            },
+            hoverColor: Color(0xFFFF8F00),
+            backgroundColor: Color(0xFFfe6e00),
+            label: Text(
+              SharedData.getGlobalLang().currentLocation(),
+              style: Theme.of(context).textTheme.bodyText1,
             ),
-          ));
-        },
-        hoverColor: Color(0xFFFF8F00),
-        backgroundColor: Color(0xFFfe6e00),
-        label: Text(
-          SharedData.getGlobalLang().currentLocation(),
-          style: Theme.of(context).textTheme.bodyText1,
-        ),
-        icon: Icon(
-          Icons.location_on,
-          color: Colors.white,
-        ),
-      ),
-      appBar: customAppBar(
-        context,
-        //backgroundColor: Colors.teal,
-        title: SharedData.getGlobalLang().locateEvent(),
-        leading: PopupMenuButton(
-          itemBuilder: (builder) {
-            return customPopupMenuEntry();
-          },
-          onSelected: (value) {
-            switch (value) {
-              case 0:
-                setState(() {
-                  maptype = MapType.hybrid;
-                });
-                break;
-              case 1:
-                setState(() {
-                  maptype = MapType.normal;
-                });
-                break;
-              case 2:
-                setState(() {
-                  maptype = MapType.satellite;
-                });
-                break;
-              case 3:
-                setState(() {
-                  maptype = MapType.terrain;
-                });
-                break;
-            }
-          },
-        ),
-
-        actions: [
-          IconButton(
             icon: Icon(
-              Icons.add_location,
+              Icons.location_on,
               color: Colors.white,
             ),
-            onPressed: () {
-              if (Provider.of<EventProvider>(context, listen: false)
-                          .event
-                          .getLat ==
-                      null &&
-                  Provider.of<EventProvider>(context, listen: false)
-                          .event
-                          .getLng ==
-                      null) {
-                showShortToast(SharedData.getGlobalLang().locationRequired(), Colors.orange);
-              } else {
-                customReusableShowDialog(
-                  context,
-                 SharedData.getGlobalLang().locateEvent(),
-                  widget: Text(SharedData.getGlobalLang().alertLocationEvent()),
-                  actions: <Widget>[
-                    TextButton(
-                      child: Text(
-                        SharedData.getGlobalLang().cancel(),
-                        style: TextStyle(color: Colors.grey),
-                      ),
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                    Container(
-                      decoration: BoxDecoration(
-                        color: Colors.deepOrange,
-                        borderRadius: BorderRadius.all(Radius.circular(5)),
-                      ),
-                      child: TextButton(
-                        child: Text(
-                          SharedData.getGlobalLang().okay(),
-                          style: Theme.of(context).textTheme.bodyText1,
-                        ),
-                        onPressed: () {
-                          showShortToast(
-                             SharedData.getGlobalLang().positionSuccessfully() , Colors.green);
-                          Map getResult = {
-                            'lat': Provider.of<EventProvider>(context,
-                                    listen: false)
-                                .event
-                                .getLat,
-                            'lng': Provider.of<EventProvider>(context,
-                                    listen: false)
-                                .event
-                                .getLng
-                          };
-                          Navigator.of(context).pop(getResult);
-                          Navigator.of(context).pop(getResult);
-                        },
-                      ),
-                    ),
-                  ],
-                );
-              }
-            },
           ),
-        ],
-      ),
-      body: Padding(
-        padding: const EdgeInsets.only(top: 8.0),
-        child: Stack(
-          children: [
-            GoogleMap(
-              //  polylines: myPolyline.toSet(),
-              layoutDirection: TextDirection.rtl,
-              onLongPress: (val) {
-                setState(() {
-                  myMarker.removeAt(0);
-                  Provider.of<EventProvider>(context, listen: false)
-                      .event
-                      .tappedPoint = null;
-                  Provider.of<EventProvider>(context, listen: false)
-                      .event
-                      .setLat = null;
-                  Provider.of<EventProvider>(context, listen: false)
-                      .event
-                      .setLng = null;
-                });
+          appBar: customAppBar(
+            context,
+            //backgroundColor: Colors.teal,
+            title: SharedData.getGlobalLang().locateEvent(),
+            leading: PopupMenuButton(
+              itemBuilder: (builder) {
+                return customPopupMenuEntry();
               },
-              myLocationButtonEnabled: false,
-              mapType: maptype,
-              onTap: handleTap,
-              initialCameraPosition: CameraPosition(
-                  target: widget.lat != null
-                      ? LatLng(widget.lat, widget.lng)
-                      : LatLng(26.3351, 17.2283),
-                  zoom: widget.lat != null ? 15 : 5),
-              onMapCreated: (GoogleMapController controller) {
-                _cController.complete(controller);
+              onSelected: (value) {
+                switch (value) {
+                  case 0:
+                    setState(() {
+                      maptype = MapType.hybrid;
+                    });
+                    break;
+                  case 1:
+                    setState(() {
+                      maptype = MapType.normal;
+                    });
+                    break;
+                  case 2:
+                    setState(() {
+                      maptype = MapType.satellite;
+                    });
+                    break;
+                  case 3:
+                    setState(() {
+                      maptype = MapType.terrain;
+                    });
+                    break;
+                }
               },
-              myLocationEnabled: true,
-              markers: Set<Marker>.of(myMarker),
             ),
-            Positioned(
-                top: 0,
-                right: 0,
-                child: Column(
-                  children: [
-                    IconButton(
-                      hoverColor: Colors.grey,
-                      highlightColor: Colors.grey,
-                      icon: Icon(
-                        Icons.arrow_back,
-                        color: Colors.black87,
-                      ),
-                      onPressed: () {
-                        Provider.of<EventProvider>(context, listen: false)
-                            .event
-                            .setLat = null;
-                        Provider.of<EventProvider>(context, listen: false)
-                            .event
-                            .setLng = null;
 
-                        Provider.of<EventProvider>(context, listen: false)
-                            .event
-                            .tappedPoint = null;
-                        Navigator.of(context).pop();
-                      },
-                    ),
-                   Padding(
-                     padding: const EdgeInsets.all(8.0),
-                     child: Row(
-                       children: [
-                         Icon(
-                           FontAwesomeIcons.temperatureThreeQuarters,
-                           color: Colors.black87,
-                           size: 24,
-                         ),
-                         SizedBox(
-                           width: 12,
-                         ),
-                         Text(
-                           "${weather}",
-                           style: TextStyle(
+            actions: [
+              IconButton(
+                icon: Icon(
+                  Icons.add_location,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  if (Provider.of<EventProvider>(context, listen: false)
+                              .event
+                              .getLat ==
+                          null &&
+                      Provider.of<EventProvider>(context, listen: false)
+                              .event
+                              .getLng ==
+                          null) {
+                    showShortToast(SharedData.getGlobalLang().locationRequired(), Colors.orange);
+                  } else {
+                    customReusableShowDialog(
+                      context,
+                     SharedData.getGlobalLang().locateEvent(),
+                      widget: Text(SharedData.getGlobalLang().alertLocationEvent()),
+                      actions: <Widget>[
+                        TextButton(
+                          child: Text(
+                            SharedData.getGlobalLang().cancel(),
+                            style: TextStyle(color: Colors.grey),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                            color: Colors.deepOrange,
+                            borderRadius: BorderRadius.all(Radius.circular(5)),
+                          ),
+                          child: TextButton(
+                            child: Text(
+                              SharedData.getGlobalLang().okay(),
+                              style: Theme.of(context).textTheme.bodyText1,
+                            ),
+                            onPressed: () {
+                              showShortToast(
+                                 SharedData.getGlobalLang().positionSuccessfully() , Colors.green);
+                              Map getResult = {
+                                'lat': Provider.of<EventProvider>(context,
+                                        listen: false)
+                                    .event
+                                    .getLat,
+                                'lng': Provider.of<EventProvider>(context,
+                                        listen: false)
+                                    .event
+                                    .getLng
+                              };
+                              Navigator.of(context).pop(getResult);
+                              Navigator.of(context).pop(getResult);
+                            },
+                          ),
+                        ),
+                      ],
+                    );
+                  }
+                },
+              ),
+            ],
+          ),
+          body: Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: Stack(
+              children: [
+                GoogleMap(
+                  //  polylines: myPolyline.toSet(),
+                  layoutDirection: TextDirection.rtl,
+                  onLongPress: (val) {
+                    setState(() {
+                      myMarker.removeAt(0);
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .tappedPoint = null;
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .setLat = null;
+                      Provider.of<EventProvider>(context, listen: false)
+                          .event
+                          .setLng = null;
+                    });
+                  },
+                  myLocationButtonEnabled: false,
+                  mapType: maptype,
+                  onTap: handleTap,
+                  initialCameraPosition: CameraPosition(
+                      target: widget.lat != null
+                          ? LatLng(widget.lat, widget.lng)
+                          : LatLng(26.3351, 17.2283),
+                      zoom: widget.lat != null ? 15 : 5),
+                  onMapCreated: (GoogleMapController controller) {
+                    _cController.complete(controller);
+                  },
+                  myLocationEnabled: true,
+                  markers: Set<Marker>.of(myMarker),
+                ),
+                Positioned(
+                    top: 0,
+                    right: 0,
+                    child: Column(
+                      children: [
+                        IconButton(
+                          hoverColor: Colors.grey,
+                          highlightColor: Colors.grey,
+                          icon: Icon(
+                            Icons.arrow_back,
+                            color: Colors.black87,
+                          ),
+                          onPressed: () {
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .setLat = null;
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .setLng = null;
+
+                            Provider.of<EventProvider>(context, listen: false)
+                                .event
+                                .tappedPoint = null;
+                            Navigator.of(context).pop();
+                          },
+                        ),
+                       Padding(
+                         padding: const EdgeInsets.all(8.0),
+                         child: Row(
+                           children: [
+                             Icon(
+                               FontAwesomeIcons.temperatureThreeQuarters,
                                color: Colors.black87,
-                               fontSize: 24,
-                               fontWeight: FontWeight.bold),
-                           // overflow: TextOverflow.ellipsis,
+                               size: 24,
+                             ),
+                             SizedBox(
+                               width: 12,
+                             ),
+                             Text(
+                               "${weather}",
+                               style: TextStyle(
+                                   color: Colors.black87,
+                                   fontSize: 24,
+                                   fontWeight: FontWeight.bold),
+                               // overflow: TextOverflow.ellipsis,
+                             ),
+                           ],
                          ),
-                       ],
-                     ),
-                   ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final GoogleMapController controller =
-                            await _cController.future;
-                        String location = "Search Location";
-                        var place = await PlacesAutocomplete.show(
-                            context: context,
-                            apiKey: Singleton.mapApiKey,
-                            mode: Mode.overlay,
-                            hint: 'بحث',
-                            types: [],
-                            strictbounds: false,
-                            components: [
-                              p.Component(p.Component.country, 'ly'),
-                              p.Component(p.Component.country, 'gb'),
-                            ],
-                            //google_map_webservice package
-                            onError: (err) {
-                              print(err);
-                            });
+                       ),
+                        ElevatedButton(
+                          onPressed: () async {
+                            final GoogleMapController controller =
+                                await _cController.future;
+                            String location = "Search Location";
+                            var place = await PlacesAutocomplete.show(
+                                context: context,
+                                apiKey: Singleton.mapApiKey,
+                                mode: Mode.overlay,
+                                hint: 'بحث',
+                                types: [],
+                                strictbounds: false,
+                                components: [
+                                  p.Component(p.Component.country, 'ly'),
+                                  p.Component(p.Component.country, 'gb'),
+                                ],
+                                //google_map_webservice package
+                                onError: (err) {
+                                  print(err);
+                                });
 
-                        if (place != null) {
-                          setState(() {
-                            location = place.description.toString();
-                          });
+                            if (place != null) {
+                              setState(() {
+                                location = place.description.toString();
+                              });
 
-                          //form google_maps_webservice package
-                          final plist = p.GoogleMapsPlaces(
-                            apiKey: Singleton.mapApiKey,
-                            apiHeaders: await GoogleApiHeaders().getHeaders(),
-                            //from google_api_headers package
-                          );
-                          String placeid = place.placeId ?? "0";
-                          final detail =
-                              await plist.getDetailsByPlaceId(placeid);
-                          final geometry = detail.result.geometry;
-                          final lat = geometry.location.lat;
-                          final lang = geometry.location.lng;
-                          var newlatlang = LatLng(lat, lang);
+                              //form google_maps_webservice package
+                              final plist = p.GoogleMapsPlaces(
+                                apiKey: Singleton.mapApiKey,
+                                apiHeaders: await GoogleApiHeaders().getHeaders(),
+                                //from google_api_headers package
+                              );
+                              String placeid = place.placeId ?? "0";
+                              final detail =
+                                  await plist.getDetailsByPlaceId(placeid);
+                              final geometry = detail.result.geometry;
+                              final lat = geometry.location.lat;
+                              final lang = geometry.location.lng;
+                              var newlatlang = LatLng(lat, lang);
 
-                          //move map camera to selected place with animation
-                          controller.animateCamera(
-                              CameraUpdate.newCameraPosition(CameraPosition(
-                                  target: newlatlang, zoom: 17)));
-                        }
-                      },
-                      child: Icon(
-                        FontAwesomeIcons.magnifyingGlass,
-                        color: Colors.grey,
-                      ),
-                      style: ElevatedButton.styleFrom(
-                        shape: CircleBorder(), //<-- SEE HERE
-                        padding: EdgeInsets.all(10),
-                      ),
-                    ),
-                  ],
-                )),
-          ],
-        ),
+                              //move map camera to selected place with animation
+                              controller.animateCamera(
+                                  CameraUpdate.newCameraPosition(CameraPosition(
+                                      target: newlatlang, zoom: 17)));
+                            }
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            color: Colors.grey,
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(), //<-- SEE HERE
+                            padding: EdgeInsets.all(10),
+                          ),
+                        ),
+                      ],
+                    )),
+              ],
+            ),
+          ),
       ),
     );
   }

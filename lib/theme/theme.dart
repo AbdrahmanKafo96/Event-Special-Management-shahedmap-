@@ -85,6 +85,7 @@ class Styles {
 
   static ThemeData themeData(bool isDarkTheme, BuildContext context) {
     return ThemeData(
+
       iconTheme: IconThemeData(
         color: Colors.white,
       ),
@@ -140,7 +141,7 @@ class Styles {
         ),
         bodyText1: GoogleFonts.notoSansArabic(
             textStyle: TextStyle(
-          fontSize: 14.0,
+          fontSize: 13.0,
           color: Color(0xFFffffff),
         )),
       ),
@@ -148,6 +149,9 @@ class Styles {
       inputDecorationTheme: InputDecorationTheme(
 
         suffixStyle: TextStyle(color: Colors.white),
+        errorStyle: TextStyle(
+          fontSize: 10.0,
+        ),
         iconColor: Color(0xFFFF9800),
         suffixIconColor: Colors.white,
         prefixIconColor: Color(0xFFFF9800),

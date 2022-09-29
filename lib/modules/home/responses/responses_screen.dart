@@ -101,7 +101,6 @@ class _ResponsePageState extends State<ResponsePage> {
                 );
 
               case ConnectionState.done:
-                print("snapshot.hasData ${snapshot.hasData}");
                 return snapshot.hasData && snapshot.data.length>0
                     ? RefreshIndicator(
                         displacement: 5,
@@ -205,10 +204,7 @@ class _ResponsePageState extends State<ResponsePage> {
     return showDialog(
         context: context,
         builder: (context) {
-          return Directionality(
-            child: customAlert(addede_id, snapshot, index, context),
-            textDirection: TextDirection.rtl,
-          );
+          return   customAlert(addede_id, snapshot, index, context) ;
         });
   }
 
@@ -251,13 +247,11 @@ class _ResponsePageState extends State<ResponsePage> {
 
   @override
   Widget build(BuildContext context) {
-    return Directionality(
-      textDirection: TextDirection.rtl,
-      child: Scaffold(
+    return  Scaffold(
         appBar:
             customAppBar(context,title: SharedData.getGlobalLang().notifications(), icon: FontAwesomeIcons.solidBell),
         body: generateItemsList(),
-      ),
+
     );
   }
 }
