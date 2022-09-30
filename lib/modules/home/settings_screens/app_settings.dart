@@ -75,9 +75,11 @@ class _AppSettingsState extends State<AppSettings> {
                           value: _selectedLanguage,
                           onChanged: (newVal)  {
                             _box.put("language", newVal);
-                            SharedData.getGlobalLang().setLanguage=newVal  ;
+
                           //  _language.setLanguage=newVal;
                             setState(() {
+                              language=newVal;
+                              SharedData.getGlobalLang().setLanguage=newVal  ;
                               _selectedLanguage = newVal;
                             });
                             ShahedApp.restartApp(context);

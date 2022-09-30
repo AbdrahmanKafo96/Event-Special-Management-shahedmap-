@@ -97,7 +97,6 @@ Future main() async {
         key: "api_token", aOptions: Singleton.getAndroidOptions());
 
     final box = await Singleton.getBox();
-    print(box.containsKey('language'));
     if (box.containsKey('language')) {
       language = box.get('language');
     } else {
@@ -105,7 +104,7 @@ Future main() async {
       language = box.get('language');
     }
     //darkMode=pref.getBool('darkMode');
-
+    SharedData.getGlobalLang().setLanguage = language;
     if (box.get('version_number') == null) box.put('version_number', 0);
 
     final GoogleMapsFlutterPlatform mapsImplementation =
@@ -113,7 +112,7 @@ Future main() async {
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       mapsImplementation.useAndroidViewSurface = true;
     }
-    SharedData.getGlobalLang().setLanguage = language;
+
     runApp(
       MultiProvider(providers: [
         ChangeNotifierProvider<EventProvider>(
