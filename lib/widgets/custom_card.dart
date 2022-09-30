@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 
 Widget customCard(
-    IconData icon, String title, Color color, BuildContext context  ) {
+    IconData icon, String title, Color color, BuildContext context) {
   return Container(
-
     child: Card(
-      color: Color(0xFF424250),
-     // color:  Colors.black12.withOpacity(0.5),
+      color: Color(0xff33333d),
+      // color:  Colors.black12.withOpacity(0.5),
+
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(
-          10.0,
+          20.0,
         ),
       ),
       // color: color,
       borderOnForeground: true,
-      elevation: 4.0,
+      elevation: 5,
+      shadowColor: Colors.black.withOpacity(.5) ,
       margin: EdgeInsets.all(8.0),
       child: Container(
-
         margin: EdgeInsets.all(10),
         padding: EdgeInsets.all(10),
         child: Center(
@@ -53,20 +53,20 @@ Widget customCard(
                   radius: 30,
                 ),
               ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: <Widget>[
-                  Expanded(
-                    child: Text(
+              FittedBox(
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    Text(
                       "$title",
-                      style: Theme.of(context).textTheme.headline4,
+                      style: Theme.of(context).textTheme.headline5,
                     ),
-                  ),
-                  Icon(
-                    Icons.arrow_forward,
-                    color: Colors.white,
-                  )
-                ],
+                    Icon(
+                      Icons.arrow_forward,
+                      color: Colors.white,
+                    )
+                  ],
+                ),
               ),
             ],
           ),

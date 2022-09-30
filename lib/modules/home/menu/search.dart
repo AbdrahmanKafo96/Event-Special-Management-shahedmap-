@@ -40,7 +40,7 @@ class DataSearchSe extends SearchDelegate<String> {
         tooltip: SharedData.getGlobalLang().back(),
         icon: Icon(
           Icons.arrow_back,
-          color: Colors.black,
+
         ),
         onPressed: () {
           close(context, null);
@@ -78,7 +78,6 @@ class DataSearchSe extends SearchDelegate<String> {
       future: fetchSearchedEvent(),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.hasData) {
-          print("eventId $eventId");
           return customDirectionality(
             child: ListView.builder(
                 itemCount: 1,
@@ -193,7 +192,7 @@ class DataSearchSe extends SearchDelegate<String> {
               itemBuilder: (context, index) {
                 return Container(
                     decoration: BoxDecoration(
-                      color: Colors.white,
+
                       borderRadius: BorderRadius.circular(15.0),
                     ),
                     padding: EdgeInsets.only(top: 8),

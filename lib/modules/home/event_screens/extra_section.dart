@@ -9,6 +9,7 @@ import 'package:shahed/modules/home/event_screens/video_picker.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_indecator.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:intl/intl.dart';
 import 'package:shahed/provider/event_provider.dart';
@@ -106,7 +107,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
-                                      CircularProgressIndicator(
+                                      customCircularProgressIndicator(
                                         color: Colors.white,
                                       ),
                                       const SizedBox(

@@ -195,8 +195,8 @@ class _ShahedAppState extends State<ShahedApp> {
               GlobalCupertinoLocalizations.delegate,
             ],
             supportedLocales: [
-              Locale('ar', ''), Locale("en", "US"), // arabic, no country code
-              // arabic, no country code
+            language=="AR"? Locale('ar', ''):Locale("en", "US"), // arabic, no country code
+
             ],
 
             //theme:,

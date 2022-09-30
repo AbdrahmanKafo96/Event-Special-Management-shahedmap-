@@ -15,6 +15,7 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../shared_data/shareddata.dart';
+import '../../../widgets/customHoverButton.dart';
 
 class ProfilePage extends StatefulWidget {
   @override
@@ -27,7 +28,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
   File _image;
   final picker = ImagePicker();
-  String _uri; 
+  String _uri;
   var result;
   var firstNameCon = TextEditingController();
   var fatherNameCon = TextEditingController();
@@ -99,478 +100,481 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     checkInternetConnectivity(context);
-    return   Scaffold(
-          resizeToAvoidBottomInset: false,
-          drawer: CustomDrawer(),
-          key: _scaffoldKey,
-          appBar: customAppBar(
-            context,
-            title: SharedData.getGlobalLang().profilePage(),
-            icon: FontAwesomeIcons.solidUser,
-          ),
-          body: SafeArea(
-            child: Stack(
-              fit: StackFit.expand,
-              children: [
-                Container(
-                  child: Padding(
-                    padding: EdgeInsets.only(top: 15),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        InkWell(
-                          onTap: pickImage,
-                          child: Container(
-                            decoration: BoxDecoration(
-                              color: Colors.white,
-                              shape: BoxShape.circle,
-                              boxShadow: [
-                                BoxShadow(
-                                    blurRadius: 2,
-                                    color: Colors.grey.withOpacity(0.5),
-                                    spreadRadius: 2)
-                              ],
-                            ),
-                            child: CircleAvatar(
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: state != true
-                                            ? "حمل الصورة الشخصية"
-                                            : "",
-                                        style: TextStyle(
-                                            color: Colors.black, fontSize: 12)),
-                                    WidgetSpan(
-                                      child: state != true
-                                          ? Icon(Icons.perm_media_sharp)
-                                          : Image.asset(
-                                              'assets/images/upload.png'),
-                                    ),
-                                  ],
-                                ),
+    return Scaffold(
+        resizeToAvoidBottomInset: false,
+        drawer: CustomDrawer(),
+        key: _scaffoldKey,
+        appBar: customAppBar(
+          context,
+          title: SharedData.getGlobalLang().profilePage(),
+          icon: FontAwesomeIcons.solidUser,
+        ),
+        body: SafeArea(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              Container(
+                child: Padding(
+                  padding: EdgeInsets.only(top: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      InkWell(
+                        onTap: pickImage,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                  blurRadius: 2,
+                                  color: Colors.grey.withOpacity(0.5),
+                                  spreadRadius: 2)
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            child: RichText(
+                              text: TextSpan(
+                                children: [
+                                  TextSpan(
+                                      text: state != true
+                                          ? "حمل الصورة الشخصية"
+                                          : "",
+                                      style: TextStyle(
+                                          color: Colors.black, fontSize: 12)),
+                                  WidgetSpan(
+                                    child: state != true
+                                        ? Icon(Icons.perm_media_sharp)
+                                        : Image.asset(
+                                            'assets/images/upload.png'),
+                                  ),
+                                ],
                               ),
-                              backgroundColor: Colors.white,
-                              backgroundImage: _image == null
-                                  ? _uri != null
-                                      ? NetworkImage(_uri)
-                                      : null
-                                  : FileImage(_image),
-                              radius: 80,
-                              key: ValueKey(new Random().nextInt(100)),
                             ),
+                            backgroundColor: Colors.white,
+                            backgroundImage: _image == null
+                                ? _uri != null
+                                    ? NetworkImage(_uri)
+                                    : null
+                                : FileImage(_image),
+                            radius: 80,
+                            key: ValueKey(new Random().nextInt(100)),
                           ),
                         ),
-                      ],
-                    ),
-                  ),
-                  decoration: const BoxDecoration(
-                    color: Colors.white,
+                      ),
+                    ],
                   ),
                 ),
-                Positioned(
-                  left: 0,
-                  bottom: 0,
-                  child: Hero(
-                    tag: 'bottom_sheet',
-                    child: Container(
-                      decoration: const BoxDecoration(
-                        // color: Color(0xff424250),
-                        gradient: LinearGradient(
-                          colors: [
-                            //Color.fromRGBO(36, 36, 36, 0.85),
-                            Color(0xFF424250),
-                            Color(0xff33333d),
-                          ],
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2.5,
-                            blurRadius: 2,
-                            color: Color(0xFFECEFF1),
-                          ),
+                // decoration: const BoxDecoration(
+                //   color: Colors.white,
+                // ),
+              ),
+              Positioned(
+                left: 0,
+                bottom: 0,
+                child: Hero(
+                  tag: 'bottom_sheet',
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      // color: Color(0xff424250),
+                      gradient: LinearGradient(
+                        colors: [
+                          //Color.fromRGBO(36, 36, 36, 0.85),
+                          Color(0xFF424250),
+                          Color(0xff33333d),
                         ],
-
-                        borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(30),
-                            topRight: Radius.circular(30)),
                       ),
-                      height: MediaQuery.of(context).size.height * 0.55,
-                      width: MediaQuery.of(context).size.width,
-                      child: switchPage
-                          ? SingleChildScrollView(
-                              child: ConstrainedBox(
-                                  constraints: BoxConstraints(
-                                    minHeight:
-                                        MediaQuery.of(context).size.height * 0.75,
-                                  ),
-                                  child: Column(
-                                    children: [
-                                      Padding(
-                                        padding: const EdgeInsets.all(20.0),
-                                        child: Form(
-                                          key: _formKey,
-                                          child: Column(
-                                            children: [
-                                              showTextFiled1
-                                                  ? customTextFormField(
-                                                      context,
-                                                      autofocus: true,
-                                                      editingController:
-                                                          firstNameCon,
+                      boxShadow: [
+                        BoxShadow(
+                          spreadRadius: 2.5,
+                          blurRadius: 2,
+                          color: Colors.black12,
+                        ),
+                      ],
 
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      validator: (value) => value
-                                                              .isEmpty
-                                                          ? SharedData.getGlobalLang().firstNameIsRequired()
-                                                          : null,
-                                                      prefixIcon: Icon(
-                                                        Icons
-                                                            .drive_file_rename_outline,
-                                                        color: Colors.teal,
-                                                      ),
-                                                      labelText: SharedData.getGlobalLang().firstName(),
-                                                      hintText: SharedData.getGlobalLang().enterFirstName(),
-                                                    )
-                                                  : SizedBox.shrink(),
-                                              SizedBox(
-                                                height: 12,
-                                              ),
-                                              showTextFiled2
-                                                  ? customTextFormField(context,
-                                                      autofocus: true,
-                                                      editingController:
-                                                          fatherNameCon,
-
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      validator: (value) =>
-                                                          value.isEmpty
-                                                              ?SharedData.getGlobalLang().middleNameRequired()
-                                                              : null,
-                                                      prefixIcon: Icon(
-                                                        Icons
-                                                            .drive_file_rename_outline,
-                                                        color: Colors.teal,
-                                                      ),
-                                                      labelText: SharedData.getGlobalLang().middleName(),
-                                                      hintText: SharedData.getGlobalLang().enterMiddleName())
-                                                  : SizedBox.shrink(),
-                                              SizedBox(
-                                                height: 12,
-                                              ),
-                                              showTextFiled3
-                                                  ? customTextFormField(context,
-                                                      autofocus: true,
-                                                      editingController:
-                                                          lastNameCon,
-
-                                                      keyboardType:
-                                                          TextInputType.text,
-                                                      validator: (value) => value
-                                                              .isEmpty
-                                                          ? SharedData.getGlobalLang().familyNameRequired()
-                                                          : null,
-                                                      prefixIcon: Icon(
-                                                        Icons
-                                                            .drive_file_rename_outline,
-                                                        color: Colors.teal,
-                                                      ),
-                                                      labelText: SharedData.getGlobalLang().familyName(),
-                                                      hintText:
-                                                         SharedData.getGlobalLang().enterFamilyName())
-                                                  : SizedBox.shrink(),
-                                              SizedBox(
-                                                height: 24,
-                                              ),
-                                              Row(
-                                                children: [
-                                                  Expanded(
-                                                    flex: 1,
-                                                    child: showTextFiled4
-                                                        ? DateTimePicker(
-                                                            style:
-                                                                Theme.of(context)
-                                                                    .textTheme
-                                                                    .bodyText1,
-                                                            validator: (value) {
-                                                              if (value.isEmpty ||
-                                                                  value == null)
-                                                                return SharedData.getGlobalLang().dateBirthIsRequired();
-                                                              else
-                                                                return null;
-                                                            },
-                                                            onChanged: (value) {
-                                                              Provider.of<UserAuthProvider>(
-                                                                          context,
-                                                                          listen:
-                                                                              false)
-                                                                      .user
-                                                                      .setDate_of_birth =
-                                                                  value;
-                                                            },
-                                                            controller: dateCon,
-                                                            // controller: date_of_birthController,
-                                                            type:
-                                                                DateTimePickerType
-                                                                    .date,
-                                                            cancelText: SharedData.getGlobalLang().no(),
-                                                            confirmText: SharedData.getGlobalLang().okay(),
-                                                            dateMask:
-                                                                'd MMM, yyyy',
-                                                            //  initialValue:dateCon.text  ,
-                                                            firstDate:
-                                                                DateTime(1930),
-                                                            lastDate: DateTime(
-                                                                DateTime.now()
-                                                                        .year -
-                                                                    12),
-                                                            calendarTitle:
-                                                                 SharedData.getGlobalLang().chooseYourDateBirth(),
-                                                            icon:
-                                                                Icon(Icons.event),
-                                                            dateLabelText:
-                                                                SharedData.getGlobalLang().dateOfBirth(),
-                                                            timeLabelText: SharedData.getGlobalLang().clock(),
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                            autovalidate: true,
-                                                            errorFormatText:
-                                                                SharedData.getGlobalLang().enterCorrectData(),
-                                                            errorInvalidText:
-                                                                 SharedData.getGlobalLang().validDate(),
-
-                                                            // validator: (val) {
-                                                            //   print('the date on validation $val ');
-                                                            //   return null;
-                                                            // },
-                                                            onSaved: (val) => print(
-                                                                'the date on save $val'),
-                                                          )
-                                                        : SizedBox.shrink(),
-                                                  ),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Container(
-                                        margin: EdgeInsets.all(10),
-                                        height: 50,
-                                        width: double.infinity,
-                                        decoration: BoxDecoration(
-                                            color: Color(0xFFfe6e00),
-                                            borderRadius:
-                                                BorderRadius.circular(20)),
-                                        child: HoverButton(
-                                          onpressed: () {
-                                            checkInternetConnectivity(context)
-                                                .then((bool value) async {
-                                              if (value) {
-                                                var form = _formKey.currentState;
-                                                if (form.validate()) {
-                                                  state == true
-                                                      ? updateForm(context)
-                                                      : saveData(context);
-                                                  setState(() {
-                                                    switchPage = !switchPage;
-                                                    showTextFiled1 = false;
-                                                    showTextFiled2 = false;
-                                                    showTextFiled3 = false;
-                                                    showTextFiled4 = false;
-                                                  });
-                                                } else {
-                                                  ScaffoldMessenger.of(context)
-                                                      .showSnackBar(SnackBar(
-                                                    content: Text(
-                                                      SharedData.getGlobalLang().fillFields(),
-                                                      //textDirection: TextDirection.rtl,
-                                                      textAlign: TextAlign.center,
-                                                    ),
-                                                    backgroundColor: Colors.red,
-                                                  ));
-                                                }
-                                              }
-                                            });
-                                          },
-                                          splashColor: Color(0xFFFF8F00),
-                                          hoverTextColor: Color(0xFFFF8F00),
-                                          highlightColor: Color(0xFFFF8F00),
-                                          color: Color(0xFFfe6e00),
-                                          child: Center(
-                                              child: Row(
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                Padding(
-                                                  padding: EdgeInsets.only(
-                                                      bottom: 3,
-                                                      right: 2,
-                                                      left: 2),
-                                                  child: Icon(
-                                                    state == true
-                                                        ? FontAwesomeIcons
-                                                            .penToSquare
-                                                        : Icons.save,
-                                                    color: Theme.of(context)
-                                                        .iconTheme
-                                                        .color,
-                                                  ),
-                                                ),
-                                                Text(
-                                                  SharedData.getGlobalLang().editPersonalData(),
-                                                  style: Theme.of(context)
-                                                      .textTheme
-                                                      .headline4,
-                                                )
-                                              ])),
-                                        ),
-                                      ),
-                                      addPaddingWhenKeyboardAppears(),
-                                    ],
-                                  )))
-                          : ListView(
-                              padding: EdgeInsets.all(10),
-                              children: [
-                                ListTile(
-                                  onTap: () {
-                                    setState(() {
-                                      showTextFiled1 = !showTextFiled1;
-                                      switchPage = !switchPage;
-                                    });
-                                  },
-                                  title: Text(
-                                   SharedData.getGlobalLang().firstName(),
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                  leading: Icon(
-                                    Icons.drive_file_rename_outline,
-                                    color: Colors.white,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    setState(() {
-                                      showTextFiled2 = !showTextFiled2;
-                                      switchPage = !switchPage;
-                                    });
-                                  },
-                                  title: Text(
-                                    SharedData.getGlobalLang().middleName(),
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                  leading: Icon(
-                                    Icons.drive_file_rename_outline,
-                                    color: Colors.white,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    setState(() {
-                                      showTextFiled3 = !showTextFiled3;
-                                      switchPage = !switchPage;
-                                    });
-                                  },
-                                  title: Text(
-                                    SharedData.getGlobalLang().familyName(),
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                  leading: Icon(
-                                    Icons.drive_file_rename_outline,
-                                    color: Colors.white,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                ListTile(
-                                  onTap: () {
-                                    setState(() {
-                                      showTextFiled4 = !showTextFiled4;
-                                      switchPage = !switchPage;
-                                    });
-                                  },
-                                  title: Text(
-                                    SharedData.getGlobalLang().dateOfBirth(),
-                                    style: Theme.of(context).textTheme.headline4,
-                                  ),
-                                  leading: Icon(
-                                    Icons.date_range,
-                                    color: Colors.white,
-                                  ),
-                                  trailing: Icon(
-                                    Icons.arrow_forward_ios,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                Container(
-                                  margin: EdgeInsets.all(10),
-                                  height: 50,
-                                  width: double.infinity,
-                                  decoration: BoxDecoration(
-                                      color: Color(0xFFfe6e00),
-                                      borderRadius: BorderRadius.circular(20)),
-                                  child: HoverButton(
-                                    onpressed: () {
-                                      setState(() {
-                                        switchPage = !switchPage;
-                                        showTextFiled1 = true;
-                                        showTextFiled2 = true;
-                                        showTextFiled3 = true;
-                                        showTextFiled4 = true;
-                                      });
-                                    },
-                                    splashColor: Color(0xFFFF8F00),
-                                    hoverTextColor: Color(0xFFFF8F00),
-                                    highlightColor: Color(0xFFFF8F00),
-                                    color: Color(0xFFfe6e00),
-                                    child: Center(
-                                        child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                bottom: 3, right: 2, left: 2),
-                                            child: Icon(
-                                              state == true
-                                                  ? FontAwesomeIcons.penToSquare
-                                                  : Icons.save,
-                                              color: Theme.of(context)
-                                                  .iconTheme
-                                                  .color,
-                                            ),
-                                          ),
-                                          Text(
-                                            SharedData.getGlobalLang().editPersonalData(),
-                                            style: Theme.of(context)
-                                                .textTheme
-                                                .headline4,
-                                          )
-                                        ])),
-                                  ),
-                                )
-                              ],
-                            ),
+                      borderRadius: BorderRadius.only(
+                          topLeft: Radius.circular(30),
+                          topRight: Radius.circular(30)),
                     ),
+                    height: MediaQuery.of(context).size.height * 0.55,
+                    width: MediaQuery.of(context).size.width,
+                    child: switchPage
+                        ? SingleChildScrollView(
+                            child: ConstrainedBox(
+                                constraints: BoxConstraints(
+                                  minHeight:
+                                      MediaQuery.of(context).size.height * 0.75,
+                                ),
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(20.0),
+                                      child: Form(
+                                        key: _formKey,
+                                        child: Column(
+                                          children: [
+                                            showTextFiled1
+                                                ? customTextFormField(
+                                                    context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        firstNameCon,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) => value
+                                                            .isEmpty
+                                                        ? SharedData
+                                                                .getGlobalLang()
+                                                            .firstNameIsRequired()
+                                                        : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData
+                                                            .getGlobalLang()
+                                                        .firstName(),
+                                                    hintText: SharedData
+                                                            .getGlobalLang()
+                                                        .enterFirstName(),
+                                                  )
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            showTextFiled2
+                                                ? customTextFormField(context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        fatherNameCon,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) => value
+                                                            .isEmpty
+                                                        ? SharedData
+                                                                .getGlobalLang()
+                                                            .middleNameRequired()
+                                                        : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData
+                                                            .getGlobalLang()
+                                                        .middleName(),
+                                                    hintText: SharedData
+                                                            .getGlobalLang()
+                                                        .enterMiddleName())
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            showTextFiled3
+                                                ? customTextFormField(context,
+                                                    autofocus: true,
+                                                    editingController:
+                                                        lastNameCon,
+                                                    keyboardType:
+                                                        TextInputType.text,
+                                                    validator: (value) => value
+                                                            .isEmpty
+                                                        ? SharedData
+                                                                .getGlobalLang()
+                                                            .familyNameRequired()
+                                                        : null,
+                                                    prefixIcon: Icon(
+                                                      Icons
+                                                          .drive_file_rename_outline,
+                                                      color: Colors.teal,
+                                                    ),
+                                                    labelText: SharedData
+                                                            .getGlobalLang()
+                                                        .familyName(),
+                                                    hintText: SharedData
+                                                            .getGlobalLang()
+                                                        .enterFamilyName())
+                                                : SizedBox.shrink(),
+                                            SizedBox(
+                                              height: 24,
+                                            ),
+                                            Row(
+                                              children: [
+                                                Expanded(
+                                                  flex: 1,
+                                                  child: showTextFiled4
+                                                      ? DateTimePicker(
+                                                          style:
+                                                              Theme.of(context)
+                                                                  .textTheme
+                                                                  .bodyText1,
+                                                          validator: (value) {
+                                                            if (value.isEmpty ||
+                                                                value == null)
+                                                              return SharedData
+                                                                      .getGlobalLang()
+                                                                  .dateBirthIsRequired();
+                                                            else
+                                                              return null;
+                                                          },
+                                                          onChanged: (value) {
+                                                            Provider.of<UserAuthProvider>(
+                                                                        context,
+                                                                        listen:
+                                                                            false)
+                                                                    .user
+                                                                    .setDate_of_birth =
+                                                                value;
+                                                          },
+                                                          controller: dateCon,
+                                                          // controller: date_of_birthController,
+                                                          type:
+                                                              DateTimePickerType
+                                                                  .date,
+                                                          cancelText: SharedData
+                                                                  .getGlobalLang()
+                                                              .no(),
+                                                          confirmText: SharedData
+                                                                  .getGlobalLang()
+                                                              .okay(),
+                                                          dateMask:
+                                                              'd MMM, yyyy',
+                                                          //  initialValue:dateCon.text  ,
+                                                          firstDate:
+                                                              DateTime(1930),
+                                                          lastDate: DateTime(
+                                                              DateTime.now()
+                                                                      .year -
+                                                                  12),
+                                                          calendarTitle: SharedData
+                                                                  .getGlobalLang()
+                                                              .chooseYourDateBirth(),
+                                                          icon:
+                                                              Icon(Icons.event),
+                                                          dateLabelText: SharedData
+                                                                  .getGlobalLang()
+                                                              .dateOfBirth(),
+                                                          timeLabelText: SharedData
+                                                                  .getGlobalLang()
+                                                              .clock(),
+                                                          textAlign:
+                                                              TextAlign.left,
+                                                          autovalidate: true,
+                                                          errorFormatText: SharedData
+                                                                  .getGlobalLang()
+                                                              .enterCorrectData(),
+                                                          errorInvalidText:
+                                                              SharedData
+                                                                      .getGlobalLang()
+                                                                  .validDate(),
+
+                                                          // validator: (val) {
+                                                          //   print('the date on validation $val ');
+                                                          //   return null;
+                                                          // },
+                                                          onSaved: (val) => print(
+                                                              'the date on save $val'),
+                                                        )
+                                                      : SizedBox.shrink(),
+                                                ),
+                                              ],
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                    Container(
+                                      margin: EdgeInsets.all(10),
+                                      height: 50,
+                                      width: double.infinity,
+                                      decoration: BoxDecoration(
+                                          color: Color(0xFFfe6e00),
+                                          borderRadius:
+                                              BorderRadius.circular(20)),
+                                      child: customHoverButton(
+                                        context,
+                                        onPressed: () {
+                                          checkInternetConnectivity(context)
+                                              .then((bool value) async {
+                                            if (value) {
+                                              var form = _formKey.currentState;
+                                              if (form.validate()) {
+                                                state == true
+                                                    ? updateForm(context)
+                                                    : saveData(context);
+                                                setState(() {
+                                                  switchPage = !switchPage;
+                                                  showTextFiled1 = false;
+                                                  showTextFiled2 = false;
+                                                  showTextFiled3 = false;
+                                                  showTextFiled4 = false;
+                                                });
+                                              } else {
+                                                ScaffoldMessenger.of(context)
+                                                    .showSnackBar(SnackBar(
+                                                  content: Text(
+                                                    SharedData.getGlobalLang()
+                                                        .fillFields(),
+                                                    //textDirection: TextDirection.rtl,
+                                                    textAlign: TextAlign.center,
+                                                  ),
+                                                  backgroundColor: Colors.red,
+                                                ));
+                                              }
+                                            }
+                                          });
+                                        },
+                                        icon: state == true
+                                            ? FontAwesomeIcons.penToSquare
+                                            : Icons.save,
+                                        text: SharedData.getGlobalLang()
+                                            .editPersonalData(),
+                                      ),
+                                    ),
+                                    addPaddingWhenKeyboardAppears(),
+                                  ],
+                                )))
+                        : ListView(
+                            padding: EdgeInsets.all(10),
+                            children: [
+                              ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    showTextFiled1 = !showTextFiled1;
+                                    switchPage = !switchPage;
+                                  });
+                                },
+                                title: Text(
+                                  SharedData.getGlobalLang().firstName(),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    showTextFiled2 = !showTextFiled2;
+                                    switchPage = !switchPage;
+                                  });
+                                },
+                                title: Text(
+                                  SharedData.getGlobalLang().middleName(),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    showTextFiled3 = !showTextFiled3;
+                                    switchPage = !switchPage;
+                                  });
+                                },
+                                title: Text(
+                                  SharedData.getGlobalLang().familyName(),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.drive_file_rename_outline,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              ListTile(
+                                onTap: () {
+                                  setState(() {
+                                    showTextFiled4 = !showTextFiled4;
+                                    switchPage = !switchPage;
+                                  });
+                                },
+                                title: Text(
+                                  SharedData.getGlobalLang().dateOfBirth(),
+                                  style: Theme.of(context).textTheme.headline4,
+                                ),
+                                leading: Icon(
+                                  Icons.date_range,
+                                  color: Colors.white,
+                                ),
+                                trailing: Icon(
+                                  Icons.arrow_forward_ios,
+                                  color: Colors.white,
+                                ),
+                              ),
+                              Container(
+                                margin: EdgeInsets.all(10),
+                                height: 50,
+                                width: double.infinity,
+                                decoration: BoxDecoration(
+                                    color: Color(0xFFfe6e00),
+                                    borderRadius: BorderRadius.circular(20)),
+                                child: HoverButton(
+                                  onpressed: () {
+                                    setState(() {
+                                      switchPage = !switchPage;
+                                      showTextFiled1 = true;
+                                      showTextFiled2 = true;
+                                      showTextFiled3 = true;
+                                      showTextFiled4 = true;
+                                    });
+                                  },
+                                  splashColor: Color(0xFFFF8F00),
+                                  hoverTextColor: Color(0xFFFF8F00),
+                                  highlightColor: Color(0xFFFF8F00),
+                                  color: Color(0xFFfe6e00),
+                                  child: Center(
+                                      child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                        Padding(
+                                          padding: EdgeInsets.only(
+                                              bottom: 3, right: 2, left: 2),
+                                          child: Icon(
+                                            state == true
+                                                ? FontAwesomeIcons.penToSquare
+                                                : Icons.save,
+                                            color: Theme.of(context)
+                                                .iconTheme
+                                                .color,
+                                          ),
+                                        ),
+                                        Text(
+                                          SharedData.getGlobalLang()
+                                              .editPersonalData(),
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
+                                        )
+                                      ])),
+                                ),
+                              )
+                            ],
+                          ),
                   ),
-                )
-              ],
-            ),
-          )
-    );
+                ),
+              )
+            ],
+          ),
+        ));
   }
 
   void pickImage() async {

@@ -9,7 +9,8 @@ class About extends StatefulWidget {
   @override
   _AboutState createState() => _AboutState();
 }
-class _AboutState extends State<About>  {
+
+class _AboutState extends State<About> {
   @override
   void initState() {
     super.initState();
@@ -19,33 +20,35 @@ class _AboutState extends State<About>  {
   void dispose() {
     super.dispose();
   }
+
   @override
   Widget build(BuildContext context) {
     return customDirectionality(
-        child: Scaffold(
-          drawer: CustomDrawer(),
-          appBar: customAppBar(
-            context,
+      child: Scaffold(
+        drawer: CustomDrawer(),
+        appBar: customAppBar(context,
             title: SharedData.getGlobalLang().aboutApp(),
-            icon: Icons.people_alt
-             ),
-          body: Container(
-            child:  Padding(
-              padding: const EdgeInsets.all(10.0),
-              child:   ContactUs(
-                logo: const AssetImage('assets/images/programmerlogo.png'),
-                email:   'abdrahmankafo@gmail.com',
-                companyName: '',
-                githubUserName: 'AbdrahmanKafo96',
-                linkedinURL: 'https://www.linkedin.com/in/abdrahman-kafo-945b331b5/',
-                tagLine: SharedData.getGlobalLang().infoDevelopmentTeam(),
-                twitterHandle: ' ',
-                textColor: Colors.black,
-                cardColor: Colors.white,
-                companyColor: Colors.black,
-                taglineColor: Colors.black,
-              ),
+            icon: Icons.people_alt),
+        body: Container(
+          child: Padding(
+            padding: const EdgeInsets.all(10.0),
+            child: ContactUs(
+              logo: const AssetImage('assets/images/programmerlogo.png'),
+              email: 'abdrahmankafo@gmail.com',
+              companyName: '',
+              githubUserName: 'AbdrahmanKafo96',
+              linkedinURL:
+                  'https://www.linkedin.com/in/abdrahman-kafo-945b331b5/',
+              tagLine: SharedData.getGlobalLang().infoDevelopmentTeam(),
+              twitterHandle: ' ',
+              textColor: Colors.white,
+              cardColor: Color(0xff33333d),
+              companyColor: Colors.grey,
+              companyFontWeight: FontWeight.bold,
+              taglineFontWeight: FontWeight.bold,
+              taglineColor: Colors.grey,
             ),
+          ),
         ),
       ),
     );

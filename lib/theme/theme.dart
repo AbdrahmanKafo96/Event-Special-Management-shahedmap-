@@ -70,7 +70,7 @@ import 'package:google_fonts/google_fonts.dart';
 
 class Styles {
   static final MaterialColor primarySwatch =
-      MaterialColor(0xffFAFAFA, <int, Color>{
+      MaterialColor( 0xffFAFAFA, <int, Color>{
     50: Color(0xffFAFAFA),
     100: Color(0xffF5F5F5),
     200: Color(0xffEEEEEE),
@@ -90,14 +90,14 @@ class Styles {
         color: Colors.white,
       ),
       primarySwatch: primarySwatch,
-      primaryColor: isDarkTheme ? Colors.black : Colors.white,
+      primaryColor: isDarkTheme ?Color( 0xff121212): Colors.white,
 
       backgroundColor: isDarkTheme ? Colors.red : Color(0xffF1F5FB),
 
-      indicatorColor: isDarkTheme ? Color(0xff0E1D36) : Color(0xffCBDCF8),
-      buttonColor: isDarkTheme ? Color(0xff3B3B3B) : Color(0xffF1F5FB),
+      indicatorColor:  isDarkTheme ? Color( 0xff121212) : Colors.white,
+      buttonColor:isDarkTheme ? Color( 0xff121212) : Colors.white,
 
-      hintColor: isDarkTheme ? Color(0xff280C0B) : Color(0xffEECED3),
+      hintColor: isDarkTheme ? Colors.white : Color( 0xff121212),
 
       highlightColor: Color(0xFFFF8F00),
       hoverColor: isDarkTheme ? Color(0xff3A3A3B) : Color(0xff4285F4),
@@ -105,13 +105,14 @@ class Styles {
       focusColor: Color(0xFFFF8F00),
       disabledColor: Colors.grey,
       //textSelectionColor: isDarkTheme ? Colors.white : Colors.black,
-      cardColor: isDarkTheme ? Color(0xFF151515) : Colors.white,
+      cardColor: isDarkTheme ? Color(0xff121212) : Colors.white,
       canvasColor: isDarkTheme ? Colors.black : Colors.grey[50],
       brightness: isDarkTheme ? Brightness.dark : Brightness.light,
       buttonTheme: Theme.of(context).buttonTheme.copyWith(
           colorScheme: isDarkTheme ? ColorScheme.dark() : ColorScheme.light()),
-      scaffoldBackgroundColor: isDarkTheme ? Colors.grey : Colors.white,
+      scaffoldBackgroundColor: isDarkTheme ? Color( 0xff121212) : Colors.white,
       textTheme: TextTheme(
+
         button: GoogleFonts.notoSansArabic(
             // textStyle: TextStyle(color: Color(0xFF666666),
             ),
@@ -121,7 +122,10 @@ class Styles {
         ),
         headline6: GoogleFonts.notoSansArabic(
           textStyle:
-              TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              TextStyle( color: Colors.white, fontWeight: FontWeight.bold),
+        ),headline5: GoogleFonts.notoSansArabic(
+          textStyle:
+              TextStyle(fontSize: 14.0 ,color: Colors.white, fontWeight: FontWeight.bold),
         ),
         headline4: GoogleFonts.notoSansArabic(
           textStyle: TextStyle(
@@ -130,7 +134,7 @@ class Styles {
         subtitle1: GoogleFonts.notoSansArabic(
           textStyle: TextStyle(
             fontSize: 14.0,
-            color: Colors.grey.shade100,
+            color: Colors.grey ,
           ),
         ),
         subtitle2: GoogleFonts.notoSansArabic(
@@ -142,7 +146,7 @@ class Styles {
         bodyText1: GoogleFonts.notoSansArabic(
             textStyle: TextStyle(
           fontSize: 13.0,
-          color: Color(0xFFffffff),
+          color: Colors.white,
         )),
       ),
 
@@ -158,11 +162,12 @@ class Styles {
         fillColor: Color(0xFF5a565f),
         isDense: true,
         contentPadding: EdgeInsets.all(12),
-        hintStyle: TextStyle(color: Colors.white),
+        hintStyle: TextStyle(color: Colors.grey),
         labelStyle: GoogleFonts.notoSansArabic(
             color: Color(0xFFFFFFFF), fontWeight: FontWeight.bold),
         filled: true,
         enabledBorder: OutlineInputBorder(
+
           borderSide: BorderSide(color: Colors.black),
           borderRadius: BorderRadius.circular(10),
         ),
@@ -181,7 +186,7 @@ class Styles {
       appBarTheme: AppBarTheme(
 
         systemOverlayStyle: SystemUiOverlayStyle(
-          statusBarColor: Colors.grey,
+          statusBarColor: Colors.black54,
           statusBarBrightness: Brightness.light,
           statusBarIconBrightness: Brightness.light,
         ),
@@ -189,7 +194,6 @@ class Styles {
           textStyle: TextStyle(
               color: Colors.white, fontWeight: FontWeight.bold, fontSize: 18),
         ),
-
         iconTheme: IconThemeData(color: Colors.white),
         shadowColor: Color(0xFFFFFFFF),
         elevation: 1.0,

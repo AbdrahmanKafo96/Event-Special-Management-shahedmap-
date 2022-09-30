@@ -489,7 +489,6 @@ class _UnitTrackingState extends State<UnitTracking> {
                                 strictbounds: false,
                                 components: [
                                   Component(Component.country, 'ly'),
-                                  Component(Component.country, 'gb'),
                                 ],
                                 //google_map_webservice package
                                 onError: (err) {
@@ -523,7 +522,7 @@ class _UnitTrackingState extends State<UnitTracking> {
                           },
                           child: Icon(
                             FontAwesomeIcons.magnifyingGlass,
-                            color: Colors.grey,
+                            color: Colors.black12.withOpacity(.5),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(), //<-- SEE HERE
@@ -541,7 +540,7 @@ class _UnitTrackingState extends State<UnitTracking> {
                           },
                           child: Icon(
                             FontAwesomeIcons.bus,
-                            color: Colors.grey,
+                            color: Colors.black12.withOpacity(.5),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(), //<-- SEE HERE
@@ -554,7 +553,7 @@ class _UnitTrackingState extends State<UnitTracking> {
                 ],
               ),
         floatingActionButton: FloatingActionButton(
-            child: Icon(Icons.location_searching),
+            child: Icon(Icons.location_searching ,color: Colors.black12.withOpacity(.5),),
             backgroundColor: Colors.deepOrange,
             onPressed: () async {
               final GoogleMapController controller = await _controller.future;

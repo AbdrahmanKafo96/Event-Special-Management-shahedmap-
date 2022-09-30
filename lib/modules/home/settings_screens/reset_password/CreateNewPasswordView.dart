@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hovering/hovering.dart';
 import 'package:provider/provider.dart'; 
 import 'package:shahed/widgets/checkInternet.dart';
@@ -12,6 +13,7 @@ import 'package:shahed/widgets/custom_drawer.dart';
 
 import '../../../../shared_data/shareddata.dart';
 import '../../../../widgets/customDirectionality.dart';
+import '../../../../widgets/customHoverButton.dart';
 
 class CreateNewPasswordView extends StatefulWidget {
   @override
@@ -182,16 +184,11 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
-                        height: 50,
-                        width: MediaQuery.of(context).size.width * 0.75,
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20)),
-                        child: HoverButton(
-                          splashColor: Color(0xFFFF8F00),
-                          hoverTextColor: Color(0xFFFF8F00),
-                          highlightColor: Color(0xFFFF8F00),
-                          color: Color(0xFFfe6e00),
-                          onpressed: () async {
+
+
+                        child: customHoverButton(
+                          context,
+                          onPressed: () async {
                             checkInternetConnectivity(context)
                                 .then((bool value) async {
                               if (value) {
@@ -224,10 +221,8 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                               }
                             });
                           },
-                          child: Text(
-                            SharedData.getGlobalLang().resetPassword(),
-                            style: Theme.of(context).textTheme.headline4,
-                          ),
+                          icon: FontAwesomeIcons.key,
+                          text: SharedData.getGlobalLang().resetPassword(),
                         ),
                       ),
                     ),

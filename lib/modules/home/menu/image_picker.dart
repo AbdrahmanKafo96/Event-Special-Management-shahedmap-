@@ -136,34 +136,32 @@ class _MyCustomImageState extends State<MyCustomImage> {
           return Card(
             color: Colors.black54,
             elevation: 5.0,
-            child: Wrap(
-              spacing: 2,
-              runSpacing: -10,
-              alignment: WrapAlignment.center,
-              crossAxisAlignment: WrapCrossAlignment.center,
-              direction: Axis.horizontal,
-              children: [
-                IconButton(
-                  icon: Icon(
-                    Icons.add_photo_alternate,
-                    color: Colors.white,
-                    size: 26,
+            child: FittedBox(
+              child: Column(
+                // spacing: 2,
+                // runSpacing: -10,
+                // alignment: WrapAlignment.center,
+                // crossAxisAlignment: WrapCrossAlignment.center,
+                // direction: Axis.horizontal,
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      Icons.add_photo_alternate,
+                      color: Colors.white,
+                      size: 26,
+                    ),
+                    onPressed: () {
+                      // if (images.length >= 1 && images.length <= 4) {
+                      showPicker(context, _imgFromGallery, _imgFromCamera,
+                          index: index);
+                    },
                   ),
-                  onPressed: () {
-                    // if (images.length >= 1 && images.length <= 4) {
-                    showPicker(context, _imgFromGallery, _imgFromCamera,
-                        index: index);
-                    // _showPicker(context, index);
-                    // } else {
-                    //   // we can put a message here if the list is full.
-                    // }
-                  },
-                ),
-                Text(
-                  SharedData.getGlobalLang().pickImage(),
-                  style: Theme.of(context).textTheme.subtitle2,
-                )
-              ],
+                   Text(
+                      SharedData.getGlobalLang().pickImage(),
+                      style: Theme.of(context).textTheme.subtitle2,
+                  ),
+                ],
+              ),
             ),
           );
         }

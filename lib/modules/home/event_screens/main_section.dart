@@ -7,6 +7,7 @@ import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/provider/event_provider.dart';
+import 'package:shahed/widgets/custom_indecator.dart';
 import 'event_category.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -69,9 +70,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
               actions: [
                 IconButton(
                     onPressed: () {
-
                       if (lat == null) {
-                        errorMessage1 = SharedData.getGlobalLang().locationRequired();
+                        errorMessage1 =
+                            SharedData.getGlobalLang().locationRequired();
                         setState(() {
                           myColor = Colors.red;
                         });
@@ -100,11 +101,13 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             .eventType
                             .type_id = null;
                         Provider.of<EventProvider>(context, listen: false)
-                            .event
-                            .eventType
-                            .type_name = SharedData.getGlobalLang().chooseType();
+                                .event
+                                .eventType
+                                .type_name =
+                            SharedData.getGlobalLang().chooseType();
 
-                        errorMessage2 = SharedData.getGlobalLang().categoryRequired();
+                        errorMessage2 =
+                            SharedData.getGlobalLang().categoryRequired();
                         setState(() {
                           myColor = Colors.red;
                         });
@@ -129,7 +132,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                   .eventType
                                   .type_name ==
                               "") {
-                        errorMessage3 = SharedData.getGlobalLang().typeRequired();
+                        errorMessage3 =
+                            SharedData.getGlobalLang().typeRequired();
                         setState(() {
                           myColor = Colors.red;
                         });
@@ -152,7 +156,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                   .getXFile
                                   .length ==
                               0) {
-                        errorMessage4 = SharedData.getGlobalLang().imageRequired();
+                        errorMessage4 =
+                            SharedData.getGlobalLang().imageRequired();
                         setState(() {
                           myColor = Colors.red;
                         });
@@ -178,13 +183,10 @@ class _EventSectionOneState extends State<EventSectionOne> {
               ],
             ),
             body: load == true
-                ? Center(
-                    child: CircularProgressIndicator(
-                    color: Colors.green,
-                  ))
+                ? Center(child: customCircularProgressIndicator())
                 : Container(
-                    margin:
-                        EdgeInsets.only(left: 10, top: 15, right: 10, bottom: 10),
+                    margin: EdgeInsets.only(
+                        left: 10, top: 15, right: 10, bottom: 10),
                     // padding:
                     width: double.infinity,
                     //  width: MediaQuery.of(context).size.width,
@@ -208,7 +210,10 @@ class _EventSectionOneState extends State<EventSectionOne> {
                           Row(
                             children: [
                               Text(
-                                lng == null ? SharedData.getGlobalLang().pickLocation() :SharedData.getGlobalLang().modifyLocation() ,
+                                lng == null
+                                    ? SharedData.getGlobalLang().pickLocation()
+                                    : SharedData.getGlobalLang()
+                                        .modifyLocation(),
                                 style: Theme.of(context).textTheme.headline6,
                               ),
                             ],
@@ -224,7 +229,8 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                 Location location = await Location();
                                 bool _serviceEnabled;
                                 PermissionStatus _permissionGranted;
-                                _serviceEnabled = await location.serviceEnabled();
+                                _serviceEnabled =
+                                    await location.serviceEnabled();
                                 if (!_serviceEnabled) {
                                   _serviceEnabled =
                                       await location.requestService();
@@ -328,16 +334,21 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                           Theme.of(context).textTheme.headline4,
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(right: 5, left: 5),
+                                      padding:
+                                          EdgeInsets.only(right: 5, left: 5),
                                       child: Text(
-                                        SharedData.getGlobalLang().imageMessage(),
-                                        style:
-                                            Theme.of(context).textTheme.subtitle1,
+                                        SharedData.getGlobalLang()
+                                            .imageMessage(),
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle1,
                                       ),
                                     ),
                                     PickImages(),
                                     Text(
-                                      errorMessage4 == null ? "" : errorMessage4,
+                                      errorMessage4 == null
+                                          ? ""
+                                          : errorMessage4,
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.red),
                                     ),

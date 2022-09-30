@@ -108,7 +108,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                     backgroundColor: Colors.orange,
                     child: Text(
                       "${username[0].toUpperCase()}",
-                      style: TextStyle(fontSize: 40.0),
+                      style: TextStyle(fontSize: 40.0,color: Colors.white),
                     ),
                   ),
                 ),

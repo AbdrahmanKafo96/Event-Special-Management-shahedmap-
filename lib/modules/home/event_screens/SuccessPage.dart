@@ -12,44 +12,42 @@ class SuccessPage extends StatefulWidget {
 class _SuccessPageState extends State<SuccessPage> {
   @override
   Widget build(BuildContext context) {
-    return  customDirectionality(
+    return customDirectionality(
       child: Scaffold(
-          appBar: customAppBar(
-            context,
-            title:  SharedData.getGlobalLang().operationSuccess(),
-            leading:IconButton(
-              icon: Icon(Icons.cancel),
-              tooltip: SharedData.getGlobalLang().skip() ,
-              onPressed: (){
-                Navigator.pushAndRemoveUntil(
-                  context,
-                  MaterialPageRoute(
-                      builder: (context) => HomePage()),
-                      (Route<dynamic> route) => false,
-                );
-              },
-            ),
+        appBar: customAppBar(
+          context,
+          title: SharedData.getGlobalLang().operationSuccess(),
+          leading: IconButton(
+            icon: Icon(Icons.cancel),
+            tooltip: SharedData.getGlobalLang().skip(),
+            onPressed: () {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (context) => HomePage()),
+                (Route<dynamic> route) => false,
+              );
+            },
           ),
-          body: Center(
+        ),
+        body: Center(
             child: Container(
-              color: Color(0xFFf7f7f7),
-              height: MediaQuery.of(context).size.height,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-
-
-                   Image.asset(
-                      "assets/images/success.gif",
-                     // height: MediaQuery.of(context).size.height/2,
-                      width:  MediaQuery.of(context).size.width,
-                    ),
-
-                  Text(SharedData.getGlobalLang().sentEvenSuccessfully(),style: Theme.of(context).textTheme.headline4,)
-                ],
+          color: Color(0xFFf7f7f7),
+          height: MediaQuery.of(context).size.height,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset(
+                "assets/images/success.gif",
+                // height: MediaQuery.of(context).size.height/2,
+                width: MediaQuery.of(context).size.width,
               ),
-            )
+              Text(
+                SharedData.getGlobalLang().sentEvenSuccessfully(),
+                style: TextStyle(color: Colors.grey, fontSize: 18),
+              )
+            ],
           ),
+        )),
       ),
     );
   }

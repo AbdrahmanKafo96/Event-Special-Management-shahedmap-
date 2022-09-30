@@ -313,14 +313,14 @@ class _MyHomePageState extends State<MapMarker> {
                             String location = "Search Location";
                             var place = await PlacesAutocomplete.show(
                                 context: context,
+
                                 apiKey: Singleton.mapApiKey,
                                 mode: Mode.overlay,
-                                hint: 'بحث',
+                                hint: SharedData.getGlobalLang().search(),
                                 types: [],
                                 strictbounds: false,
                                 components: [
                                   p.Component(p.Component.country, 'ly'),
-                                  p.Component(p.Component.country, 'gb'),
                                 ],
                                 //google_map_webservice package
                                 onError: (err) {
@@ -354,7 +354,7 @@ class _MyHomePageState extends State<MapMarker> {
                           },
                           child: Icon(
                             FontAwesomeIcons.magnifyingGlass,
-                            color: Colors.grey,
+                            color: Colors.black12.withOpacity(.5),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(), //<-- SEE HERE

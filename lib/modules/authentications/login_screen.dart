@@ -15,6 +15,7 @@ import 'package:shahed/widgets/custom_dialog.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/modules/authentications/validator.dart';
 import 'package:shahed/provider/auth_provider.dart';
+import '../../widgets/customHoverButton.dart';
 import 'account_section.dart';
 import 'logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -45,9 +46,9 @@ class _LoginUiState extends State<LoginUi> {
         child:  Scaffold(
               appBar: customAppBar(
                 context,
-                title: val == PageState.login
-                    ? SharedData.getGlobalLang().login()
-                    : SharedData.getGlobalLang().createAccount(),
+                // title: val == PageState.login
+                //     ? SharedData.getGlobalLang().login()
+                //     : SharedData.getGlobalLang().createAccount(),
               ),
               body: SafeArea(
                 child: Stack(
@@ -70,8 +71,9 @@ class _LoginUiState extends State<LoginUi> {
                             child: SingleChildScrollView(
                               child: Form(
                                 key: _formKey,
-                                child: Column(children: [
-                                  Logo('logoa.png'),
+                                child: Column(
+                                    children: [
+                                SharedData.getGlobalLang().getLanguage=="AR"?  Logo('logoa.png'):Logo('logoe.png'),
                                   val == PageState.login
                                       ? LoginForm()
                                       : RegistrationForm(),
@@ -241,8 +243,9 @@ class _LoginUiState extends State<LoginUi> {
                                     decoration: BoxDecoration(
 //     color: Color(0xFF5a8f62),
                                         borderRadius: BorderRadius.circular(20)),
-                                    child: HoverButton(
-                                      onpressed: () async {
+                                    child: customHoverButton(
+                                      context,
+                                      onPressed: () async {
                                         Map userdata;
 // L login  , R Register  ...
                                         userdata = val == PageState.login
@@ -475,36 +478,13 @@ class _LoginUiState extends State<LoginUi> {
                                           });
                                         }
                                       },
-                                      splashColor: Color(0xFFFF8F00),
-                                      hoverTextColor: Color(0xFFFF8F00),
-                                      highlightColor: Color(0xFFFF8F00),
-                                      color: Color(0xFFfe6e00),
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            Padding(
-                                              padding: EdgeInsets.only(
-                                                  bottom: 3, right: 2, left: 2),
-                                              child: Icon(
-                                                FontAwesomeIcons
-                                                    .arrowRightFromBracket,
-                                                color: Theme.of(context)
-                                                    .iconTheme
-                                                    .color,
-                                              ),
-                                            ),
-                                            Text(
-                                              val == PageState.reg
-                                                  ? SharedData.getGlobalLang()
-                                                      .createAccount()
-                                                  : SharedData.getGlobalLang()
-                                                      .login(),
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .headline4,
-                                            ),
-                                          ]),
+                                      icon:  FontAwesomeIcons
+                                          .arrowRightFromBracket,
+                                      text:val == PageState.reg
+                                          ? SharedData.getGlobalLang()
+                                          .createAccount()
+                                          : SharedData.getGlobalLang()
+                                          .login(),
                                     ),
                                   ),
                                 ]),
