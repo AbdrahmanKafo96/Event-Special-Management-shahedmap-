@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-Widget customAppBar(
-    BuildContext context,
+import 'package:shahed/shared_data/shareddata.dart';
+
+Widget customAppBar(BuildContext context,
     {String title = "",
     Color backgroundColor,
     double elevation = 0.0,
@@ -29,14 +30,17 @@ Widget customAppBar(
     title: Text.rich(
       TextSpan(
         children: [
-          TextSpan(text: " $title "),
           WidgetSpan(
               alignment: ui.PlaceholderAlignment.middle,
-              child: Icon(icon, color: Colors.white)),
+              child: Icon(
+                icon,
+                color: Colors.white,
+              )),
           //  TextSpan(text: 'downloads on both stores'),
+          TextSpan(text: " $title "),
         ],
       ),
-      style:  Theme.of(context).textTheme.headline3,
+      style: Theme.of(context).textTheme.headline3,
     ),
     centerTitle: true,
     elevation: elevation,
