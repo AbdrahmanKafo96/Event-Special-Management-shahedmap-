@@ -23,6 +23,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:weather/weather.dart';
 
 import '../../../widgets/customDirectionality.dart';
+import '../../../widgets/custom_indecator.dart';
 
 class UnitTracking extends StatefulWidget {
   const UnitTracking({Key key}) : super(key: key);
@@ -81,7 +82,8 @@ class _UnitTrackingState extends State<UnitTracking> {
           center: latlng,
           fillColor: Colors.blue.withAlpha(70));
     });
-    _getPolyline(latlng.latitude,latlng.longitude);
+    if(_lng_endpoint!=null)
+    _getPolyline(_lat_endpoint,_lng_endpoint);
   }
 
   Future<void> getIniLocation() async {
@@ -90,7 +92,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       Uint8List imageData = await getMarker();
       //   var location = await _locationTracker.getLocation();
       geo.Position position = await geo.Geolocator.getCurrentPosition(
-          desiredAccuracy: geo.LocationAccuracy.high);
+          desiredAccuracy: geo.LocationAccuracy.best);
       print("getIniLocation  position lat ${position.latitude}");
       print("getIniLocation position _lng  ${position.longitude}");
       updateMarkerAndCircle(position, imageData);
@@ -117,7 +119,7 @@ class _UnitTrackingState extends State<UnitTracking> {
     _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
     Singleton.getTrackingBox().then((value) => null);
     Singleton.getBox().then((getValue) {
-      getCurrentPosition().then((value) {
+      mygetCurrentPosition().then((value) {
         setState(() {
           senderID = getValue.get('user_id');
           beneficiarie_id = int.parse(getValue.get('beneficiarie_id'));
@@ -148,11 +150,11 @@ class _UnitTrackingState extends State<UnitTracking> {
     var boxTracking = await Singleton.getTrackingBox();
     // var location = await _locationTracker.getLocation();
     geo.Position pos = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
+        desiredAccuracy: geo.LocationAccuracy.best);
     _newLatitude = pos.latitude;
     _newLongitude = pos.longitude;
-    print("_sendLiveLocation  _newLatitude lat ${_newLatitude}");
-    print("_sendLiveLocation _newLongitude _lng  ${_newLongitude}");
+    double cu_lat=_newLatitude, cu_long=_newLongitude;
+
     if (_oldLatitude != null &&
         _oldLongitude != null &&
         _newLatitude != null &&
@@ -165,19 +167,17 @@ class _UnitTrackingState extends State<UnitTracking> {
       int seconds = newTime.second - oldTime.second;
 
       if (minutes < 0) minutes *= -1;
-
       if (seconds < 0) seconds *= -1;
+      double totalHours = ((minutes * 60) + seconds + (newTime.hour * 3600)) /3600.0;
 
-      double totalHours = ((minutes * 60) + seconds + (newTime.hour * 3600)) /
-          3600.0; // convert time to hours
       //var location = await _locationTracker.getLocation();
-      geo.Position location = await geo.Geolocator.getCurrentPosition(
-          desiredAccuracy: geo.LocationAccuracy.high);
+      // geo.Position location = await geo.Geolocator.getCurrentPosition(
+      //     desiredAccuracy: geo.LocationAccuracy.best);
       data = {
         'sender_id': senderID.toString(),
-        'beneficiarie_id': beneficiarie_id.toString(), // ok we will do it soon
-        'lat': location.latitude.toString(),
-        'lng': location.longitude.toString(),
+        'beneficiarie_id': beneficiarie_id.toString(),
+        'lat': cu_lat.toString(),
+        'lng': cu_long.toString(),
         'distance': distance.toString(),
         'lat_startpoint': _lat_startpoint.toString(),
         'lng_startpoint': _lng_startpoint.toString(),
@@ -201,8 +201,8 @@ class _UnitTrackingState extends State<UnitTracking> {
             boxTracking.add(Tracking(
                 senderID: senderID,
                 beneficiarieID: beneficiarie_id,
-                lat: location.latitude,
-                lng: location.longitude,
+                lat: cu_lat,
+                lng: cu_long,
                 distance: distance,
                 latStartPoint: _lat_startpoint,
                 lngStartPoint: _lng_startpoint,
@@ -249,12 +249,14 @@ class _UnitTrackingState extends State<UnitTracking> {
       );
     });
     _getPolyline(tappedPoint.latitude,tappedPoint.longitude);
-    _lat_endpoint = _destination.position.latitude;
-    _lng_endpoint = _destination.position.longitude;
+   setState(() {
+     _lat_endpoint = _destination.position.latitude;
+     _lng_endpoint = _destination.position.longitude;
+   });
 
     //var location = await _locationTracker.getLocation();
     geo.Position location = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
+        desiredAccuracy: geo.LocationAccuracy.best);
     _oldLatitude = location.latitude;
     _oldLongitude = location.longitude;
     print("handleTap  _oldLatitude lat ${_oldLatitude}");
@@ -273,7 +275,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       polylineId: id,
       color: Colors.blue,
       points: polylineCoordinates,
-      width: 8,
+      width: 6,
     );
     polylines[id] = polyline;
     setState(() {});
@@ -287,6 +289,8 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
   void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
+    var currentPosition = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: geo.LocationAccuracy.best);
     _addMarker(
       LatLng(currentPosition.latitude, currentPosition.longitude),
       "origin",
@@ -331,9 +335,9 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   double rad(final double degrees) => (degrees * pi / 180.0);
 
-  Future getCurrentPosition() async {
+  Future mygetCurrentPosition() async {
     currentPosition = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.high);
+        desiredAccuracy: geo.LocationAccuracy.best);
     print("getCurrentPosition  position lat ${currentPosition.latitude}");
     print("getCurrentPosition position _lng  ${currentPosition.longitude}");
   }
@@ -410,13 +414,12 @@ class _UnitTrackingState extends State<UnitTracking> {
       body: _kGooglePlex == null
           ? Container(
           child: Center(
-              child: CircularProgressIndicator(
-                color: Colors.green,
+              child: customCircularProgressIndicator(
               )))
           : Stack(
         children: [
           GoogleMap(
-
+            zoomControlsEnabled: false,
             trafficEnabled: traffic,
             myLocationEnabled: true,
             onTap: handleTap,
@@ -435,9 +438,24 @@ class _UnitTrackingState extends State<UnitTracking> {
               if (_destination != null) _destination
             },
             //   circles: Set.of((circle != null) ? [circle] : []),
-            onMapCreated: (GoogleMapController controller) {
+            onMapCreated: (GoogleMapController controller)   {
               _controller.complete(controller);
+            },
+            onCameraMoveStarted: ()async{
+           //   _locationSubscription.cancel();
+              Uint8List imageData = await getMarker();
+              geo.Position position = await geo.Geolocator.getCurrentPosition(
+                  desiredAccuracy: geo.LocationAccuracy.best);
+              updateMarkerAndCircle(position, imageData);
+            },
 
+            onCameraMove: (value) async {
+              // if(_locationSubscription!=null)
+              // _locationSubscription.cancel();
+              // Uint8List imageData = await getMarker();
+              // geo.Position position = await geo.Geolocator.getCurrentPosition(
+              //     desiredAccuracy: geo.LocationAccuracy.best);
+              //   updateMarkerAndCircle(position, imageData);
             },
           ),
           Positioned(
@@ -513,7 +531,8 @@ class _UnitTrackingState extends State<UnitTracking> {
                           final lat = geometry.location.lat;
                           final lang = geometry.location.lng;
                           var newlatlang = LatLng(lat, lang);
-
+                          if(_locationSubscription!=null)
+                          _locationSubscription.cancel();
                           //move map camera to selected place with animation
                           controller.animateCamera(
                               CameraUpdate.newCameraPosition(CameraPosition(
@@ -558,19 +577,18 @@ class _UnitTrackingState extends State<UnitTracking> {
           onPressed: () async {
             final GoogleMapController controller = await _controller.future;
             Uint8List imageData = await getMarker();
-            // var location = await _locationTracker.getLocation();
             geo.Position position = await geo.Geolocator.getCurrentPosition(
-                desiredAccuracy: geo.LocationAccuracy.high);
-            updateMarkerAndCircle(position, imageData);
+                desiredAccuracy: geo.LocationAccuracy.best);
+           updateMarkerAndCircle(position, imageData);
 
             if (_locationSubscription != null) {
               _locationSubscription.cancel();
             }
             final geo.LocationSettings locationSettings = geo.LocationSettings(
-              accuracy: geo.LocationAccuracy.high,
+              accuracy: geo.LocationAccuracy.best,
               distanceFilter: 0,
             );
-            //    geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.high);
+            //    geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.best);
 
             _locationSubscription = geo.Geolocator.getPositionStream(
                 locationSettings: locationSettings)
@@ -590,7 +608,7 @@ class _UnitTrackingState extends State<UnitTracking> {
                 updateMarkerAndCircle(position, imageData);
                 //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
               }
-            });
+             });
 
           }),
     );

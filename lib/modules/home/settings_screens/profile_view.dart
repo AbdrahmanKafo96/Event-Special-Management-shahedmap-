@@ -10,6 +10,7 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/models/witness.dart';
 import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/widgets/customScaffoldMessenger.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
@@ -412,16 +413,13 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   showTextFiled4 = false;
                                                 });
                                               } else {
-                                                ScaffoldMessenger.of(context)
-                                                    .showSnackBar(SnackBar(
-                                                  content: Text(
-                                                    SharedData.getGlobalLang()
-                                                        .fillFields(),
-                                                    //textDirection: TextDirection.rtl,
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                  backgroundColor: Colors.red,
-                                                ));
+                                                customScaffoldMessenger(
+                                                  color: Colors.red,
+                                                  context: context,
+                                                  text:
+                                                      SharedData.getGlobalLang()
+                                                          .fillFields(),
+                                                );
                                               }
                                             }
                                           });
@@ -614,31 +612,24 @@ class _ProfilePageState extends State<ProfilePage> {
         bool res = await Provider.of<UserAuthProvider>(context, listen: false)
             .saveProfileData(data);
         if (res == true)
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              SharedData.getGlobalLang().savedSuccessfully(),
-              textDirection: TextDirection.rtl,
-            ),
-            backgroundColor: Colors.green,
-          ));
+          customScaffoldMessenger(
+            color: Colors.green,
+            context: context,
+            text: SharedData.getGlobalLang().savedSuccessfully(),
+          );
         else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              SharedData.getGlobalLang().saveWasNotSuccessful(),
-              textDirection: TextDirection.rtl,
-            ),
-            backgroundColor: Colors.orange,
-          ));
+          customScaffoldMessenger(
+            color: Colors.orange,
+            context: context,
+            text: SharedData.getGlobalLang().saveWasNotSuccessful(),
+          );
         }
       } // end if stm
     } catch (ex) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          SharedData.getGlobalLang().saveWasNotSuccessful(),
-          textDirection: TextDirection.rtl,
-        ),
-        backgroundColor: Colors.orange,
-      ));
+      customScaffoldMessenger(
+          color: Colors.orange,
+          context: context,
+          text: SharedData.getGlobalLang().saveWasNotSuccessful());
     }
   }
 
@@ -690,31 +681,23 @@ class _ProfilePageState extends State<ProfilePage> {
         bool res = await Provider.of<UserAuthProvider>(context, listen: false)
             .updateProfileData(data);
         if (res == true)
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              SharedData.getGlobalLang().updateSuccessfully(),
-              textDirection: TextDirection.rtl,
-            ),
-            backgroundColor: Colors.green,
-          ));
+          customScaffoldMessenger(
+              color: Colors.green,
+              context: context,
+              text: SharedData.getGlobalLang().updateSuccessfully());
         else {
-          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-            content: Text(
-              SharedData.getGlobalLang().saveWasNotSuccessful(),
-              textDirection: TextDirection.rtl,
-            ),
-            backgroundColor: Colors.orange,
-          ));
+          customScaffoldMessenger(
+              color: Colors.orange,
+              context: context,
+              text: SharedData.getGlobalLang().saveWasNotSuccessful());
         }
       } // end if stm
     } catch (ex) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text(
-          SharedData.getGlobalLang().saveWasNotSuccessful(),
-          textDirection: TextDirection.rtl,
-        ),
-        backgroundColor: Colors.orange,
-      ));
+      customScaffoldMessenger(
+        color: Colors.orange,
+        context: context,
+        text: SharedData.getGlobalLang().saveWasNotSuccessful(),
+      );
     }
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shahed/modules/home/home.dart';
+import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
@@ -23,7 +24,7 @@ class _SuccessPageState extends State<SuccessPage> {
             onPressed: () {
               Navigator.pushAndRemoveUntil(
                 context,
-                MaterialPageRoute(builder: (context) => HomePage()),
+                MaterialPageRoute(builder: (context) => MainPage()),
                 (Route<dynamic> route) => false,
               );
             },

@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
@@ -84,12 +85,16 @@ String language = "AR";
 
 Future main() async {
   try {
+
     WidgetsFlutterBinding.ensureInitialized();
     await Firebase.initializeApp();
     final directory = await path.getApplicationDocumentsDirectory();
     Hive.init(directory.path);
     Hive.registerAdapter(TrackingAdapter());
-
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
     String token = null;
     final storage = await Singleton.getStorage();
 

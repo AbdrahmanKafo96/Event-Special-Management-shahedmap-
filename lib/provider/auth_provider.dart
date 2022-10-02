@@ -12,6 +12,8 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:shahed/singleton/singleton.dart';
 
+import '../widgets/checkInternet.dart';
+
 class UserAuthProvider extends ChangeNotifier {
   User user = User();
 
@@ -185,36 +187,41 @@ class UserAuthProvider extends ChangeNotifier {
         'api_token': api_token,
         'device_name': await PlatformDeviceId.getDeviceId,
       };
+      checkInternetConnectivity(context).then((bool state) async {
+        if (state) {
+          final response = await http.post(
+            Uri.parse("${Singleton.apiPath}/logout"),
+            body: jsonEncode(userdata),
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $value',
+              'content-type': 'application/json',
+            },
+          );
+          if (response.statusCode == 200) {
+            //var responseData = json.decode(response.body);
 
-      final response = await http.post(
-        Uri.parse("${Singleton.apiPath}/logout"),
-        body: jsonEncode(userdata),
-        headers: {
-          'Accept': 'application/json',
-          'Authorization': 'Bearer $value',
-          'content-type': 'application/json',
-        },
-      );
-      if (response.statusCode == 200) {
-        //var responseData = json.decode(response.body);
+            await storage.delete(
+                key: 'api_token', aOptions: Singleton.getAndroidOptions());
+            await storage.delete(
+                key: 'token', aOptions: Singleton.getAndroidOptions());
+            box.delete("user_id");
+            box.delete("email");
+            box.delete("role_id");
+            box.delete("beneficiarie_id");
+            box.delete("unitname");
+            Singleton.clearTracking();
+            SharedData.resetValue();
 
-        await storage.delete(
-            key: 'api_token', aOptions: Singleton.getAndroidOptions());
-        await storage.delete(
-            key: 'token', aOptions: Singleton.getAndroidOptions());
-        box.delete("user_id");
-        box.delete("email");
-        box.delete("role_id");
-        box.delete("beneficiarie_id");
-        box.delete("unitname");
-        Singleton.clearTracking();
-        SharedData.resetValue();
+            Navigator.pushReplacement(
+                context, MaterialPageRoute(builder: (_) => LoginUi()));
+          } else {
+            showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+          }
+        }
 
-        Navigator.pushReplacement(
-            context, MaterialPageRoute(builder: (_) => LoginUi()));
-      } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
-      }
+      });
+
     } catch (e) {
       print(e);
     }

@@ -1,9 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
-
 import '../shared_data/shareddata.dart';
 
-void  showPicker(context , Function f , Function  f2 , { int index = -1}) {
+void     showPicker(context , Function f , Function  f2 , { int index = -1}) {
 
   showModalBottomSheet(
       context: context,
@@ -39,7 +38,7 @@ void  showPicker(context , Function f , Function  f2 , { int index = -1}) {
                   leading:   Icon(Icons.photo_camera ,color: Colors.white ),
                   title:   Text(SharedData.getGlobalLang().cameraLibrary() , style: Theme.of(context).textTheme.headline4,),
                   onTap: () {
-                    if(index>0)
+                    if(index>=0)
                     {
                       f2(index);
                     }
