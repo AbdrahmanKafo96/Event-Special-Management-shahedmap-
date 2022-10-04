@@ -14,7 +14,7 @@ Widget customAppBar(BuildContext context,
     IconData icon}) {
   return AppBar(
     titleSpacing: titleSpacing,
-    actions: actions,
+     actions: actions,
     leading: leading,
     flexibleSpace: Container(
       decoration: const BoxDecoration(

@@ -38,6 +38,8 @@ import 'package:path_provider/path_provider.dart' as path;
 import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 
+import 'modules/home/tracking/unit_tracking.dart';
+
 callbackDispatcher() {
   try {
     Workmanager().executeTask((task, inputData) async {
@@ -221,7 +223,7 @@ class _ShahedAppState extends State<ShahedApp> {
               'settings': (context) => AppSettings(),
               'EventSectionOne': (context) => EventSectionOne(),
               'eventList': (context) => EventsMenu(),
-              'CustomWebView': (context) => CustomWebView(),
+              'unitTracking': (context) => UnitTracking(),
               'response': (context) => ResponsePage(),
               'successPage': (context) => SuccessPage(),
             },
