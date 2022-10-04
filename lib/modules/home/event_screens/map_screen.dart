@@ -45,13 +45,13 @@ class _MyHomePageState extends State<MapMarker> {
         tappedPoint.latitude;
     Provider.of<EventProvider>(context, listen: false).event.setLng =
         tappedPoint.longitude;
-    WeatherFactory wf = Singleton.getWeatherFactory();
+    WeatherFactory wf = SharedClass.getWeatherFactory();
     Weather w = await wf.currentWeatherByLocation(
         tappedPoint.latitude, tappedPoint.longitude);
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: tappedPoint.latitude,
         longitude: tappedPoint.longitude,
-        googleMapApiKey: "${Singleton.mapApiKey}");
+        googleMapApiKey: "${SharedClass.mapApiKey}");
     setState(() {
       weather = w.temperature.celsius.toInt().toString();
       myMarker = [];
@@ -308,13 +308,13 @@ class _MyHomePageState extends State<MapMarker> {
                        ),
                         ElevatedButton(
                           onPressed: () async {
+                          try{
                             final GoogleMapController controller =
-                                await _cController.future;
+                            await _cController.future;
                             String location = "Search Location";
                             var place = await PlacesAutocomplete.show(
                                 context: context,
-
-                                apiKey: Singleton.mapApiKey,
+                                apiKey: SharedClass.mapApiKey,
                                 mode: Mode.overlay,
                                 hint: SharedData.getGlobalLang().search(),
                                 types: [],
@@ -334,13 +334,13 @@ class _MyHomePageState extends State<MapMarker> {
 
                               //form google_maps_webservice package
                               final plist = p.GoogleMapsPlaces(
-                                apiKey: Singleton.mapApiKey,
+                                apiKey: SharedClass.mapApiKey,
                                 apiHeaders: await GoogleApiHeaders().getHeaders(),
                                 //from google_api_headers package
                               );
                               String placeid = place.placeId ?? "0";
                               final detail =
-                                  await plist.getDetailsByPlaceId(placeid);
+                              await plist.getDetailsByPlaceId(placeid);
                               final geometry = detail.result.geometry;
                               final lat = geometry.location.lat;
                               final lang = geometry.location.lng;
@@ -351,6 +351,9 @@ class _MyHomePageState extends State<MapMarker> {
                                   CameraUpdate.newCameraPosition(CameraPosition(
                                       target: newlatlang, zoom: 17)));
                             }
+                          }catch (e) {
+                            print(e);
+                          }
                           },
                           child: Icon(
                             FontAwesomeIcons.magnifyingGlass,

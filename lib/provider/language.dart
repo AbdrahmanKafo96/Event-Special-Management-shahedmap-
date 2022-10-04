@@ -563,13 +563,13 @@ class Language extends ChangeNotifier {
     }
   }
 
-  String normal() {
+  String normalDefault() {
     if (getLanguage == "AR") {
-      return 'طبيعي';
+      return 'الوضع الافتراضي';
     } else if (getLanguage == "EN") {
-      return 'Normal';
+      return 'default';
     } else {
-      return 'طبيعي';
+      return 'الوضع الافتراضي';
     }
   }
 
@@ -972,6 +972,7 @@ class Language extends ChangeNotifier {
       return 'اختيار الدولة';
     }
   }
+
   String login() {
     if (getLanguage == "AR") {
       return " تسجيل الدخول";
@@ -981,6 +982,7 @@ class Language extends ChangeNotifier {
       return "تسجيل الدخول";
     }
   }
+
   String createAccount() {
     if (getLanguage == "AR") {
       return 'إنشاء حساب';
@@ -990,6 +992,7 @@ class Language extends ChangeNotifier {
       return 'إنشاء حساب';
     }
   }
+
   String forgetYourPassword() {
     if (getLanguage == "AR") {
       return 'نسيت كلمة المرور!';
@@ -999,6 +1002,7 @@ class Language extends ChangeNotifier {
       return 'نسيت كلمة المرور!';
     }
   }
+
   String sendRequest() {
     if (getLanguage == "AR") {
       return 'ارسال طلب';
@@ -1008,6 +1012,7 @@ class Language extends ChangeNotifier {
       return 'ارسال طلب';
     }
   }
+
   String requestNewPassword() {
     if (getLanguage == "AR") {
       return 'طلب كلمة مرور جديدة';
@@ -1016,7 +1021,9 @@ class Language extends ChangeNotifier {
     } else {
       return 'طلب كلمة مرور جديدة';
     }
-  }String hasNoAccount() {
+  }
+
+  String hasNoAccount() {
     if (getLanguage == "AR") {
       return 'لا تملك حساب!';
     } else if (getLanguage == "EN") {
@@ -1024,7 +1031,9 @@ class Language extends ChangeNotifier {
     } else {
       return 'لا تملك حساب!';
     }
-  }String hasAccount() {
+  }
+
+  String hasAccount() {
     if (getLanguage == "AR") {
       return "لدي حساب!";
     } else if (getLanguage == "EN") {
@@ -1033,6 +1042,7 @@ class Language extends ChangeNotifier {
       return "لدي حساب!";
     }
   }
+
   String countryRequired() {
     if (getLanguage == "AR") {
       return 'حقل الدولة مطلوب';
@@ -1042,6 +1052,7 @@ class Language extends ChangeNotifier {
       return 'حقل الدولة مطلوب';
     }
   }
+
   String waitMessage() {
     if (getLanguage == "AR") {
       return "انتظر من فضلك..";
@@ -1051,6 +1062,7 @@ class Language extends ChangeNotifier {
       return "انتظر من فضلك..";
     }
   }
+
   String enterDescription() {
     if (getLanguage == "AR") {
       return 'ادخل وصف الحدث هنا.';
@@ -1059,7 +1071,9 @@ class Language extends ChangeNotifier {
     } else {
       return 'ادخل وصف الحدث هنا.';
     }
-  } String chooseType() {
+  }
+
+  String chooseType() {
     if (getLanguage == "AR") {
       return 'اختار النوع';
     } else if (getLanguage == "EN") {
@@ -1067,7 +1081,9 @@ class Language extends ChangeNotifier {
     } else {
       return 'اختار النوع';
     }
-  } String chooseCategory() {
+  }
+
+  String chooseCategory() {
     if (getLanguage == "AR") {
       return 'اختار الصنف';
     } else if (getLanguage == "EN") {
@@ -1076,6 +1092,7 @@ class Language extends ChangeNotifier {
       return 'اختار الصنف';
     }
   }
+
   String currentLocation() {
     if (getLanguage == "AR") {
       return 'الموقع الحالي';
@@ -1085,6 +1102,7 @@ class Language extends ChangeNotifier {
       return 'الموقع الحالي';
     }
   }
+
   String locateEvent() {
     if (getLanguage == "AR") {
       return "حدد موقع الحدث";
@@ -1094,6 +1112,7 @@ class Language extends ChangeNotifier {
       return "حدد موقع الحدث";
     }
   }
+
   String locationRequired() {
     if (getLanguage == "AR") {
       return 'يجب تحديد موقع الحدث';
@@ -1103,23 +1122,27 @@ class Language extends ChangeNotifier {
       return 'يجب تحديد موقع الحدث';
     }
   }
+
   String alertLocationEvent() {
     if (getLanguage == "AR") {
-      return "هل انت متأكد من عنوان الحدث ؟" ;
+      return "هل انت متأكد من عنوان الحدث ؟";
     } else if (getLanguage == "EN") {
       return "Are you sure of the incident position?";
     } else {
       return "هل انت متأكد من عنوان الحدث ؟";
     }
-  } String positionSuccessfully() {
+  }
+
+  String positionSuccessfully() {
     if (getLanguage == "AR") {
-      return "تم تحديث موقع الحدث بنجاح" ;
+      return "تم تحديث موقع الحدث بنجاح";
     } else if (getLanguage == "EN") {
       return "The event location has been successfully updated";
     } else {
       return "تم تحديث موقع الحدث بنجاح";
     }
   }
+
   // String eventData() {
   //   if (getLanguage == "AR") {
   //     return "بيانات الحدث" ;
@@ -1131,184 +1154,331 @@ class Language extends ChangeNotifier {
   // }
   String close() {
     if (getLanguage == "AR") {
-      return "إغلاق" ;
+      return "إغلاق";
     } else if (getLanguage == "EN") {
       return "Close";
     } else {
       return "إغلاق";
     }
   }
+
   String addDescription() {
     if (getLanguage == "AR") {
-      return "إضافة وصف الحدث" ;
+      return "إضافة وصف الحدث";
     } else if (getLanguage == "EN") {
       return "Add Description Event";
     } else {
       return "إضافة وصف الحدث";
     }
-  }String sendEvent() {
+  }
+
+  String sendEvent() {
     if (getLanguage == "AR") {
-      return 'إرسال الحدث' ;
+      return 'إرسال الحدث';
     } else if (getLanguage == "EN") {
       return "Send Event";
     } else {
       return 'إرسال الحدث';
     }
   }
+
   String descRequired() {
     if (getLanguage == "AR") {
-      return 'من فضلك ادخل وصف الحدث' ;
+      return 'من فضلك ادخل وصف الحدث';
     } else if (getLanguage == "EN") {
       return "Description is required";
     } else {
       return 'من فضلك ادخل وصف الحدث';
     }
   }
+
   String newEvent() {
     if (getLanguage == "AR") {
-      return 'حدث جديد' ;
+      return 'حدث جديد';
     } else if (getLanguage == "EN") {
       return "New Event";
     } else {
       return 'حدث جديد';
     }
   }
-   String   categoryRequired() {
+
+  String categoryRequired() {
     if (getLanguage == "AR") {
-      return 'يجب ان تختار الصنف' ;
+      return 'يجب ان تختار الصنف';
     } else if (getLanguage == "EN") {
       return "You must choose the category";
     } else {
       return 'يجب ان تختار الصنف';
     }
   }
-  String   typeRequired() {
+
+  String typeRequired() {
     if (getLanguage == "AR") {
-      return 'يجب ان تختار النوع' ;
+      return 'يجب ان تختار النوع';
     } else if (getLanguage == "EN") {
       return "You must choose the type";
     } else {
       return 'يجب ان تختار النوع';
     }
-  }String   imageRequired() {
+  }
+
+  String imageRequired() {
     if (getLanguage == "AR") {
-      return 'يجب ان ترفق صورة للحدث' ;
+      return 'يجب ان ترفق صورة للحدث';
     } else if (getLanguage == "EN") {
       return "Image is required at least one picture";
     } else {
       return 'يجب ان ترفق صورة للحدث';
     }
   }
-  String   next() {
+
+  String next() {
     if (getLanguage == "AR") {
-      return 'التالي' ;
+      return 'التالي';
     } else if (getLanguage == "EN") {
       return "Next";
     } else {
       return 'التالي';
     }
   }
-  String  pickLocation() {
+
+  String pickLocation() {
     if (getLanguage == "AR") {
-      return 'حدد موقع الحدث' ;
+      return 'حدد موقع الحدث';
     } else if (getLanguage == "EN") {
       return "Pick location of event";
     } else {
       return 'حدد موقع الحدث';
     }
-  } String  modifyLocation() {
+  }
+
+  String modifyLocation() {
     if (getLanguage == "AR") {
-      return "عدل موقع الحدث" ;
+      return "عدل موقع الحدث";
     } else if (getLanguage == "EN") {
       return "Modify location of event";
     } else {
       return "عدل موقع الحدث";
     }
   }
-  String  addImages() {
+
+  String addImages() {
     if (getLanguage == "AR") {
-      return "إضافة صور" ;
+      return "إضافة صور";
     } else if (getLanguage == "EN") {
       return "Add Images";
     } else {
       return "إضافة صور";
     }
   }
-  String  checkEmailPassword() {
+
+  String checkEmailPassword() {
     if (getLanguage == "AR") {
-      return "تحقق من البريد الالكتروني وكلمة المرور" ;
+      return "تحقق من البريد الالكتروني وكلمة المرور";
     } else if (getLanguage == "EN") {
       return "Check email and password";
     } else {
       return "تحقق من البريد الالكتروني وكلمة المرور";
     }
-  } String  blockUserMessage() {
+  }
+
+  String blockUserMessage() {
     if (getLanguage == "AR") {
-      return "لاتستطيع تسجيل الدخول لان حسابك محظور" ;
+      return "لاتستطيع تسجيل الدخول لان حسابك محظور";
     } else if (getLanguage == "EN") {
-      return  "You cannot login because your account is banned";
+      return "You cannot login because your account is banned";
     } else {
       return "لاتستطيع تسجيل الدخول لان حسابك محظور";
-    }}
-    String  blockEventMessage() {
+    }
+  }
+
+  String blockEventMessage() {
     if (getLanguage == "AR") {
-      return "لاتستطيع ارسال حدث لان حسابك محظور" ;
+      return "لاتستطيع ارسال حدث لان حسابك محظور";
     } else if (getLanguage == "EN") {
-      return  "You can't save an event because your account is banned";
+      return "You can't save an event because your account is banned";
     } else {
       return "لاتستطيع ارسال حدث لان حسابك محظور";
     }
-  }String  blockEditEventMessage() {
+  }
+
+  String blockEditEventMessage() {
     if (getLanguage == "AR") {
-      return 'لاتستطيع تعديل الحدث لان حسابك محظور' ;
+      return 'لاتستطيع تعديل الحدث لان حسابك محظور';
     } else if (getLanguage == "EN") {
-      return  "You can't edit an event because your account is banned";
+      return "You can't edit an event because your account is banned";
     } else {
       return 'لاتستطيع تعديل الحدث لان حسابك محظور';
     }
-  }String  emailAlreadyUsed() {
+  }
+
+  String emailAlreadyUsed() {
     if (getLanguage == "AR") {
-      return  'عفوا البريد الالكتروني مستخدم من قبل';
+      return 'عفوا البريد الالكتروني مستخدم من قبل';
     } else if (getLanguage == "EN") {
-      return   'Sorry, the email is already in use';
+      return 'Sorry, the email is already in use';
     } else {
       return 'عفوا البريد الالكتروني مستخدم من قبل';
     }
   }
-  String  pleaseCheckYourInputs() {
+
+  String pleaseCheckYourInputs() {
     if (getLanguage == "AR") {
-      return  'عفوا تأكد من المدخلات';
+      return 'عفوا تأكد من المدخلات';
     } else if (getLanguage == "EN") {
-      return   'Sorry, check your inputs';
+      return 'Sorry, check your inputs';
     } else {
       return 'عفوا تأكد من المدخلات';
     }
   }
-  String  UnableAccessSystem() {
+
+  String UnableAccessSystem() {
     if (getLanguage == "AR") {
-      return  'هناك مشكلة في الخادم';
+      return 'هناك مشكلة في الخادم';
     } else if (getLanguage == "EN") {
-      return   'There is a problem with the server, try again';
+      return 'There is a problem with the server, try again';
     } else {
       return 'هناك مشكلة في الخادم';
     }
   }
-  String  checkInbox() {
+
+  String checkInbox() {
     if (getLanguage == "AR") {
       return 'تحقق من بريدك';
     } else if (getLanguage == "EN") {
-      return   'Check your mail inbox';
+      return 'Check your mail inbox';
     } else {
       return 'تحقق من بريدك';
     }
-  }String  checkEmailInput() {
+  }
+
+  String checkEmailInput() {
     if (getLanguage == "AR") {
       return 'تأكد من صحة البريد المدخل';
     } else if (getLanguage == "EN") {
-      return   'your email not valid';
+      return 'your email not valid';
     } else {
       return 'تأكد من صحة البريد المدخل';
     }
   }
-
+  String GPSAccuracy() {
+    if (getLanguage == "AR") {
+      return "دقة تحديد الموقع";
+    } else if (getLanguage == "EN") {
+      return 'GPS Accuracy';
+    } else {
+      return "دقة تحديد الموقع";
+    }
+  } String lowAccuracy() {
+    if (getLanguage == "AR") {
+      return "منخفض الدقة";
+    } else if (getLanguage == "EN") {
+      return 'low Accuracy';
+    } else {
+      return "منخفض الدقة";
+    }
+  } String mediumAccuracy() {
+    if (getLanguage == "AR") {
+      return "متوسط الدقة";
+    } else if (getLanguage == "EN") {
+      return 'medium Accuracy';
+    } else {
+      return "متوسط الدقة";
+    }
+  } String highAccuracy() {
+    if (getLanguage == "AR") {
+      return "عالي الدقة";
+    } else if (getLanguage == "EN") {
+      return 'high Accuracy';
+    } else {
+      return "عالي الدقة";
+    }
+  } String bestAccuracy() {
+    if (getLanguage == "AR") {
+      return "أفضل دقة";
+    } else if (getLanguage == "EN") {
+      return 'best Accuracy';
+    } else {
+      return "أفضل دقة";
+    }
+  } String headOfTrackAlert() {
+    if (getLanguage == "AR") {
+      return "تفعيل تتبع الوحدة";
+    } else if (getLanguage == "EN") {
+      return 'Activate unit tracking';
+    } else {
+      return "تفعيل تتبع الوحدة";
+    }
+  } String bodyOfTrackAlert() {
+    if (getLanguage == "AR") {
+      return  "هل تريد تفعيل التتبع؟";
+    } else if (getLanguage == "EN") {
+      return 'Do you want to activate tracking?';
+    } else {
+      return  "هل تريد تفعيل التتبع؟";
+    }
+  }
+  String enable() {
+    if (getLanguage == "AR") {
+      return  "تفعيل";
+    } else if (getLanguage == "EN") {
+      return 'Enable';
+    } else {
+      return  "تفعيل";
+    }
+  }
+  String enableTrackingUnit() {
+    if (getLanguage == "AR") {
+      return  "تفعيل تتبع الوحدة";
+    } else if (getLanguage == "EN") {
+      return 'enable tracking Unit';
+    } else {
+      return  "تفعيل تتبع الوحدة";
+    }
+  }
+  String activatedSuccessfully() {
+    if (getLanguage == "AR") {
+      return  "تم التفعيل بنجاح";
+    } else if (getLanguage == "EN") {
+      return 'activated Successfully';
+    } else {
+      return  "تم التفعيل بنجاح";
+    }
+  }
+  String deactivatedSuccessfully() {
+    if (getLanguage == "AR") {
+      return  "تم إلغاء التفعيل بنجاح";
+    } else if (getLanguage == "EN") {
+      return 'Deactivated successfully';
+    } else {
+      return  "تم إلغاء التفعيل بنجاح";
+    }
+  }
+  String disable() {
+    if (getLanguage == "AR") {
+      return  "إيقاف التفعيل";
+    } else if (getLanguage == "EN") {
+      return 'disable';
+    } else {
+      return  "إيقاف التفعيل";
+    }
+  }
+  String selectDestination() {
+    if (getLanguage == "AR") {
+      return  "الرجاء تحديد الوجهة";
+    } else if (getLanguage == "EN") {
+      return 'please select the destination';
+    } else {
+      return  "الرجاء تحديد الوجهة";
+    }
+  }
+  String mustEnableTracking() {
+    if (getLanguage == "AR") {
+      return  "يجب عليك تفعيل تتبع الوحدة الان";
+    } else if (getLanguage == "EN") {
+      return 'You must activate unit tracking now';
+    } else {
+      return  "يجب عليك تفعيل تتبع الوحدة الان";
+    }
+  }
 }

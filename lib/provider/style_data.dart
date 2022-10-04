@@ -8,12 +8,12 @@ class DarkThemePreference {
      String THEME_STATUS = "THEMESTATUS";
 
   setDarkTheme(bool value) async {
-    Box box = await Singleton.getBox();
+    Box box = await SharedClass.getBox();
     box.put(THEME_STATUS, value);
   }
 
   Future<bool> getTheme() async {
-    Box box = await Singleton.getBox();
+    Box box = await SharedClass.getBox();
     return box.get(THEME_STATUS) ?? false;
   }
 }

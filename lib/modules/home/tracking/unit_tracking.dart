@@ -16,6 +16,8 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/customPopupMenuEntry.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_dialog.dart';
+import 'package:shahed/widgets/custom_toast.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
@@ -32,9 +34,10 @@ class UnitTracking extends StatefulWidget {
 
 class _UnitTrackingState extends State<UnitTracking> {
   StreamSubscription _locationSubscription;
-  final kGoogleApiKey = Singleton.mapApiKey;
-
+  final kGoogleApiKey = SharedClass.mapApiKey;
+  geo.LocationAccuracy desiredAccuracy = geo.LocationAccuracy.best;
   GoogleMapsPlaces _places;
+  bool active = false;
 
   // Location _locationTracker = Location();
   Marker marker, _destination;
@@ -89,7 +92,7 @@ class _UnitTrackingState extends State<UnitTracking> {
       Uint8List imageData = await getMarker();
       //   var location = await _locationTracker.getLocation();
       geo.Position position = await geo.Geolocator.getCurrentPosition(
-          desiredAccuracy: geo.LocationAccuracy.medium);
+          desiredAccuracy: desiredAccuracy);
       print("getIniLocation  position lat ${position.latitude}");
       print("getIniLocation position _lng  ${position.longitude}");
       updateMarkerAndCircle(position, imageData);
@@ -111,8 +114,8 @@ class _UnitTrackingState extends State<UnitTracking> {
     super.initState();
     Wakelock.enable();
     _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
-    Singleton.getTrackingBox().then((value) => null);
-    Singleton.getBox().then((getValue) {
+    SharedClass.getTrackingBox().then((value) => null);
+    SharedClass.getBox().then((getValue) {
       mygetCurrentPosition().then((value) {
         setState(() {
           senderID = getValue.get('user_id');
@@ -132,7 +135,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   void dispose() {
     super.dispose();
     _kGooglePlex = null;
-    Singleton.closeTracking();
+    SharedClass.closeTracking();
     timer?.cancel();
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
@@ -141,10 +144,10 @@ class _UnitTrackingState extends State<UnitTracking> {
   }
 
   Future<void> _sendLiveLocation() async {
-    var boxTracking = await Singleton.getTrackingBox();
+    var boxTracking = await SharedClass.getTrackingBox();
     // var location = await _locationTracker.getLocation();
     geo.Position pos = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.medium);
+        desiredAccuracy: desiredAccuracy);
     _newLatitude = pos.latitude;
     _newLongitude = pos.longitude;
     double cu_lat = _newLatitude, cu_long = _newLongitude;
@@ -167,7 +170,7 @@ class _UnitTrackingState extends State<UnitTracking> {
 
       //var location = await _locationTracker.getLocation();
       // geo.Position location = await geo.Geolocator.getCurrentPosition(
-      //     desiredAccuracy: geo.LocationAccuracy.medium);
+      //     desiredAccuracy: desiredAccuracy);
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -224,15 +227,17 @@ class _UnitTrackingState extends State<UnitTracking> {
   p.PolylinePoints polylinePoints = p.PolylinePoints();
 
   handleTap(LatLng tappedPoint) async {
-    WeatherFactory wf = Singleton.getWeatherFactory();
+    WeatherFactory wf = SharedClass.getWeatherFactory();
     Weather w = await wf.currentWeatherByLocation(
         tappedPoint.latitude, tappedPoint.longitude);
     GeoData data = await Geocoder2.getDataFromCoordinates(
         latitude: tappedPoint.latitude,
         longitude: tappedPoint.longitude,
-        googleMapApiKey: "${Singleton.mapApiKey}");
+        googleMapApiKey: SharedClass.mapApiKey.toString());
     setState(() {
       weather = w.temperature.celsius.toInt().toString();
+      _lat_endpoint = tappedPoint.latitude;
+      _lng_endpoint = tappedPoint.longitude;
       _destination = Marker(
         icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
         markerId: MarkerId(521.toString()),
@@ -244,23 +249,29 @@ class _UnitTrackingState extends State<UnitTracking> {
       );
     });
     _getPolyline(tappedPoint.latitude, tappedPoint.longitude);
-    setState(() {
-      _lat_endpoint = _destination.position.latitude;
-      _lng_endpoint = _destination.position.longitude;
-    });
+
 
     //var location = await _locationTracker.getLocation();
-    geo.Position location = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.medium);
-    _oldLatitude = location.latitude;
-    _oldLongitude = location.longitude;
+    geo.Position location2 = await geo.Geolocator.getCurrentPosition(
+        desiredAccuracy: desiredAccuracy);
+    _oldLatitude = location2.latitude;
+    _oldLongitude = location2.longitude;
     print("handleTap  _oldLatitude lat ${_oldLatitude}");
     print("handleTap _oldLongitude _lng  ${_oldLongitude}");
     oldTime = DateTime.now();
-    timer =
-        Timer.periodic(Duration(seconds: 5), (Timer t) => _sendLiveLocation());
-  }
+    if(active==false)
+      showShortToast( SharedData.getGlobalLang() .mustEnableTracking(), Colors.orangeAccent);
 
+    print("the distance is :"
+        "${vincentyGreatCircleDistance(_oldLatitude , _oldLongitude , _lat_endpoint,_lng_startpoint)}");
+  }
+  // double calculateDistances(lat1, lon1, lat2, lon2){
+  //   var p = 0.017453292519943295;
+  //   var a = 0.5 - cos((lat2 - lat1) * p)/2 +
+  //       cos(lat1 * p) * cos(lat2 * p) *
+  //           (1 - cos((lon2 - lon1) * p))/2;
+  //   return 12742 * asin(sqrt(a));
+  // }
   Map<PolylineId, Polyline> polylines = {};
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
@@ -289,7 +300,7 @@ class _UnitTrackingState extends State<UnitTracking> {
   void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
     var currentPosition = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.medium);
+        desiredAccuracy: desiredAccuracy);
     _addMarker(
       LatLng(currentPosition.latitude, currentPosition.longitude),
       "origin",
@@ -305,7 +316,7 @@ class _UnitTrackingState extends State<UnitTracking> {
     List<LatLng> polylineCoordinates = [];
 
     p.PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "${Singleton.mapApiKey}",
+      "${SharedClass.mapApiKey}",
       p.PointLatLng(currentPosition.latitude, currentPosition.longitude),
       p.PointLatLng(lat, long),
       travelMode: p.TravelMode.walking,
@@ -335,7 +346,7 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   Future mygetCurrentPosition() async {
     currentPosition = await geo.Geolocator.getCurrentPosition(
-        desiredAccuracy: geo.LocationAccuracy.medium);
+        desiredAccuracy: desiredAccuracy);
     print("getCurrentPosition  position lat ${currentPosition.latitude}");
     print("getCurrentPosition position _lng  ${currentPosition.longitude}");
   }
@@ -374,248 +385,372 @@ class _UnitTrackingState extends State<UnitTracking> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: customAppBar(
-        context,
-        title: SharedData.getGlobalLang().trackingUnit(),
-        icon: Icons.track_changes,
-        leading: PopupMenuButton(
-          itemBuilder: (builder) {
-            return customPopupMenuEntry();
-          },
-          onSelected: (value) {
-            switch (value) {
-              case 0:
-                setState(() {
-                  maptype = MapType.hybrid;
-                });
-                break;
-              case 1:
-                setState(() {
-                  maptype = MapType.normal;
-                });
-                break;
-              case 2:
-                setState(() {
-                  maptype = MapType.satellite;
-                });
-                break;
-              case 3:
-                setState(() {
-                  maptype = MapType.terrain;
-                });
-                break;
-            }
-          },
-        ),
-      ),
-      body: _kGooglePlex == null
-          ? Container(child: Center(child: customCircularProgressIndicator()))
-          : Stack(
-              children: [
-                GoogleMap(
-                  zoomControlsEnabled: false,
-                  trafficEnabled: traffic,
-                  myLocationEnabled: true,
-                  onTap: handleTap,
-                  onLongPress: (val) {
-                    setState(() {
-                      _destination = null;
-                    });
-                  },
-                  myLocationButtonEnabled: false,
-                  mapType: maptype,
-                  initialCameraPosition: _kGooglePlex,
-                  polylines: Set<Polyline>.of(polylines.values),
-                  // markers: Set<Marker>.of(markers.values),
-                  markers: {
-                    if (marker != null) marker,
-                    if (_destination != null) _destination
-                  },
-                  //   circles: Set.of((circle != null) ? [circle] : []),
-                  onMapCreated: (GoogleMapController controller) {
-                    _controller.complete(controller);
-                  },
-                  onCameraMoveStarted: () async {
-                    //   _locationSubscription.cancel();
-                    Uint8List imageData = await getMarker();
-                    geo.Position position =
-                        await geo.Geolocator.getCurrentPosition(
-                            desiredAccuracy: geo.LocationAccuracy.medium);
-                    updateMarkerAndCircle(position, imageData);
-                  },
+    return WillPopScope(
+      onWillPop: () async => false,
+      child: Scaffold(
+        appBar: customAppBar(
+          context,
+          title: SharedData.getGlobalLang().trackingUnit(),
+          icon: Icons.track_changes,
+          actions: [
+            IconButton(
+              onPressed: () {
+                customReusableShowDialog(
+                  context,
+                  SharedData.getGlobalLang().headOfTrackAlert(),
+                  widget: Text(SharedData.getGlobalLang().bodyOfTrackAlert()),
+                  actions: <Widget>[
+                    TextButton(
+                      child: Text(
+                        SharedData.getGlobalLang().cancel(),
+                        style: TextStyle(color: Colors.grey),
+                      ),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    ),
+                    Container(
+                      decoration: BoxDecoration(
+                        color: Colors.deepOrange,
+                        borderRadius: BorderRadius.all(Radius.circular(5)),
+                      ),
+                      child: TextButton(
+                        child: Text(
+                          active == false
+                              ? SharedData.getGlobalLang().enable()
+                              : SharedData.getGlobalLang().disable(),
+                          style: Theme.of(context).textTheme.bodyText1,
+                        ),
+                        onPressed: () {
+                          if (active == false) {
+                            if (_lng_endpoint != null) {
+                              setState(() {
+                                active = !active;
+                              });
+                              showShortToast(
+                                  SharedData.getGlobalLang()
+                                      .activatedSuccessfully(),
+                                  Colors.green);
 
-                  onCameraMove: (value) async {
-                    // if(_locationSubscription!=null)
-                    // _locationSubscription.cancel();
-                    // Uint8List imageData = await getMarker();
-                    // geo.Position position = await geo.Geolocator.getCurrentPosition(
-                    //     desiredAccuracy: geo.LocationAccuracy.medium);
-                    //   updateMarkerAndCircle(position, imageData);
-                  },
-                ),
-                Positioned(
-                    child: Container(
-                  padding: EdgeInsets.all(5),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Icon(
-                              FontAwesomeIcons.temperatureThreeQuarters,
-                              color: Colors.white,
-                              size: 24,
-                            ),
-                            SizedBox(
-                              width: 12,
-                            ),
-                            Text(
-                              "${weather}",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold),
-                              // overflow: TextOverflow.ellipsis,
-                            ),
+                              //  timer = Timer.periodic(Duration(seconds: 5), (Timer t) => _sendLiveLocation());
+                            } else {
+                              showShortToast(
+                                  SharedData.getGlobalLang().selectDestination(),
+                                  Colors.orangeAccent);
+                            }
+                          } else {
+                            showShortToast(
+                                SharedData.getGlobalLang()
+                                    .deactivatedSuccessfully(),
+                                Colors.green);
+                            setState(() {
+                              active = !active;
+                            });
+                          }
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              },
+              icon: Icon(
+                active == false ? Icons.gps_not_fixed : Icons.gps_fixed,
+                color: active == false ? Colors.grey : Colors.red,
+              ),tooltip: SharedData.getGlobalLang().enableTrackingUnit(),
+            )
+          ],
+          leading: PopupMenuButton(
+            icon: Icon(Icons.layers),
+            itemBuilder: (builder) {
+              return customPopupMenuEntry();
+            },
+            onSelected: (value) {
+              switch (value) {
+                case 0:
+                  setState(() {
+                    maptype = MapType.hybrid;
+                  });
+                  break;
+                case 1:
+                  setState(() {
+                    maptype = MapType.normal;
+                  });
+                  break;
+                case 2:
+                  setState(() {
+                    maptype = MapType.satellite;
+                  });
+                  break;
+                case 3:
+                  setState(() {
+                    maptype = MapType.terrain;
+                  });
+                  break;
+              }
+            },
+          ),
+        ),
+        body: _kGooglePlex == null
+            ? Container(child: Center(child: customCircularProgressIndicator()))
+            : Stack(
+                children: [
+                  GoogleMap(
+                    zoomControlsEnabled: false,
+                    trafficEnabled: traffic,
+                    myLocationEnabled: true,
+                    onTap: handleTap,
+                    onLongPress: (val) {
+                      setState(() {
+                        polylines.clear();
+                        _lng_endpoint=null;
+                        _lat_endpoint=null;
+                        _destination = null;
+                      });
+                    },
+                    myLocationButtonEnabled: false,
+                    mapType: maptype,
+                    initialCameraPosition: _kGooglePlex,
+                    polylines: Set<Polyline>.of(polylines.values),
+                    // markers: Set<Marker>.of(markers.values),
+                    markers: {
+                      if (marker != null) marker,
+                      if (_destination != null) _destination
+                    },
+                    //   circles: Set.of((circle != null) ? [circle] : []),
+                    onMapCreated: (GoogleMapController controller) {
+                      _controller.complete(controller);
+                    },
+                    onCameraMoveStarted: () async {
+                      //   _locationSubscription.cancel();
+                      Uint8List imageData = await getMarker();
+                      geo.Position position =
+                          await geo.Geolocator.getCurrentPosition(
+                              desiredAccuracy: desiredAccuracy);
+                      updateMarkerAndCircle(position, imageData);
+                    },
+
+                    onCameraMove: (value) async {
+                      // if(_locationSubscription!=null)
+                      // _locationSubscription.cancel();
+                      // Uint8List imageData = await getMarker();
+                      // geo.Position position = await geo.Geolocator.getCurrentPosition(
+                      //     desiredAccuracy:desiredAccuracy);
+                      //   updateMarkerAndCircle(position, imageData);
+                    },
+                  ),
+                  Positioned(
+                      child: Container(
+                    padding: EdgeInsets.all(5),
+                    child: Column(
+
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                         children: [
+                          IconButton(
+                            tooltip: SharedData.getGlobalLang().back(),
+                            icon: Icon(Icons.arrow_back),
+                            onPressed: () {
+                              // if active is true then we need show alert to the user to check
+                              Navigator.pop(context);
+                            },
+                          ),
                           ],
                         ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          final GoogleMapController controller =
-                              await _controller.future;
-                          String location = "Search Location";
-                          var place = await PlacesAutocomplete.show(
-                              context: context,
-                              apiKey: kGoogleApiKey,
-                              mode: Mode.overlay,
-                              hint: SharedData.getGlobalLang().search(),
-                              types: [],
-                              strictbounds: false,
-                              components: [
-                                Component(Component.country, 'ly'),
-                              ],
-                              //google_map_webservice package
-                              onError: (err) {
-                                print(err);
-                              });
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0,right: 8.0),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Icon(
+                                FontAwesomeIcons.temperatureThreeQuarters,
+                                color: Colors.yellow,
+                                size: 24,
+                              ),
 
-                          if (place != null) {
+                              Text(
+                                "${weather}",
+                                style: TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold),
+                                // overflow: TextOverflow.ellipsis,
+                              ),
+                            ],
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          onPressed: () async {
+                            try {
+                              final GoogleMapController controller =
+                                  await _controller.future;
+                              String location = "Search Location";
+                              var place = await PlacesAutocomplete.show(
+                                  context: context,
+                                  apiKey: kGoogleApiKey,
+                                  mode: Mode.overlay,
+                                  hint: SharedData.getGlobalLang().search(),
+                                  types: [],
+                                  strictbounds: false,
+                                  components: [
+                                    Component(Component.country, 'ly'),
+                                  ],
+                                  //google_map_webservice package
+                                  onError: (err) {
+                                    print(err);
+                                  });
+
+                              if (place != null) {
+                                setState(() {
+                                  location = place.description.toString();
+                                });
+
+                                //form google_maps_webservice package
+                                final plist = GoogleMapsPlaces(
+                                  apiKey: kGoogleApiKey,
+                                  apiHeaders:
+                                      await GoogleApiHeaders().getHeaders(),
+                                  //from google_api_headers package
+                                );
+                                String placeid = place.placeId ?? "0";
+                                final detail = await plist.getDetailsByPlaceId(placeid);
+                                final geometry = detail.result.geometry;
+                                var newlatlang = LatLng(geometry.location.lat,  geometry.location.lng);
+                                if (_locationSubscription != null)
+                                  _locationSubscription.cancel();
+                                //move map camera to selected place with animation
+                                controller.animateCamera(
+                                    CameraUpdate.newCameraPosition(CameraPosition(
+                                        target: newlatlang, zoom: 17)));
+                              }
+                            } catch (e) {
+                              print(e);
+                            }
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.magnifyingGlass,
+                            color: Colors.black12.withOpacity(.5),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(), //<-- SEE HERE
+                            padding: EdgeInsets.all(10),
+                          ),
+                        ),
+
+                        ElevatedButton(
+                          onPressed: () async {
                             setState(() {
-                              location = place.description.toString();
+                              traffic = !traffic;
                             });
-
-                            //form google_maps_webservice package
-                            final plist = GoogleMapsPlaces(
-                              apiKey: kGoogleApiKey,
-                              apiHeaders: await GoogleApiHeaders().getHeaders(),
-                              //from google_api_headers package
-                            );
-                            String placeid = place.placeId ?? "0";
-                            final detail =
-                                await plist.getDetailsByPlaceId(placeid);
-                            final geometry = detail.result.geometry;
-                            final lat = geometry.location.lat;
-                            final lang = geometry.location.lng;
-                            var newlatlang = LatLng(lat, lang);
-                            if (_locationSubscription != null)
-                              _locationSubscription.cancel();
-                            //move map camera to selected place with animation
-                            controller.animateCamera(
-                                CameraUpdate.newCameraPosition(CameraPosition(
-                                    target: newlatlang, zoom: 17)));
-                          }
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.magnifyingGlass,
-                          color: Colors.black12.withOpacity(.5),
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.bus,
+                            color: traffic == true
+                                ? Colors.green
+                                : Colors.black54.withOpacity(.5),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            shape: CircleBorder(), //<-- SEE HERE
+                            padding: EdgeInsets.all(10),
+                          ),
                         ),
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(), //<-- SEE HERE
-                          padding: EdgeInsets.all(10),
+                        PopupMenuButton(
+                          tooltip: SharedData.getGlobalLang().GPSAccuracy(),
+                          icon: Icon(
+                            Icons.pin_drop_rounded,
+                            size: 28,
+                          ),
+                          itemBuilder: (builder) {
+                            return customPopupMenuEntry(
+                                low: SharedData.getGlobalLang().lowAccuracy(),
+                                medium:
+                                    SharedData.getGlobalLang().mediumAccuracy(),
+                                high: SharedData.getGlobalLang().highAccuracy(),
+                                best: SharedData.getGlobalLang().bestAccuracy());
+                          },
+                          onSelected: (value) {
+                            switch (value) {
+                              case 0:
+                                setState(() {
+                                  desiredAccuracy = geo.LocationAccuracy.low;
+                                });
+                                break;
+                              case 1:
+                                setState(() {
+                                  desiredAccuracy = geo.LocationAccuracy.medium;
+                                });
+                                break;
+                              case 2:
+                                setState(() {
+                                  desiredAccuracy = geo.LocationAccuracy.high;
+                                });
+                                break;
+                              case 3:
+                                setState(() {
+                                  desiredAccuracy = geo.LocationAccuracy.best;
+                                });
+                                break;
+                            }
+                          },
                         ),
-                      ),
-                      SizedBox(
-                        height: 12,
-                      ),
-                      ElevatedButton(
-                        onPressed: () async {
-                          setState(() {
-                            traffic = !traffic;
-                          });
-                        },
-                        child: Icon(
-                          FontAwesomeIcons.bus,
-                          color: traffic == true
-                              ? Colors.green
-                              : Colors.black54.withOpacity(.5),
-                        ),
-                        style: ElevatedButton.styleFrom(
-                          shape: CircleBorder(), //<-- SEE HERE
-                          padding: EdgeInsets.all(10),
-                        ),
-                      ),
-                    ],
-                  ),
-                )),
-              ],
+                      ],
+                    ),
+                  )),
+                ],
+              ),
+        floatingActionButton: FloatingActionButton(
+            child: Icon(
+              Icons.location_searching,
+              color: Colors.black12.withOpacity(.5),
             ),
-      floatingActionButton: FloatingActionButton(
-          child: Icon(
-            Icons.location_searching,
-            color: Colors.black12.withOpacity(.5),
-          ),
-          backgroundColor: Colors.deepOrange,
-          onPressed: () async {
-            final GoogleMapController controller = await _controller.future;
-            Uint8List imageData = await getMarker();
-            geo.Position position = await geo.Geolocator.getCurrentPosition(
-                desiredAccuracy: geo.LocationAccuracy.medium);
-            updateMarkerAndCircle(position, imageData);
+            tooltip: SharedData.getGlobalLang().currentLocation(),
+            backgroundColor: Colors.deepOrange,
+            onPressed: () async {
+              final GoogleMapController controller = await _controller.future;
+              Uint8List imageData = await getMarker();
+              geo.Position position = await geo.Geolocator.getCurrentPosition(
+                  desiredAccuracy: desiredAccuracy);
+              updateMarkerAndCircle(position, imageData);
 
-            if (_locationSubscription != null) {
-              _locationSubscription.cancel();
-            }
-            final geo.LocationSettings locationSettings = geo.LocationSettings(
-              accuracy: geo.LocationAccuracy.medium,
-              distanceFilter: 0,
-            );
-            //    geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: geo.LocationAccuracy.medium);
-
-            _locationSubscription = geo.Geolocator.getPositionStream(
-                    locationSettings: locationSettings)
-                .listen((geo.Position position) {
-              if (controller != null) {
-                _lat_startpoint = position.latitude;
-                _lng_startpoint = position.longitude;
-                print("FloatingActionButton _lat_startpoint $_lat_startpoint");
-                print("FloatingActionButton _lng_startpoint $_lng_startpoint");
-
-                controller.animateCamera(
-                    CameraUpdate.newCameraPosition(CameraPosition(
-                        //bearing: 0,
-                        target: LatLng(position.latitude, position.longitude),
-                        // tilt: 0,
-                        zoom: 18.0)));
-                updateMarkerAndCircle(position, imageData);
-                //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+              if (_locationSubscription != null) {
+                _locationSubscription.cancel();
               }
-            });
-          }),
+              final geo.LocationSettings locationSettings = geo.LocationSettings(
+                accuracy: desiredAccuracy,
+                distanceFilter: 0,
+              );
+              //    geo.Position  position = await geo.Geolocator.getCurrentPosition(desiredAccuracy: desiredAccuracy);
+
+              _locationSubscription = geo.Geolocator.getPositionStream(
+                      locationSettings: locationSettings)
+                  .listen((geo.Position position) {
+                if (controller != null) {
+                  _lat_startpoint = position.latitude;
+                  _lng_startpoint = position.longitude;
+                  print("FloatingActionButton _lat_startpoint $_lat_startpoint");
+                  print("FloatingActionButton _lng_startpoint $_lng_startpoint");
+
+                  controller.animateCamera(
+                      CameraUpdate.newCameraPosition(CameraPosition(
+                          //bearing: 0,
+                          target: LatLng(position.latitude, position.longitude),
+                          // tilt: 0,
+                          zoom: 18.0)));
+                  updateMarkerAndCircle(position, imageData);
+                  //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+                }
+              });
+            }),
+      ),
     );
   }
 
   Future<bool> syncData() async {
-    Singleton.getTrackingBox().then((boxTracking) {
+    SharedClass.getTrackingBox().then((boxTracking) {
       print("database local is open ");
 
       Tracking tracking;

@@ -51,11 +51,11 @@ class DataSearchSe extends SearchDelegate<String> {
     Map data = {
       'addede_id': eventId.toString(),
     };
-    final storage = await Singleton.getStorage();
+    final storage = await SharedClass.getStorage();
     String value = await storage.read(
-        key: "token", aOptions: Singleton.getAndroidOptions());
+        key: "token", aOptions: SharedClass.getAndroidOptions());
     final response = await http
-        .post(Uri.parse('${Singleton.apiPath}/getEvent'), body: data, headers: {
+        .post(Uri.parse('${SharedClass.apiPath}/getEvent'), body: data, headers: {
       // 'Accept':'application/json',
       'Authorization': 'Bearer $value',
       // 'content-type': 'application/json',

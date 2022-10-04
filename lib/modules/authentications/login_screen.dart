@@ -460,7 +460,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     );
                                                   },
                                                 );
-                                                await Singleton.getBox();
+                                                await SharedClass.getBox();
                                                 Future.delayed(
                                                     Duration(seconds: 3), () {
                                                   Navigator.pop(

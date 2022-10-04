@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
       showTextFiled4 = false;
 
   Future<void> getUID() async {
-    Box box = await Singleton.getBox();
+    Box box = await SharedClass.getBox();
     String uid = box.get('user_id').toString();
     setState(() {
       result = uid;
@@ -63,7 +63,7 @@ class _ProfilePageState extends State<ProfilePage> {
               state = true;
               _image = null;
               _uri = witness.image != null
-                  ? "${Singleton.routePath}${witness.image}"
+                  ? "${SharedClass.routePath}${witness.image}"
                   : null;
               print(_uri);
               setDataForm();

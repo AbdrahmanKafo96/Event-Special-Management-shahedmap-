@@ -193,7 +193,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                                 .then((bool value) async {
                               if (value) {
                                 if (_formKey.currentState.validate()) {
-                                  var prefs = await Singleton.getBox();
+                                  var prefs = await SharedClass.getBox();
                                   String email = prefs.get('email');
                                   int user_id = prefs.get('user_id');
 

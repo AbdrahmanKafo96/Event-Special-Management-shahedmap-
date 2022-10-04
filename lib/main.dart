@@ -48,11 +48,11 @@ callbackDispatcher() {
           Position userLocation = await Geolocator.getCurrentPosition(
               desiredAccuracy: LocationAccuracy.high);
           await Hive.initFlutter();
-          Box box = await Singleton.getBox();
+          Box box = await SharedClass.getBox();
 
-          final storage = await Singleton.getStorage();
+          final storage = await SharedClass.getStorage();
           String value = await storage.read(
-              key: "token", aOptions: Singleton.getAndroidOptions());
+              key: "token", aOptions: SharedClass.getAndroidOptions());
 
           Map data = {
             'user_id': box.get('user_id').toString(),
@@ -60,7 +60,7 @@ callbackDispatcher() {
             'lng': userLocation.longitude.toString(),
           };
           final response = await http.post(
-              Uri.parse('${Singleton.apiPath}/updateUnit'),
+              Uri.parse('${SharedClass.apiPath}/updateUnit'),
               body: jsonEncode(data),
               headers: {
                 'Accept': 'application/json',
@@ -98,12 +98,12 @@ Future main() async {
       DeviceOrientation.portraitDown,
     ]);
     String token = null;
-    final storage = await Singleton.getStorage();
+    final storage = await SharedClass.getStorage();
 
     token = await storage.read(
-        key: "api_token", aOptions: Singleton.getAndroidOptions());
+        key: "api_token", aOptions: SharedClass.getAndroidOptions());
 
-    final box = await Singleton.getBox();
+    final box = await SharedClass.getBox();
     if (box.containsKey('language')) {
       language = box.get('language');
     } else {

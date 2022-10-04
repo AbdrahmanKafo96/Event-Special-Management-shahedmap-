@@ -22,7 +22,7 @@ class _AppSettingsState extends State<AppSettings> {
   String _selectedLanguage;
   bool _darkMode = false;
   Box _box;
-  Language _language=Singleton.getLanguage();
+  Language _language=SharedClass.getLanguage();
   DarkThemePreference darkThemePreference =   DarkThemePreference();
   var themeChange ;
   @override
@@ -30,7 +30,7 @@ class _AppSettingsState extends State<AppSettings> {
     // TODO: implement initState
     super.initState();
 
-    Singleton.getBox().then((value) async {
+    SharedClass.getBox().then((value) async {
       setState(() {
         _box=value;
         _language.getLanguage;

@@ -24,7 +24,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
   }
 
   void openBox() {
-    Singleton.getBox().then((value) {
+    SharedClass.getBox().then((value) {
       setState(() {
         email = value.get('email');
         username = value.get('unitname').toString();

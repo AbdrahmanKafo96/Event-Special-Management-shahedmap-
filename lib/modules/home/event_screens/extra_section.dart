@@ -158,7 +158,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                               .getDescription !=
                                           null) {
                                     setState(() => isLoading = true);
-                                    Box box = await Singleton.getBox();
+                                    Box box = await SharedClass.getBox();
                                     Map userData = Map();
                                     userData = {
                                       'description': Provider.of<EventProvider>(

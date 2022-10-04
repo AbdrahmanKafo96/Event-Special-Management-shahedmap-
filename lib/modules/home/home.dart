@@ -17,6 +17,7 @@ import 'package:flutter/services.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
 import 'package:weather/weather.dart' as we;
+import 'package:weather/weather.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -42,7 +43,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   void openBox() {
-    Singleton.getBox().then((value) {
+    SharedClass.getBox().then((value) {
       setState(() {
         box = value;
         loader = true;
@@ -217,6 +218,19 @@ class _HomePageState extends State<HomePage> {
     Location location = Location();
     try {
       myLocation = await location.getLocation();
+      we.WeatherFactory wf = SharedClass.getWeatherFactory();
+      we.Weather w = await wf.currentWeatherByLocation(
+          myLocation.latitude, myLocation.longitude);
+
+      GeoData data = await Geocoder2.getDataFromCoordinates(
+          latitude: myLocation.latitude,
+          longitude: myLocation.longitude,
+          googleMapApiKey: "${SharedClass.mapApiKey}");
+      setState(() {
+        countryName = data.country;
+        subAdminArea = data.address;
+        weather = w.temperature.celsius.toInt().toString();
+      });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {
         error = 'please grant permission';
@@ -226,21 +240,18 @@ class _HomePageState extends State<HomePage> {
         error = 'permission denied- please enable it from app settings';
         print(error);
       }
+
       myLocation = null;
+    } on OpenWeatherAPIException catch (e) {
+      if (e == 'OpenWeatherAPIException') {
+        print("e.message ${e}");
+        print('Invalid API key.');
+        setState(() {
+          countryName ="";
+          subAdminArea = "";
+          weather = "";
+        });
+      }
     }
-
-    we.WeatherFactory wf = Singleton.getWeatherFactory();
-    we.Weather w = await wf.currentWeatherByLocation(
-        myLocation.latitude, myLocation.longitude);
-
-    GeoData data = await Geocoder2.getDataFromCoordinates(
-        latitude: myLocation.latitude,
-        longitude: myLocation.longitude,
-        googleMapApiKey: "${Singleton.mapApiKey}");
-    setState(() {
-      countryName = data.country;
-      subAdminArea = data.address;
-      weather = w.temperature.celsius.toInt().toString();
-    });
   }
 }

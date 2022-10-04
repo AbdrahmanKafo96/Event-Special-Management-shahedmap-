@@ -19,14 +19,14 @@ class UserAuthProvider extends ChangeNotifier {
 
   Future<bool> login(Map userData) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
-      final box = await Singleton.getBox();
+      final box = await SharedClass.getBox();
 
       if (box != null) {
         final response = userData['userState'] == 'L'
             ? await http.post(
-                Uri.parse("${Singleton.apiPath}/login"),
+                Uri.parse("${SharedClass.apiPath}/login"),
                 body: jsonEncode(userData),
                 headers: {
                   'Accept': 'application/json',
@@ -36,7 +36,7 @@ class UserAuthProvider extends ChangeNotifier {
               )
             : await http.post(
                 Uri.parse(
-                  "${Singleton.apiPath}/register",
+                  "${SharedClass.apiPath}/register",
                 ),
                 body: jsonEncode(userData),
                 headers: {
@@ -69,11 +69,11 @@ class UserAuthProvider extends ChangeNotifier {
               await storage.write(
                   key: 'api_token',
                   value: user.api_token,
-                  aOptions: Singleton.getAndroidOptions());
+                  aOptions: SharedClass.getAndroidOptions());
               await storage.write(
                   key: 'token',
                   value: responseData['token'],
-                  aOptions: Singleton.getAndroidOptions());
+                  aOptions: SharedClass.getAndroidOptions());
 
               box.put('user_id', user.user_id);
               box.put(
@@ -108,11 +108,11 @@ class UserAuthProvider extends ChangeNotifier {
             await storage.write(
                 key: 'api_token',
                 value: user.api_token,
-                aOptions: Singleton.getAndroidOptions());
+                aOptions: SharedClass.getAndroidOptions());
             await storage.write(
                 key: 'token',
                 value: responseData['token'],
-                aOptions: Singleton.getAndroidOptions());
+                aOptions: SharedClass.getAndroidOptions());
             box.put('user_id', user.user_id);
             box.put(
                 'email', responseData['result']['original']['data']["email"]);
@@ -138,9 +138,9 @@ class UserAuthProvider extends ChangeNotifier {
 
   Future<bool> resetPassword(String password, String confPassword,
       String user_id, String email, BuildContext context) async {
-    final storage = await Singleton.getStorage();
+    final storage = await SharedClass.getStorage();
     String value = await storage.read(
-        key: "token", aOptions: Singleton.getAndroidOptions());
+        key: "token", aOptions: SharedClass.getAndroidOptions());
     try {
       Map data = {
         'password': password.trim(),
@@ -150,7 +150,7 @@ class UserAuthProvider extends ChangeNotifier {
       };
 
       final response = await http.post(
-        Uri.parse('${Singleton.apiPath}/resetPasswordUser'),
+        Uri.parse('${SharedClass.apiPath}/resetPasswordUser'),
         body: jsonEncode(data),
         headers: {
           'Accept': 'application/json',
@@ -174,14 +174,14 @@ class UserAuthProvider extends ChangeNotifier {
 
   void logout(BuildContext context) async {
     try {
-      Box box = await Singleton.getBox();
+      Box box = await SharedClass.getBox();
 
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
 
       String api_token = await storage.read(
-          key: 'api_token', aOptions: Singleton.getAndroidOptions());
+          key: 'api_token', aOptions: SharedClass.getAndroidOptions());
 
       Map userdata = {
         'api_token': api_token,
@@ -190,7 +190,7 @@ class UserAuthProvider extends ChangeNotifier {
       checkInternetConnectivity(context).then((bool state) async {
         if (state) {
           final response = await http.post(
-            Uri.parse("${Singleton.apiPath}/logout"),
+            Uri.parse("${SharedClass.apiPath}/logout"),
             body: jsonEncode(userdata),
             headers: {
               'Accept': 'application/json',
@@ -202,15 +202,15 @@ class UserAuthProvider extends ChangeNotifier {
             //var responseData = json.decode(response.body);
 
             await storage.delete(
-                key: 'api_token', aOptions: Singleton.getAndroidOptions());
+                key: 'api_token', aOptions: SharedClass.getAndroidOptions());
             await storage.delete(
-                key: 'token', aOptions: Singleton.getAndroidOptions());
+                key: 'token', aOptions: SharedClass.getAndroidOptions());
             box.delete("user_id");
             box.delete("email");
             box.delete("role_id");
             box.delete("beneficiarie_id");
             box.delete("unitname");
-            Singleton.clearTracking();
+            SharedClass.clearTracking();
             SharedData.resetValue();
 
             Navigator.pushReplacement(
@@ -229,13 +229,13 @@ class UserAuthProvider extends ChangeNotifier {
 
   Future<bool> saveProfileData(Map userData) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final request = await http.MultipartRequest(
           "POST",
           Uri.parse(
-            "${Singleton.apiPath}/saveUserData",
+            "${SharedClass.apiPath}/saveUserData",
           ));
       request.headers.addAll({"Authorization": "Bearer $value"});
 
@@ -279,13 +279,13 @@ class UserAuthProvider extends ChangeNotifier {
         Map data = {
           'user_id': result.toString(),
         };
-        final box = await Singleton.getBox();
-        final storage = await Singleton.getStorage();
+        final box = await SharedClass.getBox();
+        final storage = await SharedClass.getStorage();
         String value = await storage.read(
-            key: "token", aOptions: Singleton.getAndroidOptions());
+            key: "token", aOptions: SharedClass.getAndroidOptions());
 
         final response = await http.post(
-          Uri.parse("${Singleton.apiPath}/getUser"),
+          Uri.parse("${SharedClass.apiPath}/getUser"),
           body: data,
           headers: {
             'Authorization': 'Bearer $value',
@@ -312,11 +312,11 @@ class UserAuthProvider extends ChangeNotifier {
 
   Future<bool> updateProfileData(Map userData) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final request = await http.MultipartRequest(
-          "POST", Uri.parse("${Singleton.apiPath}/updateUserData"));
+          "POST", Uri.parse("${SharedClass.apiPath}/updateUserData"));
       request.headers.addAll({"Authorization": "Bearer $value"});
       request.fields['user_id'] = userData['user_id'].toString();
       request.fields['first_name'] = userData['first_name'];
@@ -360,7 +360,7 @@ class UserAuthProvider extends ChangeNotifier {
         };
 
         final response = await http.post(
-          Uri.parse("${Singleton.apiPath}/forgotpassword"),
+          Uri.parse("${SharedClass.apiPath}/forgotpassword"),
           body: data,
         );
         if (response.statusCode == 200) {
@@ -388,13 +388,13 @@ class UserAuthProvider extends ChangeNotifier {
         Map data = {
           'user_id': result.toString(),
         };
-        Box box = await Singleton.getBox();
-        final storage = await Singleton.getStorage();
+        Box box = await SharedClass.getBox();
+        final storage = await SharedClass.getStorage();
         String value = await storage.read(
-            key: "token", aOptions: Singleton.getAndroidOptions());
+            key: "token", aOptions: SharedClass.getAndroidOptions());
 
         final response = await http.post(
-          Uri.parse("${Singleton.apiPath}/findBenID"),
+          Uri.parse("${SharedClass.apiPath}/findBenID"),
           body: data,
           headers: {
             'Authorization': 'Bearer $value',

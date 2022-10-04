@@ -55,7 +55,7 @@ class _EventViewState extends State<EventView> {
                       onPressed: ()  async {
                   checkInternetConnectivity(context).then((bool value) async {
                     if(value){
-                      Box box = await Singleton.getBox();
+                      Box box = await SharedClass.getBox();
                       Map userData = Map();
                       userData = {
                         'user_id':box.get('user_id').toString(),
@@ -121,7 +121,7 @@ class _EventViewState extends State<EventView> {
                                           onPressed: () {
                                             int postId = widget.eventID;
 
-                                            Singleton.getBox().then((
+                                            SharedClass.getBox().then((
                                                 value) async{
                                              await  Provider.of<EventProvider>(
                                                   context, listen: false)
@@ -216,7 +216,7 @@ class _EventViewState extends State<EventView> {
           count = _response['count'];
 
           if (_response['data']['video'] != null)
-            video = "${Singleton.routePath}" + _response['data']['video'];
+            video = "${SharedClass.routePath}" + _response['data']['video'];
 
           eventNameController.text = _response['data']['event_name'];
           eventDescController.text = _response['data']['description'];
@@ -224,7 +224,7 @@ class _EventViewState extends State<EventView> {
           for (int i = 1; i <= 4; i++) {
             if(_response['data']['image$i']!=null)
             {
-              imgList[index]="${Singleton.routePath}" +_response['data']['image$i'];
+              imgList[index]="${SharedClass.routePath}" +_response['data']['image$i'];
 
             } index++;
           }

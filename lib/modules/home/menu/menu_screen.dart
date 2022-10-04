@@ -43,7 +43,7 @@ class _EventsMenuState extends State<EventsMenu> {
   Future<void> fetchData() async {
     // await Future.delayed(Duration(milliseconds: 1500));
     // setState(() {
-    Singleton.getBox().then((value) {
+    SharedClass.getBox().then((value) {
       setState(() {
         //  value.getInt('user_id')
         fuList = Provider.of<EventProvider>(context, listen: false)
@@ -54,7 +54,7 @@ class _EventsMenuState extends State<EventsMenu> {
 
     getData() {
     var list;
-    Singleton.getBox().then((value) async {
+    SharedClass.getBox().then((value) async {
       list = await Provider.of<EventProvider>(context, listen: false)
           .searchData(value.get('user_id'));
       try {
@@ -293,7 +293,7 @@ class _EventsMenuState extends State<EventsMenu> {
             ),
             onPressed: () {
               var postId = addede_id;
-              Singleton.getBox().then((value) {
+              SharedClass.getBox().then((value) {
                 Provider.of<EventProvider>(context, listen: false)
                     .deleteEvent(postId, value.get('user_id'));
               });

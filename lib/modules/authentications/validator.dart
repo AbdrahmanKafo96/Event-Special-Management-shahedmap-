@@ -2,7 +2,7 @@ import 'package:shahed/provider/language.dart';
 import 'package:shahed/singleton/singleton.dart';
 
 class ValidatorClass {
-  static Language language = Singleton.getLanguage();
+  static Language language = SharedClass.getLanguage();
 
   static bool isValidEmail(String email) {
     bool emailValid = RegExp(

@@ -136,7 +136,7 @@ class _MappolyState extends State<Mappoly> {
     List<LatLng> polylineCoordinates = [];
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
-      "${Singleton.mapApiKey}",
+      "${SharedClass.mapApiKey}",
       PointLatLng(currentPosition.latitude, currentPosition.longitude),
       PointLatLng(lat, long),
       travelMode: TravelMode.walking,

@@ -27,7 +27,7 @@ class _ResponsePageState extends State<ResponsePage> {
   }
 
   Future<void> getData() {
-    Singleton.getBox().then((value) {
+    SharedClass.getBox().then((value) {
       setState(() {
         user_id = value.get('user_id');
 
@@ -230,7 +230,7 @@ class _ResponsePageState extends State<ResponsePage> {
           onPressed: () {
             var postId = addede_id;
 
-            Singleton.getBox().then((value) {
+            SharedClass.getBox().then((value) {
               Provider.of<EventProvider>(context, listen: false)
                   .deleteEvent(postId, value.get('user_id'));
             });

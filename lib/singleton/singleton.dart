@@ -3,8 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:weather/weather.dart' as wea;
 
-class Singleton {
-  Singleton._();
+class SharedClass {
+  SharedClass._();
 
   static FlutterSecureStorage _storage;
   static String apiPath = "http://ets.ly/api";
@@ -17,7 +17,7 @@ class Singleton {
 
   static wea.WeatherFactory getWeatherFactory() {
     if (_wf == null) {
-      _wf = wea.WeatherFactory(Singleton.weatherApiKey.toString(),
+      _wf = wea.WeatherFactory(SharedClass.weatherApiKey.toString(),
           language: wea.Language.ENGLISH);
     }
     return _wf;

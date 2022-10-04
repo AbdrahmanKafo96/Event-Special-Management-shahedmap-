@@ -8,14 +8,14 @@ class SharedData{
  static Language _language ;
   static Language getGlobalLang(){
    if(_language==null){
-     _language = Singleton.getLanguage();
+     _language = SharedClass.getLanguage();
    }
     return _language;
   }
   static bool _state ;
   static  bool getUserState()   {
     if (_state == null) {
-      Singleton.getBox().then((value) async {
+      SharedClass.getBox().then((value) async {
 
         var user_id= value.get('user_id');
         if (value.get('role_id') == 4) {

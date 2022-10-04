@@ -13,13 +13,13 @@ class EventProvider extends ChangeNotifier {
 
   addEvent(Map userData) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
 
       var _count = 1;
       var request = http.MultipartRequest(
-          "POST", Uri.parse("${Singleton.apiPath}/save_event"));
+          "POST", Uri.parse("${SharedClass.apiPath}/save_event"));
       request.headers.addAll({"Authorization": "Bearer $value"});
       if (userData['description'] != null)
         request.fields['description'] = userData['description'];
@@ -82,12 +82,12 @@ class EventProvider extends ChangeNotifier {
 
   Future update_position(Map data) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
 
       final response = await http.post(
-        Uri.parse('${Singleton.apiPath}/update_position'),
+        Uri.parse('${SharedClass.apiPath}/update_position'),
         body: jsonEncode(data),
         headers: {
           'Accept': 'application/json',
@@ -110,15 +110,15 @@ class EventProvider extends ChangeNotifier {
 
   Future deleteEvent(int addede_id, int sender_id) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'sender_id': sender_id.toString(),
         'addede_id': addede_id.toString(),
       };
       final response = await http.delete(
-        Uri.parse('${Singleton.apiPath}/deleteEvent'),
+        Uri.parse('${SharedClass.apiPath}/deleteEvent'),
         body: jsonEncode(data),
         headers: {
           'Accept': 'application/json',
@@ -138,12 +138,12 @@ class EventProvider extends ChangeNotifier {
 
   updateEvent(Map userData) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       //var _count = 1;
       var request = http.MultipartRequest(
-          "POST", Uri.parse("${Singleton.apiPath}/updateEvent"));
+          "POST", Uri.parse("${SharedClass.apiPath}/updateEvent"));
       request.headers.addAll({"Authorization": "Bearer $value"});
       request.fields['description'] = userData['description'];
       request.fields['user_id'] = userData['user_id'].toString();
@@ -215,12 +215,12 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'addede_id': addede_id.toString(),
       };
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
 
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/getEvent'),
+          Uri.parse('${SharedClass.apiPath}/getEvent'),
           body: jsonEncode(data),
           headers: {
             'Accept': 'application/json',
@@ -242,11 +242,11 @@ class EventProvider extends ChangeNotifier {
 //  we need to close connection after call these methods
   Future<List<CategoryClass>> fetchEventCategories() async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.get(
-          Uri.parse('${Singleton.apiPath}/fetchEventCategories'),
+          Uri.parse('${SharedClass.apiPath}/fetchEventCategories'),
           headers: {
             //'Accept':'application/json',
             'Authorization': 'Bearer $value',
@@ -272,11 +272,11 @@ class EventProvider extends ChangeNotifier {
 
   Future<List<EventType>> fetchEventTypes() async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http
-          .get(Uri.parse('${Singleton.apiPath}/fetchEventTypes'), headers: {
+          .get(Uri.parse('${SharedClass.apiPath}/fetchEventTypes'), headers: {
         // 'Accept':'application/json',
         'Authorization': 'Bearer $value',
         // 'content-type': 'application/json',
@@ -310,7 +310,7 @@ class EventProvider extends ChangeNotifier {
       // final storage = await Singleton.getStorage()  ;
       //String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
-        Uri.parse('${Singleton.apiPath}/removeImage'),
+        Uri.parse('${SharedClass.apiPath}/removeImage'),
         body: data,
         // headers: {
         //   // 'Accept':'application/json',
@@ -338,7 +338,7 @@ class EventProvider extends ChangeNotifier {
       // final storage = await Singleton.getStorage()  ;
       //String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final response = await http.post(
-        Uri.parse('${Singleton.apiPath}/removeVideo'),
+        Uri.parse('${SharedClass.apiPath}/removeVideo'),
         body: data,
         // headers: {
         //   // 'Accept':'application/json',
@@ -363,11 +363,11 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'sender_id': sender_id.toString(),
       };
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/fetchAllListByUserId'),
+          Uri.parse('${SharedClass.apiPath}/fetchAllListByUserId'),
           body: data,
           headers: {
             // 'Accept':'application/json',
@@ -393,11 +393,11 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'user_id': user_id.toString(),
       };
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/getAllRespons'),
+          Uri.parse('${SharedClass.apiPath}/getAllRespons'),
           body: data,
           headers: {
             // 'Accept':'application/json',
@@ -422,11 +422,11 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'addede_id': addede_id.toString(),
       };
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/getEvent'),
+          Uri.parse('${SharedClass.apiPath}/getEvent'),
           body: data,
           headers: {
             // 'Accept':'application/json',
@@ -450,11 +450,11 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'sender_id': sender_id.toString(),
       };
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
-        Uri.parse('${Singleton.apiPath}/fetchAllListByUserId'),
+        Uri.parse('${SharedClass.apiPath}/fetchAllListByUserId'),
         body: data,
         // headers: {
         //   // 'Accept':'application/json',
@@ -478,15 +478,15 @@ class EventProvider extends ChangeNotifier {
 
   Future<bool> updateNoti(int user_id, int notification_id) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
         'notification_id': notification_id.toString(),
       };
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/updateNoti'),
+          Uri.parse('${SharedClass.apiPath}/updateNoti'),
           body: data,
           headers: {
             // 'Accept':'application/json',
@@ -509,15 +509,15 @@ class EventProvider extends ChangeNotifier {
 
   Future<dynamic> getRespo(int user_id, int notification_id) async {
     try {
-      final storage = await Singleton.getStorage();
+      final storage = await SharedClass.getStorage();
       String value = await storage.read(
-          key: "token", aOptions: Singleton.getAndroidOptions());
+          key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
         'notification_id': notification_id.toString(),
       };
       final response = await http.post(
-          Uri.parse('${Singleton.apiPath}/getRespo'),
+          Uri.parse('${SharedClass.apiPath}/getRespo'),
           body: data,
           headers: {
             // 'Accept':'application/json',

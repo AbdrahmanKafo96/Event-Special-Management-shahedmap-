@@ -29,7 +29,7 @@ class _EventCategoryState extends State<EventCategory> {
   void initState() {
     super.initState();
     openDB().then((db) {
-      Singleton.getBox().then((box) async {
+      SharedClass.getBox().then((box) async {
         // SharedPreferences prefs= await Singleton.getPrefInstance();
         // final key = 'token';
         // final value = prefs.get(key ) ?? 0;
@@ -43,7 +43,7 @@ class _EventCategoryState extends State<EventCategory> {
             };
 
             final response = await http.post(
-                Uri.parse("${Singleton.apiPath}/isVersionUpdated"),
+                Uri.parse("${SharedClass.apiPath}/isVersionUpdated"),
                 body: data);
             if (response.statusCode == 200) {
               var res = jsonDecode(response.body);
