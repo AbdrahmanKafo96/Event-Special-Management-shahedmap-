@@ -611,6 +611,14 @@ class Language extends ChangeNotifier {
     } else {
       return "تتبع الوحدة";
     }
+  } String missionsList() {
+    if (getLanguage == "AR") {
+      return "قائمة المهام";
+    } else if (getLanguage == "EN") {
+      return 'Missions List';
+    } else {
+      return "قائمة المهام";
+    }
   }
 
   String eventList() {
@@ -1332,7 +1340,7 @@ class Language extends ChangeNotifier {
     }
   }
 
-  String UnableAccessSystem() {
+  String unableAccessSystem() {
     if (getLanguage == "AR") {
       return 'هناك مشكلة في الخادم';
     } else if (getLanguage == "EN") {

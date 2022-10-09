@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/models/category.dart';
- import 'package:shahed/modules/home/responses/map_respo.dart';
+import 'package:shahed/modules/home/responses/map_respo.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
@@ -80,7 +80,6 @@ class _ResponsePageState extends State<ResponsePage> {
             // if ( snapshot.data==null)
             //   return Center(child: Text('قم بإنشاء حدث جديد'));
             switch (snapshot.connectionState) {
-
               case ConnectionState.none:
                 return Text('');
 
@@ -101,7 +100,7 @@ class _ResponsePageState extends State<ResponsePage> {
                 );
 
               case ConnectionState.done:
-                return snapshot.hasData && snapshot.data.length>0
+                return snapshot.hasData && snapshot.data.length > 0
                     ? RefreshIndicator(
                         displacement: 5,
                         onRefresh: getData,
@@ -133,14 +132,40 @@ class _ResponsePageState extends State<ResponsePage> {
                                         ),
                                         child: ListTile(
                                             onTap: () {
-                                              Provider.of<EventProvider>(
+                                              if (snapshot.data[index].seen ==
+                                                  0) {
+                                                Provider.of<EventProvider>(
+                                                        context,
+                                                        listen: false)
+                                                    .updateNoti(
+                                                        user_id,
+                                                        snapshot.data[index]
+                                                            .notification_id)
+                                                    .then((value1) {
+                                                  Provider.of<EventProvider>(
+                                                          context,
+                                                          listen: false)
+                                                      .getRespo(
+                                                          user_id,
+                                                          snapshot.data[index]
+                                                              .notification_id)
+                                                      .then((value) {
+                                                    print(value['data']['lat']);
+                                                    print(value['data']['lng']);
+                                                    Navigator.push(
                                                       context,
-                                                      listen: false)
-                                                  .updateNoti(
-                                                      user_id,
-                                                      snapshot.data[index]
-                                                          .notification_id)
-                                                  .then((value) {
+                                                      MaterialPageRoute(
+                                                          builder: (context) => Mappoly(
+                                                              lat: double.parse(
+                                                                  value['data']
+                                                                      ['lat']),
+                                                              lng: double.parse(
+                                                                  value['data'][
+                                                                      'lng']))),
+                                                    );
+                                                  });
+                                                });
+                                              } else {
                                                 Provider.of<EventProvider>(
                                                         context,
                                                         listen: false)
@@ -163,7 +188,7 @@ class _ResponsePageState extends State<ResponsePage> {
                                                                     ['lng']))),
                                                   );
                                                 });
-                                              });
+                                              }
                                             },
                                             leading: Icon(
                                               Icons.event_note_rounded,
@@ -185,8 +210,9 @@ class _ResponsePageState extends State<ResponsePage> {
                         ),
                       )
                     : Center(
-                        child: Text( SharedData.getGlobalLang().noNotifications(),
-                            style:TextStyle(color: Colors.black54)));
+                        child: Text(
+                            SharedData.getGlobalLang().noNotifications(),
+                            style: TextStyle(color: Colors.black54)));
               default:
                 {
                   return Center(
@@ -194,7 +220,6 @@ class _ResponsePageState extends State<ResponsePage> {
                           style: TextStyle(color: Colors.black54)));
                 }
             }
-
           }),
     );
   }
@@ -204,7 +229,7 @@ class _ResponsePageState extends State<ResponsePage> {
     return showDialog(
         context: context,
         builder: (context) {
-          return   customAlert(addede_id, snapshot, index, context) ;
+          return customAlert(addede_id, snapshot, index, context);
         });
   }
 
@@ -247,11 +272,11 @@ class _ResponsePageState extends State<ResponsePage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Scaffold(
-        appBar:
-            customAppBar(context,title: SharedData.getGlobalLang().notifications(), icon: FontAwesomeIcons.solidBell),
-        body: generateItemsList(),
-
+    return Scaffold(
+      appBar: customAppBar(context,
+          title: SharedData.getGlobalLang().notifications(),
+          icon: FontAwesomeIcons.solidBell),
+      body: generateItemsList(),
     );
   }
 }

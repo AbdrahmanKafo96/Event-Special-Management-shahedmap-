@@ -60,8 +60,8 @@ class _DashboardState extends State<Dashboard> {
             dashboardItem(context, SharedData.getGlobalLang().notifications(), FontAwesomeIcons.bell,
                 'response', Colors.redAccent),
           if (SharedData.getUserState())
-          dashboardItem(context, SharedData.getGlobalLang().trackingUnit(), Icons.track_changes,
-              'unitTracking', Colors.orange),
+          dashboardItem(context, SharedData.getGlobalLang().missionsList(), Icons.track_changes,
+              'Missions', Colors.orange),
           // dashboardItem(
           //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
         ],

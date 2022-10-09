@@ -2,11 +2,14 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shahed/models/markermodel.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/models/category.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/singleton/singleton.dart';
+import 'package:intl/intl.dart';
+import '../models/mission.dart';
 
 class EventProvider extends ChangeNotifier {
   Event event = Event();
@@ -63,7 +66,8 @@ class EventProvider extends ChangeNotifier {
           return false;
         }
         if (res['message'] == 'لاتستطيع ارسال حدث لان حسابك محظور') {
-          showShortToast(SharedData.getGlobalLang().blockEventMessage(), Colors.red);
+          showShortToast(
+              SharedData.getGlobalLang().blockEventMessage(), Colors.red);
           return false;
         }
         if (res['status'] == 'success') {
@@ -74,7 +78,8 @@ class EventProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {}
@@ -102,7 +107,8 @@ class EventProvider extends ChangeNotifier {
         }
         return 'unse';
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to delete post.');
       }
     } catch (e) {}
@@ -130,7 +136,8 @@ class EventProvider extends ChangeNotifier {
       if (response.statusCode == 200) {
         return Event.fromJson(jsonDecode(response.body));
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to delete post.');
       }
     } catch (e) {}
@@ -194,7 +201,8 @@ class EventProvider extends ChangeNotifier {
         var respo = jsonDecode(respStr);
 
         if (respo['message'] == 'لاتستطيع تعديل الحدث لان حسابك محظور') {
-          showShortToast(SharedData.getGlobalLang().blockEditEventMessage(), Colors.red);
+          showShortToast(
+              SharedData.getGlobalLang().blockEditEventMessage(), Colors.red);
           return false;
         }
         if (respo['status'] == 'success') {
@@ -202,8 +210,9 @@ class EventProvider extends ChangeNotifier {
         } else {
           return false;
         }
-      }else{
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {}
@@ -233,8 +242,9 @@ class EventProvider extends ChangeNotifier {
 
         return parsed;
         // return parsed.map<Event>((json) => Event.fromJson(json)).toList();
-      }else{
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
       }
     } catch (e) {}
   }
@@ -264,7 +274,8 @@ class EventProvider extends ChangeNotifier {
       } else {
         // If the server did not return a 200 OK response,
         // then throw an exception.
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load posts');
       }
     } catch (e) {}
@@ -291,7 +302,8 @@ class EventProvider extends ChangeNotifier {
             .toList();
         // return  CategoryClass.fromJson(jsonDecode(response.body));
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         // If the server did not return a 200 OK response,
         // then throw an exception.
         throw Exception('Failed to load album');
@@ -324,7 +336,8 @@ class EventProvider extends ChangeNotifier {
 
         return parsed;
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -352,7 +365,8 @@ class EventProvider extends ChangeNotifier {
 
         return parsed;
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -382,7 +396,8 @@ class EventProvider extends ChangeNotifier {
 
         return parsed.map<Event>((json) => Event.fromJson(json)).toList();
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -411,7 +426,8 @@ class EventProvider extends ChangeNotifier {
 
         return parsed.map<Respo>((json) => Respo.fromJson(json)).toList();
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -439,7 +455,8 @@ class EventProvider extends ChangeNotifier {
 
         return parsed.map<Event>((json) => Event.fromJson(json)).toList();
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -470,7 +487,8 @@ class EventProvider extends ChangeNotifier {
         else
           return false;
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -501,7 +519,40 @@ class EventProvider extends ChangeNotifier {
         else
           return false;
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        throw Exception('Failed to load List');
+      }
+    } catch (e) {}
+  } Future<bool> updateMissionSeen(String user_id , mission_id) async {
+    try {
+      final storage = await SharedClass.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: SharedClass.getAndroidOptions());
+      Map data = {
+        'user_id': user_id ,
+        'mission_id': mission_id ,
+      };
+      final response = await http.post(
+          Uri.parse('${SharedClass.apiPath}/updateMissionSeen'),
+          body: data,
+          headers: {
+            // 'Accept':'application/json',
+            'Authorization': 'Bearer $value',
+            // 'content-type': 'application/json',
+          });
+
+      if (response.statusCode == 200) {
+        final parsed = json.decode(response.body);
+        print(parsed['message']);
+        print(response.body);
+        if (parsed['message'] == 'success')
+          return true;
+        else
+          return false;
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -532,7 +583,108 @@ class EventProvider extends ChangeNotifier {
         // else
         //   return false;
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        throw Exception('Failed to load List');
+      }
+    } catch (e) {}
+  }
+
+  Future<bool> stopTracking(int sender_id, int beneficiarie_id) async {
+    try {
+      final storage = await SharedClass.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: SharedClass.getAndroidOptions());
+      Map data = {
+        'sender_id': sender_id.toString(),
+        'beneficiarie_id': beneficiarie_id.toString(),
+      };
+      print(value);
+      final response = await http.post(
+          Uri.parse('${SharedClass.apiPath}/close_track'),
+          body: data,
+          headers: {
+            // 'Accept':'application/json',
+            'Authorization': 'Bearer $value',
+            // 'content-type': 'application/json',
+          });
+
+      if (response.statusCode == 200) {
+        final parsed = json.decode(response.body);
+        if (parsed['status'] == 'success')
+          return true;
+        else
+          return false;
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        return false;
+        throw Exception('Failed to load List');
+      }
+    } catch (e) {}
+  }
+
+  Future<List<MarkerModel>> getEvents() async {
+    try {
+      // var now = new DateTime.now();
+      // var formatter = new DateFormat('yyyy-MM-dd');
+      // String formattedDate = formatter.format(now);
+
+      final storage = await SharedClass.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: SharedClass.getAndroidOptions());
+      // Map data = {
+      //  // 'date':formattedDate.toString(),
+      //   'date':"2022-10-01",
+      // };
+
+      final response = await http
+          .get(Uri.parse('${SharedClass.apiPath}/getevents'), headers: {
+        // 'Accept':'application/json',
+        'Authorization': 'Bearer $value',
+        // 'content-type': 'application/json',
+      });
+
+      if (response.statusCode == 200) {
+        if (response.body.length > 0) {
+          final parsed =
+              json.decode(response.body).cast<Map<String, dynamic>>();
+          return parsed
+              .map<MarkerModel>((json) => MarkerModel.fromJson(json))
+              .toList();
+        }
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        throw Exception('Failed to load List');
+      }
+    } catch (e) {}
+  }
+
+  Future<List<Mission>> getMissions(String user_id, ben_id) async {
+    try {
+      Map data = {
+        'user_id': user_id,
+        'ben_id': ben_id,
+      };
+      final storage = await SharedClass.getStorage();
+      String value = await storage.read(
+          key: "token", aOptions: SharedClass.getAndroidOptions());
+
+      final response = await http.post(
+          Uri.parse('${SharedClass.apiPath}/getmissions'),
+          body: data,
+          headers: {
+            // 'Accept':'application/json',
+            'Authorization': 'Bearer $value',
+            // 'content-type': 'application/json',
+          });
+      if (response.statusCode == 200) {
+        final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
+        return parsed.map<Mission>((json) => Mission.fromJson(json)).toList();
+      } else {
+        showShortToast(
+            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}

@@ -124,7 +124,7 @@ class UserAuthProvider extends ChangeNotifier {
             return true;
           }
         } else {
-          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           return false;
         }
       }
@@ -167,7 +167,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
       }
     } catch (e) {}
   }
@@ -216,7 +216,7 @@ class UserAuthProvider extends ChangeNotifier {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (_) => LoginUi()));
           } else {
-            showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+            showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           }
         }
 
@@ -264,7 +264,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {
@@ -301,7 +301,7 @@ class UserAuthProvider extends ChangeNotifier {
             return null;
           }
         } else {
-          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           return null;
         }
       }
@@ -343,7 +343,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         return false;
       }
     } catch (e) {
@@ -375,7 +375,7 @@ class UserAuthProvider extends ChangeNotifier {
           showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.green);
           return;
         } else {
-          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           return null;
         }
       }
@@ -406,7 +406,7 @@ class UserAuthProvider extends ChangeNotifier {
           box.put('beneficiarie_id', res['data']['beneficiarie_id']);
           box.put('unitname', res['data']['name']);
         } else {
-          showShortToast(SharedData.getGlobalLang().UnableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           return null;
         }
       }

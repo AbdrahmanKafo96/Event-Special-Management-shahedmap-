@@ -8,11 +8,11 @@ import '../shared_data/shareddata.dart';
   return <PopupMenuEntry<int>>[
     PopupMenuItem<int>(
       value: 0,
-      child: Text(low!=null ?low :SharedData.getGlobalLang().hybrid(),style: TextStyle(color: Colors.grey),),
+      child: Text(low!=null ?low :SharedData.getGlobalLang().normalDefault(),style: TextStyle(color: Colors.grey),),
     ),
     PopupMenuItem<int>(
       value: 1,
-      child: Text(medium!=null ?medium :SharedData.getGlobalLang().normalDefault(),style: TextStyle(color: Colors.grey),),
+      child: Text(medium!=null ?medium :SharedData.getGlobalLang().hybrid(),style: TextStyle(color: Colors.grey),),
     ),
     PopupMenuItem<int>(
       value: 2,
