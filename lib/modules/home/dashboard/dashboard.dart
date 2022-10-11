@@ -54,14 +54,18 @@ class _DashboardState extends State<Dashboard> {
         children: <Widget>[
           dashboardItem(context, SharedData.getGlobalLang().eventList(), FontAwesomeIcons.list,
               'eventList', Colors.blue),
-          dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.users,
-              'Inform', Colors.greenAccent),
+          // if (SharedData.getUserState())
+          //   dashboardItem(context, SharedData.getGlobalLang().trackingUnit(), Icons.track_changes,
+          //       'unitTracking', Colors.teal),
+
           if (SharedData.getUserState())
             dashboardItem(context, SharedData.getGlobalLang().notifications(), FontAwesomeIcons.bell,
                 'response', Colors.redAccent),
           if (SharedData.getUserState())
-          dashboardItem(context, SharedData.getGlobalLang().missionsList(), Icons.track_changes,
+          dashboardItem(context, SharedData.getGlobalLang().missionsList(), FontAwesomeIcons.route,
               'Missions', Colors.orange),
+          dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.users,
+              'Inform', Colors.greenAccent),
           // dashboardItem(
           //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
         ],

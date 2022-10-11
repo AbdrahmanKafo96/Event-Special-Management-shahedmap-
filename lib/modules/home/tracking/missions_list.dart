@@ -8,8 +8,10 @@ import 'package:shahed/shimmer/shimmer.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:intl/intl.dart';
 import '../../../models/mission.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'mission_track.dart';
 
 class Missions extends StatefulWidget {
   @override
@@ -89,66 +91,87 @@ class _MissionsState extends State<Missions> {
                                 padding: const EdgeInsets.all(8.0),
                                 child: Column(
                                   children: [
-                                    InkWell(
-                                      onTap: () {},
-                                      child: Ink(
-                                        child: Card(
-                                          color: snapshot.data[index].seen == 0
-                                              ? Colors.grey.withOpacity(0.5)
-                                              : Colors.white,
-                                          shape: RoundedRectangleBorder(
-                                            side: BorderSide(
-                                              color: Colors.green.shade300,
-                                            ),
-                                            borderRadius:
-                                                BorderRadius.circular(15.0),
-                                          ),
-                                          child: ListTile(
-                                              onTap: () {
-                                                if(snapshot.data[index].seen == 0){
-                                                  Provider.of<EventProvider>(
+                                    Card(
+                                      color: snapshot.data[index].seen==0
+                                          ?Color(0xFFc3c3c4)
+                                          :  Color(0xFF424250),
+                                      shape: RoundedRectangleBorder(
+                                        side: BorderSide(
+                                        color:snapshot.data[index].seen==0?
+                                        Colors.black54:Colors.white12),
+                                        borderRadius:
+                                            BorderRadius.circular(15.0),
+                                      ),
+                                      child: ListTile(
+                                          onTap: () {
+                                            if (snapshot.data[index].seen ==
+                                                0) {
+                                              Provider.of<EventProvider>(
                                                       context,
                                                       listen: false)
-                                                      .updateMissionSeen(
+                                                  .updateMissionSeen(
                                                       user_id,
                                                       snapshot.data[index]
                                                           .mission_id
                                                           .toString())
-                                                      .then((value) {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) =>
-                                                              UnitTracking()),
-                                                    );
-                                                  });
-                                                }else{
-                                                  Navigator.push(
-                                                    context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            UnitTracking()),
-                                                  );
-                                                }
+                                                  .then((value) {
+                                                Navigator.push(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                      builder:
+                                                          (context) =>
+                                                              MissionTracking(
+                                                                latLngDestination: LatLng(
+                                                                    snapshot
+                                                                        .data[
+                                                                            index]
+                                                                        .lat_finish,
+                                                                    snapshot
+                                                                        .data[index]
+                                                                        .lng_finish),
+                                                              )),
+                                                );
+                                              });
+                                            } else {
+                                              Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        MissionTracking(
+                                                          latLngDestination: LatLng(
+                                                              snapshot
+                                                                  .data[
+                                                                      index]
+                                                                  .lat_finish,
+                                                              snapshot
+                                                                  .data[
+                                                                      index]
+                                                                  .lng_finish),
+                                                        )),
+                                              );
+                                            }
+                                          },
+                                          subtitle: Text(
+                                            '${snapshot.data[index].mission_date}',
+                                            softWrap: true,
+                                            overflow: TextOverflow.ellipsis,
 
-                                              },
-                                              subtitle: Text(
-                                                '${snapshot.data[index].mission_date}',
-                                                style: TextStyle(
-                                                    color: Color(0xFF666666)),
-                                              ),
-                                              leading: Icon(
-                                                Icons.event_note_rounded,
-                                                size: 30,
-                                                color: Colors.blueGrey,
-                                              ),
-                                              title: Text(
-                                                '${snapshot.data[index].mission_name}',
-                                                style: TextStyle(
-                                                    color: Color(0xFF666666)),
-                                              )),
-                                        ),
-                                      ),
+                                            style:
+                                           snapshot.data[index].seen==0?
+                                           Theme.of(context).textTheme.bodyText2:
+                                           Theme.of(context).textTheme.subtitle1,),
+                                          leading: Icon(
+                                            Icons.task_alt,
+                                            size: 30,
+                                            color:snapshot.data[index].seen==0? Colors.green:Colors.white,
+                                          ),
+                                          title: Text(
+                                            '${snapshot.data[index].mission_name}',
+                                            softWrap: true,
+                                            //overflow: TextOverflow.visible,
+                                            style:
+                                            Theme.of(context).textTheme.headline4,),
+                                          ),
                                     ),
                                   ],
                                 ),
@@ -176,7 +199,7 @@ class _MissionsState extends State<Missions> {
     return Scaffold(
       appBar: customAppBar(context,
           title: SharedData.getGlobalLang().missionsList(),
-          icon: FontAwesomeIcons.locationDot),
+          icon: FontAwesomeIcons.route),
       body: generateItemsList(),
     );
   }

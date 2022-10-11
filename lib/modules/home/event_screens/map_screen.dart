@@ -127,8 +127,9 @@ class _MyHomePageState extends State<MapMarker> {
             //backgroundColor: Colors.teal,
             title: SharedData.getGlobalLang().locateEvent(),
             leading: PopupMenuButton(
+              color: Colors.deepOrange,
               itemBuilder: (builder) {
-                return customPopupMenuEntry();
+                return customPopupMenuEntry(context);
               },
               onSelected: (value) {
                 switch (value) {

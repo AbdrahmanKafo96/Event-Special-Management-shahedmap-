@@ -82,8 +82,9 @@ class _HomePageState extends State<HomePage> {
           title: SharedData.getGlobalLang().homePage(),
           icon: FontAwesomeIcons.house,
           actions: [
-            SharedData.getUserState() == true &&
-                    SharedData.getUserState() == false
+            SharedData.getUserState() == true
+                &&
+                SharedData.getUserState() == false
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: IconButton(

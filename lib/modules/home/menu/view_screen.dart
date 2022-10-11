@@ -225,7 +225,7 @@ class _EventViewState extends State<EventView> {
             if(_response['data']['image$i']!=null)
             {
               imgList[index]="${SharedClass.routePath}" +_response['data']['image$i'];
-
+print(imgList[index]);
             } index++;
           }
         }

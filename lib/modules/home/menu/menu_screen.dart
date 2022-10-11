@@ -119,7 +119,6 @@ class _EventsMenuState extends State<EventsMenu> {
                             children: [
                               Container(
                                 decoration: BoxDecoration(
-
                                   borderRadius: BorderRadius.circular(15.0),
                                 ),
                                 padding: EdgeInsets.only(top: 8),

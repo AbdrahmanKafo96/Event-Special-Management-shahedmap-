@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as p;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder2/geocoder2.dart';
@@ -26,18 +27,20 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:weather/weather.dart';
 import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
+import 'dart:ui' as ui;
+class MissionTracking extends StatefulWidget {
+  LatLng latLngDestination;
 
-class UnitTracking extends StatefulWidget {
-  UnitTracking();
+  MissionTracking({this.latLngDestination});
 
   @override
-  State<UnitTracking> createState() => _UnitTrackingState();
+  State<MissionTracking> createState() => _MissionTrackingState();
 }
 
-class _UnitTrackingState extends State<UnitTracking>
+class _MissionTrackingState extends State<MissionTracking>
     with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
-  StreamSubscription<loc.LocationData>  _locSubscription;
+ static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
   GoogleMapsPlaces _places;
@@ -91,14 +94,17 @@ class _UnitTrackingState extends State<UnitTracking>
           center: latlng,
           fillColor: Colors.blue.withAlpha(70));
     });
-    if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
+    if (_lng_endpoint != null){
+      print("yes true ");
+      _getPolyline( newLocalData , _lat_endpoint, _lng_endpoint);
+    }
   }
 
-  Future<void> getIniLocation() async {
+  Future<void> getIniLocation(loc.LocationData locationData) async {
     try {
       final GoogleMapController controller = await _controller.future;
       Uint8List imageData = await getMarker();
-      var position = await _locationTracker.getLocation();
+      var position = locationData;
       // geo.Position position = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
 
@@ -119,28 +125,30 @@ class _UnitTrackingState extends State<UnitTracking>
   @override
   void initState() {
     super.initState();
-
     WidgetsBinding.instance.addObserver(this);
     getMarkers();
     Wakelock.enable();
 
-    _locationTracker.changeSettings(interval: 5000, accuracy: desiredAccuracy);
-    _locationTracker.enableBackgroundMode(enable: true);
+
     _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
+
     SharedClass.getTrackingBox().then((value) => null);
+
     SharedClass.getBox().then((getValue) {
-      getCurrentPosition().then((value) {
+      loc.Location().getLocation().then((currentPos) {
         setState(() {
-          _lat_endpoint = getValue.containsKey("lat_endpoint")
-              ? getValue.get('lat_endpoint')
-              : null;
-          _lng_endpoint = getValue.containsKey("lng_endpoint")
-              ? getValue.get('lng_endpoint')
-              : null;
-          active =
-              getValue.containsKey("active") ? getValue.get('active') : false;
+          currentPosition = currentPos;
+
+          _lat_endpoint = widget.latLngDestination.latitude;
+          _lng_endpoint = widget.latLngDestination.longitude;
+          active = getValue.containsKey("myactive")
+              ? getValue.get('myactive')
+              : false;
+
+          print("_locSubscription $_locSubscription");
           traffic =
               getValue.containsKey("traffic") ? getValue.get('traffic') : false;
+
           //  _destination=getValue.containsKey("destination")?getValue.get('destination'):null;
           if (_lat_endpoint != null && _lng_endpoint != null) {
             _destination = Marker(
@@ -157,13 +165,16 @@ class _UnitTrackingState extends State<UnitTracking>
           }
           senderID = getValue.get('user_id');
           beneficiarie_id = int.parse(getValue.get('beneficiarie_id'));
+
           _kGooglePlex = CameraPosition(
-            target: LatLng(currentPosition.latitude, currentPosition.longitude),
+            target: LatLng(currentPos.latitude, currentPos.longitude),
             zoom: 18,
           );
-          getIniLocation();
+          getIniLocation(currentPos);
         });
-        return value;
+        _locationTracker.changeSettings(interval: 5000, accuracy: desiredAccuracy);
+        _locationTracker.enableBackgroundMode(enable: true);
+        //    return currentPos;
       });
     });
   }
@@ -184,14 +195,15 @@ class _UnitTrackingState extends State<UnitTracking>
   // @override
   // void didChangeAppLifecycleState(AppLifecycleState state) {
   //   super.didChangeAppLifecycleState(state);
-  //   if(state== AppLifecycleState.paused || state== AppLifecycleState.inactive)
+  //   if (state == AppLifecycleState.paused ||
+  //       state == AppLifecycleState.inactive)
   //     _locationTracker.enableBackgroundMode(enable: true);
-  //   if(state ==AppLifecycleState.resumed){
+  //   if (state == AppLifecycleState.resumed) {
   //     _locationTracker.enableBackgroundMode(enable: false);
   //   }
   // }
 
-  Future<void> _sendLiveLocation( BuildContext context) async {
+  Future<void> _sendLiveLocation(BuildContext context) async {
     var boxTracking = await SharedClass.getTrackingBox();
     var pos = await _locationTracker.getLocation();
     // geo.Position pos = await geo.Geolocator.getCurrentPosition(
@@ -219,7 +231,7 @@ class _UnitTrackingState extends State<UnitTracking>
       //var location = await _locationTracker.getLocation();
       // geo.Position location = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
-      print(data);
+      print("data $data");
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -258,11 +270,11 @@ class _UnitTrackingState extends State<UnitTracking>
         }
       });
 
-    //  setState(() {
-        _oldLatitude = _newLatitude;
-        _oldLongitude = _newLongitude;
-        oldTime = newTime;
-    //  });
+      // setState(() {
+      _oldLatitude = _newLatitude;
+      _oldLongitude = _newLongitude;
+      oldTime = newTime;
+      // });
       // send data to the api...
 
     } else {
@@ -270,41 +282,48 @@ class _UnitTrackingState extends State<UnitTracking>
     }
   }
 
-  handleTap(LatLng tappedPoint) async {
-    WeatherFactory wf = SharedClass.getWeatherFactory();
-    Weather w = await wf.currentWeatherByLocation(
-        tappedPoint.latitude, tappedPoint.longitude);
-    GeoData data = await Geocoder2.getDataFromCoordinates(
-        latitude: tappedPoint.latitude,
-        longitude: tappedPoint.longitude,
-        googleMapApiKey: SharedClass.mapApiKey.toString());
-    setState(() {
-      resetDestination();
-      weather = w.temperature.celsius.toInt().toString();
-      _lat_endpoint = tappedPoint.latitude;
-      _lng_endpoint = tappedPoint.longitude;
-      _destination = Marker(
-        icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
-        markerId: MarkerId(521.toString()),
-        position: tappedPoint,
-        infoWindow: InfoWindow(
-          title: "${data.address}",
-          snippet: "${data.state}",
-        ),
-      );
-      markerss.add(_destination);
-    });
-    _getPolyline(tappedPoint.latitude, tappedPoint.longitude);
-
-    var location = await _locationTracker.getLocation();
-
-    _oldLatitude = location.latitude;
-    _oldLongitude = location.longitude;
-    oldTime = DateTime.now();
-    if (active == false)
-      showShortToast(
-          SharedData.getGlobalLang().mustEnableTracking(), Colors.orangeAccent);
-  }
+  // handleTap(LatLng tappedPoint) async {
+  //   WeatherFactory wf = SharedClass.getWeatherFactory();
+  //   Weather w = await wf.currentWeatherByLocation(
+  //       tappedPoint.latitude, tappedPoint.longitude);
+  //   GeoData data = await Geocoder2.getDataFromCoordinates(
+  //       latitude: tappedPoint.latitude,
+  //       longitude: tappedPoint.longitude,
+  //       googleMapApiKey: SharedClass.mapApiKey.toString());
+  //   setState(() {
+  //    // resetDestination();
+  //     weather = w.temperature.celsius.toInt().toString();
+  //     // _lat_endpoint = tappedPoint.latitude;
+  //     // _lng_endpoint = tappedPoint.longitude;
+  //      _destination2 = Marker(
+  //       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueRed),
+  //       markerId: MarkerId(521.toString()),
+  //       position: tappedPoint,
+  //       infoWindow: InfoWindow(
+  //         title: "${data.address}",
+  //         snippet: "${data.state}",
+  //       ),
+  //     );
+  //      markerss.add(_destination2);
+  //   });
+  //  // _getPolyline(tappedPoint.latitude, tappedPoint.longitude);
+  //
+  //   //var location = await _locationTracker.getLocation();
+  //   // geo.Position location2 = await geo.Geolocator.getCurrentPosition(
+  //   //     desiredAccuracy: desiredAccuracy);
+  //   // _oldLatitude = location2.latitude;
+  //   // _oldLongitude = location2.longitude;
+  //   // oldTime = DateTime.now();
+  //   // if (active == false)
+  //   //   showShortToast(
+  //   //       SharedData.getGlobalLang().mustEnableTracking(), Colors.orangeAccent);
+  //   //
+  //   // print("the distance is :"
+  //   //     "${await getDistance(LatLng(
+  //   //           _oldLatitude,
+  //   //           _oldLongitude,
+  //   //         ), LatLng(_lat_endpoint, _lng_endpoint))}");
+  // }
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
     PolylineId id = PolylineId(
@@ -327,10 +346,11 @@ class _UnitTrackingState extends State<UnitTracking>
     markers[markerId] = marker;
   }
 
-  void _getPolyline(var lat, var long) async {
+  void _getPolyline(loc.LocationData currentPosition , var lat, var long) async {
     /// add origin marker origin marker
-    // var   currentPosition = await _locationTracker.getLocation();
-    var currentPosition = await geo.Geolocator.getCurrentPosition();
+    //var currentPosition = await loc.Location().getLocation();
+    // var currentPosition = await geo.Geolocator.getCurrentPosition(
+    //     desiredAccuracy: desiredAccuracy);
     _addMarker(
       LatLng(currentPosition.latitude, currentPosition.longitude),
       "origin",
@@ -358,7 +378,9 @@ class _UnitTrackingState extends State<UnitTracking>
     } else {
       print(result.errorMessage);
     }
+// this stm needs more review
     _addPolyLine(polylineCoordinates);
+    setState(() {});
   }
 
   Future<double> getDistance(LatLng latLng, latlng2) async {
@@ -367,7 +389,7 @@ class _UnitTrackingState extends State<UnitTracking>
     LatLng startLocation = latLng;
     LatLng endLocation = latlng2;
     double totalDistance = 0;
-
+    p.PolylineResult result;
     polylinePoints
         .getRouteBetweenCoordinates(
       kGoogleApiKey,
@@ -407,7 +429,13 @@ class _UnitTrackingState extends State<UnitTracking>
   double rad(final double degrees) => (degrees * pi / 180.0);
 
   Future getCurrentPosition() async {
-    currentPosition = await _locationTracker.getLocation();
+    try {
+      currentPosition = await loc.Location().getLocation().catchError((err) {
+        print(err);
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 
   // double vincentyGreatCircleDistance(
@@ -424,28 +452,45 @@ class _UnitTrackingState extends State<UnitTracking>
   //   return distance;
   // }
 
-  Future<Null> displayPrediction(Prediction p) async {
-    if (p != null) {
-      PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
-      var placeId = p.placeId;
-      double lat = detail.result.geometry.location.lat;
-      double lng = detail.result.geometry.location.lng;
-      // var address = await Geocoder.local.findAddressesFromQuery(p.description);
-
-    }
+  // Future<Null> displayPrediction(Prediction p) async {
+  //   if (p != null) {
+  //     PlacesDetailsResponse detail =
+  //         await _places.getDetailsByPlaceId(p.placeId);
+  //     var placeId = p.placeId;
+  //     double lat = detail.result.geometry.location.lat;
+  //     double lng = detail.result.geometry.location.lng;
+  //     // var address = await Geocoder.local.findAddressesFromQuery(p.description);
+  //
+  //   }
+  // }
+  Future<Uint8List> loadNetworkImage(path) async {
+    final completed = Completer<ImageInfo>();
+    var image = NetworkImage(path);
+    image.resolve(const ImageConfiguration()).addListener(
+        ImageStreamListener((info, _) => completed.complete(info)));
+    final imageInfo = await completed.future;
+    final byteData =
+    await imageInfo.image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData.buffer.asUint8List();
   }
-
   final Set<Marker> markerss = new Set();
 
   Future<Set<Marker>> getMarkers() async {
+
+
     List<MarkerModel> myList =
         await Provider.of<EventProvider>(context, listen: false).getEvents();
-    List<MarkerModel> myList2;
-    MarkerModel markerModel;
-    for (int i = 0; i < myList.length; i++) {
-      //   myList[i]['event_name']
 
+    for (int i = 0; i < myList.length; i++) {
+      Uint8List image = await loadNetworkImage("http://ets.ly/storage//images/events_icons/${myList[i].icon}");
+      final ui.Codec markerImageCodec = await ui.instantiateImageCodec(
+          image.buffer.asUint8List(),
+          targetHeight: 150,
+          targetWidth: 150);
+      final ui.FrameInfo frameInfo = await markerImageCodec.getNextFrame();
+      final ByteData byteData =
+      await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+      final Uint8List resizedImageMarker = byteData.buffer.asUint8List();
       markerss.add(Marker(
         //add second marker
         markerId: MarkerId(myList[i].postede_id.toString()),
@@ -455,21 +500,26 @@ class _UnitTrackingState extends State<UnitTracking>
           title: '${myList[i].type_name}',
           snippet: 'My Custom Subtitle',
         ),
-        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        icon: BitmapDescriptor.fromBytes( resizedImageMarker), //Icon for Marker
       ));
     }
     setState(() {});
 
     return markerss;
   }
-  _stopListening() {
 
-    print("someone called me ");
-    _locSubscription?.cancel();
+  _stopListening()async {
+      _locationTracker.enableBackgroundMode(enable: false);
+    if (_locSubscription != null) {
+
+      _locSubscription.cancel();
+    }
+
     setState(() {
       _locSubscription = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -519,18 +569,20 @@ class _UnitTrackingState extends State<UnitTracking>
                                       .activatedSuccessfully(),
                                   Colors.green);
 
-                              _locSubscription = _locationTracker.onLocationChanged.handleError((onError) {
-
+                              _locSubscription = _locationTracker
+                                  .onLocationChanged
+                                  .handleError((onError) {
                                 _locSubscription?.cancel();
                                 setState(() {
                                   _locSubscription = null;
                                 });
-                              }).listen((loc.LocationData currentLocation) async {
-                            //    setState(() {
-                                  _oldLatitude=  currentLocation .latitude ;
-                                  _oldLongitude=  currentLocation .longitude ;
-                                  oldTime = DateTime.now();
-                              //  });
+                              }).listen(
+                                      (loc.LocationData currentLocation) async {
+                                //    setState(() {
+                                _oldLatitude = currentLocation.latitude;
+                                _oldLongitude = currentLocation.longitude;
+                                oldTime = DateTime.now();
+                                //  });
 
                                 _sendLiveLocation(context);
                               });
@@ -542,17 +594,18 @@ class _UnitTrackingState extends State<UnitTracking>
                             }
                           } else {
                             if (senderID != null) {
+
                               bool result;
                               Provider.of<EventProvider>(context, listen: false)
                                   .stopTracking(senderID, beneficiarie_id)
                                   .then((value) {
                                 result = value;
                                 if (result) {
+                                  _stopListening();
                                   setState(() {
                                     active = !active;
                                   });
-                                  _stopListening();
-                                  resetDestination();
+
                                   showShortToast(
                                       SharedData.getGlobalLang()
                                           .deactivatedSuccessfully(),
@@ -587,10 +640,6 @@ class _UnitTrackingState extends State<UnitTracking>
           ],
           leading: IconButton(
             tooltip: SharedData.getGlobalLang().back(),
-            style: ElevatedButton.styleFrom(
-              shape: CircleBorder(), //<-- SEE HERE
-              padding: EdgeInsets.all(10),
-            ),
             icon: Icon(
               Icons.arrow_back,
               color: Colors.white,
@@ -598,13 +647,15 @@ class _UnitTrackingState extends State<UnitTracking>
             onPressed: () {
               // if active is true then we need show alert to the user to check
               SharedClass.getBox().then((value) {
-                value.put('lat_endpoint', _lat_endpoint);
-                value.put('lng_endpoint', _lng_endpoint);
-                value.put('destination', _destination);
+                // value.put('lat_endpoint', _lat_endpoint);
+                // value.put('lng_endpoint', _lng_endpoint);
+                //value.put('destination', _destination);
+                print(" loc val =$_locationTracker");
                 value.put('traffic', traffic);
-                value.put('active', active);
+                value.put('myactive', active);
+                Navigator.pop(context);
               });
-              Navigator.pop(context);
+
             },
           ),
         ),
@@ -616,10 +667,10 @@ class _UnitTrackingState extends State<UnitTracking>
                     //zoomControlsEnabled: false,
                     trafficEnabled: traffic,
                     myLocationEnabled: true,
-                    onTap: handleTap,
-                    onLongPress: (val) {
-                      resetDestination();
-                    },
+                    //  onTap: handleTap,
+                    // onLongPress: (val) {
+                    //   //resetDestination();
+                    // },
                     myLocationButtonEnabled: false,
                     mapType: maptype,
                     initialCameraPosition: _kGooglePlex,
@@ -632,6 +683,7 @@ class _UnitTrackingState extends State<UnitTracking>
                         _controller.complete(controller);
                       });
                     },
+
                     onCameraMoveStarted: () async {
                       if (_locationSubscription != null) {
                         _locationSubscription.cancel();
@@ -658,38 +710,36 @@ class _UnitTrackingState extends State<UnitTracking>
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Container(
-                          child: PopupMenuButton(
-                            color: Colors.deepOrange,
-                            icon: Icon(FontAwesomeIcons.layerGroup),
-                            itemBuilder: (builder) {
-                              return customPopupMenuEntry(context);
-                            },
-                            onSelected: (value) {
-                              switch (value) {
-                                case 0:
-                                  setState(() {
-                                    maptype = MapType.normal;
-                                  });
-                                  break;
-                                case 1:
-                                  setState(() {
-                                    maptype = MapType.hybrid;
-                                  });
-                                  break;
-                                case 2:
-                                  setState(() {
-                                    maptype = MapType.satellite;
-                                  });
-                                  break;
-                                case 3:
-                                  setState(() {
-                                    maptype = MapType.terrain;
-                                  });
-                                  break;
-                              }
-                            },
-                          ),
+                        PopupMenuButton(
+                          color: Colors.deepOrange,
+                          icon: Icon(FontAwesomeIcons.layerGroup),
+                          itemBuilder: (builder) {
+                            return customPopupMenuEntry(context);
+                          },
+                          onSelected: (value) {
+                            switch (value) {
+                              case 0:
+                                setState(() {
+                                  maptype = MapType.normal;
+                                });
+                                break;
+                              case 1:
+                                setState(() {
+                                  maptype = MapType.hybrid;
+                                });
+                                break;
+                              case 2:
+                                setState(() {
+                                  maptype = MapType.satellite;
+                                });
+                                break;
+                              case 3:
+                                setState(() {
+                                  maptype = MapType.terrain;
+                                });
+                                break;
+                            }
+                          },
                         ),
                         ElevatedButton(
                           onPressed: () async {
@@ -746,11 +796,11 @@ class _UnitTrackingState extends State<UnitTracking>
                             color: Colors.white,
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff33333d),
-                              elevation: 0,
-                            shape: CircleBorder(), //<-- SEE HERE
-                            // padding: EdgeInsets.all(10),
-                          ),
+                              backgroundColor: Color(0xff33333d),
+                              shape: CircleBorder(),
+                              elevation: 0 //<-- SEE HERE
+                              // padding: EdgeInsets.all(10),
+                              ),
                         ),
                         ElevatedButton(
                           onPressed: () async {
@@ -764,9 +814,9 @@ class _UnitTrackingState extends State<UnitTracking>
                                 traffic == true ? Colors.green : Colors.white,
                           ),
                           style: ElevatedButton.styleFrom(
+                            elevation: 0,
                             backgroundColor: Color(0xff33333d),
-                            shape: CircleBorder(),
-                              elevation: 0//<-- SEE HERE
+                            shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
                         ),
@@ -862,30 +912,30 @@ class _UnitTrackingState extends State<UnitTracking>
               if (_locationSubscription != null) {
                 _locationSubscription.cancel();
               }
-              // i need to review this code again ...
+              // مزال تبي مراجعة
               final geo.LocationSettings locationSettings =
                   geo.LocationSettings(
                 accuracy: geo.LocationAccuracy.high,
                 distanceFilter: 0,
               );
+              //يبي مراجعة
+              _locationSubscription = geo.Geolocator.getPositionStream(
+                      locationSettings: locationSettings)
+                  .listen((geo.Position position) {
+                if (controller != null) {
+                  _lat_startpoint = position.latitude;
+                  _lng_startpoint = position.longitude;
 
-              // _locationSubscription = geo.Geolocator.getPositionStream(
-              //         locationSettings: locationSettings)
-              //     .listen((geo.Position position) {
-              if (controller != null) {
-                _lat_startpoint = position.latitude;
-                _lng_startpoint = position.longitude;
-                loc.LocationData;
-                controller.animateCamera(
-                    CameraUpdate.newCameraPosition(CameraPosition(
-                        //bearing: 0,
-                        target: LatLng(position.latitude, position.longitude),
-                        // tilt: 0,
-                        zoom: 18.0)));
-                updateMarkerAndCircle(position, imageData);
-                //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
-              }
-              //  });
+                  controller.animateCamera(
+                      CameraUpdate.newCameraPosition(CameraPosition(
+                          //bearing: 0,
+                          target: LatLng(position.latitude, position.longitude),
+                          // tilt: 0,
+                          zoom: 18.0)));
+                //    updateMarkerAndCircle(position, imageData);
+                  //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+                }
+              });
             }),
       ),
     );
