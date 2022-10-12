@@ -54,9 +54,9 @@ class _DashboardState extends State<Dashboard> {
         children: <Widget>[
           dashboardItem(context, SharedData.getGlobalLang().eventList(), FontAwesomeIcons.list,
               'eventList', Colors.blue),
-          // if (SharedData.getUserState())
-          //   dashboardItem(context, SharedData.getGlobalLang().trackingUnit(), Icons.track_changes,
-          //       'unitTracking', Colors.teal),
+          if (SharedData.getUserState())
+            dashboardItem(context, SharedData.getGlobalLang().trackingUnit(), Icons.track_changes,
+                'unitTracking', Colors.teal),
 
           if (SharedData.getUserState())
             dashboardItem(context, SharedData.getGlobalLang().notifications(), FontAwesomeIcons.bell,

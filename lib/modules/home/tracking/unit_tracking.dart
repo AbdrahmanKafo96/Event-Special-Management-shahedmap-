@@ -37,7 +37,7 @@ class UnitTracking extends StatefulWidget {
 class _UnitTrackingState extends State<UnitTracking>
     with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
-  StreamSubscription<loc.LocationData>  _locSubscription;
+  StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
   GoogleMapsPlaces _places;
@@ -191,7 +191,7 @@ class _UnitTrackingState extends State<UnitTracking>
   //   }
   // }
 
-  Future<void> _sendLiveLocation( BuildContext context) async {
+  Future<void> _sendLiveLocation(BuildContext context) async {
     var boxTracking = await SharedClass.getTrackingBox();
     var pos = await _locationTracker.getLocation();
     // geo.Position pos = await geo.Geolocator.getCurrentPosition(
@@ -258,11 +258,11 @@ class _UnitTrackingState extends State<UnitTracking>
         }
       });
 
-    //  setState(() {
-        _oldLatitude = _newLatitude;
-        _oldLongitude = _newLongitude;
-        oldTime = newTime;
-    //  });
+      //  setState(() {
+      _oldLatitude = _newLatitude;
+      _oldLongitude = _newLongitude;
+      oldTime = newTime;
+      //  });
       // send data to the api...
 
     } else {
@@ -462,14 +462,15 @@ class _UnitTrackingState extends State<UnitTracking>
 
     return markerss;
   }
-  _stopListening() {
 
+  _stopListening() {
     print("someone called me ");
     _locSubscription?.cancel();
     setState(() {
       _locSubscription = null;
     });
   }
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -519,18 +520,20 @@ class _UnitTrackingState extends State<UnitTracking>
                                       .activatedSuccessfully(),
                                   Colors.green);
 
-                              _locSubscription = _locationTracker.onLocationChanged.handleError((onError) {
-
+                              _locSubscription = _locationTracker
+                                  .onLocationChanged
+                                  .handleError((onError) {
                                 _locSubscription?.cancel();
                                 setState(() {
                                   _locSubscription = null;
                                 });
-                              }).listen((loc.LocationData currentLocation) async {
-                            //    setState(() {
-                                  _oldLatitude=  currentLocation .latitude ;
-                                  _oldLongitude=  currentLocation .longitude ;
-                                  oldTime = DateTime.now();
-                              //  });
+                              }).listen(
+                                      (loc.LocationData currentLocation) async {
+                                //    setState(() {
+                                _oldLatitude = currentLocation.latitude;
+                                _oldLongitude = currentLocation.longitude;
+                                oldTime = DateTime.now();
+                                //  });
 
                                 _sendLiveLocation(context);
                               });
@@ -747,7 +750,7 @@ class _UnitTrackingState extends State<UnitTracking>
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Color(0xff33333d),
-                              elevation: 0,
+                            elevation: 0,
                             shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
@@ -764,11 +767,11 @@ class _UnitTrackingState extends State<UnitTracking>
                                 traffic == true ? Colors.green : Colors.white,
                           ),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Color(0xff33333d),
-                            shape: CircleBorder(),
-                              elevation: 0//<-- SEE HERE
-                            // padding: EdgeInsets.all(10),
-                          ),
+                              backgroundColor: Color(0xff33333d),
+                              shape: CircleBorder(),
+                              elevation: 0 //<-- SEE HERE
+                              // padding: EdgeInsets.all(10),
+                              ),
                         ),
                         PopupMenuButton(
                           color: Colors.deepOrange,

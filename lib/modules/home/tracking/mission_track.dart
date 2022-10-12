@@ -28,6 +28,7 @@ import 'package:weather/weather.dart';
 import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
+
 class MissionTracking extends StatefulWidget {
   LatLng latLngDestination;
 
@@ -40,7 +41,7 @@ class MissionTracking extends StatefulWidget {
 class _MissionTrackingState extends State<MissionTracking>
     with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
- static StreamSubscription<loc.LocationData> _locSubscription;
+  static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
   GoogleMapsPlaces _places;
@@ -94,9 +95,9 @@ class _MissionTrackingState extends State<MissionTracking>
           center: latlng,
           fillColor: Colors.blue.withAlpha(70));
     });
-    if (_lng_endpoint != null){
+    if (_lng_endpoint != null) {
       print("yes true ");
-      _getPolyline( newLocalData , _lat_endpoint, _lng_endpoint);
+      _getPolyline(newLocalData, _lat_endpoint, _lng_endpoint);
     }
   }
 
@@ -129,7 +130,6 @@ class _MissionTrackingState extends State<MissionTracking>
     getMarkers();
     Wakelock.enable();
 
-
     _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
     SharedClass.getTrackingBox().then((value) => null);
@@ -138,7 +138,9 @@ class _MissionTrackingState extends State<MissionTracking>
       loc.Location().getLocation().then((currentPos) {
         setState(() {
           currentPosition = currentPos;
-
+          oldTime = DateTime.now();
+          _oldLatitude = currentPos.latitude;
+          _oldLongitude = currentPos.longitude;
           _lat_endpoint = widget.latLngDestination.latitude;
           _lng_endpoint = widget.latLngDestination.longitude;
           active = getValue.containsKey("myactive")
@@ -172,7 +174,8 @@ class _MissionTrackingState extends State<MissionTracking>
           );
           getIniLocation(currentPos);
         });
-        _locationTracker.changeSettings(interval: 5000, accuracy: desiredAccuracy);
+        _locationTracker.changeSettings(
+            interval: 5000, accuracy: desiredAccuracy);
         _locationTracker.enableBackgroundMode(enable: true);
         //    return currentPos;
       });
@@ -203,21 +206,23 @@ class _MissionTrackingState extends State<MissionTracking>
   //   }
   // }
 
-  Future<void> _sendLiveLocation(BuildContext context) async {
+  Future<void> _sendLiveLocation(
+      loc.LocationData pos, BuildContext context) async {
     var boxTracking = await SharedClass.getTrackingBox();
-    var pos = await _locationTracker.getLocation();
+    //  var pos = await _locationTracker.getLocation();
     // geo.Position pos = await geo.Geolocator.getCurrentPosition(
     //     desiredAccuracy: desiredAccuracy);
     _newLatitude = pos.latitude;
     _newLongitude = pos.longitude;
+
     double cu_lat = _newLatitude, cu_long = _newLongitude;
 
     if (_oldLatitude != null &&
         _oldLongitude != null &&
         _newLatitude != null &&
         _newLongitude != null) {
-      double distance = await getDistance(LatLng(_oldLatitude, _oldLongitude),
-          LatLng(_newLatitude, _newLongitude));
+      double distance = await getDistance(
+          _oldLatitude, _oldLongitude, _newLatitude, _newLongitude);
 
       newTime = DateTime.now();
       int minutes = newTime.minute - oldTime.minute;
@@ -231,7 +236,7 @@ class _MissionTrackingState extends State<MissionTracking>
       //var location = await _locationTracker.getLocation();
       // geo.Position location = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
-      print("data $data");
+      //  print("data $data");
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -346,7 +351,7 @@ class _MissionTrackingState extends State<MissionTracking>
     markers[markerId] = marker;
   }
 
-  void _getPolyline(loc.LocationData currentPosition , var lat, var long) async {
+  void _getPolyline(loc.LocationData currentPosition, var lat, var long) async {
     /// add origin marker origin marker
     //var currentPosition = await loc.Location().getLocation();
     // var currentPosition = await geo.Geolocator.getCurrentPosition(
@@ -383,37 +388,39 @@ class _MissionTrackingState extends State<MissionTracking>
     setState(() {});
   }
 
-  Future<double> getDistance(LatLng latLng, latlng2) async {
+  Future<double> getDistance(
+      double oldLatitude, oldLongitude, newLatitude, newLongitude) async {
     List<LatLng> polylineCoordinates = [];
+
     p.PolylinePoints polylinePoints = p.PolylinePoints();
-    LatLng startLocation = latLng;
-    LatLng endLocation = latlng2;
-    double totalDistance = 0;
-    p.PolylineResult result;
-    polylinePoints
-        .getRouteBetweenCoordinates(
+    LatLng startLocation = LatLng(oldLatitude, oldLongitude);
+    LatLng endLocation = LatLng(newLatitude, newLongitude);
+
+    p.PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       kGoogleApiKey,
       p.PointLatLng(startLocation.latitude, startLocation.longitude),
       p.PointLatLng(endLocation.latitude, endLocation.longitude),
-    )
-        .then((value) {
-      if (value.points.isNotEmpty) {
-        value.points.forEach((p.PointLatLng point) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        });
-      } else {
-        print(value.errorMessage);
-      }
-      //polulineCoordinates is the List of longitute and latidtude.
+      travelMode: p.TravelMode.driving,
+    );
 
-      for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-        totalDistance += calculateDistance(
-            polylineCoordinates[i].latitude,
-            polylineCoordinates[i].longitude,
-            polylineCoordinates[i + 1].latitude,
-            polylineCoordinates[i + 1].longitude);
-      }
-    });
+    if (result.points.isNotEmpty) {
+      print(result.points);
+      result.points.forEach((p.PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+
+    double totalDistance = 0;
+    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          polylineCoordinates[i].latitude,
+          polylineCoordinates[i].longitude,
+          polylineCoordinates[i + 1].latitude,
+          polylineCoordinates[i + 1].longitude);
+    }
+    print(totalDistance);
 
     return totalDistance;
   }
@@ -470,26 +477,26 @@ class _MissionTrackingState extends State<MissionTracking>
         ImageStreamListener((info, _) => completed.complete(info)));
     final imageInfo = await completed.future;
     final byteData =
-    await imageInfo.image.toByteData(format: ui.ImageByteFormat.png);
+        await imageInfo.image.toByteData(format: ui.ImageByteFormat.png);
     return byteData.buffer.asUint8List();
   }
+
   final Set<Marker> markerss = new Set();
 
   Future<Set<Marker>> getMarkers() async {
-
-
     List<MarkerModel> myList =
         await Provider.of<EventProvider>(context, listen: false).getEvents();
 
     for (int i = 0; i < myList.length; i++) {
-      Uint8List image = await loadNetworkImage("http://ets.ly/storage//images/events_icons/${myList[i].icon}");
+      Uint8List image = await loadNetworkImage(
+          "http://ets.ly/storage//images/events_icons/${myList[i].icon}");
       final ui.Codec markerImageCodec = await ui.instantiateImageCodec(
           image.buffer.asUint8List(),
           targetHeight: 150,
           targetWidth: 150);
       final ui.FrameInfo frameInfo = await markerImageCodec.getNextFrame();
       final ByteData byteData =
-      await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+          await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
       final Uint8List resizedImageMarker = byteData.buffer.asUint8List();
       markerss.add(Marker(
         //add second marker
@@ -500,7 +507,7 @@ class _MissionTrackingState extends State<MissionTracking>
           title: '${myList[i].type_name}',
           snippet: 'My Custom Subtitle',
         ),
-        icon: BitmapDescriptor.fromBytes( resizedImageMarker), //Icon for Marker
+        icon: BitmapDescriptor.fromBytes(resizedImageMarker), //Icon for Marker
       ));
     }
     setState(() {});
@@ -508,10 +515,9 @@ class _MissionTrackingState extends State<MissionTracking>
     return markerss;
   }
 
-  _stopListening()async {
-      _locationTracker.enableBackgroundMode(enable: false);
+  _stopListening() async {
+    _locationTracker.enableBackgroundMode(enable: false);
     if (_locSubscription != null) {
-
       _locSubscription.cancel();
     }
 
@@ -579,12 +585,12 @@ class _MissionTrackingState extends State<MissionTracking>
                               }).listen(
                                       (loc.LocationData currentLocation) async {
                                 //    setState(() {
-                                _oldLatitude = currentLocation.latitude;
-                                _oldLongitude = currentLocation.longitude;
-                                oldTime = DateTime.now();
+                                // _oldLatitude = currentLocation.latitude;
+                                // _oldLongitude = currentLocation.longitude;
+                                //   oldTime = DateTime.now();
                                 //  });
 
-                                _sendLiveLocation(context);
+                                _sendLiveLocation(currentLocation, context);
                               });
                             } else {
                               showShortToast(
@@ -594,7 +600,6 @@ class _MissionTrackingState extends State<MissionTracking>
                             }
                           } else {
                             if (senderID != null) {
-
                               bool result;
                               Provider.of<EventProvider>(context, listen: false)
                                   .stopTracking(senderID, beneficiarie_id)
@@ -655,7 +660,6 @@ class _MissionTrackingState extends State<MissionTracking>
                 value.put('myactive', active);
                 Navigator.pop(context);
               });
-
             },
           ),
         ),
@@ -932,7 +936,7 @@ class _MissionTrackingState extends State<MissionTracking>
                           target: LatLng(position.latitude, position.longitude),
                           // tilt: 0,
                           zoom: 18.0)));
-                //    updateMarkerAndCircle(position, imageData);
+                  //    updateMarkerAndCircle(position, imageData);
                   //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
                 }
               });
