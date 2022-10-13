@@ -26,7 +26,7 @@ import 'package:google_maps_webservice/places.dart';
 import 'package:weather/weather.dart';
 import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
-
+import 'dart:ui' as ui;
 class UnitTracking extends StatefulWidget {
   UnitTracking();
 
@@ -37,7 +37,7 @@ class UnitTracking extends StatefulWidget {
 class _UnitTrackingState extends State<UnitTracking>
     with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
-  StreamSubscription<loc.LocationData> _locSubscription;
+  static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
   GoogleMapsPlaces _places;
@@ -91,14 +91,14 @@ class _UnitTrackingState extends State<UnitTracking>
           center: latlng,
           fillColor: Colors.blue.withAlpha(70));
     });
-    if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
+    if (_lng_endpoint != null) _getPolyline( _lat_endpoint, _lng_endpoint );
   }
 
-  Future<void> getIniLocation() async {
+  Future<void> getIniLocation(loc.LocationData locationData) async {
     try {
       final GoogleMapController controller = await _controller.future;
       Uint8List imageData = await getMarker();
-      var position = await _locationTracker.getLocation();
+      var position = locationData;
       // geo.Position position = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
 
@@ -115,7 +115,7 @@ class _UnitTrackingState extends State<UnitTracking>
       }
     }
   }
-
+//  still build and iniState method
   @override
   void initState() {
     super.initState();
@@ -123,13 +123,10 @@ class _UnitTrackingState extends State<UnitTracking>
     WidgetsBinding.instance.addObserver(this);
     getMarkers();
     Wakelock.enable();
-
-    _locationTracker.changeSettings(interval: 5000, accuracy: desiredAccuracy);
-    _locationTracker.enableBackgroundMode(enable: true);
     _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
     SharedClass.getTrackingBox().then((value) => null);
     SharedClass.getBox().then((getValue) {
-      getCurrentPosition().then((value) {
+      loc.Location().getLocation().then((currentPos) {
         setState(() {
           _lat_endpoint = getValue.containsKey("lat_endpoint")
               ? getValue.get('lat_endpoint')
@@ -141,6 +138,8 @@ class _UnitTrackingState extends State<UnitTracking>
               getValue.containsKey("active") ? getValue.get('active') : false;
           traffic =
               getValue.containsKey("traffic") ? getValue.get('traffic') : false;
+          _oldLatitude = currentPos.latitude;
+          _oldLongitude = currentPos.longitude;
           //  _destination=getValue.containsKey("destination")?getValue.get('destination'):null;
           if (_lat_endpoint != null && _lng_endpoint != null) {
             _destination = Marker(
@@ -158,12 +157,14 @@ class _UnitTrackingState extends State<UnitTracking>
           senderID = getValue.get('user_id');
           beneficiarie_id = int.parse(getValue.get('beneficiarie_id'));
           _kGooglePlex = CameraPosition(
-            target: LatLng(currentPosition.latitude, currentPosition.longitude),
+            target: LatLng(currentPos.latitude, currentPos.longitude),
             zoom: 18,
           );
-          getIniLocation();
+          getIniLocation(currentPos);
         });
-        return value;
+        _locationTracker.changeSettings(
+            interval: 5000, accuracy: desiredAccuracy);
+        _locationTracker.enableBackgroundMode(enable: true);
       });
     });
   }
@@ -191,21 +192,21 @@ class _UnitTrackingState extends State<UnitTracking>
   //   }
   // }
 
-  Future<void> _sendLiveLocation(BuildContext context) async {
+  Future<void> _sendLiveLocation(loc.LocationData locationData,BuildContext context) async {
     var boxTracking = await SharedClass.getTrackingBox();
-    var pos = await _locationTracker.getLocation();
+   // var pos = await _locationTracker.getLocation();
     // geo.Position pos = await geo.Geolocator.getCurrentPosition(
     //     desiredAccuracy: desiredAccuracy);
-    _newLatitude = pos.latitude;
-    _newLongitude = pos.longitude;
+    _newLatitude = locationData.latitude;
+    _newLongitude = locationData.longitude;
     double cu_lat = _newLatitude, cu_long = _newLongitude;
 
     if (_oldLatitude != null &&
         _oldLongitude != null &&
         _newLatitude != null &&
         _newLongitude != null) {
-      double distance = await getDistance(LatLng(_oldLatitude, _oldLongitude),
-          LatLng(_newLatitude, _newLongitude));
+      double distance = await getDistance( _oldLatitude, _oldLongitude ,
+          _newLatitude, _newLongitude );
 
       newTime = DateTime.now();
       int minutes = newTime.minute - oldTime.minute;
@@ -219,7 +220,9 @@ class _UnitTrackingState extends State<UnitTracking>
       //var location = await _locationTracker.getLocation();
       // geo.Position location = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
+     // totalHours=locationData.time > 0? locationData.speedAccuracy * 3.6:0.0;
       print(data);
+      var  time=(distance/(locationData.speedAccuracy)) /3600;
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -230,10 +233,11 @@ class _UnitTrackingState extends State<UnitTracking>
         'lng_startpoint': _lng_startpoint.toString(),
         'lat_endpoint': _lat_endpoint.toString(),
         'lng_endpoint': _lng_endpoint.toString(),
-        'time': totalHours
+        'time': time,
       };
+      print("distance/time");
       checkInternetConnectivity(context).then((bool value) async {
-        if (distance > 5.0) //distance > 4
+        if (distance > 1115.0) //distance > 4
         {
           if (value) // phone is connected ...
           {
@@ -294,12 +298,13 @@ class _UnitTrackingState extends State<UnitTracking>
       );
       markerss.add(_destination);
     });
-    _getPolyline(tappedPoint.latitude, tappedPoint.longitude);
+     var currentPosition = await geo.Geolocator.getCurrentPosition();
+    _getPolyline( tappedPoint.latitude, tappedPoint.longitude);
 
-    var location = await _locationTracker.getLocation();
+   // var location = await _locationTracker.getLocation();
 
-    _oldLatitude = location.latitude;
-    _oldLongitude = location.longitude;
+    _oldLatitude = currentPosition.latitude;
+    _oldLongitude = currentPosition.longitude;
     oldTime = DateTime.now();
     if (active == false)
       showShortToast(
@@ -327,7 +332,7 @@ class _UnitTrackingState extends State<UnitTracking>
     markers[markerId] = marker;
   }
 
-  void _getPolyline(var lat, var long) async {
+  void _getPolyline(var lat, var long ) async {
     /// add origin marker origin marker
     // var   currentPosition = await _locationTracker.getLocation();
     var currentPosition = await geo.Geolocator.getCurrentPosition();
@@ -359,39 +364,42 @@ class _UnitTrackingState extends State<UnitTracking>
       print(result.errorMessage);
     }
     _addPolyLine(polylineCoordinates);
+    setState(() {});
   }
 
-  Future<double> getDistance(LatLng latLng, latlng2) async {
+  Future<double> getDistance(
+      double oldLatitude, oldLongitude, newLatitude, newLongitude) async {
     List<LatLng> polylineCoordinates = [];
-    p.PolylinePoints polylinePoints = p.PolylinePoints();
-    LatLng startLocation = latLng;
-    LatLng endLocation = latlng2;
-    double totalDistance = 0;
 
-    polylinePoints
-        .getRouteBetweenCoordinates(
+    p.PolylinePoints polylinePoints = p.PolylinePoints();
+    LatLng startLocation = LatLng(oldLatitude, oldLongitude);
+    LatLng endLocation = LatLng(newLatitude, newLongitude);
+
+    p.PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       kGoogleApiKey,
       p.PointLatLng(startLocation.latitude, startLocation.longitude),
       p.PointLatLng(endLocation.latitude, endLocation.longitude),
-    )
-        .then((value) {
-      if (value.points.isNotEmpty) {
-        value.points.forEach((p.PointLatLng point) {
-          polylineCoordinates.add(LatLng(point.latitude, point.longitude));
-        });
-      } else {
-        print(value.errorMessage);
-      }
-      //polulineCoordinates is the List of longitute and latidtude.
+      travelMode: p.TravelMode.driving,
+    );
 
-      for (var i = 0; i < polylineCoordinates.length - 1; i++) {
-        totalDistance += calculateDistance(
-            polylineCoordinates[i].latitude,
-            polylineCoordinates[i].longitude,
-            polylineCoordinates[i + 1].latitude,
-            polylineCoordinates[i + 1].longitude);
-      }
-    });
+    if (result.points.isNotEmpty) {
+      print(result.points);
+      result.points.forEach((p.PointLatLng point) {
+        polylineCoordinates.add(LatLng(point.latitude, point.longitude));
+      });
+    } else {
+      print(result.errorMessage);
+    }
+
+    double totalDistance = 0;
+    for (var i = 0; i < polylineCoordinates.length - 1; i++) {
+      totalDistance += calculateDistance(
+          polylineCoordinates[i].latitude,
+          polylineCoordinates[i].longitude,
+          polylineCoordinates[i + 1].latitude,
+          polylineCoordinates[i + 1].longitude);
+    }
+    print(totalDistance);
 
     return totalDistance;
   }
@@ -404,48 +412,56 @@ class _UnitTrackingState extends State<UnitTracking>
     return (12742 * asin(sqrt(a))) * 1000;
   }
 
-  double rad(final double degrees) => (degrees * pi / 180.0);
+//  double rad(final double degrees) => (degrees * pi / 180.0);
 
   Future getCurrentPosition() async {
-    currentPosition = await _locationTracker.getLocation();
-  }
-
-  // double vincentyGreatCircleDistance(
-  //   double oldLatitude,
-  //   double oldLongitude,
-  //   double newLatitude,
-  //   double newLongitude,
-  // ) {
-  //   // convert from degrees to radians
-  //
-  //   var distance =
-  //       getDistance(oldLatitude, oldLongitude, newLatitude, newLongitude);
-  //   print("distance before check: $distance");
-  //   return distance;
-  // }
-
-  Future<Null> displayPrediction(Prediction p) async {
-    if (p != null) {
-      PlacesDetailsResponse detail =
-          await _places.getDetailsByPlaceId(p.placeId);
-      var placeId = p.placeId;
-      double lat = detail.result.geometry.location.lat;
-      double lng = detail.result.geometry.location.lng;
-      // var address = await Geocoder.local.findAddressesFromQuery(p.description);
-
+    try {
+      currentPosition = await loc.Location().getLocation().catchError((err) {
+        print(err);
+      });
+    } catch (e) {
+      print(e);
     }
   }
 
-  final Set<Marker> markerss = new Set();
+  // Future<Null> displayPrediction(Prediction p) async {
+  //   if (p != null) {
+  //     PlacesDetailsResponse detail =
+  //         await _places.getDetailsByPlaceId(p.placeId);
+  //     var placeId = p.placeId;
+  //     double lat = detail.result.geometry.location.lat;
+  //     double lng = detail.result.geometry.location.lng;
+  //     // var address = await Geocoder.local.findAddressesFromQuery(p.description);
+  //
+  //   }
+  // }
 
+  final Set<Marker> markerss = new Set();
+  Future<Uint8List> loadNetworkImage(path) async {
+    final completed = Completer<ImageInfo>();
+    var image = NetworkImage(path);
+    image.resolve(const ImageConfiguration()).addListener(
+        ImageStreamListener((info, _) => completed.complete(info)));
+    final imageInfo = await completed.future;
+    final byteData =
+    await imageInfo.image.toByteData(format: ui.ImageByteFormat.png);
+    return byteData.buffer.asUint8List();
+  }
   Future<Set<Marker>> getMarkers() async {
     List<MarkerModel> myList =
-        await Provider.of<EventProvider>(context, listen: false).getEvents();
-    List<MarkerModel> myList2;
-    MarkerModel markerModel;
-    for (int i = 0; i < myList.length; i++) {
-      //   myList[i]['event_name']
+    await Provider.of<EventProvider>(context, listen: false).getEvents();
 
+    for (int i = 0; i < myList.length; i++) {
+      Uint8List image = await loadNetworkImage(
+          "http://ets.ly/storage//images/events_icons/${myList[i].icon}");
+      final ui.Codec markerImageCodec = await ui.instantiateImageCodec(
+          image.buffer.asUint8List(),
+          targetHeight: 150,
+          targetWidth: 150);
+      final ui.FrameInfo frameInfo = await markerImageCodec.getNextFrame();
+      final ByteData byteData =
+      await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
+      final Uint8List resizedImageMarker = byteData.buffer.asUint8List();
       markerss.add(Marker(
         //add second marker
         markerId: MarkerId(myList[i].postede_id.toString()),
@@ -455,7 +471,7 @@ class _UnitTrackingState extends State<UnitTracking>
           title: '${myList[i].type_name}',
           snippet: 'My Custom Subtitle',
         ),
-        icon: BitmapDescriptor.defaultMarker, //Icon for Marker
+        icon: BitmapDescriptor.fromBytes(resizedImageMarker), //Icon for Marker
       ));
     }
     setState(() {});
@@ -463,9 +479,12 @@ class _UnitTrackingState extends State<UnitTracking>
     return markerss;
   }
 
-  _stopListening() {
-    print("someone called me ");
-    _locSubscription?.cancel();
+  _stopListening()async {
+    _locationTracker.enableBackgroundMode(enable: false);
+    if (_locSubscription != null) {
+      _locSubscription.cancel();
+    }
+
     setState(() {
       _locSubscription = null;
     });
@@ -535,7 +554,7 @@ class _UnitTrackingState extends State<UnitTracking>
                                 oldTime = DateTime.now();
                                 //  });
 
-                                _sendLiveLocation(context);
+                                _sendLiveLocation(currentLocation ,context);
                               });
                             } else {
                               showShortToast(
@@ -603,7 +622,7 @@ class _UnitTrackingState extends State<UnitTracking>
               SharedClass.getBox().then((value) {
                 value.put('lat_endpoint', _lat_endpoint);
                 value.put('lng_endpoint', _lng_endpoint);
-                value.put('destination', _destination);
+               // value.put('destination', _destination);
                 value.put('traffic', traffic);
                 value.put('active', active);
               });

@@ -95,10 +95,7 @@ class _MissionTrackingState extends State<MissionTracking>
           center: latlng,
           fillColor: Colors.blue.withAlpha(70));
     });
-    if (_lng_endpoint != null) {
-      print("yes true ");
-      _getPolyline(newLocalData, _lat_endpoint, _lng_endpoint);
-    }
+    if (_lng_endpoint != null) _getPolyline(newLocalData, _lat_endpoint, _lng_endpoint);
   }
 
   Future<void> getIniLocation(loc.LocationData locationData) async {
@@ -236,7 +233,9 @@ class _MissionTrackingState extends State<MissionTracking>
       //var location = await _locationTracker.getLocation();
       // geo.Position location = await geo.Geolocator.getCurrentPosition(
       //     desiredAccuracy: desiredAccuracy);
-      //  print("data $data");
+
+     var  time=(distance/(pos.speedAccuracy)) /3600;
+        print("data $data");
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -247,7 +246,7 @@ class _MissionTrackingState extends State<MissionTracking>
         'lng_startpoint': _lng_startpoint.toString(),
         'lat_endpoint': _lat_endpoint.toString(),
         'lng_endpoint': _lng_endpoint.toString(),
-        'time': totalHours
+        'time': time,
       };
       checkInternetConnectivity(context).then((bool value) async {
         if (distance > 5.0) //distance > 4
@@ -655,7 +654,6 @@ class _MissionTrackingState extends State<MissionTracking>
                 // value.put('lat_endpoint', _lat_endpoint);
                 // value.put('lng_endpoint', _lng_endpoint);
                 //value.put('destination', _destination);
-                print(" loc val =$_locationTracker");
                 value.put('traffic', traffic);
                 value.put('myactive', active);
                 Navigator.pop(context);
@@ -694,11 +692,11 @@ class _MissionTrackingState extends State<MissionTracking>
                       }
                       //   _locationSubscription.cancel();
                       Uint8List imageData = await getMarker();
-                      var position = await _locationTracker.getLocation();
-                      // geo.Position position =
-                      //     await geo.Geolocator.getCurrentPosition(
-                      //         desiredAccuracy: desiredAccuracy);
-                      updateMarkerAndCircle(position, imageData);
+                   //   var position = await _locationTracker.getLocation();
+                   //    geo.Position position =
+                   //        await geo.Geolocator.getCurrentPosition(
+                   //           );
+                      updateMarkerAndCircle(await loc.Location().getLocation(), imageData);
                     },
                   ),
                   Positioned(
@@ -976,16 +974,6 @@ class _MissionTrackingState extends State<MissionTracking>
         boxTracking.clear();
       }
       return true;
-    });
-  }
-
-  void resetDestination() {
-    setState(() {
-      polylines.clear();
-      _lng_endpoint = null;
-      _lat_endpoint = null;
-      markerss.remove(_destination);
-      _destination = null;
     });
   }
 }
