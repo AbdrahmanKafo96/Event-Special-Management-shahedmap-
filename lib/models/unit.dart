@@ -23,6 +23,8 @@ class Tracking extends HiveObject {
     double lngEndPoint;
   @HiveField(9)
     double time;
+  @HiveField(10)
+    double speed;
 
   Tracking(
       {  this.senderID,
@@ -34,7 +36,7 @@ class Tracking extends HiveObject {
           this.lngStartPoint,
           this.latEndPoint,
           this.lngEndPoint,
-          this.time});
+          this.time,this.speed});
 
   @override
   String toString() {

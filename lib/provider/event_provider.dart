@@ -9,6 +9,7 @@ import 'package:shahed/models/category.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:intl/intl.dart';
+import 'package:weather/weather.dart';
 import '../models/mission.dart';
 
 class EventProvider extends ChangeNotifier {
@@ -19,7 +20,9 @@ class EventProvider extends ChangeNotifier {
       final storage = await SharedClass.getStorage();
       String value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
-
+      WeatherFactory wf = SharedClass.getWeatherFactory();
+      Weather w = await wf.currentWeatherByLocation(
+          double.parse(userData['lat']),  double.parse(userData['lng']));
       var _count = 1;
       var request = http.MultipartRequest(
           "POST", Uri.parse("${SharedClass.apiPath}/save_event"));
@@ -32,6 +35,7 @@ class EventProvider extends ChangeNotifier {
       request.fields['eventtype'] = userData['eventtype'];
       request.fields['lat'] = userData['lat'];
       request.fields['lng'] = userData['lng'];
+      request.fields['weather_temperateure'] =w.temperature.celsius.toInt().toString();
       // code below for camera image ...
 
       if (event.getXFile != null) {
@@ -103,10 +107,12 @@ class EventProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         if (jsonDecode(response.body) == 1) {
+          print(response.body);
           return 'se';
         }
         return 'unse';
       } else {
+        print(response.body);
         showShortToast(
             SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         throw Exception('Failed to delete post.');
@@ -608,9 +614,11 @@ class EventProvider extends ChangeNotifier {
             'Authorization': 'Bearer $value',
             // 'content-type': 'application/json',
           });
-
+      print(response.body);
       if (response.statusCode == 200) {
+
         final parsed = json.decode(response.body);
+
         if (parsed['status'] == 'success')
           return true;
         else

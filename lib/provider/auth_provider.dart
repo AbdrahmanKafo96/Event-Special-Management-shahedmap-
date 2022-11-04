@@ -216,6 +216,7 @@ class UserAuthProvider extends ChangeNotifier {
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (_) => LoginUi()));
           } else {
+            print(response.body);
             showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           }
         }

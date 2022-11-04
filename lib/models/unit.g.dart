@@ -27,13 +27,14 @@ class TrackingAdapter extends TypeAdapter<Tracking> {
       latEndPoint: fields[7] as double,
       lngEndPoint: fields[8] as double,
       time: fields[9] as double,
+      speed: fields[10] as double,
     );
   }
 
   @override
   void write(BinaryWriter writer, Tracking obj) {
     writer
-      ..writeByte(10)
+      ..writeByte(11)
       ..writeByte(0)
       ..write(obj.senderID)
       ..writeByte(1)
@@ -53,7 +54,9 @@ class TrackingAdapter extends TypeAdapter<Tracking> {
       ..writeByte(8)
       ..write(obj.lngEndPoint)
       ..writeByte(9)
-      ..write(obj.time);
+      ..write(obj.time)
+      ..writeByte(10)
+      ..write(obj.speed);
   }
 
   @override

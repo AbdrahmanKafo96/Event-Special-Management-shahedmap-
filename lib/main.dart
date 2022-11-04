@@ -17,6 +17,7 @@ import 'package:shahed/modules/home/settings_screens/app_settings.dart';
 import 'package:shahed/modules/home/settings_screens/about_screen.dart';
 import 'package:shahed/modules/home/settings_screens/profile_view.dart';
 import 'package:shahed/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
+import 'package:shahed/modules/home/tracking/tracking_user.dart';
 import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/provider/language.dart';
@@ -224,7 +225,7 @@ class _ShahedAppState extends State<ShahedApp> {
               'settings': (context) => AppSettings(),
               'EventSectionOne': (context) => EventSectionOne(),
               'eventList': (context) => EventsMenu(),
-              'unitTracking': (context) => UnitTracking(),
+              'unitTracking': (context) => UserTracking(),
               'response': (context) => ResponsePage(),
               'successPage': (context) => SuccessPage(),
               'Missions': (context) => Missions(),

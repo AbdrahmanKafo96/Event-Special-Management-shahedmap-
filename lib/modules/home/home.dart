@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
+import 'package:shahed/modules/home/tracking/tracking_user.dart';
 import 'package:shahed/modules/home/tracking/unit_tracking.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
@@ -93,7 +94,7 @@ class _HomePageState extends State<HomePage> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => UnitTracking()),
+                              builder: (context) => UserTracking()),
                         );
                       },
                     ),
