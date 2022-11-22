@@ -29,6 +29,7 @@ import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
 
+@pragma('vm:entry-point')
 class MissionTracking extends StatefulWidget {
   LatLng latLngDestination;
 
@@ -132,6 +133,7 @@ class _MissionTrackingState extends State<MissionTracking>
     SharedClass.getTrackingBox().then((value) => null);
 
     SharedClass.getBox().then((getValue) {
+      print(getValue.keys);
       loc.Location().getLocation().then((currentPos) {
         setState(() {
           currentPosition = currentPos;
@@ -140,8 +142,8 @@ class _MissionTrackingState extends State<MissionTracking>
           _oldLongitude = currentPos.longitude;
           _lat_endpoint = widget.latLngDestination.latitude;
           _lng_endpoint = widget.latLngDestination.longitude;
-          active = getValue.containsKey("myactive")
-              ? getValue.get('myactive')
+          active = getValue.containsKey("btnmyactive")
+              ? getValue.get('btnmyactive')
               : false;
 
           print("_locSubscription $_locSubscription");
@@ -181,7 +183,7 @@ class _MissionTrackingState extends State<MissionTracking>
 savaDataLocally(){
   SharedClass.getBox().then((value) {
     value.put('traffic', traffic);
-   // value.put('myactive', active);
+   // value.put('btnmyactive', active);
   });
 }
   @override
@@ -255,7 +257,7 @@ savaDataLocally(){
         'lat_endpoint': _lat_endpoint.toString(),
         'lng_endpoint': _lng_endpoint.toString(),
         'time': totalHours,
-        'speed':pos.speed * 3600 / 1000 ,
+        'speed': double.parse((pos.speed * 3600 / 1000).toStringAsFixed(2))  ,
       };
       checkInternetConnectivity(context).then((bool value) async {
         if (distance *1000 > 5.0) //distance > 4
@@ -279,7 +281,7 @@ savaDataLocally(){
                 latEndPoint: _lat_endpoint,
                 lngEndPoint: _lng_endpoint,
                 time: totalHours,
-                speed: pos.speed * 3600 / 1000
+                speed: double.parse((pos.speed * 3600 / 1000).toStringAsFixed(2))
             ));
           }
         }
@@ -676,7 +678,7 @@ savaDataLocally(){
                 // value.put('lng_endpoint', _lng_endpoint);
                 //value.put('destination', _destination);
                 value.put('traffic', traffic);
-                value.put('myactive', active);
+                value.put('btnmyactive', active);
                 Navigator.pop(context);
               });
             },
@@ -991,7 +993,7 @@ savaDataLocally(){
             'lat_endpoint': tracking.latEndPoint.toString(),
             'lng_endpoint': tracking.lngEndPoint.toString(),
             'time': tracking.time ,
-            'speed': tracking.speed ,
+            'speed':  tracking.speed ,
           };
           print("local item is sent ...");
           Provider.of<EventProvider>(context, listen: false)

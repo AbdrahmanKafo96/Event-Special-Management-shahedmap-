@@ -2,7 +2,7 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:weather/weather.dart' as wea;
-
+import 'package:location/location.dart' as loc;
 class SharedClass {
   SharedClass._();
 
@@ -14,6 +14,7 @@ class SharedClass {
   static Language _language;
   static Box _boxUserData, _trackingBox;
   static wea.WeatherFactory _wf;
+  static loc.Location _location;
 
   static wea.WeatherFactory getWeatherFactory() {
     if (_wf == null) {
@@ -28,6 +29,12 @@ class SharedClass {
       _boxUserData = await Hive.openBox("userData");
     }
     return _boxUserData;
+  }
+  static loc.Location  getLocationObj() {
+    if (_location == null) {
+      _location = loc.Location();
+    }
+    return _location;
   }
 
   static Future<Box> closeBox() async {
@@ -54,7 +61,7 @@ class SharedClass {
   }
 
   static void clearTracking() async {
-    if (_trackingBox != null) {
+    if (_trackingBox != null && _trackingBox.isOpen) {
       _trackingBox.clear().then((value) {
         print("Tracking now is close");
       });

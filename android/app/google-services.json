@@ -7,6 +7,35 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:870861922784:android:93e4c0a6947dd4fd34cb85",
+        "android_client_info": {
+          "package_name": "com.example.shahedmap"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "870861922784-6e6nsfb1lblrfk0d2lnvbgdmqmi2557v.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDnA23aqHHfGIsIwmQNn9gjq1o2Vp6rpXg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "870861922784-6e6nsfb1lblrfk0d2lnvbgdmqmi2557v.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:870861922784:android:20f0bff00594e6fa34cb85",
         "android_client_info": {
           "package_name": "com.example.systemevents"

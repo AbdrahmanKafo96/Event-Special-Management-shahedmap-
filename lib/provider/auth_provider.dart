@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 import 'package:platform_device_id/platform_device_id.dart';
+import 'package:provider/provider.dart';
+import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/modules/authentications/login_screen.dart';
@@ -11,7 +13,7 @@ import 'package:shahed/models/user.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:shahed/singleton/singleton.dart';
-
+import 'package:location/location.dart' as loc;
 import '../widgets/checkInternet.dart';
 
 class UserAuthProvider extends ChangeNotifier {
@@ -22,7 +24,7 @@ class UserAuthProvider extends ChangeNotifier {
       final storage = await SharedClass.getStorage();
       //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final box = await SharedClass.getBox();
-
+      print(userData);
       if (box != null) {
         final response = userData['userState'] == 'L'
             ? await http.post(
@@ -189,6 +191,14 @@ class UserAuthProvider extends ChangeNotifier {
       };
       checkInternetConnectivity(context).then((bool state) async {
         if (state) {
+          if(await SharedClass.getLocationObj().isBackgroundModeEnabled())
+          {
+            await EventProvider().stopTracking( box.get('user_id'),
+                int.parse( box.get('beneficiarie_id')));
+
+            SharedClass.getLocationObj().enableBackgroundMode(enable: false);
+
+          }
           final response = await http.post(
             Uri.parse("${SharedClass.apiPath}/logout"),
             body: jsonEncode(userdata),
@@ -199,17 +209,23 @@ class UserAuthProvider extends ChangeNotifier {
             },
           );
           if (response.statusCode == 200) {
-            //var responseData = json.decode(response.body);
+             var responseData = json.decode(response.body);
 
             await storage.delete(
                 key: 'api_token', aOptions: SharedClass.getAndroidOptions());
-            await storage.delete(
-                key: 'token', aOptions: SharedClass.getAndroidOptions());
+             await storage.delete(
+                 key: 'token', aOptions: SharedClass.getAndroidOptions());
             box.delete("user_id");
+            box.delete("sender_id");
             box.delete("email");
             box.delete("role_id");
             box.delete("beneficiarie_id");
             box.delete("unitname");
+            box.delete('lat_endpoint');
+            box.delete('lng_endpoint');
+            box.delete('traffic');
+            box.delete('myactive');
+            box.delete('btnmyactive');
             SharedClass.clearTracking();
             SharedData.resetValue();
 

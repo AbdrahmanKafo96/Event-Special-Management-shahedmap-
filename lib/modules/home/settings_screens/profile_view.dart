@@ -232,7 +232,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.teal,
+                                                      color: Colors.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -261,7 +261,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.teal,
+                                                      color: Colors.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -289,7 +289,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.teal,
+                                                      color: Colors.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -301,87 +301,88 @@ class _ProfilePageState extends State<ProfilePage> {
                                             SizedBox(
                                               height: 24,
                                             ),
-                                            Row(
-                                              children: [
-                                                Expanded(
-                                                  flex: 1,
-                                                  child: showTextFiled4
-                                                      ? DateTimePicker(
-                                                          style:
-                                                              Theme.of(context)
-                                                                  .textTheme
-                                                                  .bodyText1,
-                                                          validator: (value) {
-                                                            if (value.isEmpty ||
-                                                                value == null)
-                                                              return SharedData
-                                                                      .getGlobalLang()
-                                                                  .dateBirthIsRequired();
-                                                            else
-                                                              return null;
-                                                          },
-                                                          onChanged: (value) {
-                                                            Provider.of<UserAuthProvider>(
-                                                                        context,
-                                                                        listen:
-                                                                            false)
-                                                                    .user
-                                                                    .setDate_of_birth =
-                                                                value;
-                                                          },
-                                                          controller: dateCon,
-                                                          // controller: date_of_birthController,
-                                                          type:
-                                                              DateTimePickerType
-                                                                  .date,
-                                                          cancelText: SharedData
-                                                                  .getGlobalLang()
-                                                              .no(),
-                                                          confirmText: SharedData
-                                                                  .getGlobalLang()
-                                                              .okay(),
-                                                          dateMask:
-                                                              'd MMM, yyyy',
-                                                          //  initialValue:dateCon.text  ,
-                                                          firstDate:
-                                                              DateTime(1930),
-                                                          lastDate: DateTime(
-                                                              DateTime.now()
-                                                                      .year -
-                                                                  12),
-                                                          calendarTitle: SharedData
-                                                                  .getGlobalLang()
-                                                              .chooseYourDateBirth(),
-                                                          icon:
-                                                              Icon(Icons.event),
-                                                          dateLabelText: SharedData
-                                                                  .getGlobalLang()
-                                                              .dateOfBirth(),
-                                                          timeLabelText: SharedData
-                                                                  .getGlobalLang()
-                                                              .clock(),
-                                                          textAlign:
-                                                              TextAlign.left,
-                                                          autovalidate: true,
-                                                          errorFormatText: SharedData
-                                                                  .getGlobalLang()
-                                                              .enterCorrectData(),
-                                                          errorInvalidText:
-                                                              SharedData
-                                                                      .getGlobalLang()
-                                                                  .validDate(),
-
-                                                          // validator: (val) {
-                                                          //   print('the date on validation $val ');
-                                                          //   return null;
-                                                          // },
-                                                          onSaved: (val) => print(
-                                                              'the date on save $val'),
-                                                        )
-                                                      : SizedBox.shrink(),
-                                                ),
-                                              ],
-                                            ),
+                                            // Row(
+                                            //   children: [
+                                            //     Expanded(
+                                            //       flex: 1,
+                                            //       child: showTextFiled4
+                                            //           ? DateTimePicker(
+                                            //               style:
+                                            //                   Theme.of(context)
+                                            //                       .textTheme
+                                            //                       .bodyText1,
+                                            //               validator: (value) {
+                                            //                 if (value.isEmpty ||
+                                            //                     value == null)
+                                            //                   return SharedData
+                                            //                           .getGlobalLang()
+                                            //                       .dateBirthIsRequired();
+                                            //                 else
+                                            //                   return null;
+                                            //               },
+                                            //               onChanged: (value) {
+                                            //                 Provider.of<UserAuthProvider>(
+                                            //                             context,
+                                            //                             listen:
+                                            //                                 false)
+                                            //                         .user
+                                            //                         .setDate_of_birth =
+                                            //                     value;
+                                            //               },
+                                            //               controller: dateCon,
+                                            //               // controller: date_of_birthController,
+                                            //               type:
+                                            //                   DateTimePickerType
+                                            //                       .date,
+                                            //               cancelText: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .no(),
+                                            //               confirmText: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .okay(),
+                                            //               dateMask:
+                                            //                   'd MMM, yyyy',
+                                            //               //  initialValue:dateCon.text  ,
+                                            //               firstDate:
+                                            //                   DateTime(1930),
+                                            //               lastDate: DateTime(
+                                            //                   DateTime.now()
+                                            //                           .year -
+                                            //                       12),
+                                            //
+                                            //               calendarTitle: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .chooseYourDateBirth(),
+                                            //               icon:
+                                            //                   Icon(Icons.event),
+                                            //               dateLabelText: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .dateOfBirth(),
+                                            //               timeLabelText: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .clock(),
+                                            //               textAlign:
+                                            //                   TextAlign.left,
+                                            //               autovalidate: true,
+                                            //               errorFormatText: SharedData
+                                            //                       .getGlobalLang()
+                                            //                   .enterCorrectData(),
+                                            //               errorInvalidText:
+                                            //                   SharedData
+                                            //                           .getGlobalLang()
+                                            //                       .validDate(),
+                                            //
+                                            //               // validator: (val) {
+                                            //               //   print('the date on validation $val ');
+                                            //               //   return null;
+                                            //               // },
+                                            //               onSaved: (val) => print(
+                                            //                   'the date on save $val'),
+                                            //             )
+                                            //           : SizedBox.shrink(),
+                                            //     ),
+                                            //   ],
+                                            // ),
                                           ],
                                         ),
                                       ),
@@ -435,7 +436,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                   ],
                                 )))
                         : ListView(
-                            padding: EdgeInsets.all(10),
+                            padding: EdgeInsets.all(25),
                             children: [
                               ListTile(
                                 onTap: () {
@@ -497,74 +498,75 @@ class _ProfilePageState extends State<ProfilePage> {
                                   color: Colors.white,
                                 ),
                               ),
-                              ListTile(
-                                onTap: () {
-                                  setState(() {
-                                    showTextFiled4 = !showTextFiled4;
-                                    switchPage = !switchPage;
-                                  });
-                                },
-                                title: Text(
-                                  SharedData.getGlobalLang().dateOfBirth(),
-                                  style: Theme.of(context).textTheme.headline4,
-                                ),
-                                leading: Icon(
-                                  Icons.date_range,
-                                  color: Colors.white,
-                                ),
-                                trailing: Icon(
-                                  Icons.arrow_forward_ios,
-                                  color: Colors.white,
-                                ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.all(10),
-                                height: 50,
-                                width: double.infinity,
-                                decoration: BoxDecoration(
-                                    color: Color(0xFFfe6e00),
-                                    borderRadius: BorderRadius.circular(20)),
-                                child: HoverButton(
-                                  onpressed: () {
-                                    setState(() {
-                                      switchPage = !switchPage;
-                                      showTextFiled1 = true;
-                                      showTextFiled2 = true;
-                                      showTextFiled3 = true;
-                                      showTextFiled4 = true;
-                                    });
-                                  },
-                                  splashColor: Color(0xFFFF8F00),
-                                  hoverTextColor: Color(0xFFFF8F00),
-                                  highlightColor: Color(0xFFFF8F00),
-                                  color: Color(0xFFfe6e00),
-                                  child: Center(
-                                      child: Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: 3, right: 2, left: 2),
-                                          child: Icon(
-                                            state == true
-                                                ? FontAwesomeIcons.penToSquare
-                                                : Icons.save,
-                                            color: Theme.of(context)
-                                                .iconTheme
-                                                .color,
-                                          ),
-                                        ),
-                                        Text(
-                                          SharedData.getGlobalLang()
-                                              .editPersonalData(),
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .headline4,
-                                        )
-                                      ])),
-                                ),
-                              )
+                              // ListTile(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       showTextFiled4 = !showTextFiled4;
+                              //       switchPage = !switchPage;
+                              //     });
+                              //   },
+                              //   title: Text(
+                              //     SharedData.getGlobalLang().dateOfBirth(),
+                              //     style: Theme.of(context).textTheme.headline4,
+                              //   ),
+                              //   leading: Icon(
+                              //     Icons.date_range,
+                              //     color: Colors.white,
+                              //   ),
+                              //   trailing: Icon(
+                              //     Icons.arrow_forward_ios,
+                              //     color: Colors.white,
+                              //   ),
+                              // ),
+
+                               Container(
+                                 margin: EdgeInsets.all(10),
+                                 height: 50,
+                                 width: double.infinity,
+                                 decoration: BoxDecoration(
+                                     color: Color(0xFFfe6e00),
+                                     borderRadius: BorderRadius.circular(20)),
+                                 child: HoverButton(
+                                   onpressed: () {
+                                     setState(() {
+                                       switchPage = !switchPage;
+                                       showTextFiled1 = true;
+                                       showTextFiled2 = true;
+                                       showTextFiled3 = true;
+                                       showTextFiled4 = true;
+                                     });
+                                   },
+                                   splashColor: Color(0xFFFF8F00),
+                                   hoverTextColor: Color(0xFFFF8F00),
+                                   highlightColor: Color(0xFFFF8F00),
+                                   color: Color(0xFFfe6e00),
+                                   child: Center(
+                                       child: Row(
+                                           mainAxisAlignment:
+                                           MainAxisAlignment.center,
+                                           children: [
+                                             Padding(
+                                               padding: EdgeInsets.only(
+                                                   bottom: 3, right: 2, left: 2),
+                                               child: Icon(
+                                                 state == true
+                                                     ? FontAwesomeIcons.penToSquare
+                                                     : Icons.save,
+                                                 color: Theme.of(context)
+                                                     .iconTheme
+                                                     .color,
+                                               ),
+                                             ),
+                                             Text(
+                                               SharedData.getGlobalLang()
+                                                   .editPersonalData(),
+                                               style: Theme.of(context)
+                                                   .textTheme
+                                                   .headline4,
+                                             )
+                                           ])),
+                                 ),
+                               )
                             ],
                           ),
                   ),
@@ -639,6 +641,7 @@ class _ProfilePageState extends State<ProfilePage> {
     lastNameCon.text = witness != null ? witness.family_name : "";
     dateCon.text =
         witness != null ? (witness.date_of_birth) : "1960-01-01 00:00:00.000";
+    print(dateCon.text);
     witness != null
         ? Provider.of<UserAuthProvider>(context, listen: false)
             .user

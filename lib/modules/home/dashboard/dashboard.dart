@@ -1,8 +1,9 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_card.dart';
 import 'package:geolocator/geolocator.dart';
-import 'package:telephony/telephony.dart';
+import 'package:telephony/telephony.dart' as tel;
 import 'package:workmanager/workmanager.dart';
 import 'package:shahed/main.dart';
 import 'package:location/location.dart' as loc;
@@ -14,12 +15,13 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  final Telephony telephony = Telephony.instance;
+  final tel.Telephony telephony = tel.Telephony.instance;
  // String _message = "";
 
   @override
   void initState() {
     super.initState();
+
     if (SharedData.getUserState()) {
       LocationPermission permission;
 
@@ -35,6 +37,10 @@ class _DashboardState extends State<Dashboard> {
               "1",
               "fetchBackground",
               frequency: Duration(minutes: 15),
+                 constraints: Constraints(
+                    networkType: NetworkType.connected,
+                    requiresBatteryNotLow: false,
+                )
             );
           });
         });
@@ -66,6 +72,8 @@ class _DashboardState extends State<Dashboard> {
               'Missions', Colors.orange),
           dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.users,
               'Inform', Colors.greenAccent),
+          dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.stackpath,
+              'important', Colors.pink),
           // dashboardItem(
           //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
         ],

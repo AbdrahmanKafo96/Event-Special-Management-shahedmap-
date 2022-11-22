@@ -1,10 +1,13 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:geocoder2/geocoder2.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/models/event.dart';
+import 'dart:convert';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
+import 'package:shahed/modules/home/tracking/mission_track.dart';
 import 'package:shahed/modules/home/tracking/tracking_user.dart';
 import 'package:shahed/modules/home/tracking/unit_tracking.dart';
 import 'package:shahed/provider/event_provider.dart';
@@ -19,6 +22,10 @@ import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
 import 'package:weather/weather.dart' as we;
 import 'package:weather/weather.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../main.dart';
 
 class HomePage extends StatefulWidget {
   @override
@@ -35,11 +42,85 @@ class _HomePageState extends State<HomePage> {
   // GlobalKey _appbarkey = GlobalKey();
   Box box;
   var provider;
+  var  description;
+  double latitude,long;
+
+  @pragma('vm:entry-point')
+  void openPage(var ro ,{double lat ,lng} ){
+
+
+  Navigator.push(
+    context,
+    MaterialPageRoute(
+      builder: (context) => MissionTracking( latLngDestination:
+      LatLng(lat==null?latitude:lat,lng==null?long :lng)),
+    ),
+  );
+}
 
   @override
   void initState() {
     super.initState();
-    openBox();
+    var initialzationSettingsAndroid =
+    AndroidInitializationSettings('@mipmap/ic_launcher');
+    var initializationSettings =
+    InitializationSettings(android: initialzationSettingsAndroid );
+    flutterLocalNotificationsPlugin.initialize(initializationSettings,
+        onDidReceiveNotificationResponse: openPage);
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      RemoteNotification  notification = message.notification;
+      AndroidNotification  android = message.notification .android;
+      if (notification != null && android != null) {
+        var s=message.toMap()['notification']['body'];
+        print(jsonDecode(s)['description']);
+        setState(() {
+          description= jsonDecode(s)['description'];
+          latitude=double.parse(jsonDecode(s)['lat_f']);
+          long= double.parse(jsonDecode(s)['lng_f']);
+        });
+// body: {"description":"one way","lat_s":"32.855193","lng_s":"13.079033",
+        // "lat_f":"32.839617","lng_f":"13.080063"},
+
+        flutterLocalNotificationsPlugin.show(
+            notification.hashCode,
+            notification.title,
+            notification.body,
+            NotificationDetails(
+              android: AndroidNotificationDetails(
+                channel.id,
+                channel.name,
+                channelDescription: channel.description,
+                color: Colors.blue,
+                playSound: true,
+                icon: '@mipmap/ic_launcher',
+              ),
+            ));
+      }
+    });
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('A new onMessageOpenedApp event was published!');
+      RemoteNotification  notification = message.notification;
+      AndroidNotification  android = message.notification .android;
+      if (notification != null && android != null) {
+        var s=message.toMap()['notification']['body'];
+        print(  jsonDecode(s)['description'] );
+
+        openPage("",lat:double.parse(jsonDecode(s)['lat_f']) ,
+            lng:double.parse(jsonDecode(s)['lng_f']) );
+      }
+    });
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+
+      if (message != null) {
+        var s=message.toMap()['notification']['body'];
+        print(  jsonDecode(s)['description'] );
+        print('TERMINATED');
+        openPage("",lat:double.parse(jsonDecode(s)['lat_f']) ,
+            lng:double.parse(jsonDecode(s)['lng_f']) );
+       }
+    });
+     openBox();
     _getUserLocation();
   }
 

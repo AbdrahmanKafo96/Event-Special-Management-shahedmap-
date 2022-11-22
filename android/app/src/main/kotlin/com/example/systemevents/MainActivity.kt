@@ -1,4 +1,4 @@
-package com.example.systemevents
+package com.example.shahedmap
 
 import io.flutter.embedding.android.FlutterActivity
 

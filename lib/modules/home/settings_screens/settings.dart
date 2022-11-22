@@ -1,6 +1,6 @@
 // import 'package:flutter/material.dart';
-// import 'package:systemevents/widgets/customCard.dart';
-// import 'package:systemevents/singleton/singleton.dart';
+// import 'package:shahedmap/widgets/customCard.dart';
+// import 'package:shahedmap/singleton/singleton.dart';
 // class Settings extends StatefulWidget {
 //   @override
 //   _SettingsState createState() => _SettingsState();

@@ -29,6 +29,7 @@ import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
 
+@pragma('vm:entry-point')
 class UserTracking extends StatefulWidget {
   UserTracking();
 
@@ -44,7 +45,7 @@ class _UserTrackingState extends State<UserTracking>
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
   GoogleMapsPlaces _places;
   bool active = false;
-  loc.Location _locationTracker = loc.Location();
+ //  loc.Location _locationTracker;//= loc.Location();
   Marker marker, _destination;
 
   Map data;
@@ -122,6 +123,7 @@ class _UserTrackingState extends State<UserTracking>
   void initState() {
     super.initState();
     WidgetsBinding.instance.addObserver(this);
+    //_locationTracker=SharedClass.getLocationObj();
     getMarkers();
     Wakelock.enable();
 
@@ -134,6 +136,7 @@ class _UserTrackingState extends State<UserTracking>
     });
 
     SharedClass.getBox().then((getValue) {
+      print(getValue.keys);
       loc.Location().getLocation().then((currentPos) {
         setState(() {
           currentPosition = currentPos;
@@ -173,9 +176,9 @@ class _UserTrackingState extends State<UserTracking>
           );
           getIniLocation(currentPos);
         });
-        _locationTracker.changeSettings(
-            interval: 5000, accuracy: desiredAccuracy);
-        _locationTracker.enableBackgroundMode(enable: true);
+        SharedClass.getLocationObj().changeSettings(
+            interval: 5000, accuracy: desiredAccuracy ,);
+        SharedClass.getLocationObj().enableBackgroundMode(enable: true,);
         //    return currentPos;
       });
     });
@@ -248,7 +251,7 @@ class _UserTrackingState extends State<UserTracking>
 
       //  double  time=(distance/(pos.speedAccuracy)) /3600;
       print("data $data");
-      print("pos.speed  ${pos.speed}");
+
       data = {
         'sender_id': senderID.toString(),
         'beneficiarie_id': beneficiarie_id.toString(),
@@ -260,11 +263,12 @@ class _UserTrackingState extends State<UserTracking>
         'lat_endpoint': _lat_endpoint.toString(),
         'lng_endpoint': _lng_endpoint.toString(),
         'time': totalHours,
-        'speed': pos.speed * 3600 / 1000 ,
+        'speed': double.parse((pos.speed * 3600 / 1000).toStringAsFixed(2))  ,
       };
       checkInternetConnectivity(context).then((bool value)   async{
         if (distance *1000 > 5.0) //distance > 4
             {
+          print("check internet  ");
           if (value) // phone is connected ...
               {
             syncData(unitBoxTracking).then((value)   {
@@ -273,6 +277,8 @@ class _UserTrackingState extends State<UserTracking>
             }); // for sync local data
 
           } else {
+            //
+            print("row is saved...");
             boxTracking.add(Tracking(
                 senderID: senderID,
                 beneficiarieID: beneficiarie_id,
@@ -284,7 +290,7 @@ class _UserTrackingState extends State<UserTracking>
                 latEndPoint: _lat_endpoint,
                 lngEndPoint: _lng_endpoint,
                 time: totalHours,
-                speed: pos.speed  * 3600 / 1000
+                speed: double.parse((pos.speed * 3600 / 1000).toStringAsFixed(2))
             ));
           }
         }
@@ -536,7 +542,7 @@ class _UserTrackingState extends State<UserTracking>
   }
 
   _stopListening() async {
-    _locationTracker.enableBackgroundMode(enable: false);
+    SharedClass.getLocationObj().enableBackgroundMode(enable: false);
     if (_locSubscription != null) {
       _locSubscription.cancel();
     }
@@ -596,7 +602,7 @@ class _UserTrackingState extends State<UserTracking>
                                       .activatedSuccessfully(),
                                   Colors.green);
 
-                              _locSubscription = _locationTracker
+                              _locSubscription = SharedClass.getLocationObj()
                                   .onLocationChanged
                                   .handleError((onError) {
                                 _locSubscription?.cancel();
@@ -610,7 +616,9 @@ class _UserTrackingState extends State<UserTracking>
                                     // _oldLongitude = currentLocation.longitude;
                                     //   oldTime = DateTime.now();
                                     //  });
-                                        if (_lng_endpoint != null) _getPolyline(  _lat_endpoint, _lng_endpoint);
+
+                                        // if (_lng_endpoint != null)
+                                        //   _getPolyline(  _lat_endpoint, _lng_endpoint);
                                     _sendLiveLocation(currentLocation, context);
                                   });
                             } else {
@@ -979,7 +987,7 @@ class _UserTrackingState extends State<UserTracking>
 
   Future<bool> syncData( var unitBoxTracking) async {
   // var  unitBoxTracking= await SharedClass.getTrackingBox();
-      print("database local is open ");
+      print("local database is open ");
 
      if(unitBoxTracking.isOpen){
        Tracking tracking;
@@ -1001,7 +1009,7 @@ class _UserTrackingState extends State<UserTracking>
              'lat_endpoint': tracking.latEndPoint.toString(),
              'lng_endpoint': tracking.lngEndPoint.toString(),
              'time': tracking.time ,
-             'speed': tracking.speed ,
+             'speed':  tracking.speed,
            };
            print("local item is sent ...");
            Provider.of<EventProvider>(context, listen: false)
