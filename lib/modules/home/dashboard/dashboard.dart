@@ -1,4 +1,3 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_card.dart';
@@ -23,7 +22,7 @@ class _DashboardState extends State<Dashboard> {
     super.initState();
 
     if (SharedData.getUserState()) {
-      LocationPermission permission;
+
 
       Geolocator.checkPermission().then((value) {
         Geolocator.requestPermission().then((value) {
@@ -60,8 +59,8 @@ class _DashboardState extends State<Dashboard> {
         children: <Widget>[
           dashboardItem(context, SharedData.getGlobalLang().eventList(), FontAwesomeIcons.list,
               'eventList', Colors.blue),
-          if (SharedData.getUserState())
-            dashboardItem(context, SharedData.getGlobalLang().trackingUnit(), Icons.track_changes,
+        //  if (SharedData.getUserState())
+            dashboardItem(context, SharedData.getGlobalLang().browseMap(), Icons.track_changes,
                 'unitTracking', Colors.teal),
 
           if (SharedData.getUserState())
@@ -72,10 +71,9 @@ class _DashboardState extends State<Dashboard> {
               'Missions', Colors.orange),
           dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.users,
               'Inform', Colors.greenAccent),
-          dashboardItem(context, SharedData.getGlobalLang().notifyAgency(), FontAwesomeIcons.stackpath,
-              'important', Colors.pink),
-          // dashboardItem(
-          //       context, "الإشعارات", FontAwesomeIcons.bell, 'serc',Colors.redAccent),
+          dashboardItem(context, SharedData.getGlobalLang().pathList(), FontAwesomeIcons.drawPolygon,
+              'paths', Colors.pink),
+
         ],
       ),
     );

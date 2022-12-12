@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-import 'package:shahed/shared_data/shareddata.dart';
-
 Widget customAppBar(BuildContext context,
     {String title = "",
     Color backgroundColor,

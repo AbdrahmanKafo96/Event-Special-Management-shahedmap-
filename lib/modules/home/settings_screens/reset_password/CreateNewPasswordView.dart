@@ -10,9 +10,7 @@ import 'package:shahed/modules/authentications/validator.dart';
 import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
-
 import '../../../../shared_data/shareddata.dart';
-import '../../../../widgets/customDirectionality.dart';
 import '../../../../widgets/customHoverButton.dart';
 
 class CreateNewPasswordView extends StatefulWidget {

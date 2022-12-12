@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shahed/modules/home/tracking/mission.dart';
 import 'package:shahed/modules/home/tracking/unit_tracking.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
@@ -119,7 +120,7 @@ class _MissionsState extends State<Missions> {
                                                   MaterialPageRoute(
                                                       builder:
                                                           (context) =>
-                                                              MissionTracking(
+                                                              UserMission(
                                                                 latLngDestination: LatLng(
                                                                     snapshot
                                                                         .data[
@@ -127,7 +128,7 @@ class _MissionsState extends State<Missions> {
                                                                         .lat_finish,
                                                                     snapshot
                                                                         .data[index]
-                                                                        .lng_finish),
+                                                                        .lng_finish),state: 1,
                                                               )),
                                                 );
                                               });
@@ -136,7 +137,7 @@ class _MissionsState extends State<Missions> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        MissionTracking(
+                                                        UserMission(
                                                           latLngDestination: LatLng(
                                                               snapshot
                                                                   .data[
@@ -145,7 +146,7 @@ class _MissionsState extends State<Missions> {
                                                               snapshot
                                                                   .data[
                                                                       index]
-                                                                  .lng_finish),
+                                                                  .lng_finish),state: 1
                                                         )),
                                               );
                                             }

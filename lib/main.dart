@@ -4,23 +4,21 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shahed/models/unit.dart';
+import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shahed/modules/home/Responses/responses_screen.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
 import 'package:shahed/modules/home/home.dart';
-import 'package:shahed/modules/home/important.dart';
 import 'package:shahed/modules/home/informauthorities/inform.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/modules/home/menu/menu_screen.dart';
+import 'package:shahed/modules/home/paths/paths.dart';
 import 'package:shahed/modules/home/search.dart';
 import 'package:shahed/modules/home/settings_screens/app_settings.dart';
 import 'package:shahed/modules/home/settings_screens/about_screen.dart';
 import 'package:shahed/modules/home/settings_screens/profile_view.dart';
 import 'package:shahed/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
-import 'package:shahed/modules/home/tracking/mission_track.dart';
-import 'package:shahed/modules/home/tracking/tracking_user.dart';
+import 'package:shahed/modules/home/tracking/mission.dart';
 import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/provider/language.dart';
@@ -29,7 +27,6 @@ import 'package:shahed/provider/style_data.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/theme/theme.dart';
-import 'package:shahed/web_browser/webView.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/authentications/login_screen.dart';
@@ -43,7 +40,7 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'modules/home/tracking/missions_list.dart';
-import 'modules/home/tracking/unit_tracking.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 @pragma('vm:entry-point')
 callbackDispatcher() {
@@ -88,6 +85,61 @@ callbackDispatcher() {
   }
 }
 
+@pragma('vm:entry-point')
+void headlessTask(bg.HeadlessEvent headlessEvent) async {
+  print('[BackgroundGeolocation HeadlessTask]: $headlessEvent');
+  // Implement a 'case' for only those events you're interested in.
+  switch(headlessEvent.name) {
+    case bg.Event.TERMINATE:
+      bg.State state = headlessEvent.event;
+      print('- State: $state');
+      break;
+    case bg.Event.HEARTBEAT:
+      bg.HeartbeatEvent event = headlessEvent.event;
+      print('- HeartbeatEvent: $event');
+      break;
+    case bg.Event.LOCATION:
+      bg.Location location = headlessEvent.event;
+      print('- Location: $location');
+      break;
+    case bg.Event.MOTIONCHANGE:
+      bg.Location location = headlessEvent.event;
+      print('- Location: $location');
+      break;
+    case bg.Event.GEOFENCE:
+      bg.GeofenceEvent geofenceEvent = headlessEvent.event;
+      print('- GeofenceEvent: $geofenceEvent');
+      break;
+    case bg.Event.GEOFENCESCHANGE:
+      bg.GeofencesChangeEvent event = headlessEvent.event;
+      print('- GeofencesChangeEvent: $event');
+      break;
+    case bg.Event.SCHEDULE:
+      bg.State state = headlessEvent.event;
+      print('- State: $state');
+      break;
+    case bg.Event.ACTIVITYCHANGE:
+      bg.ActivityChangeEvent event = headlessEvent.event;
+      print('ActivityChangeEvent: $event');
+      break;
+    case bg.Event.HTTP:
+      bg.HttpEvent response = headlessEvent.event;
+      print('HttpEvent: $response');
+      break;
+    case bg.Event.POWERSAVECHANGE:
+      bool enabled = headlessEvent.event;
+      print('ProviderChangeEvent: $enabled');
+      break;
+    case bg.Event.CONNECTIVITYCHANGE:
+      bg.ConnectivityChangeEvent event = headlessEvent.event;
+      print('ConnectivityChangeEvent: $event');
+      break;
+    case bg.Event.ENABLEDCHANGE:
+      bool enabled = headlessEvent.event;
+      print('EnabledChangeEvent: $enabled');
+      break;
+  }
+}
 String language = "AR";
 //bool  darkMode=false;
 const AndroidNotificationChannel channel = AndroidNotificationChannel(
@@ -122,7 +174,7 @@ Future main() async {
 
     final directory = await path.getApplicationDocumentsDirectory();
     Hive.init(directory.path);
-    Hive.registerAdapter(TrackingAdapter());
+   // Hive.registerAdapter(TrackingAdapter());
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
@@ -149,7 +201,12 @@ Future main() async {
     if (mapsImplementation is GoogleMapsFlutterAndroid) {
       mapsImplementation.useAndroidViewSurface = true;
     }
-
+    // await SentryFlutter.init(
+    //         (options) {
+    //       options.dsn = 'https://92119abba7a54244918bed279f872012@o4504264870461440.ingest.sentry.io/4504264877211648';
+    //     },
+    //     // Init your App.
+    //     appRunner:() =>
     runApp(
       MultiProvider(providers: [
         ChangeNotifierProvider<EventProvider>(
@@ -168,7 +225,9 @@ Future main() async {
           create: (context) => Language(),
         ),
       ], child: ShahedApp(token, language)),
-    );
+  //  )
+  );
+    bg.BackgroundGeolocation.registerHeadlessTask(headlessTask);
   } catch (e) {
     print(e);
   }
@@ -248,8 +307,6 @@ class _ShahedAppState extends State<ShahedApp> {
 
             routes: {
               'About': (context) => About(),
-              'important': (context) => Important(),
-              'MissionTracking': (context) => MissionTracking(),
               'Inform': (context) => InformEntity(),
               'serc': (context) => SearchPlacesScreen(),
               'Home': (context) => HomePage(),
@@ -258,10 +315,11 @@ class _ShahedAppState extends State<ShahedApp> {
               'settings': (context) => AppSettings(),
               'EventSectionOne': (context) => EventSectionOne(),
               'eventList': (context) => EventsMenu(),
-              'unitTracking': (context) => UserTracking(),
-              'response': (context) => ResponsePage(),
+              'unitTracking': (context) => UserMission(state: 0,),
+              'response': (context) => ResponsePage(),// notifications single notification page
               'successPage': (context) => SuccessPage(),
-              'Missions': (context) => Missions(),
+              'Missions': (context) => Missions(),// list of missions
+              'paths': (context) => Paths(),// list of missions
             },
           );
         },

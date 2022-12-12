@@ -1,8 +1,7 @@
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:hovering/hovering.dart';
 import 'package:intl/intl.dart' as intl;
-import 'package:platform_device_id/platform_device_id.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/modules/authentications/login_section.dart';
@@ -246,7 +245,8 @@ class _LoginUiState extends State<LoginUi> {
                                     child: customHoverButton(
                                       context,
                                       onPressed: () async {
-
+                                        DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
+                                        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
                                         Map userdata;
 // L login  , R Register  ...
                                         userdata = val == PageState.login
@@ -257,8 +257,7 @@ class _LoginUiState extends State<LoginUi> {
                                                         .instance
                                                         .getToken(),
                                                 'device_name':
-                                                    await PlatformDeviceId
-                                                        .getDeviceId,
+                                                androidInfo.id,
                                                 'email':
                                                     Provider.of<UserAuthProvider>(
                                                             context,
@@ -277,9 +276,7 @@ class _LoginUiState extends State<LoginUi> {
                                             : {
                                                 'userState': 'R',
                                                 'role_id': '2',
-                                                'device_name':
-                                                    await PlatformDeviceId
-                                                        .getDeviceId,
+                                                'device_name': androidInfo.id,
                                                 'message_token':
                                                     await FirebaseMessaging
                                                         .instance

@@ -7,9 +7,7 @@ import 'package:shahed/models/event.dart';
 import 'dart:convert';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
-import 'package:shahed/modules/home/tracking/mission_track.dart';
-import 'package:shahed/modules/home/tracking/tracking_user.dart';
-import 'package:shahed/modules/home/tracking/unit_tracking.dart';
+import 'package:shahed/modules/home/tracking/mission.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
@@ -24,9 +22,10 @@ import 'package:weather/weather.dart' as we;
 import 'package:weather/weather.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 import '../../main.dart';
-
+import 'dart:math';
+JsonEncoder encoder = JsonEncoder.withIndent("     ");
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -40,47 +39,86 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   // GlobalKey _appbarkey = GlobalKey();
-  Box box;
+  Box box ,boxPath;
   var provider;
-  var  description;
-  double latitude,long;
+  double latitude, long;
+  String routeName;
+  List points;
+  String titleNotification;
+  bool  isMoving;
+  bool _enabled;
+  String  motionActivity;
+  String  odometer;
+  String content;
 
   @pragma('vm:entry-point')
-  void openPage(var ro ,{double lat ,lng} ){
+  void openPage(var ro,
+      {double lat, lng, route = null, List path_coordinates = null,String title=""}) {
+    // {route: missionWithPath, lat_f: 32.893485, lng_f: 13.249322, lat_s: 32.893485, lng_s: 13.249322,
+    // path_cordinates: [{"lat":32.893485,"long":13.249322},{"lat":32.855423,"long":13.204346},
+    // {"lat":32.881088,"long":13.167954},{"lat":32.893485,"long":13.249322}]}
+    if (route == null) {
+      route = routeName;
+    }
 
-
-  Navigator.push(
-    context,
-    MaterialPageRoute(
-      builder: (context) => MissionTracking( latLngDestination:
-      LatLng(lat==null?latitude:lat,lng==null?long :lng)),
-    ),
-  );
-}
+    if (route == 'mission') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => UserMission(
+              latLngDestination: LatLng(
+                  lat == null ? latitude : lat, lng == null ? long : lng) ,state: 1,),
+        ),
+      );
+    } else {
+      if (path_coordinates == null) {
+        path_coordinates = points;
+        title=titleNotification;
+      }
+      print(" my path coordinates :$path_coordinates");
+      print("title :$title : $path_coordinates");
+      boxPath.put("$title ${Random().nextInt(100)}", path_coordinates);
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) =>  UserMission(
+            path: path_coordinates ,state: 0, pathshasData: 'yes',)
+        ),
+      );
+    }
+  }
 
   @override
   void initState() {
     super.initState();
+    isMoving = false;
+    _enabled = false;
+    content = '';
+    motionActivity = 'UNKNOWN';
+    odometer = '0';
+    openBox();
     var initialzationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
-    InitializationSettings(android: initialzationSettingsAndroid );
+        InitializationSettings(android: initialzationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: openPage);
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      RemoteNotification  notification = message.notification;
-      AndroidNotification  android = message.notification .android;
+        onDidReceiveNotificationResponse: openPage);// foreground notification
+    // foreground notification
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification.android;
       if (notification != null && android != null) {
-        var s=message.toMap()['notification']['body'];
-        print(jsonDecode(s)['description']);
+        print(message.notification.title);
+        print(message.notification.body);
+        print(message.data);
+
         setState(() {
-          description= jsonDecode(s)['description'];
-          latitude=double.parse(jsonDecode(s)['lat_f']);
-          long= double.parse(jsonDecode(s)['lng_f']);
+          latitude = double.parse(message.data['lat_f']);
+          long = double.parse(message.data['lng_f']);
+          routeName = message.data['route'];
+          points = jsonDecode(message.data['path_cordinates']);
+          titleNotification=message.notification.body;
         });
-// body: {"description":"one way","lat_s":"32.855193","lng_s":"13.079033",
-        // "lat_f":"32.839617","lng_f":"13.080063"},
 
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
@@ -100,37 +138,214 @@ class _HomePageState extends State<HomePage> {
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
-      RemoteNotification  notification = message.notification;
-      AndroidNotification  android = message.notification .android;
+      RemoteNotification notification = message.notification;
+      AndroidNotification android = message.notification.android;
       if (notification != null && android != null) {
-        var s=message.toMap()['notification']['body'];
-        print(  jsonDecode(s)['description'] );
-
-        openPage("",lat:double.parse(jsonDecode(s)['lat_f']) ,
-            lng:double.parse(jsonDecode(s)['lng_f']) );
+        openPage("",
+            lat: double.parse(message.data['lat_f']),
+            lng: double.parse(message.data['lng_f']),
+            route: message.data['route'],
+            path_coordinates: jsonDecode(message.data['path_cordinates']),
+            title: message.notification.body
+        );
       }
     });
     FirebaseMessaging.instance.getInitialMessage().then((message) {
-
       if (message != null) {
-        var s=message.toMap()['notification']['body'];
-        print(  jsonDecode(s)['description'] );
         print('TERMINATED');
-        openPage("",lat:double.parse(jsonDecode(s)['lat_f']) ,
-            lng:double.parse(jsonDecode(s)['lng_f']) );
-       }
+        openPage("",
+            lat: double.parse(message.data['lat_f']),
+            lng: double.parse(message.data['lng_f']),
+            route: message.data['route'],
+            path_coordinates: jsonDecode(message.data['path_cordinates'],),
+            title: message.notification.body
+        );
+      }
     });
-     openBox();
-    _getUserLocation();
+   _getUserLocation();
+    startTrip();
+  }
+
+  startTrip() async {
+    final storage = await SharedClass.getStorage();
+    String token = await storage.read(
+        key: "token", aOptions: SharedClass.getAndroidOptions());
+    SharedClass.getBox().then((UserInfo) async {
+      // 1.  Listen to events (See docs for all 12 available events).
+      bg.BackgroundGeolocation.onLocation(_onLocation);
+      bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
+      bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
+      bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
+      bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
+
+      bg.BackgroundGeolocation.onHttp((response) {
+        print(
+            "[http] response:   ${response.success}, ${response.status}, ${response.responseText}");
+      });
+
+      // 2.  Configure the plugin
+      bg.BackgroundGeolocation.ready(bg.Config(
+              desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+              distanceFilter: 10,
+              isMoving: true,
+              forceReloadOnGeofence: true,
+              forceReloadOnSchedule: true,
+              stopOnTerminate: false,
+              method: 'post',
+              foregroundService: true,
+              httpRootProperty: '.',
+              enableHeadless: true,
+              locationTemplate: '{"lat":<%= latitude %>,"lng":<%= longitude %>,"time":"<%= timestamp %>",speed:<%= speed %>}',
+              url: 'http://ets.ly/api/update_position',
+              headers: {
+                'Accept': 'application/json',
+                'Authorization': 'Bearer $token',
+                'content-type': 'application/json',
+              },
+              params: {
+                'sender_id': UserInfo.get('user_id'),
+                'beneficiarie_id': int.parse(UserInfo.get('beneficiarie_id')),
+                'distance': 10,
+              },
+              autoSync: true,
+              //batchSync: true,
+            maxDaysToPersist: 1,
+              startOnBoot: true,
+              forceReloadOnBoot: true,
+              stopTimeout: 10,
+              //  stationaryRadius: ,
+              debug: true,
+              logLevel: bg.Config.LOG_LEVEL_VERBOSE,
+              reset: true))
+          .then((bg.State state) {
+        setState(() {
+          _enabled = state.enabled;
+          //  _isMoving = state.isMoving;
+        });
+      });
+    });
+  }
+
+// ---------- not this method --------------
+  void _onClickEnable(enabled) {
+
+    SharedClass.getBox().then((UserInfo) async {
+      if (enabled) {
+        bg.BackgroundGeolocation.start().then((bg.State state) {
+          print('[start] success $state');
+          bg.BackgroundGeolocation.changePace(true).then((bool isMoving) {
+            print('[changePace] success $isMoving.');
+          }).catchError((e) {
+            print('[changePace] ERROR: ' + e.code.toString());
+          });
+          setState(() {
+            _enabled = state.enabled;
+            // _isMoving = state.isMoving;
+          });
+        });
+      } else {
+        bg.BackgroundGeolocation.stop().then((bg.State state) async {
+          print('[stop] success: $state');
+          await Provider.of<EventProvider>(context, listen: false).stopTracking(
+              UserInfo.get('user_id'),
+              int.parse(UserInfo.get('beneficiarie_id')));
+          // Reset odometer.
+          bg.BackgroundGeolocation.setOdometer(0.0);
+
+          setState(() {
+            //_odometer = '0.0';
+            _enabled = state.enabled;
+            //  _isMoving = state.isMoving;
+          });
+        });
+      }
+    });
+  }
+
+  // ---------- not this method --------------
+  // Manually toggle the tracking state:  moving vs stationary
+  // void _onClickChangePace() {
+  //   setState(() {
+  //     //  _isMoving = !_isMoving!;
+  //   });
+  //   // print("[onClickChangePace] -> $_isMoving");
+  //
+  //   bg.BackgroundGeolocation.changePace(true).then((bool isMoving) {
+  //     print('[changePace] success $isMoving.');
+  //   }).catchError((e) {
+  //     print('[changePace] ERROR: ' + e.code.toString());
+  //   });
+  // }
+
+  // ---------- not this method --------------
+  // Manually fetch the current position.
+
+  // void _onClickGetCurrentPosition() async {
+  //   bg.BackgroundGeolocation.getCurrentPosition(
+  //           persist: false, // <-- do not persist this location
+  //           desiredAccuracy: 0, // <-- desire best possible accuracy
+  //           timeout: 1000, // <-- wait 30s before giving up.
+  //           samples: 3 // <-- sample 3 location before selecting best.
+  //           )
+  //       .then((bg.Location location) {
+  //     print('[getCurrentPosition] - $location');
+  //   }).catchError((error) {
+  //     print('[getCurrentPosition] ERROR: $error');
+  //   });
+  // }
+
+  ////
+  // Event handlers
+  //
+
+  void _onLocation(bg.Location location) {
+    print('[location] - $location');
+
+    String odometerKM = (location.odometer / 1000.0).toStringAsFixed(1);
+
+    setState(() {
+      content = encoder.convert(location.toMap());
+
+      odometer = odometerKM;
+    });
+  }
+
+  void _onMotionChange(bg.Location location) {
+    print('[motionchange] - $location');
+  }
+
+  // ---------- not this method --------------
+  void _onActivityChange(bg.ActivityChangeEvent event) {
+    print('[activitychange] - $event');
+    setState(() {
+      motionActivity = event.activity;
+    });
+  }
+
+  void _onProviderChange(bg.ProviderChangeEvent event) {
+    print('$event');
+
+    setState(() {
+      content = encoder.convert(event.toMap());
+    });
+  }
+
+// ---------- not this method --------------
+  void _onConnectivityChange(bg.ConnectivityChangeEvent event) {
+    print('$event');
   }
 
   void openBox() {
-    SharedClass.getBox().then((value) {
-      setState(() {
-        box = value;
-        loader = true;
+    SharedClass.getBox().then((userBox) {
+      SharedClass.boxPath().then((value) {
+        setState(() {
+          box = userBox;
+          boxPath = value;
+          loader = true;
+        });
       });
     });
+
   }
 
   @override
@@ -165,20 +380,13 @@ class _HomePageState extends State<HomePage> {
           icon: FontAwesomeIcons.house,
           actions: [
             SharedData.getUserState() == true
-                &&
-                SharedData.getUserState() == false
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: IconButton(
-                      icon: Icon(Icons.track_changes),
-                      onPressed: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => UserTracking()),
-                        );
-                      },
-                    ),
+                    child: Switch(
+
+                        activeColor: Colors.redAccent,
+                        value: _enabled,
+                        onChanged: _onClickEnable),
                   )
                 : SizedBox.shrink(),
           ],
@@ -304,14 +512,16 @@ class _HomePageState extends State<HomePage> {
       we.WeatherFactory wf = SharedClass.getWeatherFactory();
       we.Weather w = await wf.currentWeatherByLocation(
           myLocation.latitude, myLocation.longitude);
-
-      GeoData data = await Geocoder2.getDataFromCoordinates(
+print('my loci:${myLocation.longitude}');
+      GeoData result = await Geocoder2.getDataFromCoordinates(
           latitude: myLocation.latitude,
           longitude: myLocation.longitude,
-          googleMapApiKey: "${SharedClass.mapApiKey}");
+          googleMapApiKey: "${SharedClass.mapApiKey}").catchError((onError){
+            print(onError);
+      });
       setState(() {
-        countryName = data.country;
-        subAdminArea = data.address;
+        countryName = result.country;
+        subAdminArea = result.address;
         weather = w.temperature.celsius.toInt().toString();
       });
     } on PlatformException catch (e) {
@@ -330,7 +540,7 @@ class _HomePageState extends State<HomePage> {
         print("e.message ${e}");
         print('Invalid API key.');
         setState(() {
-          countryName ="";
+          countryName = "";
           subAdminArea = "";
           weather = "";
         });

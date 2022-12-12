@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hovering/hovering.dart';
 
 Widget customHoverButton(BuildContext context, {VoidCallback onPressed, String text ,IconData icon}) {

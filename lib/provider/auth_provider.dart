@@ -2,7 +2,8 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+// import 'package:platform_device_id/platform_device_id.dart';
+import 'package:device_info_plus/device_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
@@ -176,7 +177,7 @@ class UserAuthProvider extends ChangeNotifier {
 
   void logout(BuildContext context) async {
     try {
-      Box box = await SharedClass.getBox();
+      Box box  = await SharedClass.getBox();
 
       final storage = await SharedClass.getStorage();
       String value = await storage.read(
@@ -184,10 +185,11 @@ class UserAuthProvider extends ChangeNotifier {
 
       String api_token = await storage.read(
           key: 'api_token', aOptions: SharedClass.getAndroidOptions());
-
+      DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       Map userdata = {
         'api_token': api_token,
-        'device_name': await PlatformDeviceId.getDeviceId,
+        'device_name':   androidInfo.id,// اذا حدت مشكلة فتغيير الذي حدث هنا هو سبب المشكلة!
       };
       checkInternetConnectivity(context).then((bool state) async {
         if (state) {
@@ -210,7 +212,7 @@ class UserAuthProvider extends ChangeNotifier {
           );
           if (response.statusCode == 200) {
              var responseData = json.decode(response.body);
-
+            print(responseData);
             await storage.delete(
                 key: 'api_token', aOptions: SharedClass.getAndroidOptions());
              await storage.delete(
@@ -226,7 +228,7 @@ class UserAuthProvider extends ChangeNotifier {
             box.delete('traffic');
             box.delete('myactive');
             box.delete('btnmyactive');
-            SharedClass.clearTracking();
+
             SharedData.resetValue();
 
             Navigator.pushReplacement(

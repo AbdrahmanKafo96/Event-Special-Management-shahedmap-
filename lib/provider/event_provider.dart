@@ -473,9 +473,9 @@ class EventProvider extends ChangeNotifier {
       Map data = {
         'sender_id': sender_id.toString(),
       };
-      final storage = await SharedClass.getStorage();
-      String value = await storage.read(
-          key: "token", aOptions: SharedClass.getAndroidOptions());
+      //final storage = await SharedClass.getStorage();
+      // String value = await storage.read(
+      //     key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
         Uri.parse('${SharedClass.apiPath}/fetchAllListByUserId'),
         body: data,
@@ -626,8 +626,8 @@ class EventProvider extends ChangeNotifier {
       } else {
         showShortToast(
             SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+      //  throw Exception('Failed to load List');
         return false;
-        throw Exception('Failed to load List');
       }
     } catch (e) {}
   }

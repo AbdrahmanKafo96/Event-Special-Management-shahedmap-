@@ -602,14 +602,22 @@ class Language extends ChangeNotifier {
       return 'بحث';
     }
   }
-
+  String browseMap() {
+    if (getLanguage == "AR") {
+      return "تصفح الخريطة";
+    } else if (getLanguage == "EN") {
+      return 'Browse Map';
+    } else {
+      return "تصفح الخريطة";
+    }
+  }
   String trackingUnit() {
     if (getLanguage == "AR") {
-      return "تتبع الوحدة";
+      return "مهمة الوحدة";
     } else if (getLanguage == "EN") {
-      return 'Tracking Unit';
+      return 'Mission Unit';
     } else {
-      return "تتبع الوحدة";
+      return "مهمة الوحدة";
     }
   } String missionsList() {
     if (getLanguage == "AR") {
@@ -638,6 +646,24 @@ class Language extends ChangeNotifier {
       return 'Notify Agency';
     } else {
       return "إبلاغ الجهة";
+    }
+  }
+  String pathList() {
+    if (getLanguage == "AR") {
+      return "قائمة المسارات";
+    } else if (getLanguage == "EN") {
+      return 'Path List';
+    } else {
+      return "قائمة المسارات";
+    }
+  }
+  String path() {
+    if (getLanguage == "AR") {
+      return "مسار";
+    } else if (getLanguage == "EN") {
+      return 'Path';
+    } else {
+      return "مسار";
     }
   }
 

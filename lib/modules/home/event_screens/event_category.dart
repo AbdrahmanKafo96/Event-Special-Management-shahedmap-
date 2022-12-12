@@ -6,7 +6,6 @@ import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/checkInternet.dart';
-import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:sqflite/sqflite.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;

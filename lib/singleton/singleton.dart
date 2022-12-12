@@ -12,7 +12,7 @@ class SharedClass {
   static const String mapApiKey = "AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk";
   static const String weatherApiKey = "fe5ab7fcf47cd01b406b3d7faa519b21";
   static Language _language;
-  static Box _boxUserData, _trackingBox;
+  static Box _boxUserData ,_boxPath;
   static wea.WeatherFactory _wf;
   static loc.Location _location;
 
@@ -30,6 +30,12 @@ class SharedClass {
     }
     return _boxUserData;
   }
+  static Future<Box> boxPath() async {
+    if (_boxPath == null) {
+      _boxPath = await Hive.openBox("boxPath");
+    }
+    return _boxPath;
+  }
   static loc.Location  getLocationObj() {
     if (_location == null) {
       _location = loc.Location();
@@ -45,28 +51,28 @@ class SharedClass {
     }
   }
 
-  static Future<Box> getTrackingBox() async {
-    if (_trackingBox == null) {
-      _trackingBox = await Hive.openBox("Tracking");
-    }
-    return _trackingBox;
-  }
+  // static Future<Box> getTrackingBox() async {
+  //   if (_trackingBox == null) {
+  //     _trackingBox = await Hive.openBox("Tracking");
+  //   }
+  //   return _trackingBox;
+  // }
+  //
+  // static void closeTracking() async {
+  //   if (_trackingBox != null) {
+  //     _trackingBox.close().then((value) {
+  //       print("Tracking now is close");
+  //     });
+  //   }
+  // }
 
-  static void closeTracking() async {
-    if (_trackingBox != null) {
-      _trackingBox.close().then((value) {
-        print("Tracking now is close");
-      });
-    }
-  }
-
-  static void clearTracking() async {
-    if (_trackingBox != null && _trackingBox.isOpen) {
-      _trackingBox.clear().then((value) {
-        print("Tracking now is close");
-      });
-    }
-  }
+  // static void clearTracking() async {
+  //   if (_trackingBox != null && _trackingBox.isOpen) {
+  //     _trackingBox.clear().then((value) {
+  //       print("Tracking now is close");
+  //     });
+  //   }
+  // }
 
   static Language getLanguage() {
     if (_language == null) {

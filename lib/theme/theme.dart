@@ -95,7 +95,7 @@ class Styles {
       backgroundColor: isDarkTheme ? Colors.red : Color(0xffF1F5FB),
 
       indicatorColor:  isDarkTheme ? Color( 0xff121212) : Colors.white,
-      buttonColor:isDarkTheme ? Color( 0xff121212) : Colors.white,
+      //buttonColor:isDarkTheme ? Color( 0xff121212) : Colors.white,
 
       hintColor: isDarkTheme ? Colors.white : Color( 0xff121212),
 
