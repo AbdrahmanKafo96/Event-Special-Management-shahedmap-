@@ -12,7 +12,7 @@ class SharedClass {
   static const String mapApiKey = "AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk";
   static const String weatherApiKey = "fe5ab7fcf47cd01b406b3d7faa519b21";
   static Language _language;
-  static Box _boxUserData ,_boxPath;
+  static Box _boxUserData  ;
   static wea.WeatherFactory _wf;
   static loc.Location _location;
 
@@ -29,12 +29,6 @@ class SharedClass {
       _boxUserData = await Hive.openBox("userData");
     }
     return _boxUserData;
-  }
-  static Future<Box> boxPath() async {
-    if (_boxPath == null) {
-      _boxPath = await Hive.openBox("boxPath");
-    }
-    return _boxPath;
   }
   static loc.Location  getLocationObj() {
     if (_location == null) {

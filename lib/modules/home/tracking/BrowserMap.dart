@@ -25,18 +25,18 @@ import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
 
-class UserMission extends StatefulWidget {
+class BrowserMap extends StatefulWidget {
   LatLng latLngDestination;
   int state;
   List path;
   String pathshasData='';
-  UserMission({this.latLngDestination,this.state,this.path,this.pathshasData});
+  BrowserMap({this.latLngDestination,this.state,this.path,this.pathshasData});
 
   @override
-  State<UserMission> createState() => _UserMissionState();
+  State<BrowserMap> createState() => _BrowserMapState();
 }
 
-class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
+class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
   // static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
@@ -67,25 +67,27 @@ class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
   void updateMarkerAndCircle(
       loc.LocationData newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
-    setState(() {
-      marker = Marker(
-          markerId: MarkerId("home"),
-          position: latlng,
-          rotation: newLocalData.heading,
-          draggable: false,
-          zIndex: 2,
-          flat: true,
-          anchor: Offset(0.5, 0.5),
-          icon: BitmapDescriptor.fromBytes(imageData));
-      markerss.add(marker);
-      circle = Circle(
-          circleId: CircleId("car"),
-          radius: newLocalData.accuracy,
-          zIndex: 1,
-          strokeColor: Colors.blueAccent,
-          center: latlng,
-          fillColor: Colors.blue.withAlpha(70));
-    });
+   if(mounted){
+     setState(() {
+       marker = Marker(
+           markerId: MarkerId("home"),
+           position: latlng,
+           rotation: newLocalData.heading,
+           draggable: false,
+           zIndex: 2,
+           flat: true,
+           anchor: Offset(0.5, 0.5),
+           icon: BitmapDescriptor.fromBytes(imageData));
+       markerss.add(marker);
+       circle = Circle(
+           circleId: CircleId("car"),
+           radius: newLocalData.accuracy,
+           zIndex: 1,
+           strokeColor: Colors.blueAccent,
+           center: latlng,
+           fillColor: Colors.blue.withAlpha(70));
+     });
+   }
     if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
   }
 
@@ -162,7 +164,7 @@ class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
       });
     });
 
-    if(widget.pathshasData=='yes' && widget.state==0){
+    if(widget.pathshasData=='yes' && widget.state==1){
       _addPath();
     }
   }
@@ -399,7 +401,7 @@ class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
           context,
           title:widget.state==1? SharedData.getGlobalLang().trackingUnit():
           SharedData.getGlobalLang().browseMap(),
-          icon: widget.state==1? FontAwesomeIcons.mapLocation: FontAwesomeIcons.map,
+          icon: widget.state==1? FontAwesomeIcons.route: FontAwesomeIcons.mapLocationDot,
           leading: IconButton(
             tooltip: SharedData.getGlobalLang().back(),
             icon: Icon(
@@ -659,7 +661,7 @@ class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                 widget.pathshasData=='yes'? Positioned(
+                 widget.pathshasData=='yes'&& widget.path.length>0? Positioned(
                    child: Center(
                      child: Padding(
                        padding: const EdgeInsets.only(left: 8.0, right: 8.0),
@@ -669,19 +671,21 @@ class _UserMissionState extends State<UserMission> with WidgetsBindingObserver {
                          children: [
                            ElevatedButton(
                              onPressed: () async {
-                               final GoogleMapController controller = await _controller.future;
-                               if (_locationSubscription != null) {
-                                 _locationSubscription.cancel();
-                               }
-                               List<LatLng> point= _createPoints();
-                               if (controller != null) {
-                                 controller.animateCamera(
-                                     CameraUpdate.newCameraPosition(CameraPosition(
-                                       //bearing: 0,
-                                         target: LatLng( point.elementAt( (point.length/2).toInt()).latitude,point.elementAt( (point.length/2).toInt()).longitude),
-                                         // tilt: 0,
-                                         zoom: 18.0)));
-                               }
+
+                                  final GoogleMapController controller = await _controller.future;
+                                  if (_locationSubscription != null) {
+                                    _locationSubscription.cancel();
+                                  }
+                                  List<LatLng> point= _createPoints();
+                                  if (controller != null) {
+                                    controller.animateCamera(
+                                        CameraUpdate.newCameraPosition(CameraPosition(
+                                          //bearing: 0,
+                                            target: LatLng( point.elementAt( (point.length/2).toInt()).latitude,point.elementAt( (point.length/2).toInt()).longitude),
+                                            // tilt: 0,
+                                            zoom: 18.0)));
+                                  }
+
                              },
                              child: Icon(
                                Icons.center_focus_strong,

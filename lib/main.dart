@@ -18,7 +18,7 @@ import 'package:shahed/modules/home/settings_screens/app_settings.dart';
 import 'package:shahed/modules/home/settings_screens/about_screen.dart';
 import 'package:shahed/modules/home/settings_screens/profile_view.dart';
 import 'package:shahed/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
-import 'package:shahed/modules/home/tracking/mission.dart';
+import 'package:shahed/modules/home/tracking/BrowserMap.dart';
 import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/provider/language.dart';
@@ -74,7 +74,8 @@ callbackDispatcher() {
           if (response.statusCode == 200) {
             json.decode(response.body);
             notif.Notification notification = new notif.Notification();
-            notification.showNotificationWithoutSound("تم إرسال موقع الوحدة" );
+            notification.showNotificationWithoutSound("تم ارسال موقع الوحدة للخادم" );
+
           }
           break;
       }
@@ -308,18 +309,18 @@ class _ShahedAppState extends State<ShahedApp> {
             routes: {
               'About': (context) => About(),
               'Inform': (context) => InformEntity(),
-              'serc': (context) => SearchPlacesScreen(),
+              //'serc': (context) => SearchPlacesScreen(),
               'Home': (context) => HomePage(),
               'ProfilePage': (context) => ProfilePage(),
               'ResetPage': (context) => CreateNewPasswordView(),
               'settings': (context) => AppSettings(),
               'EventSectionOne': (context) => EventSectionOne(),
               'eventList': (context) => EventsMenu(),
-              'unitTracking': (context) => UserMission(state: 0,),
+              'browserMap': (context) => BrowserMap(state: 0,),
               'response': (context) => ResponsePage(),// notifications single notification page
               'successPage': (context) => SuccessPage(),
               'Missions': (context) => Missions(),// list of missions
-              'paths': (context) => Paths(),// list of missions
+
             },
           );
         },

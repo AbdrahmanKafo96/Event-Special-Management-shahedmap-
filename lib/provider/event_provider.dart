@@ -689,7 +689,10 @@ class EventProvider extends ChangeNotifier {
           });
       if (response.statusCode == 200) {
         final parsed = json.decode(response.body).cast<Map<String, dynamic>>();
-        return parsed.map<Mission>((json) => Mission.fromJson(json)).toList();
+
+        List<Mission> result= parsed.map<Mission>((json) => Mission.fromJson(json)).toList();
+
+        return result.reversed.toList();
       } else {
         showShortToast(
             SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);

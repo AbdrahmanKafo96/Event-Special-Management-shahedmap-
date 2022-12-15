@@ -15,9 +15,9 @@ import 'package:shahed/widgets/custom_dialog.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class EventView extends StatefulWidget {
-  int eventID;String eventName;
+  int eventID;String eventName;int state=0;
 
-  EventView({this.eventID , this.eventName});
+  EventView({this.eventID , this.eventName,this.state});
 
   @override
   _EventViewState createState() => _EventViewState();
@@ -44,7 +44,7 @@ class _EventViewState extends State<EventView> {
       onWillPop: () async => false,
       child:   customDirectionality(
         child: Scaffold(
-              appBar: customAppBar(
+              appBar: widget.state==0?customAppBar(
                 context,
                 elevation: 1.0,
                 title:'${widget.eventName}',
@@ -150,7 +150,7 @@ class _EventViewState extends State<EventView> {
                     Navigator.pop(context);
                   },
                 ),
-              ),
+              ):null,
               body: _response == null
                   ? Center(
                       child: CircularProgressIndicator(

@@ -146,6 +146,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                                       eventName: snapshot
                                                           .data[index]
                                                           .event_name,
+                                                  state: 0,
                                                     )),
                                           );
                                         }
@@ -175,7 +176,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                                                     .addede_id),
                                                             eventName: snapshot
                                                                 .data[index]
-                                                                .event_name)),
+                                                                .event_name,state: 0, )),
                                                   );
                                                 }
                                               });

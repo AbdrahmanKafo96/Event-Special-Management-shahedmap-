@@ -50,6 +50,12 @@
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="high_importance_channel" />
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@mipmap/ic_launcher_my_location" />
+        <meta-data
+            android:name="com.google.firebase.messaging.default_notification_color"
+            android:resource="@android:color/black" />
+        <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk" />
 

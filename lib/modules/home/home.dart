@@ -7,7 +7,7 @@ import 'package:shahed/models/event.dart';
 import 'dart:convert';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
-import 'package:shahed/modules/home/tracking/mission.dart';
+import 'package:shahed/modules/home/tracking/BrowserMap.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
@@ -39,10 +39,9 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   // GlobalKey _appbarkey = GlobalKey();
-  Box box ,boxPath;
+  Box box  ;
   var provider;
   double latitude, long;
-  String routeName;
   List points;
   String titleNotification;
   bool  isMoving;
@@ -50,42 +49,32 @@ class _HomePageState extends State<HomePage> {
   String  motionActivity;
   String  odometer;
   String content;
+  String  routeName='';
 
   @pragma('vm:entry-point')
   void openPage(var ro,
-      {double lat, lng, route = null, List path_coordinates = null,String title=""}) {
+      {double lat, lng,  List path_coordinates = null ,String route=null}) {
     // {route: missionWithPath, lat_f: 32.893485, lng_f: 13.249322, lat_s: 32.893485, lng_s: 13.249322,
     // path_cordinates: [{"lat":32.893485,"long":13.249322},{"lat":32.855423,"long":13.204346},
     // {"lat":32.881088,"long":13.167954},{"lat":32.893485,"long":13.249322}]}
-    if (route == null) {
-      route = routeName;
-    }
 
-    if (route == 'mission') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => UserMission(
-              latLngDestination: LatLng(
-                  lat == null ? latitude : lat, lng == null ? long : lng) ,state: 1,),
-        ),
-      );
-    } else {
-      if (path_coordinates == null) {
-        path_coordinates = points;
-        title=titleNotification;
+      if(route==null){
+        route=routeName;
+        if(route=='missionWithPath' || route=="mission"){
+          if (path_coordinates == null) {
+            path_coordinates = points;
+          }
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) => BrowserMap(
+                latLngDestination: LatLng(
+                    lat == null ? latitude : lat, lng == null ? long : lng) ,state: 1,
+                path: path_coordinates ,pathshasData:path_coordinates.length>0? 'yes':'',),
+            ),
+          );
+        }
       }
-      print(" my path coordinates :$path_coordinates");
-      print("title :$title : $path_coordinates");
-      boxPath.put("$title ${Random().nextInt(100)}", path_coordinates);
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) =>  UserMission(
-            path: path_coordinates ,state: 0, pathshasData: 'yes',)
-        ),
-      );
-    }
   }
 
   @override
@@ -115,9 +104,8 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           latitude = double.parse(message.data['lat_f']);
           long = double.parse(message.data['lng_f']);
-          routeName = message.data['route'];
           points = jsonDecode(message.data['path_cordinates']);
-          titleNotification=message.notification.body;
+          routeName = message.data['route'];
         });
 
         flutterLocalNotificationsPlugin.show(
@@ -144,9 +132,8 @@ class _HomePageState extends State<HomePage> {
         openPage("",
             lat: double.parse(message.data['lat_f']),
             lng: double.parse(message.data['lng_f']),
-            route: message.data['route'],
             path_coordinates: jsonDecode(message.data['path_cordinates']),
-            title: message.notification.body
+            route: message.data['route']
         );
       }
     });
@@ -156,9 +143,8 @@ class _HomePageState extends State<HomePage> {
         openPage("",
             lat: double.parse(message.data['lat_f']),
             lng: double.parse(message.data['lng_f']),
-            route: message.data['route'],
             path_coordinates: jsonDecode(message.data['path_cordinates'],),
-            title: message.notification.body
+            route: message.data['route']
         );
       }
     });
@@ -337,13 +323,10 @@ class _HomePageState extends State<HomePage> {
 
   void openBox() {
     SharedClass.getBox().then((userBox) {
-      SharedClass.boxPath().then((value) {
         setState(() {
           box = userBox;
-          boxPath = value;
           loader = true;
         });
-      });
     });
 
   }
@@ -353,37 +336,36 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            checkInternetConnectivity(context).then((bool value) async {
-              if (value) {
-                Provider.of<EventProvider>(context, listen: false).event =
-                    Event();
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => EventSectionOne()),
-                );
-              }
-            });
-          },
-          tooltip: SharedData.getGlobalLang().addEvent(),
-          child: const Icon(
-            FontAwesomeIcons.plus,
-            color: Colors.white,
-            size: 24,
-          ),
-          backgroundColor: Colors.deepOrange,
-        ),
+        // floatingActionButton: FloatingActionButton(
+        //   onPressed: () {
+        //     checkInternetConnectivity(context).then((bool value) async {
+        //       if (value) {
+        //         Provider.of<EventProvider>(context, listen: false).event =
+        //             Event();
+        //         Navigator.push(
+        //           context,
+        //           MaterialPageRoute(builder: (context) => EventSectionOne()),
+        //         );
+        //       }
+        //     });
+        //   },
+        //   tooltip: SharedData.getGlobalLang().addEvent(),
+        //   child: const Icon(
+        //     FontAwesomeIcons.plus,
+        //     color: Colors.white,
+        //     size: 24,
+        //   ),
+        //   backgroundColor: Colors.deepOrange,
+        // ),
         appBar: customAppBar(
           context,
-          title: SharedData.getGlobalLang().homePage(),
+          title: SharedData.getGlobalLang().WitnessApp(),
           icon: FontAwesomeIcons.house,
           actions: [
             SharedData.getUserState() == true
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Switch(
-
                         activeColor: Colors.redAccent,
                         value: _enabled,
                         onChanged: _onClickEnable),

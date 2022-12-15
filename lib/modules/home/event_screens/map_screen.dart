@@ -318,6 +318,7 @@ class _MyHomePageState extends State<MapMarker> {
                                 context: context,
                                 apiKey: SharedClass.mapApiKey,
                                 mode: Mode.overlay,
+                                decoration: InputDecoration(fillColor: Colors.white),
                                 hint: SharedData.getGlobalLang().search(),
                                 types: [],
                                 strictbounds: false,

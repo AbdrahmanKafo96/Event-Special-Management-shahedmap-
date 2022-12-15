@@ -3,12 +3,12 @@ import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 class Notification {
   Notification() {
     var initializationSettingsAndroid =
-    AndroidInitializationSettings('@mipmap/ic_launcher');
+    AndroidInitializationSettings('@mipmap/ic_launcher_my_location');
     var initializationSettingsIOS = DarwinInitializationSettings();
     var initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid);
+    InitializationSettings(android: initializationSettingsAndroid ,);
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings ,onDidReceiveNotificationResponse:null);
   }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;

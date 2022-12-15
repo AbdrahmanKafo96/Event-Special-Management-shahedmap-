@@ -502,6 +502,15 @@ class Language extends ChangeNotifier {
       return 'الصفحة الرئيسية';
     }
   }
+  String WitnessApp() {
+    if (getLanguage == "AR") {
+      return 'تطبيق شاهد';
+    } else if (getLanguage == "EN") {
+      return 'WitnessApp';
+    } else {
+      return 'تطبيق شاهد';
+    }
+  }
 
   String logout() {
     if (getLanguage == "AR") {
@@ -648,15 +657,15 @@ class Language extends ChangeNotifier {
       return "إبلاغ الجهة";
     }
   }
-  String pathList() {
-    if (getLanguage == "AR") {
-      return "قائمة المسارات";
-    } else if (getLanguage == "EN") {
-      return 'Path List';
-    } else {
-      return "قائمة المسارات";
-    }
-  }
+  // String pathList() {
+  //   if (getLanguage == "AR") {
+  //     return "قائمة المسارات";
+  //   } else if (getLanguage == "EN") {
+  //     return 'Path List';
+  //   } else {
+  //     return "قائمة المسارات";
+  //   }
+  // }
   String path() {
     if (getLanguage == "AR") {
       return "مسار";

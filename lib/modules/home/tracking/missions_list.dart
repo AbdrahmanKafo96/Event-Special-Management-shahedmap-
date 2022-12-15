@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:shahed/modules/home/tracking/mission.dart';
-import 'package:shahed/modules/home/tracking/unit_tracking.dart';
+import 'package:shahed/modules/home/tracking/BrowserMap.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
@@ -30,23 +29,20 @@ class _MissionsState extends State<Missions> {
 
   String user_id, ben_id;
 
-  Future<void> getData() {
-    SharedClass.getBox().then((value) async {
-      setState(() {
+  Future<List<Mission>> getData() {
+  return  SharedClass.getBox().then((value) async {
         user_id = value.get('user_id').toString();
         ben_id = value.get('beneficiarie_id').toString();
-        futureList = Provider.of<EventProvider>(context, listen: false)
+     return  futureList = Provider.of<EventProvider>(context, listen: false)
             .getMissions(user_id, ben_id);
-      });
     });
-    Future.delayed(const Duration(seconds: 1), () {});
   }
 
   generateItemsList() {
     return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: FutureBuilder<List<Mission>>(
-            future: futureList,
+            future: getData(),
             builder: (ctx, snapshot) {
               // if(!snapshot.hasData){
               //   return Center(child: CircularProgressIndicator());
@@ -78,6 +74,7 @@ class _MissionsState extends State<Missions> {
                   return snapshot.hasData && snapshot.data.length > 0
                       ? RefreshIndicator(
                           displacement: 5,
+                          color: Colors.orange,
                           onRefresh: getData,
                           child: ListView.builder(
                             shrinkWrap: true,
@@ -120,7 +117,8 @@ class _MissionsState extends State<Missions> {
                                                   MaterialPageRoute(
                                                       builder:
                                                           (context) =>
-                                                              UserMission(
+                                                              BrowserMap(
+
                                                                 latLngDestination: LatLng(
                                                                     snapshot
                                                                         .data[
@@ -128,7 +126,10 @@ class _MissionsState extends State<Missions> {
                                                                         .lat_finish,
                                                                     snapshot
                                                                         .data[index]
-                                                                        .lng_finish),state: 1,
+                                                                        .lng_finish), state: 1,
+                                                                pathshasData: 'yes',
+                                                                path:snapshot
+                                                                    .data[index].points ,
                                                               )),
                                                 );
                                               });
@@ -137,7 +138,7 @@ class _MissionsState extends State<Missions> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        UserMission(
+                                                        BrowserMap(
                                                           latLngDestination: LatLng(
                                                               snapshot
                                                                   .data[
@@ -146,7 +147,10 @@ class _MissionsState extends State<Missions> {
                                                               snapshot
                                                                   .data[
                                                                       index]
-                                                                  .lng_finish),state: 1
+                                                                  .lng_finish),state: 1,
+                                                          pathshasData: 'yes',
+                                                          path:snapshot
+                                                              .data[index].points ,
                                                         )),
                                               );
                                             }
@@ -199,7 +203,7 @@ class _MissionsState extends State<Missions> {
     return Scaffold(
       appBar: customAppBar(context,
           title: SharedData.getGlobalLang().missionsList(),
-          icon: FontAwesomeIcons.route),
+          icon: FontAwesomeIcons.solidComment),
       body: generateItemsList(),
     );
   }

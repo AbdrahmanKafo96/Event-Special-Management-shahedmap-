@@ -6,6 +6,7 @@ class Mission {
   final double lat_start, lng_start, lat_finish, lng_finish;
   final int seen;
   int mission_id;
+  List points;
 
   Mission(
       {this.mission_id,
@@ -15,7 +16,7 @@ class Mission {
       this.lng_start,
       this.lat_finish,
       this.lng_finish,
-      this.seen});
+      this.seen ,this.points});
 
   factory Mission.fromJson(Map<String, dynamic> json) {
     return Mission(
@@ -26,6 +27,7 @@ class Mission {
         lng_start: double.parse(json['lng_start']),
         lat_finish: double.parse(json['lat_finish']),
         lng_finish: double.parse(json['lng_finish']),
+        points:  json['mission_path'] ,
         seen: int.parse(json['seen']));
   }
 }
