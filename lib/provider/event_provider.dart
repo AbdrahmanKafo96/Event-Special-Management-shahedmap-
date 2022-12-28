@@ -15,7 +15,7 @@ import '../models/mission.dart';
 class EventProvider extends ChangeNotifier {
   Event event = Event();
 
-  addEvent(Map userData) async {
+  Future<bool> addEvent(Map userData) async {
     try {
       final storage = await SharedClass.getStorage();
       String value = await storage.read(
@@ -60,6 +60,7 @@ class EventProvider extends ChangeNotifier {
             filename: event.getVideoFile.path.split("/").last));
 
       var response = await request.send();
+      print(response.statusCode);
 
       if (response.statusCode == 200) {
         final respStr = await response.stream.bytesToString();

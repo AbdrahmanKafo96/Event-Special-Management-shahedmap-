@@ -3,16 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:geocoder2/geocoder2.dart';
 import 'package:hive/hive.dart';
 import 'package:provider/provider.dart';
-import 'package:shahed/models/event.dart';
 import 'dart:convert';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
-import 'package:shahed/modules/home/event_screens/main_section.dart';
+import 'package:shahed/modules/home/responses/map_respo.dart';
 import 'package:shahed/modules/home/tracking/BrowserMap.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
-import 'package:shahed/widgets/checkInternet.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:location/location.dart';
 import 'package:flutter/services.dart';
@@ -22,10 +20,15 @@ import 'package:weather/weather.dart' as we;
 import 'package:weather/weather.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+    as bg;
 import '../../main.dart';
 import 'dart:math';
+
+import '../../widgets/customScaffoldMessenger.dart';
+
 JsonEncoder encoder = JsonEncoder.withIndent("     ");
+
 class HomePage extends StatefulWidget {
   @override
   _HomePageState createState() => _HomePageState();
@@ -39,59 +42,78 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   // GlobalKey _appbarkey = GlobalKey();
-  Box box  ;
+  Box box;
+
   var provider;
   double latitude, long;
   List points;
   String titleNotification;
-  bool  isMoving;
+  bool _isMoving;
   bool _enabled;
-  String  motionActivity;
-  String  odometer;
+  String motionActivity;
+  String odometer;
   String content;
-  String  routeName='';
+  String routeName = '';
+  String apiPath = 'http://ets.ly/api/update_position';
 
   @pragma('vm:entry-point')
   void openPage(var ro,
-      {double lat, lng,  List path_coordinates = null ,String route=null}) {
+      {double lat, lng, List path_coordinates = null, String route = null}) {
     // {route: missionWithPath, lat_f: 32.893485, lng_f: 13.249322, lat_s: 32.893485, lng_s: 13.249322,
     // path_cordinates: [{"lat":32.893485,"long":13.249322},{"lat":32.855423,"long":13.204346},
     // {"lat":32.881088,"long":13.167954},{"lat":32.893485,"long":13.249322}]}
+    print("route : $routeName");
 
-      if(route==null){
-        route=routeName;
-        if(route=='missionWithPath' || route=="mission"){
-          if (path_coordinates == null) {
-            path_coordinates = points;
-          }
-          Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => BrowserMap(
-                latLngDestination: LatLng(
-                    lat == null ? latitude : lat, lng == null ? long : lng) ,state: 1,
-                path: path_coordinates ,pathshasData:path_coordinates.length>0? 'yes':'',),
-            ),
-          );
+    if (route == null) {
+      route = routeName;
+    }
+    if (route != null) {
+      if (route == 'missionWithPath' || route == "mission") {
+        if (path_coordinates == null) {
+          path_coordinates = points;
         }
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => BrowserMap(
+              latLngDestination: LatLng(
+                  lat == null ? latitude : lat, lng == null ? long : lng),
+              state: 1,
+              path: path_coordinates,
+              pathshasData: path_coordinates.length > 0 ? 'yes' : '',
+            ),
+          ),
+        );
       }
+      if (route == 'RespondToEvent') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+              builder: (context) => Mappoly(
+                  lat: lat == null ? latitude : lat,
+                  lng: lng == null ? long : lng)),
+        );
+      }
+    }
   }
 
   @override
   void initState() {
-    super.initState();
-    isMoving = false;
+    super.initState(); //_getUserLocation();
+    _isMoving = false;
     _enabled = false;
     content = '';
     motionActivity = 'UNKNOWN';
     odometer = '0';
     openBox();
+    startTrip();
+
     var initialzationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
         InitializationSettings(android: initialzationSettingsAndroid);
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
-        onDidReceiveNotificationResponse: openPage);// foreground notification
+        onDidReceiveNotificationResponse: openPage); // foreground notification
     // foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
@@ -101,11 +123,18 @@ class _HomePageState extends State<HomePage> {
         print(message.notification.body);
         print(message.data);
 
+        routeName = message.data['route'];
+
         setState(() {
-          latitude = double.parse(message.data['lat_f']);
-          long = double.parse(message.data['lng_f']);
-          points = jsonDecode(message.data['path_cordinates']);
-          routeName = message.data['route'];
+          latitude = routeName == 'RespondToEvent'
+              ? double.parse(message.data['lat'])
+              : double.parse(message.data['lat_f']);
+          long = routeName == 'RespondToEvent'
+              ? double.parse(message.data['lng'])
+              : double.parse(message.data['lng_f']);
+          points = routeName == 'RespondToEvent'
+              ? []
+              : jsonDecode(message.data['path_cordinates']);
         });
 
         flutterLocalNotificationsPlugin.show(
@@ -129,27 +158,37 @@ class _HomePageState extends State<HomePage> {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification.android;
       if (notification != null && android != null) {
+        ;
         openPage("",
-            lat: double.parse(message.data['lat_f']),
-            lng: double.parse(message.data['lng_f']),
-            path_coordinates: jsonDecode(message.data['path_cordinates']),
-            route: message.data['route']
-        );
+            lat: message.data['route'] == 'RespondToEvent'
+                ? double.parse(message.data['lat'])
+                : double.parse(message.data['lat_f']),
+            lng: message.data['route'] == 'RespondToEvent'
+                ? double.parse(message.data['lng'])
+                : double.parse(message.data['lng_f']),
+            path_coordinates: message.data['route'] == 'RespondToEvent'
+                ? []
+                : jsonDecode(message.data['path_cordinates']),
+            route: message.data['route']);
       }
     });
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         print('TERMINATED');
         openPage("",
-            lat: double.parse(message.data['lat_f']),
-            lng: double.parse(message.data['lng_f']),
-            path_coordinates: jsonDecode(message.data['path_cordinates'],),
-            route: message.data['route']
-        );
+            lat: message.data['route'] == 'RespondToEvent'
+                ? double.parse(message.data['lat'])
+                : double.parse(message.data['lat_f']),
+            lng: message.data['route'] == 'RespondToEvent'
+                ? double.parse(message.data['lng'])
+                : double.parse(message.data['lng_f']),
+            path_coordinates: message.data['route'] == 'RespondToEvent'
+                ? []
+                : jsonDecode(message.data['path_cordinates']),
+            route: message.data['route']);
       }
     });
-   _getUserLocation();
-    startTrip();
+
   }
 
   startTrip() async {
@@ -169,20 +208,14 @@ class _HomePageState extends State<HomePage> {
             "[http] response:   ${response.success}, ${response.status}, ${response.responseText}");
       });
 
-      // 2.  Configure the plugin
       bg.BackgroundGeolocation.ready(bg.Config(
               desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-              distanceFilter: 10,
-              isMoving: true,
-              forceReloadOnGeofence: true,
-              forceReloadOnSchedule: true,
-              stopOnTerminate: false,
-              method: 'post',
-              foregroundService: true,
+              distanceFilter: 5,
+              locationTemplate:
+                  '{"lat":<%= latitude %>,"lng":<%= longitude %>,"time":"<%= timestamp %>","speed":<%= speed %>,"accuracy":<%= accuracy %>}',
+              url: '$apiPath',
+              method: 'POST',
               httpRootProperty: '.',
-              enableHeadless: true,
-              locationTemplate: '{"lat":<%= latitude %>,"lng":<%= longitude %>,"time":"<%= timestamp %>",speed:<%= speed %>}',
-              url: 'http://ets.ly/api/update_position',
               headers: {
                 'Accept': 'application/json',
                 'Authorization': 'Bearer $token',
@@ -193,96 +226,73 @@ class _HomePageState extends State<HomePage> {
                 'beneficiarie_id': int.parse(UserInfo.get('beneficiarie_id')),
                 'distance': 10,
               },
-              autoSync: true,
-              //batchSync: true,
-            maxDaysToPersist: 1,
+              stopOnTerminate: false,
               startOnBoot: true,
-              forceReloadOnBoot: true,
-              stopTimeout: 10,
-              //  stationaryRadius: ,
+
               debug: true,
               logLevel: bg.Config.LOG_LEVEL_VERBOSE,
               reset: true))
           .then((bg.State state) {
+        //    _getUserLocation();
         setState(() {
           _enabled = state.enabled;
-          //  _isMoving = state.isMoving;
+          _isMoving = state.isMoving;
         });
       });
     });
   }
 
-// ---------- not this method --------------
   void _onClickEnable(enabled) {
-
-    SharedClass.getBox().then((UserInfo) async {
-      if (enabled) {
-        bg.BackgroundGeolocation.start().then((bg.State state) {
-          print('[start] success $state');
-          bg.BackgroundGeolocation.changePace(true).then((bool isMoving) {
-            print('[changePace] success $isMoving.');
-          }).catchError((e) {
-            print('[changePace] ERROR: ' + e.code.toString());
-          });
-          setState(() {
-            _enabled = state.enabled;
-            // _isMoving = state.isMoving;
-          });
+    customScaffoldMessenger(
+        color: Colors.orange,
+        context: context,
+        seconds: 2,
+        text: SharedData.getGlobalLang().waitMessage());
+    if (enabled) {
+      bg.BackgroundGeolocation.start().then((bg.State state) {
+        SharedClass.getBGState(state: state.enabled);
+        print('[start] success $state');
+        setState(() {
+          _enabled = state.enabled;
+          _isMoving = state.isMoving;
         });
-      } else {
-        bg.BackgroundGeolocation.stop().then((bg.State state) async {
+      });
+    } else {
+      bg.BackgroundGeolocation.stop().then((bg.State state) {
+        SharedClass.getBGState(state: state.enabled);
+        print('[stop] success: $state');
+        // Reset odometer.
+        SharedClass.getBox().then((UserInfo) async {
           print('[stop] success: $state');
           await Provider.of<EventProvider>(context, listen: false).stopTracking(
               UserInfo.get('user_id'),
               int.parse(UserInfo.get('beneficiarie_id')));
           // Reset odometer.
-          bg.BackgroundGeolocation.setOdometer(0.0);
-
-          setState(() {
-            //_odometer = '0.0';
-            _enabled = state.enabled;
-            //  _isMoving = state.isMoving;
-          });
         });
-      }
-    });
+        bg.BackgroundGeolocation.setOdometer(0.0);
+
+        setState(() {
+          odometer = '0.0';
+          _enabled = state.enabled;
+          _isMoving = state.isMoving;
+        });
+      });
+    }
   }
 
-  // ---------- not this method --------------
   // Manually toggle the tracking state:  moving vs stationary
-  // void _onClickChangePace() {
-  //   setState(() {
-  //     //  _isMoving = !_isMoving!;
-  //   });
-  //   // print("[onClickChangePace] -> $_isMoving");
-  //
-  //   bg.BackgroundGeolocation.changePace(true).then((bool isMoving) {
-  //     print('[changePace] success $isMoving.');
-  //   }).catchError((e) {
-  //     print('[changePace] ERROR: ' + e.code.toString());
-  //   });
-  // }
+  void _onClickChangePace() {
+    setState(() {
+      _isMoving = !_isMoving;
+    });
+    print("[onClickChangePace] -> $_isMoving");
 
-  // ---------- not this method --------------
-  // Manually fetch the current position.
-
-  // void _onClickGetCurrentPosition() async {
-  //   bg.BackgroundGeolocation.getCurrentPosition(
-  //           persist: false, // <-- do not persist this location
-  //           desiredAccuracy: 0, // <-- desire best possible accuracy
-  //           timeout: 1000, // <-- wait 30s before giving up.
-  //           samples: 3 // <-- sample 3 location before selecting best.
-  //           )
-  //       .then((bg.Location location) {
-  //     print('[getCurrentPosition] - $location');
-  //   }).catchError((error) {
-  //     print('[getCurrentPosition] ERROR: $error');
-  //   });
-  // }
-
-  ////
-  // Event handlers
-  //
+    bg.BackgroundGeolocation.changePace(_isMoving).then((bool isMoving) {
+      print('[changePace] success $isMoving');
+    }).catchError((e) {
+      print('[changePace] ERROR: ' + e.code.toString());
+    });
+  }
 
   void _onLocation(bg.Location location) {
     print('[location] - $location');
@@ -291,7 +301,6 @@ class _HomePageState extends State<HomePage> {
 
     setState(() {
       content = encoder.convert(location.toMap());
-
       odometer = odometerKM;
     });
   }
@@ -323,12 +332,11 @@ class _HomePageState extends State<HomePage> {
 
   void openBox() {
     SharedClass.getBox().then((userBox) {
-        setState(() {
-          box = userBox;
-          loader = true;
-        });
+      setState(() {
+        box = userBox;
+        loader = true;
+      });
     });
-
   }
 
   @override
@@ -336,27 +344,6 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
         key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
-        // floatingActionButton: FloatingActionButton(
-        //   onPressed: () {
-        //     checkInternetConnectivity(context).then((bool value) async {
-        //       if (value) {
-        //         Provider.of<EventProvider>(context, listen: false).event =
-        //             Event();
-        //         Navigator.push(
-        //           context,
-        //           MaterialPageRoute(builder: (context) => EventSectionOne()),
-        //         );
-        //       }
-        //     });
-        //   },
-        //   tooltip: SharedData.getGlobalLang().addEvent(),
-        //   child: const Icon(
-        //     FontAwesomeIcons.plus,
-        //     color: Colors.white,
-        //     size: 24,
-        //   ),
-        //   backgroundColor: Colors.deepOrange,
-        // ),
         appBar: customAppBar(
           context,
           title: SharedData.getGlobalLang().WitnessApp(),
@@ -365,11 +352,25 @@ class _HomePageState extends State<HomePage> {
             SharedData.getUserState() == true
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Switch(
-                        activeColor: Colors.redAccent,
-                        value: _enabled,
-                        onChanged: _onClickEnable),
+                    child: Transform.scale(
+                      scale: 1.5,
+                      child: Switch(
+                          activeColor: Colors.redAccent,
+                          value: _enabled,
+                          onChanged: _onClickEnable),
+                    ),
                   )
+                : SizedBox.shrink(),
+            SharedData.getUserState() == true
+                ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MaterialButton(
+                      minWidth: 30.0,
+                      child: Icon( FontAwesomeIcons.personWalking ,
+                          color: Colors.white),
+                      color: (_isMoving) ? Colors.red : Colors.green,
+                      onPressed: _onClickChangePace),
+                )
                 : SizedBox.shrink(),
           ],
         ),
@@ -494,12 +495,13 @@ class _HomePageState extends State<HomePage> {
       we.WeatherFactory wf = SharedClass.getWeatherFactory();
       we.Weather w = await wf.currentWeatherByLocation(
           myLocation.latitude, myLocation.longitude);
-print('my loci:${myLocation.longitude}');
+      print('my loci:${myLocation.longitude}');
       GeoData result = await Geocoder2.getDataFromCoordinates(
-          latitude: myLocation.latitude,
-          longitude: myLocation.longitude,
-          googleMapApiKey: "${SharedClass.mapApiKey}").catchError((onError){
-            print(onError);
+              latitude: myLocation.latitude,
+              longitude: myLocation.longitude,
+              googleMapApiKey: "${SharedClass.mapApiKey}")
+          .catchError((onError) {
+        print(onError);
       });
       setState(() {
         countryName = result.country;

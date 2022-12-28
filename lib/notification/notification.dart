@@ -8,7 +8,8 @@ class Notification {
     var initializationSettings =
     InitializationSettings(android: initializationSettingsAndroid ,);
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-    flutterLocalNotificationsPlugin.initialize(initializationSettings ,onDidReceiveNotificationResponse:null);
+    flutterLocalNotificationsPlugin.initialize(initializationSettings ,
+        onDidReceiveNotificationResponse:null);
   }
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;

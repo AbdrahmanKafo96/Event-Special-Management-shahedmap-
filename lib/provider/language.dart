@@ -32,6 +32,24 @@ class Language extends ChangeNotifier {
       return "مرحبا";
     }
   }
+  String fetchCurrentLocation() {
+    if (getLanguage == "AR") {
+      return "جلب الموقع الحالي";
+    } else if (getLanguage == "EN") {
+      return "fetch current location";
+    } else {
+      return "جلب الموقع الحالي";
+    }
+  }
+  String fetchLocationEveryQuarter() {
+    if (getLanguage == "AR") {
+      return "جلب الموقع الحالي كل ربع ساعة";
+    } else if (getLanguage == "EN") {
+      return "Fetch the current location every quarter of an hour";
+    } else {
+      return "جلب الموقع الحالي كل ربع ساعة";
+    }
+  }
 
   String darkMode() {
     if (getLanguage == "AR") {
@@ -1063,6 +1081,14 @@ class Language extends ChangeNotifier {
       return 'Request new password';
     } else {
       return 'طلب كلمة مرور جديدة';
+    }
+  } String LocateEvent() {
+    if (getLanguage == "AR") {
+      return 'تحديد موقع الحدث';
+    } else if (getLanguage == "EN") {
+      return 'Locate the event';
+    } else {
+      return 'تحديد موقع الحدث';
     }
   }
 

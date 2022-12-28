@@ -28,26 +28,26 @@ class _DashboardState extends State<Dashboard> {
   void initState() {
     super.initState();
 
-    if (SharedData.getUserState()) {
-      Geolocator.checkPermission().then((value) {
-        Geolocator.requestPermission().then((value) {
-          Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-              .then((value) {
-            Workmanager().initialize(
-              callbackDispatcher,
-              isInDebugMode: false,
-            );
-            Workmanager().registerPeriodicTask("1", "fetchBackground",
-                frequency: Duration(minutes: 15),
-                constraints: Constraints(
-                  networkType: NetworkType.connected,
-                  requiresBatteryNotLow: false,
-                ));
-
-          });
-        });
-      });
-    }
+    // if (SharedData.getUserState()) {
+    //   Geolocator.checkPermission().then((value) {
+    //     Geolocator.requestPermission().then((value) {
+    //       Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+    //           .then((value) {
+    //         Workmanager().initialize(
+    //           callbackDispatcher,
+    //           isInDebugMode: false,
+    //         );
+    //         Workmanager().registerPeriodicTask("1", "fetchBackground",
+    //             frequency: Duration(minutes: 15),
+    //             constraints: Constraints(
+    //               networkType: NetworkType.connected,
+    //               requiresBatteryNotLow: false,
+    //             ));
+    //
+    //       });
+    //     });
+    //   });
+    // }
   }
 
   @override

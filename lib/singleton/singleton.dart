@@ -3,6 +3,8 @@ import 'package:hive/hive.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:weather/weather.dart' as wea;
 import 'package:location/location.dart' as loc;
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
+as bg;
 class SharedClass {
   SharedClass._();
 
@@ -12,10 +14,17 @@ class SharedClass {
   static const String mapApiKey = "AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk";
   static const String weatherApiKey = "fe5ab7fcf47cd01b406b3d7faa519b21";
   static Language _language;
-  static Box _boxUserData  ;
+  static Box _boxUserData ;
   static wea.WeatherFactory _wf;
   static loc.Location _location;
+  static bool _state=false ;
 
+  static bool  getBGState({bool state}) {
+     if(state==true || state==false){
+       _state=state;
+     }
+    return _state;
+  }
   static wea.WeatherFactory getWeatherFactory() {
     if (_wf == null) {
       _wf = wea.WeatherFactory(SharedClass.weatherApiKey.toString(),

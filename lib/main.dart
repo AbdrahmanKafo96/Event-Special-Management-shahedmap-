@@ -13,7 +13,6 @@ import 'package:shahed/modules/home/informauthorities/inform.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/modules/home/menu/menu_screen.dart';
 import 'package:shahed/modules/home/paths/paths.dart';
-import 'package:shahed/modules/home/search.dart';
 import 'package:shahed/modules/home/settings_screens/app_settings.dart';
 import 'package:shahed/modules/home/settings_screens/about_screen.dart';
 import 'package:shahed/modules/home/settings_screens/profile_view.dart';
@@ -43,7 +42,7 @@ import 'modules/home/tracking/missions_list.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 @pragma('vm:entry-point')
-callbackDispatcher() {
+void callbackDispatcher() {
   try {
     Workmanager().executeTask((task, inputData) async {
       switch (task) {
@@ -309,7 +308,6 @@ class _ShahedAppState extends State<ShahedApp> {
             routes: {
               'About': (context) => About(),
               'Inform': (context) => InformEntity(),
-              //'serc': (context) => SearchPlacesScreen(),
               'Home': (context) => HomePage(),
               'ProfilePage': (context) => ProfilePage(),
               'ResetPage': (context) => CreateNewPasswordView(),

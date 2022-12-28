@@ -8,9 +8,9 @@ import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
-
+import 'package:workmanager/workmanager.dart';
 import '../../../main.dart';
-import '../../../widgets/customDirectionality.dart';
+import 'package:geolocator/geolocator.dart';
 
 class AppSettings extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class AppSettings extends StatefulWidget {
 class _AppSettingsState extends State<AppSettings> {
   List<String> _languages = ['AR', "EN"];
   String _selectedLanguage;
-  bool _darkMode = false;
+  bool _darkMode = false ,_locationState=false;
   Box _box;
   Language _language=SharedClass.getLanguage();
   DarkThemePreference darkThemePreference =   DarkThemePreference();
@@ -33,6 +33,7 @@ class _AppSettingsState extends State<AppSettings> {
     SharedClass.getBox().then((value) async {
       setState(() {
         _box=value;
+        _locationState=value.get('fetch');
         _language.getLanguage;
         _darkMode=value.get(darkThemePreference.THEME_STATUS);
        // _darkMode=darkMode;
@@ -96,7 +97,7 @@ class _AppSettingsState extends State<AppSettings> {
                         title: Text(_language.darkMode() , style: Theme.of(context).textTheme.headline4,),
                         leading: Icon(
                           FontAwesomeIcons.brush,
-                          color: Colors.black,
+                          color: Colors.white,
                         ),
                         trailing: Switch(
                           activeColor: Colors.deepOrange,
@@ -110,7 +111,50 @@ class _AppSettingsState extends State<AppSettings> {
                             });
                           },
                         ),
-                      )
+                      ),SharedData.getUserState() == true
+                          ?ListTile(
+                        title: Text(_language.fetchCurrentLocation() , style: Theme.of(context).textTheme.headline4,),
+                        leading: Icon(
+                          FontAwesomeIcons.locationDot,
+                          color: Colors.redAccent,
+                        ),
+                        subtitle: Text(_language.fetchLocationEveryQuarter() ,style: Theme.of(context).textTheme.subtitle1,),
+                        trailing: Switch(
+                          activeColor: Colors.deepOrange,
+                          value: _locationState,
+                          onChanged: (val){
+                            setState(() {
+                              _locationState=val;
+                             if(_locationState==true){
+                               if (SharedData.getUserState()) {
+                                 Geolocator.checkPermission().then((value) {
+                                   Geolocator.requestPermission().then((value) {
+                                     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
+                                         .then((value) {
+                                       Workmanager().initialize(
+                                         callbackDispatcher,
+                                         isInDebugMode: false,
+                                       );
+                                       Workmanager().registerPeriodicTask("1", "fetchBackground",
+                                           frequency: Duration(minutes: 15),
+                                          tag: 'fetchLocation',
+                                           constraints: Constraints(
+                                             networkType: NetworkType.connected,
+                                             requiresBatteryNotLow: false,
+                                           ));
+
+                                     });
+                                   });
+                                 });
+                               }
+                             }else{
+                               Workmanager().cancelByTag('fetchLocation');
+                              }
+                             _box.put('fetch', _locationState);
+                            });
+                          },
+                        ),
+                      ) : SizedBox.shrink(),
                     ],
                   ),
                 )

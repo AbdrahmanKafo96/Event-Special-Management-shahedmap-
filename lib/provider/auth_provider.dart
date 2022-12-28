@@ -2,7 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
-// import 'package:platform_device_id/platform_device_id.dart';
+import 'package:workmanager/workmanager.dart';
 import 'package:device_info_plus/device_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/provider/event_provider.dart';
@@ -16,6 +16,7 @@ import 'package:http/http.dart' as http;
 import 'package:shahed/singleton/singleton.dart';
 import 'package:location/location.dart' as loc;
 import '../widgets/checkInternet.dart';
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
 class UserAuthProvider extends ChangeNotifier {
   User user = User();
@@ -176,6 +177,8 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   void logout(BuildContext context) async {
+
+
     try {
       Box box  = await SharedClass.getBox();
 
@@ -189,18 +192,11 @@ class UserAuthProvider extends ChangeNotifier {
       AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
       Map userdata = {
         'api_token': api_token,
-        'device_name':   androidInfo.id,// اذا حدت مشكلة فتغيير الذي حدث هنا هو سبب المشكلة!
+        'device_name':   androidInfo.id,
       };
       checkInternetConnectivity(context).then((bool state) async {
         if (state) {
-          if(await SharedClass.getLocationObj().isBackgroundModeEnabled())
-          {
-            await EventProvider().stopTracking( box.get('user_id'),
-                int.parse( box.get('beneficiarie_id')));
 
-            SharedClass.getLocationObj().enableBackgroundMode(enable: false);
-
-          }
           final response = await http.post(
             Uri.parse("${SharedClass.apiPath}/logout"),
             body: jsonEncode(userdata),
@@ -211,12 +207,18 @@ class UserAuthProvider extends ChangeNotifier {
             },
           );
           if (response.statusCode == 200) {
-             var responseData = json.decode(response.body);
-            print(responseData);
+              var responseData = json.decode(response.body);
+
             await storage.delete(
                 key: 'api_token', aOptions: SharedClass.getAndroidOptions());
              await storage.delete(
                  key: 'token', aOptions: SharedClass.getAndroidOptions());
+
+             if(SharedClass.getBGState())
+             bg.BackgroundGeolocation.stop().then((value) async{
+               await EventProvider().stopTracking( box.get('user_id'),
+                   int.parse( box.get('beneficiarie_id')));
+             });
             box.delete("user_id");
             box.delete("sender_id");
             box.delete("email");
@@ -230,7 +232,7 @@ class UserAuthProvider extends ChangeNotifier {
             box.delete('btnmyactive');
 
             SharedData.resetValue();
-
+             Workmanager().cancelByTag('fetchLocation');
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (_) => LoginUi()));
           } else {
@@ -238,9 +240,7 @@ class UserAuthProvider extends ChangeNotifier {
             showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
           }
         }
-
       });
-
     } catch (e) {
       print(e);
     }

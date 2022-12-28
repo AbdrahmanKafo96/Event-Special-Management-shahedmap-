@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:math';
+import 'package:another_flushbar/flushbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as p;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
@@ -11,11 +12,14 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/models/markermodel.dart';
+import 'package:shahed/modules/home/event_screens/event_category.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/customPopupMenuEntry.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
+import 'package:shahed/widgets/custom_dialog.dart';
+import 'package:shahed/widgets/custom_toast.dart';
 import 'package:wakelock/wakelock.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
@@ -24,7 +28,7 @@ import 'package:weather/weather.dart';
 import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
-
+import 'package:intl/intl.dart';
 class BrowserMap extends StatefulWidget {
   LatLng latLngDestination;
   int state;
@@ -588,50 +592,152 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                             shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
-                        ),
-                        PopupMenuButton(
-                          color: Colors.deepOrange,
-                          tooltip: SharedData.getGlobalLang().GPSAccuracy(),
-                          icon: Icon(
-                            Icons.pin_drop_rounded,
-                            size: 28,
+                        ), ElevatedButton(
+                          onPressed: () async {
+                            final formKey = GlobalKey<FormState>();
+                            customReusableShowDialog(
+                              context,
+
+                              SharedData.getGlobalLang()
+                                  .LocateEvent(),formKey: formKey,
+                             widget:  Container(
+                               height: MediaQuery.of(context).size.height/2,
+                               child: Column(
+                                 children: [
+
+                                   Text(
+                                     SharedData.getGlobalLang().chooseCategoryType(),
+                                     style: Theme.of(context).textTheme.headline4,
+                                   ),
+                                   EventCategory(),
+                                 ],
+                               ),
+                             ),
+                              // formKey: formKey,
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text(
+                                    SharedData.getGlobalLang()
+                                        .cancel(),
+                                    style: TextStyle(
+
+                                        color: Colors.white),
+                                  ),
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                  },
+                                ),
+                                Container(
+                                  decoration: BoxDecoration(
+                                    color: Colors.deepOrange,
+                                    borderRadius: BorderRadius.all(
+                                        Radius.circular(5)),
+                                  ),
+                                  child: TextButton(
+                                    //color: Colors.green,
+                                    child: Text(
+                                      SharedData.getGlobalLang()
+                                          .sendEvent(),
+                                      style:
+                                      TextStyle(fontSize: 12),
+                                    ),
+                                    onPressed: () async {
+
+                                      String type_name =
+                                          Provider.of<EventProvider>(context, listen: false)
+                                              .event
+                                              .eventType
+                                              .type_name;
+
+                                      String category_name =
+                                          Provider.of<EventProvider>(context, listen: false)
+                                              .event
+                                              .categoryClass
+                                              .category_name;
+
+                                      loc.Location location = loc.Location();
+                                      loc.LocationData      userLocation = await location.getLocation();
+
+                                      double longitude = userLocation.longitude;
+                                      double latitude = userLocation.latitude;
+                                      // final SmsSendStatusListener listener = (SendStatus status) {};
+
+                                      if (latitude == null ||
+                                          longitude == null ||
+                                          category_name == null ||
+                                          type_name == null) {
+                                        await Flushbar(
+                                            //  title: 'Hey Ninja',
+                                            message: SharedData.getGlobalLang().categoryTypeAreRequired(),
+                                      backgroundColor: Colors.orange,
+                                      duration: Duration(seconds: 3),
+                                      ).show(context);
+                                      } else {
+                                  SharedClass.getBox().then((box) async {
+                                       Map userData = {
+                                          'description': 'Urgent event.',
+                                          'event_name': Provider.of<EventProvider>(
+                                              context,
+                                              listen: false)
+                                              .event
+                                              .eventType
+                                              .type_name
+                                              .toString(),
+                                          'sender_id': box.get('user_id').toString(),
+                                          'senddate': DateFormat('yyyy-MM-dd')
+                                              .format(DateTime.now())
+                                              .toString(),
+                                          'eventtype': Provider.of<EventProvider>(
+                                              context,
+                                              listen: false)
+                                              .event
+                                              .eventType
+                                              .type_id
+                                              .toString(),
+                                          'lat': latitude.toString(),
+                                          'lng':  longitude.toString(),
+                                        };
+                                       var result = await Provider.of<EventProvider>(context, listen: false).addEvent(userData);
+
+                                       if(result)
+                                          showShortToast( SharedData.getGlobalLang().sentEvenSuccessfully(), Colors.green);
+                                       else
+                                         showShortToast(SharedData.getGlobalLang().saveWasNotSuccessful(), Colors.redAccent);
+
+                                     Provider.of<EventProvider>(context, listen: false)
+                                          .event
+                                          .eventType
+                                          .type_name = null;
+
+                                      Provider.of<EventProvider>(context, listen: false)
+                                          .event
+                                          .categoryClass
+                                          .category_name = null;
+                                      Provider.of<EventProvider>(context, listen: false)
+                                          .event
+                                          .categoryClass
+                                          .emergency_phone = null;
+
+                                      Navigator.pop(context);
+                                     }); }
+                                    },
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                          child: Icon(
+                            FontAwesomeIcons.locationDot,
+                            color: Colors.white,
                           ),
-                          itemBuilder: (builder) {
-                            return customPopupMenuEntry(context,
-                                low: SharedData.getGlobalLang().lowAccuracy(),
-                                medium:
-                                    SharedData.getGlobalLang().mediumAccuracy(),
-                                high: SharedData.getGlobalLang().highAccuracy(),
-                                best:
-                                    SharedData.getGlobalLang().bestAccuracy());
-                          },
-                          onSelected: (value) {
-                            switch (value) {
-                              case 0:
-                                setState(() {
-                                  desiredAccuracy =
-                                      loc.LocationAccuracy.powerSave;
-                                });
-                                break;
-                              case 1:
-                                setState(() {
-                                  desiredAccuracy = loc.LocationAccuracy.low;
-                                });
-                                break;
-                              case 2:
-                                setState(() {
-                                  desiredAccuracy =
-                                      loc.LocationAccuracy.balanced;
-                                });
-                                break;
-                              case 3:
-                                setState(() {
-                                  desiredAccuracy = loc.LocationAccuracy.high;
-                                });
-                                break;
-                            }
-                          },
+                          style: ElevatedButton.styleFrom(
+                            elevation: 0,
+                            backgroundColor: Color(0xff33333d),
+                            shape: CircleBorder(), //<-- SEE HERE
+                            // padding: EdgeInsets.all(10),
+                          ),
                         ),
+
                       ],
                     ),
                   )),
@@ -724,11 +830,11 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                 _locationSubscription.cancel();
               }
               // مزال تبي مراجعة
-              final geo.LocationSettings locationSettings =
-                  geo.LocationSettings(
-                accuracy: geo.LocationAccuracy.high,
-                distanceFilter: 0,
-              );
+              // final geo.LocationSettings locationSettings =
+              //     geo.LocationSettings(
+              //   accuracy: geo.LocationAccuracy.high,
+              //   distanceFilter: 0,
+              // );
               //يبي مراجعة
               _locationSubscription =
                   locTracker.onLocationChanged.listen((position) {
