@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
-<key>NSAppTransportSecurity</key>
+
 <dict>
     <key>NSLocationWhenInUseUsageDescription</key>
     <string>The app needs location permission</string>
@@ -48,5 +48,21 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>NSLocationWhenInUseUsageDescription</key>
+    <string>This app needs access to location when open.</string>
+    <key>NSLocationAlwaysUsageDescription</key>
+    <string>This app needs access to location when in the background.</string>
+    <key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+    <string>This app needs access to location even if the app isn't running.</string>
+    <key>UIBackgroundModes</key>
+    <string>location</string>
+    <key>NSPhotoLibraryUsageDescription</key>
+    <string>The app needs permission to allow access to photos from gallery.</string>
+    <key>NSCameraUsageDescription</key>
+    <string>The app needs permission to allow to take photos using the camera.</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>The application needs permission to allow access to the microphone</string>
+    <key>NSAppTransportSecurity</key>
+    <string>The application needs permission to allow access videos.</string>
 </dict>
 </plist>

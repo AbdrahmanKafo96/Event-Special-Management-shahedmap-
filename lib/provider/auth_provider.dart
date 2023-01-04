@@ -177,11 +177,13 @@ class UserAuthProvider extends ChangeNotifier {
   }
 
   void logout(BuildContext context) async {
-
-
-    try {
+     try {
       Box box  = await SharedClass.getBox();
-
+      if(SharedClass.getBGState())
+        await    bg.BackgroundGeolocation.stop().then((value) async{
+      await EventProvider().stopTracking( box.get('user_id'),
+          int.parse( box.get('beneficiarie_id')) );
+         });
       final storage = await SharedClass.getStorage();
       String value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
@@ -189,10 +191,19 @@ class UserAuthProvider extends ChangeNotifier {
       String api_token = await storage.read(
           key: 'api_token', aOptions: SharedClass.getAndroidOptions());
       DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      String id ;
+      if (Platform.isAndroid) {
+        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+          id=androidInfo.id;
+      }
+      if (Platform.isIOS) {
+        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+          id=iosInfo.identifierForVendor;
+      }
+
       Map userdata = {
         'api_token': api_token,
-        'device_name':   androidInfo.id,
+        'device_name':id,
       };
       checkInternetConnectivity(context).then((bool state) async {
         if (state) {
@@ -214,11 +225,7 @@ class UserAuthProvider extends ChangeNotifier {
              await storage.delete(
                  key: 'token', aOptions: SharedClass.getAndroidOptions());
 
-             if(SharedClass.getBGState())
-             bg.BackgroundGeolocation.stop().then((value) async{
-               await EventProvider().stopTracking( box.get('user_id'),
-                   int.parse( box.get('beneficiarie_id')));
-             });
+
             box.delete("user_id");
             box.delete("sender_id");
             box.delete("email");

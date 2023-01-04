@@ -1,4 +1,4 @@
-import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:shahed/widgets/customScaffoldMessenger.dart';
 import '../shared_data/shareddata.dart';

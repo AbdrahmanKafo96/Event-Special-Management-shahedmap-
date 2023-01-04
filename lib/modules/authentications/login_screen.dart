@@ -18,7 +18,7 @@ import '../../widgets/customHoverButton.dart';
 import 'account_section.dart';
 import 'logo.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-
+import 'dart:io';
 class LoginUi extends StatefulWidget {
   @override
   _LoginUiState createState() => _LoginUiState();
@@ -246,9 +246,17 @@ class _LoginUiState extends State<LoginUi> {
                                       context,
                                       onPressed: () async {
                                         DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
-                                        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                                        String id ;
+                                        if (Platform.isAndroid) {
+                                          AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+                                          id=androidInfo.id;
+                                        }
+                                        if (Platform.isIOS) {
+                                          IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+                                          id=iosInfo.identifierForVendor;
+                                        }
                                         Map userdata;
-// L login  , R Register  ...
+                                  // L login  , R Register  ...
                                         userdata = val == PageState.login
                                             ? {
                                                 'userState': 'L',
@@ -256,8 +264,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     await FirebaseMessaging
                                                         .instance
                                                         .getToken(),
-                                                'device_name':
-                                                androidInfo.id,
+                                                'device_name': id,
                                                 'email':
                                                     Provider.of<UserAuthProvider>(
                                                             context,
@@ -276,7 +283,7 @@ class _LoginUiState extends State<LoginUi> {
                                             : {
                                                 'userState': 'R',
                                                 'role_id': '2',
-                                                'device_name': androidInfo.id,
+                                                'device_name':  id,
                                                 'message_token':
                                                     await FirebaseMessaging
                                                         .instance

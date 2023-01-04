@@ -55,6 +55,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   double _lat_startpoint, _lng_startpoint, _lat_endpoint, _lng_endpoint;
   bool traffic = false;
   String weather = "";
+  loc.Location _locationTracker =  loc.Location();
   p.PolylinePoints polylinePoints = p.PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
   Map<MarkerId, Marker> markers = {};
@@ -130,6 +131,10 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     SharedClass.getBox().then((getValue) {
 
       loc.Location().getLocation().then((currentPos) {
+        _kGooglePlex = CameraPosition(
+          target: LatLng(currentPos.latitude, currentPos.longitude),
+          zoom: 18,
+        );
         setState(() {
           currentPosition = currentPos;
           if (widget.state == 1) {
@@ -158,12 +163,10 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
             );
             markerss.add(_destination);
           }
-          _kGooglePlex = CameraPosition(
-            target: LatLng(currentPos.latitude, currentPos.longitude),
-            zoom: 18,
-          );
+
           getIniLocation(currentPos);
         });
+
         //    return currentPos;
       });
     });
@@ -819,37 +822,34 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
             tooltip: SharedData.getGlobalLang().currentLocation(),
             backgroundColor: Colors.deepOrange,
             onPressed: () async {
-              final GoogleMapController controller = await _controller.future;
-              Uint8List imageData = await getMarker();
-              loc.Location locTracker = loc.Location();
-              //  var position =await locationTracker.getLocation();
-              updateMarkerAndCircle(await locTracker.getLocation(), imageData);
-              if (_lng_endpoint != null)
-                _getPolyline(_lat_endpoint, _lng_endpoint);
-              if (_locationSubscription != null) {
-                _locationSubscription.cancel();
-              }
-              // مزال تبي مراجعة
-              // final geo.LocationSettings locationSettings =
-              //     geo.LocationSettings(
-              //   accuracy: geo.LocationAccuracy.high,
-              //   distanceFilter: 0,
-              // );
-              //يبي مراجعة
-              _locationSubscription =
-                  locTracker.onLocationChanged.listen((position) {
-                if (controller != null) {
-                  controller.animateCamera(
-                      CameraUpdate.newCameraPosition(CameraPosition(
-                          //bearing: 0,
-                          target: LatLng(position.latitude, position.longitude),
-                          // tilt: 0,
-                          zoom: 18.0)));
-                     updateMarkerAndCircle(position, imageData);
+              try {
+                final GoogleMapController controller = await _controller.future;
+                Uint8List imageData = await getMarker();
+                var location = await _locationTracker.getLocation();
 
-                  //  print(position == null ? 'Unknown' : '${position.latitude.toString()}, ${position.longitude.toString()}');
+                updateMarkerAndCircle(location, imageData);
+
+                if (_locationSubscription != null) {
+                  _locationSubscription.cancel();
                 }
-              });
+
+
+                _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
+                  if (controller != null) {
+                    controller.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
+                        bearing: 192.8334901395799,
+                        target: LatLng(newLocalData.latitude, newLocalData.longitude),
+                        tilt: 0,
+                        zoom: 18.00)));
+                    updateMarkerAndCircle(newLocalData, imageData);
+                  }
+                });
+
+              } on PlatformException catch (e) {
+                if (e.code == 'PERMISSION_DENIED') {
+                  debugPrint("Permission Denied");
+                }
+              }
             }),
       ),
     );

@@ -63,6 +63,7 @@ class _DashboardState extends State<Dashboard> {
           dashboardItem(context, SharedData.getGlobalLang().addEvent(),
               FontAwesomeIcons.locationDot, 'addEvent', Colors.deepOrange),
           //  if (SharedData.getUserState())
+          if (SharedData.getUserState())
           dashboardItem(context, SharedData.getGlobalLang().browseMap(),
               FontAwesomeIcons.mapLocationDot, 'browserMap', Colors.teal),
 
@@ -72,10 +73,9 @@ class _DashboardState extends State<Dashboard> {
           if (SharedData.getUserState())
             dashboardItem(context, SharedData.getGlobalLang().missionsList(),
                 FontAwesomeIcons.solidComment, 'Missions', Colors.orange),
+
           dashboardItem(context, SharedData.getGlobalLang().notifyAgency(),
               FontAwesomeIcons.users, 'Inform', Colors.greenAccent),
-          // dashboardItem(context, SharedData.getGlobalLang().pathList(),
-          //     FontAwesomeIcons.drawPolygon, 'paths', Colors.pink),
 
           dashboardItem(context, SharedData.getGlobalLang().eventList(),
               FontAwesomeIcons.list, 'eventList', Colors.blue),

@@ -23,7 +23,6 @@ import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart'
     as bg;
 import '../../main.dart';
-import 'dart:math';
 
 import '../../widgets/customScaffoldMessenger.dart';
 
@@ -59,9 +58,6 @@ class _HomePageState extends State<HomePage> {
   @pragma('vm:entry-point')
   void openPage(var ro,
       {double lat, lng, List path_coordinates = null, String route = null}) {
-    // {route: missionWithPath, lat_f: 32.893485, lng_f: 13.249322, lat_s: 32.893485, lng_s: 13.249322,
-    // path_cordinates: [{"lat":32.893485,"long":13.249322},{"lat":32.855423,"long":13.204346},
-    // {"lat":32.881088,"long":13.167954},{"lat":32.893485,"long":13.249322}]}
     print("route : $routeName");
 
     if (route == null) {
@@ -106,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     motionActivity = 'UNKNOWN';
     odometer = '0';
     openBox();
-    startTrip();
+     startTrip();
 
     var initialzationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
@@ -196,6 +192,7 @@ class _HomePageState extends State<HomePage> {
     String token = await storage.read(
         key: "token", aOptions: SharedClass.getAndroidOptions());
     SharedClass.getBox().then((UserInfo) async {
+
       // 1.  Listen to events (See docs for all 12 available events).
       bg.BackgroundGeolocation.onLocation(_onLocation);
       bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
@@ -228,7 +225,6 @@ class _HomePageState extends State<HomePage> {
               },
               stopOnTerminate: false,
               startOnBoot: true,
-
               debug: true,
               logLevel: bg.Config.LOG_LEVEL_VERBOSE,
               reset: true))
@@ -294,7 +290,7 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onLocation(bg.Location location) {
+  void _onLocation(bg.Location location) async{
     print('[location] - $location');
 
     String odometerKM = (location.odometer / 1000.0).toStringAsFixed(1);
@@ -363,14 +359,14 @@ class _HomePageState extends State<HomePage> {
                 : SizedBox.shrink(),
             SharedData.getUserState() == true
                 ? Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: MaterialButton(
-                      minWidth: 30.0,
-                      child: Icon( FontAwesomeIcons.personWalking ,
-                          color: Colors.white),
-                      color: (_isMoving) ? Colors.red : Colors.green,
-                      onPressed: _onClickChangePace),
-                )
+                    padding: const EdgeInsets.all(8.0),
+                    child: MaterialButton(
+                        minWidth: 30.0,
+                        child: Icon(FontAwesomeIcons.personWalking,
+                            color: Colors.white),
+                        color: (_isMoving) ? Colors.red : Colors.green,
+                        onPressed: _onClickChangePace),
+                  )
                 : SizedBox.shrink(),
           ],
         ),
@@ -486,19 +482,17 @@ class _HomePageState extends State<HomePage> {
         drawer: CustomDrawer());
   }
 
-  _getUserLocation() async {
-    LocationData myLocation;
+  _getUserLocation(double latitude,longitude) async {
+
     String error;
-    Location location = Location();
     try {
-      myLocation = await location.getLocation();
       we.WeatherFactory wf = SharedClass.getWeatherFactory();
       we.Weather w = await wf.currentWeatherByLocation(
-          myLocation.latitude, myLocation.longitude);
-      print('my loci:${myLocation.longitude}');
+          latitude,longitude);
+
       GeoData result = await Geocoder2.getDataFromCoordinates(
-              latitude: myLocation.latitude,
-              longitude: myLocation.longitude,
+              latitude:  latitude,
+              longitude:  longitude,
               googleMapApiKey: "${SharedClass.mapApiKey}")
           .catchError((onError) {
         print(onError);
@@ -518,7 +512,7 @@ class _HomePageState extends State<HomePage> {
         print(error);
       }
 
-      myLocation = null;
+
     } on OpenWeatherAPIException catch (e) {
       if (e == 'OpenWeatherAPIException') {
         print("e.message ${e}");

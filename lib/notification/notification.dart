@@ -6,7 +6,7 @@ class Notification {
     AndroidInitializationSettings('@mipmap/ic_launcher_my_location');
     var initializationSettingsIOS = DarwinInitializationSettings();
     var initializationSettings =
-    InitializationSettings(android: initializationSettingsAndroid ,);
+    InitializationSettings(android: initializationSettingsAndroid ,iOS: initializationSettingsIOS);
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
     flutterLocalNotificationsPlugin.initialize(initializationSettings ,
         onDidReceiveNotificationResponse:null);
@@ -22,9 +22,9 @@ class Notification {
         importance: Importance.max,
         priority: Priority.high);
     var iOSPlatformChannelSpecifics =
-    DarwinInitializationSettings(defaultPresentSound: false);
+    DarwinNotificationDetails( );
     var platformChannelSpecifics =
-    NotificationDetails(android: androidPlatformChannelSpecifics);
+    NotificationDetails(android: androidPlatformChannelSpecifics ,iOS: iOSPlatformChannelSpecifics);
     await flutterLocalNotificationsPlugin?.show(
       0,
       'Location fetched',

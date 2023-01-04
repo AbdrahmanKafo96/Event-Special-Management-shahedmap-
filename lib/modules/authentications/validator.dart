@@ -28,24 +28,24 @@ class ValidatorClass {
   }
 
   static String isValidPassword(String password) {
-    String isValid = "",
-        upperCaseChars = "(.*[A-Z].*)",
-        lowerCaseChars = "(.*[a-z].*)",
-        numbers = "(.*[0-9].*)",
-        specialChars = "(.*[@,#,\$,%,].*\$)";
+    String isValid = "";
+        // upperCaseChars = "(.*[A-Z].*)",
+        // lowerCaseChars = "(.*[a-z].*)",
+        // numbers = "(.*[0-9].*)",
+        // specialChars = "(.*[@,#,\$,%,].*\$)";
 
     if (password == null || password.isEmpty)
       isValid = language.thisFieldIsRequired();
     else if (password.length > 24 || password.length < 6)
       isValid =  language.passwordContainLessThan24Error();
-    else if (!RegExp(upperCaseChars).hasMatch(password))
-      isValid = language.passwordContainCapitalLetterError();
-    else if (!RegExp(lowerCaseChars).hasMatch(password))
-      isValid = language.passwordContainLowercaseLetterError();
-    else if (!RegExp(numbers).hasMatch(password))
-      isValid = language.passwordContainAtLeastOneNumberError();
-    else if (!RegExp(specialChars).hasMatch(password))
-      isValid = language.passwordContainAtLeastSpecialCharacterError();
+    // else if (!RegExp(upperCaseChars).hasMatch(password))
+    //   isValid = language.passwordContainCapitalLetterError();
+    // else if (!RegExp(lowerCaseChars).hasMatch(password))
+    //   isValid = language.passwordContainLowercaseLetterError();
+    // else if (!RegExp(numbers).hasMatch(password))
+    //   isValid = language.passwordContainAtLeastOneNumberError();
+    // else if (!RegExp(specialChars).hasMatch(password))
+    //   isValid = language.passwordContainAtLeastSpecialCharacterError();
     else
       isValid = "";
     return isValid;

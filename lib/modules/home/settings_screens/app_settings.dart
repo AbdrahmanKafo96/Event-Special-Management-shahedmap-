@@ -129,8 +129,7 @@ class _AppSettingsState extends State<AppSettings> {
                                if (SharedData.getUserState()) {
                                  Geolocator.checkPermission().then((value) {
                                    Geolocator.requestPermission().then((value) {
-                                     Geolocator.getCurrentPosition(desiredAccuracy: LocationAccuracy.high)
-                                         .then((value) {
+
                                        Workmanager().initialize(
                                          callbackDispatcher,
                                          isInDebugMode: false,
@@ -145,7 +144,7 @@ class _AppSettingsState extends State<AppSettings> {
 
                                      });
                                    });
-                                 });
+
                                }
                              }else{
                                Workmanager().cancelByTag('fetchLocation');
