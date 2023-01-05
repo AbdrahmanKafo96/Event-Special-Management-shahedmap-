@@ -120,7 +120,8 @@ class _HomePageState extends State<HomePage> {
         print(message.data);
 
         routeName = message.data['route'];
-
+// if theres problem i will check this code below
+      if(mounted){
         setState(() {
           latitude = routeName == 'RespondToEvent'
               ? double.parse(message.data['lat'])
@@ -132,6 +133,7 @@ class _HomePageState extends State<HomePage> {
               ? []
               : jsonDecode(message.data['path_cordinates']);
         });
+      }
 
         flutterLocalNotificationsPlugin.show(
             notification.hashCode,
