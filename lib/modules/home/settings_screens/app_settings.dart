@@ -134,7 +134,7 @@ class _AppSettingsState extends State<AppSettings> {
                                          callbackDispatcher,
                                          isInDebugMode: false,
                                        );
-                                       Workmanager().registerPeriodicTask("1", "fetchBackground",
+                                       Workmanager().registerPeriodicTask("fetchBackground", "fetchBackground",
                                            frequency: Duration(minutes: 15),
                                           tag: 'fetchLocation',
                                            constraints: Constraints(
