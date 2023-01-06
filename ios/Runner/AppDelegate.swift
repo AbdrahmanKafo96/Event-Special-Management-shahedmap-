@@ -2,6 +2,7 @@ import UIKit
 import Flutter
 import GoogleMaps
 import flutter_local_notifications
+import workmanager
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -18,8 +19,10 @@ if #available(iOS 10.0, *) {
   UNUserNotificationCenter.current().delegate = self as? UNUserNotificationCenterDelegate
 }
 GMSServices.provideAPIKey("AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk")
-
+UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(60*15))
 GeneratedPluginRegistrant.register(with: self)
+WorkmanagerPlugin.registerTask(withIdentifier: "fetchBackground")
+
 return super.application(application, didFinishLaunchingWithOptions: launchOptions)
 }
 }
