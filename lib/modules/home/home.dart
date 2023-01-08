@@ -108,7 +108,7 @@ class _HomePageState extends State<HomePage> {
     var initialzationSettingsAndroid =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     var initializationSettings =
-        InitializationSettings(android: initialzationSettingsAndroid);
+        InitializationSettings(android: initialzationSettingsAndroid,iOS: DarwinInitializationSettings());
     flutterLocalNotificationsPlugin.initialize(initializationSettings,
         onDidReceiveNotificationResponse: openPage); // foreground notification
     // foreground notification
@@ -156,6 +156,7 @@ class _HomePageState extends State<HomePage> {
                 playSound: true,
                 icon: '@mipmap/ic_launcher',
               ),
+              iOS: DarwinNotificationDetails()
             ));
       }
     });
