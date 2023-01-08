@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:shahed/modules/home/dashboard/dashboard.dart';
 import 'package:shahed/modules/home/responses/map_respo.dart';
 import 'package:shahed/modules/home/tracking/BrowserMap.dart';
+import 'package:shahed/provider/counter_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
@@ -114,12 +115,19 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification.android;
+
       if (notification != null && android != null) {
         print(message.notification.title);
         print(message.notification.body);
         print(message.data);
 
         routeName = message.data['route'];
+        var provider = Provider.of<CounterProvider>(context , listen: false);
+        if ((message.data['route'] == 'missionWithPath' )|| (message.data['route'] == "mission")) {
+          provider.setCounterMissions=true;
+        }else{
+          provider.setCounterNotification=true;
+        }
 // if theres problem i will check this code below
       if(mounted){
         setState(() {
@@ -156,7 +164,12 @@ class _HomePageState extends State<HomePage> {
       RemoteNotification notification = message.notification;
       AndroidNotification android = message.notification.android;
       if (notification != null && android != null) {
-        ;
+        var provider = Provider.of<CounterProvider>(context ,listen: false);
+        if (message.data['route'] == 'missionWithPath' || message.data['route'] == "mission") {
+          provider.setCounterMissions=true;
+        }else{
+          provider.setCounterNotification=true;
+        }
         openPage("",
             lat: message.data['route'] == 'RespondToEvent'
                 ? double.parse(message.data['lat'])
@@ -173,6 +186,12 @@ class _HomePageState extends State<HomePage> {
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
         print('TERMINATED');
+        var provider = Provider.of<CounterProvider>(context ,listen: false);
+        if (message.data['route'] == 'missionWithPath' || message.data['route'] == "mission") {
+          provider.setCounterMissions=true;
+        }else{
+          provider.setCounterNotification=true;
+        }
         openPage("",
             lat: message.data['route'] == 'RespondToEvent'
                 ? double.parse(message.data['lat'])

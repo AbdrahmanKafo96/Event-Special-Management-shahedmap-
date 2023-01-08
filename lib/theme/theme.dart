@@ -99,7 +99,7 @@ class Styles {
 
       hintColor: isDarkTheme ? Colors.white : Color( 0xff121212),
 
-      highlightColor: Color(0xFFFF8F00),
+      highlightColor: Colors.deepOrange,
       hoverColor: isDarkTheme ? Color(0xff3A3A3B) : Color(0xff4285F4),
 
       focusColor: Color(0xFFFF8F00),

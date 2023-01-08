@@ -1,7 +1,11 @@
+import 'package:badges/badges.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import '../provider/counter_provider.dart';
 
-Widget customCard(
-    IconData icon, String title, Color color, BuildContext context) {
+Widget customCard(IconData icon, String title, Color color,
+    BuildContext context, String routName) {
+  var provider = Provider.of<CounterProvider>(context);
   return Container(
     child: Card(
       color: Color(0xff33333d),
@@ -15,7 +19,7 @@ Widget customCard(
       // color: color,
       borderOnForeground: true,
       elevation: 5,
-      shadowColor: Colors.black.withOpacity(.5) ,
+      shadowColor: Colors.black.withOpacity(.5),
       margin: EdgeInsets.all(8.0),
       child: Container(
         margin: EdgeInsets.all(10),
@@ -43,10 +47,35 @@ Widget customCard(
                   child: Container(
                       // width: 31,
                       //  height: 31,
-                      child: Icon(
-                    icon,
-                    color: Colors.white,
-                  )
+                      child:
+                              (routName == "Missions" &&
+                                  provider.getCounterMissions == true)
+                          ? Badge(
+                              badgeContent: Icon(
+                                Icons.brightness_1,
+                                size: 12,
+                                color: Colors.white,
+                              ),
+                              child: Icon(
+                                icon,
+                                color: Colors.white,
+                              ),
+                            )
+                          :(routName == "response" &&
+                                  provider.getCounterNotification == true)? Badge(
+                                badgeContent: Icon(
+                                  Icons.brightness_1,
+                                  size: 12,
+                                  color: Colors.white,
+                                ),
+                                child: Icon(
+                                  icon,
+                                  color: Colors.white,
+                                ),
+                              ) :Icon(
+                              icon,
+                              color: Colors.white,
+                            )
                       // child: Image.asset(containerImage,),
                       ),
                   backgroundColor: color,

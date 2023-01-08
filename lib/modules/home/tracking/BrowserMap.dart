@@ -12,7 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/models/markermodel.dart';
-import 'package:shahed/modules/home/event_screens/event_category.dart';
+import 'package:shahed/provider/counter_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
@@ -29,12 +29,15 @@ import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
+
 class BrowserMap extends StatefulWidget {
   LatLng latLngDestination;
   int state;
   List path;
-  String pathshasData='';
-  BrowserMap({this.latLngDestination,this.state,this.path,this.pathshasData});
+  String pathshasData = '';
+
+  BrowserMap(
+      {this.latLngDestination, this.state, this.path, this.pathshasData});
 
   @override
   State<BrowserMap> createState() => _BrowserMapState();
@@ -42,6 +45,7 @@ class BrowserMap extends StatefulWidget {
 
 class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   StreamSubscription _locationSubscription;
+
   // static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
@@ -55,13 +59,14 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   double _lat_startpoint, _lng_startpoint, _lat_endpoint, _lng_endpoint;
   bool traffic = false;
   String weather = "";
-  loc.Location _locationTracker =  loc.Location();
+  loc.Location _locationTracker = loc.Location();
   p.PolylinePoints polylinePoints = p.PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
   Map<MarkerId, Marker> markers = {};
   static CameraPosition _kGooglePlex;
   final Set<Marker> markerss = new Set();
   int _polylineIdCounter = 1;
+
   // get marker like car
   Future<Uint8List> getMarker() async {
     ByteData byteData =
@@ -72,27 +77,27 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   void updateMarkerAndCircle(
       loc.LocationData newLocalData, Uint8List imageData) {
     LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
-   if(mounted){
-     setState(() {
-       marker = Marker(
-           markerId: MarkerId("home"),
-           position: latlng,
-           rotation: newLocalData.heading,
-           draggable: false,
-           zIndex: 2,
-           flat: true,
-           anchor: Offset(0.5, 0.5),
-           icon: BitmapDescriptor.fromBytes(imageData));
-       markerss.add(marker);
-       circle = Circle(
-           circleId: CircleId("car"),
-           radius: newLocalData.accuracy,
-           zIndex: 1,
-           strokeColor: Colors.blueAccent,
-           center: latlng,
-           fillColor: Colors.blue.withAlpha(70));
-     });
-   }
+    if (mounted) {
+      setState(() {
+        marker = Marker(
+            markerId: MarkerId("home"),
+            position: latlng,
+            rotation: newLocalData.heading,
+            draggable: false,
+            zIndex: 2,
+            flat: true,
+            anchor: Offset(0.5, 0.5),
+            icon: BitmapDescriptor.fromBytes(imageData));
+        markerss.add(marker);
+        circle = Circle(
+            circleId: CircleId("car"),
+            radius: newLocalData.accuracy,
+            zIndex: 1,
+            strokeColor: Colors.blueAccent,
+            center: latlng,
+            fillColor: Colors.blue.withAlpha(70));
+      });
+    }
     if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
   }
 
@@ -129,7 +134,6 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     // _places = GoogleMapsPlaces(apiKey: kGoogleApiKey);
 
     SharedClass.getBox().then((getValue) {
-
       loc.Location().getLocation().then((currentPos) {
         _kGooglePlex = CameraPosition(
           target: LatLng(currentPos.latitude, currentPos.longitude),
@@ -148,7 +152,8 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                 ? getValue.get('lng_endpoint')
                 : null;
           }
-          traffic = getValue.containsKey("traffic") ? getValue.get('traffic') : false;
+          traffic =
+              getValue.containsKey("traffic") ? getValue.get('traffic') : false;
 
           if (_lat_endpoint != null && _lng_endpoint != null) {
             _destination = Marker(
@@ -171,7 +176,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
       });
     });
 
-    if(widget.pathshasData=='yes' && widget.state==1){
+    if (widget.pathshasData == 'yes' && widget.state == 1) {
       _addPath();
     }
   }
@@ -191,7 +196,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     _kGooglePlex = null;
-   // SharedClass.closeTracking();
+    // SharedClass.closeTracking();
     if (_locationSubscription != null) {
       _locationSubscription.cancel();
     }
@@ -324,8 +329,6 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     }
   }
 
-
-
   Future<Uint8List> loadNetworkImage(path) async {
     final completed = Completer<ImageInfo>();
     var image = NetworkImage(path);
@@ -369,8 +372,8 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
 
     return markerss;
   }
-  void _addPath() {
 
+  void _addPath() {
     final String polylineIdVal = 'polyline_id_$_polylineIdCounter';
     _polylineIdCounter++;
     final PolylineId polylineId = PolylineId(polylineIdVal);
@@ -387,6 +390,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
       polylines[polylineId] = polyline;
     });
   }
+
   List<LatLng> _createPoints() {
     // final List<LatLng> points = <LatLng>[];
     // points.add(LatLng(1.875249, 0.845140));
@@ -396,7 +400,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     // points.add(LatLng(16.196142, 4.094979));
     // points.add(LatLng(20.196142, 5.094979));
     // return points;
-      return widget.path.map((e) => LatLng(e['lat'],e['long']) ).toList();
+    return widget.path.map((e) => LatLng(e['lat'], e['long'])).toList();
   }
 
   @override
@@ -406,9 +410,12 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
       child: Scaffold(
         appBar: customAppBar(
           context,
-          title:widget.state==1? SharedData.getGlobalLang().trackingUnit():
-          SharedData.getGlobalLang().browseMap(),
-          icon: widget.state==1? FontAwesomeIcons.route: FontAwesomeIcons.mapLocationDot,
+          title: widget.state == 1
+              ? SharedData.getGlobalLang().trackingUnit()
+              : SharedData.getGlobalLang().browseMap(),
+          icon: widget.state == 1
+              ? FontAwesomeIcons.route
+              : FontAwesomeIcons.mapLocationDot,
           leading: IconButton(
             tooltip: SharedData.getGlobalLang().back(),
             icon: Icon(
@@ -595,139 +602,55 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                             shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
-                        ), ElevatedButton(
+                        ),
+                        ElevatedButton(
                           onPressed: () async {
-                            final formKey = GlobalKey<FormState>();
-                            customReusableShowDialog(
-                              context,
+                            loc.Location location = loc.Location();
+                            loc.LocationData userLocation =
+                                await location.getLocation();
 
-                              SharedData.getGlobalLang()
-                                  .LocateEvent(),formKey: formKey,
-                             widget:  Container(
-                               height: MediaQuery.of(context).size.height/2,
-                               child: Column(
-                                 children: [
+                            double longitude = userLocation.longitude;
+                            double latitude = userLocation.latitude;
+                            // final SmsSendStatusListener listener = (SendStatus status) {};
 
-                                   Text(
-                                     SharedData.getGlobalLang().chooseCategoryType(),
-                                     style: Theme.of(context).textTheme.headline4,
-                                   ),
-                                   EventCategory(),
-                                 ],
-                               ),
-                             ),
-                              // formKey: formKey,
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text(
-                                    SharedData.getGlobalLang()
-                                        .cancel(),
-                                    style: TextStyle(
+                            if (latitude == null || longitude == null) {
+                              await Flushbar(
+                                //  title: 'Hey Ninja',
+                                message: SharedData.getGlobalLang()
+                                    .categoryTypeAreRequired(),
+                                backgroundColor: Colors.orange,
+                                duration: Duration(seconds: 3),
+                              ).show(context);
+                            } else {
+                              SharedClass.getBox().then((box) async {
+                                Map userData = {
+                                  'description': 'Urgent event.',
+                                  'event_name': 'SOS',
+                                  'sender_id': box.get('user_id').toString(),
+                                  'senddate': DateFormat('yyyy-MM-dd')
+                                      .format(DateTime.now())
+                                      .toString(),
+                                  'eventtype': '118',
+                                  'lat': latitude.toString(),
+                                  'lng': longitude.toString(),
+                                };
+                                var result = await Provider.of<EventProvider>(
+                                        context,
+                                        listen: false)
+                                    .addEvent(userData);
 
-                                        color: Colors.white),
-                                  ),
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                  },
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: Colors.deepOrange,
-                                    borderRadius: BorderRadius.all(
-                                        Radius.circular(5)),
-                                  ),
-                                  child: TextButton(
-                                    //color: Colors.green,
-                                    child: Text(
+                                if (result)
+                                  showShortToast(
                                       SharedData.getGlobalLang()
-                                          .sendEvent(),
-                                      style:
-                                      TextStyle(fontSize: 12),
-                                    ),
-                                    onPressed: () async {
-
-                                      String type_name =
-                                          Provider.of<EventProvider>(context, listen: false)
-                                              .event
-                                              .eventType
-                                              .type_name;
-
-                                      String category_name =
-                                          Provider.of<EventProvider>(context, listen: false)
-                                              .event
-                                              .categoryClass
-                                              .category_name;
-
-                                      loc.Location location = loc.Location();
-                                      loc.LocationData      userLocation = await location.getLocation();
-
-                                      double longitude = userLocation.longitude;
-                                      double latitude = userLocation.latitude;
-                                      // final SmsSendStatusListener listener = (SendStatus status) {};
-
-                                      if (latitude == null ||
-                                          longitude == null ||
-                                          category_name == null ||
-                                          type_name == null) {
-                                        await Flushbar(
-                                            //  title: 'Hey Ninja',
-                                            message: SharedData.getGlobalLang().categoryTypeAreRequired(),
-                                      backgroundColor: Colors.orange,
-                                      duration: Duration(seconds: 3),
-                                      ).show(context);
-                                      } else {
-                                  SharedClass.getBox().then((box) async {
-                                       Map userData = {
-                                          'description': 'Urgent event.',
-                                          'event_name': Provider.of<EventProvider>(
-                                              context,
-                                              listen: false)
-                                              .event
-                                              .eventType
-                                              .type_name
-                                              .toString(),
-                                          'sender_id': box.get('user_id').toString(),
-                                          'senddate': DateFormat('yyyy-MM-dd')
-                                              .format(DateTime.now())
-                                              .toString(),
-                                          'eventtype': Provider.of<EventProvider>(
-                                              context,
-                                              listen: false)
-                                              .event
-                                              .eventType
-                                              .type_id
-                                              .toString(),
-                                          'lat': latitude.toString(),
-                                          'lng':  longitude.toString(),
-                                        };
-                                       var result = await Provider.of<EventProvider>(context, listen: false).addEvent(userData);
-
-                                       if(result)
-                                          showShortToast( SharedData.getGlobalLang().sentEvenSuccessfully(), Colors.green);
-                                       else
-                                         showShortToast(SharedData.getGlobalLang().saveWasNotSuccessful(), Colors.redAccent);
-
-                                     Provider.of<EventProvider>(context, listen: false)
-                                          .event
-                                          .eventType
-                                          .type_name = null;
-
-                                      Provider.of<EventProvider>(context, listen: false)
-                                          .event
-                                          .categoryClass
-                                          .category_name = null;
-                                      Provider.of<EventProvider>(context, listen: false)
-                                          .event
-                                          .categoryClass
-                                          .emergency_phone = null;
-
-                                      Navigator.pop(context);
-                                     }); }
-                                    },
-                                  ),
-                                ),
-                              ],
-                            );
+                                          .sentEvenSuccessfully(),
+                                      Colors.green);
+                                else
+                                  showShortToast(
+                                      SharedData.getGlobalLang()
+                                          .saveWasNotSuccessful(),
+                                      Colors.redAccent);
+                              });
+                            }
                           },
                           child: Icon(
                             FontAwesomeIcons.locationDot,
@@ -740,7 +663,6 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                             // padding: EdgeInsets.all(10),
                           ),
                         ),
-
                       ],
                     ),
                   )),
@@ -770,48 +692,60 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                 widget.pathshasData=='yes'&& widget.path.length>0? Positioned(
-                   child: Center(
-                     child: Padding(
-                       padding: const EdgeInsets.only(left: 8.0, right: 8.0),
-                       child: Row(
-                         mainAxisAlignment: MainAxisAlignment.end,
-                         crossAxisAlignment: CrossAxisAlignment.center,
-                         children: [
-                           ElevatedButton(
-                             onPressed: () async {
-
-                                  final GoogleMapController controller = await _controller.future;
-                                  if (_locationSubscription != null) {
-                                    _locationSubscription.cancel();
-                                  }
-                                  List<LatLng> point= _createPoints();
-                                  if (controller != null) {
-                                    controller.animateCamera(
-                                        CameraUpdate.newCameraPosition(CameraPosition(
-                                          //bearing: 0,
-                                            target: LatLng( point.elementAt( (point.length/2).toInt()).latitude,point.elementAt( (point.length/2).toInt()).longitude),
-                                            // tilt: 0,
-                                            zoom: 18.0)));
-                                  }
-
-                             },
-                             child: Icon(
-                               Icons.center_focus_strong,
-                               color: Colors.red  ,
-                             ),
-                             style: ElevatedButton.styleFrom(
-                               elevation: 0,
-                               backgroundColor: Color(0xff33333d),
-                               shape: CircleBorder(), //<-- SEE HERE
-                               // padding: EdgeInsets.all(10),
-                             ),
-                           ),
-                         ],
-                       ),
-                     ),
-                   ),
-                 ):SizedBox.shrink()
+                  widget.pathshasData == 'yes' && widget.path.length > 0
+                      ? Positioned(
+                          child: Center(
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 8.0, right: 8.0),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  ElevatedButton(
+                                    onPressed: () async {
+                                      final GoogleMapController controller =
+                                          await _controller.future;
+                                      if (_locationSubscription != null) {
+                                        _locationSubscription.cancel();
+                                      }
+                                      List<LatLng> point = _createPoints();
+                                      if (controller != null) {
+                                        controller.animateCamera(CameraUpdate
+                                            .newCameraPosition(CameraPosition(
+                                                //bearing: 0,
+                                                target: LatLng(
+                                                    point
+                                                        .elementAt(
+                                                            (point.length / 2)
+                                                                .toInt())
+                                                        .latitude,
+                                                    point
+                                                        .elementAt(
+                                                            (point.length / 2)
+                                                                .toInt())
+                                                        .longitude),
+                                                // tilt: 0,
+                                                zoom: 18.0)));
+                                      }
+                                    },
+                                    child: Icon(
+                                      Icons.center_focus_strong,
+                                      color: Colors.red,
+                                    ),
+                                    style: ElevatedButton.styleFrom(
+                                      elevation: 0,
+                                      backgroundColor: Color(0xff33333d),
+                                      shape: CircleBorder(), //<-- SEE HERE
+                                      // padding: EdgeInsets.all(10),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        )
+                      : SizedBox.shrink()
                 ],
               ),
         floatingActionButton: FloatingActionButton(
@@ -833,18 +767,19 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                   _locationSubscription.cancel();
                 }
 
-
-                _locationSubscription = _locationTracker.onLocationChanged.listen((newLocalData) {
+                _locationSubscription =
+                    _locationTracker.onLocationChanged.listen((newLocalData) {
                   if (controller != null) {
-                    controller.animateCamera(CameraUpdate.newCameraPosition(new CameraPosition(
-                        bearing: 192.8334901395799,
-                        target: LatLng(newLocalData.latitude, newLocalData.longitude),
-                        tilt: 0,
-                        zoom: 18.00)));
+                    controller.animateCamera(CameraUpdate.newCameraPosition(
+                        new CameraPosition(
+                            bearing: 192.8334901395799,
+                            target: LatLng(
+                                newLocalData.latitude, newLocalData.longitude),
+                            tilt: 0,
+                            zoom: 18.00)));
                     updateMarkerAndCircle(newLocalData, imageData);
                   }
                 });
-
               } on PlatformException catch (e) {
                 if (e.code == 'PERMISSION_DENIED') {
                   debugPrint("Permission Denied");

@@ -4,6 +4,7 @@ import 'package:provider/provider.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/models/category.dart';
 import 'package:shahed/modules/home/responses/map_respo.dart';
+import 'package:shahed/provider/counter_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
@@ -23,6 +24,9 @@ class _ResponsePageState extends State<ResponsePage> {
   @override
   initState() {
     super.initState();
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<CounterProvider>(context ,listen: false).setCounterNotification=false;
+    });
     getData();
   }
 

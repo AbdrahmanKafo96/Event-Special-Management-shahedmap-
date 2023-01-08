@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/modules/home/tracking/BrowserMap.dart';
+import 'package:shahed/provider/counter_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/shimmer/shimmer.dart';
@@ -24,17 +25,27 @@ class _MissionsState extends State<Missions> {
   @override
   initState() {
     super.initState();
-    getData();
+    Future.delayed(Duration.zero).then((value) {
+      Provider.of<CounterProvider>(context ,listen: false).setCounterMissions=false;
+    });
+
+   setState(() {
+     getData();
+   });
   }
 
   String user_id, ben_id;
 
-  Future<List<Mission>> getData() {
-  return  SharedClass.getBox().then((value) async {
-        user_id = value.get('user_id').toString();
-        ben_id = value.get('beneficiarie_id').toString();
-     return  futureList = Provider.of<EventProvider>(context, listen: false)
-            .getMissions(user_id, ben_id);
+  Future<void> getData() {
+
+        SharedClass.getBox().then((value) async {
+        setState(() {
+          user_id = value.get('user_id').toString();
+          ben_id = value.get('beneficiarie_id').toString();
+          futureList = Provider.of<EventProvider>(context, listen: false)
+              .getMissions(user_id, ben_id);
+        });
+
     });
   }
 
@@ -42,7 +53,7 @@ class _MissionsState extends State<Missions> {
     return Padding(
         padding: const EdgeInsets.only(top: 8.0),
         child: FutureBuilder<List<Mission>>(
-            future: getData(),
+            future:futureList,
             builder: (ctx, snapshot) {
               // if(!snapshot.hasData){
               //   return Center(child: CircularProgressIndicator());
@@ -89,51 +100,29 @@ class _MissionsState extends State<Missions> {
                                 child: Column(
                                   children: [
                                     Card(
-                                      color: snapshot.data[index].seen==0
-                                          ?Color(0xFFc3c3c4)
-                                          :  Color(0xFF424250),
+                                      color: snapshot.data[index].seen == 0
+                                          ? Color(0xFFc3c3c4)
+                                          : Color(0xFF424250),
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
-                                        color:snapshot.data[index].seen==0?
-                                        Colors.black54:Colors.white12),
+                                            color:
+                                                snapshot.data[index].seen == 0
+                                                    ? Colors.black54
+                                                    : Colors.white12),
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                       ),
                                       child: ListTile(
-                                          onTap: () {
-                                            if (snapshot.data[index].seen ==
-                                                0) {
-                                              Provider.of<EventProvider>(
-                                                      context,
-                                                      listen: false)
-                                                  .updateMissionSeen(
-                                                      user_id,
-                                                      snapshot.data[index]
-                                                          .mission_id
-                                                          .toString())
-                                                  .then((value) {
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                      builder:
-                                                          (context) =>
-                                                              BrowserMap(
-
-                                                                latLngDestination: LatLng(
-                                                                    snapshot
-                                                                        .data[
-                                                                            index]
-                                                                        .lat_finish,
-                                                                    snapshot
-                                                                        .data[index]
-                                                                        .lng_finish), state: 1,
-                                                                pathshasData: 'yes',
-                                                                path:snapshot
-                                                                    .data[index].points ,
-                                                              )),
-                                                );
-                                              });
-                                            } else {
+                                        onTap: () {
+                                          if (snapshot.data[index].seen == 0) {
+                                            Provider.of<EventProvider>(context,
+                                                    listen: false)
+                                                .updateMissionSeen(
+                                                    user_id,
+                                                    snapshot
+                                                        .data[index].mission_id
+                                                        .toString())
+                                                .then((value) {
                                               Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
@@ -141,41 +130,69 @@ class _MissionsState extends State<Missions> {
                                                         BrowserMap(
                                                           latLngDestination: LatLng(
                                                               snapshot
-                                                                  .data[
-                                                                      index]
+                                                                  .data[index]
                                                                   .lat_finish,
                                                               snapshot
-                                                                  .data[
-                                                                      index]
-                                                                  .lng_finish),state: 1,
+                                                                  .data[index]
+                                                                  .lng_finish),
+                                                          state: 1,
                                                           pathshasData: 'yes',
-                                                          path:snapshot
-                                                              .data[index].points ,
+                                                          path: snapshot
+                                                              .data[index]
+                                                              .points,
                                                         )),
                                               );
-                                            }
-                                          },
-                                          subtitle: Text(
-                                            '${snapshot.data[index].mission_date}',
-                                            softWrap: true,
-                                            overflow: TextOverflow.ellipsis,
-
-                                            style:
-                                           snapshot.data[index].seen==0?
-                                           Theme.of(context).textTheme.bodyText2:
-                                           Theme.of(context).textTheme.subtitle1,),
-                                          leading: Icon(
-                                            Icons.task_alt,
-                                            size: 30,
-                                            color:snapshot.data[index].seen==0? Colors.green:Colors.white,
-                                          ),
-                                          title: Text(
-                                            '${snapshot.data[index].mission_name}',
-                                            softWrap: true,
-                                            //overflow: TextOverflow.visible,
-                                            style:
-                                            Theme.of(context).textTheme.headline4,),
-                                          ),
+                                            });
+                                          } else {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder:
+                                                      (context) => BrowserMap(
+                                                            latLngDestination: LatLng(
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .lat_finish,
+                                                                snapshot
+                                                                    .data[index]
+                                                                    .lng_finish),
+                                                            state: 1,
+                                                            pathshasData: 'yes',
+                                                            path: snapshot
+                                                                .data[index]
+                                                                .points,
+                                                          )),
+                                            );
+                                          }
+                                        },
+                                        subtitle: Text(
+                                          '${snapshot.data[index].mission_date}',
+                                          softWrap: true,
+                                          overflow: TextOverflow.ellipsis,
+                                          style: snapshot.data[index].seen == 0
+                                              ? Theme.of(context)
+                                                  .textTheme
+                                                  .bodyText2
+                                              : Theme.of(context)
+                                                  .textTheme
+                                                  .subtitle1,
+                                        ),
+                                        leading: Icon(
+                                          Icons.task_alt,
+                                          size: 30,
+                                          color: snapshot.data[index].seen == 0
+                                              ? Colors.green
+                                              : Colors.white,
+                                        ),
+                                        title: Text(
+                                          '${snapshot.data[index].mission_name}',
+                                          softWrap: true,
+                                          //overflow: TextOverflow.visible,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .headline4,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),

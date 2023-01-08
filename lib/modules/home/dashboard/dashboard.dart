@@ -135,7 +135,7 @@ class _DashboardState extends State<Dashboard> {
           viewPage(ctx, routName);
         }
       },
-      child: customCard(icon, title, color, ctx),
+      child: customCard(icon, title, color, ctx , routName),
     );
   }
 

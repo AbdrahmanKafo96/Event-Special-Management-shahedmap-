@@ -19,6 +19,7 @@ import 'package:shahed/modules/home/settings_screens/profile_view.dart';
 import 'package:shahed/modules/home/settings_screens/reset_password/CreateNewPasswordView.dart';
 import 'package:shahed/modules/home/tracking/BrowserMap.dart';
 import 'package:shahed/provider/auth_provider.dart';
+import 'package:shahed/provider/counter_provider.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:shahed/provider/navigation_provider.dart';
@@ -169,6 +170,9 @@ Future main() async {
         ),
         ChangeNotifierProvider<Language>(
           create: (context) => Language(),
+        ),
+        ChangeNotifierProvider<CounterProvider>(
+          create: (context) => CounterProvider(),
         ),
       ], child: ShahedApp(token, language)),
   //  )
