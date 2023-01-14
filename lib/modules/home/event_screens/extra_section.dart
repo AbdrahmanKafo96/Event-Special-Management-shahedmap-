@@ -196,12 +196,12 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                           .toString(),
                                     };
 
-                                    bool result = await Provider.of<EventProvider>(
+                                    bool? result = await Provider.of<EventProvider>(
                                             context,
                                             listen: false)
                                         .addEvent(userData);
                                     setState(() => isLoading = false);
-                                    if (result) {
+                                    if (result!) {
                                       Navigator.pushAndRemoveUntil(
                                         context,
                                         MaterialPageRoute(

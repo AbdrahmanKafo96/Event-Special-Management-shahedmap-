@@ -63,14 +63,14 @@ class _DashboardState extends State<Dashboard> {
           dashboardItem(context, SharedData.getGlobalLang().addEvent(),
               FontAwesomeIcons.locationDot, 'addEvent', Colors.deepOrange),
           //  if (SharedData.getUserState())
-          if (SharedData.getUserState())
+          if (   SharedData.getUserState()  )
           dashboardItem(context, SharedData.getGlobalLang().browseMap(),
               FontAwesomeIcons.mapLocationDot, 'browserMap', Colors.teal),
 
-          if (SharedData.getUserState())
+          if (SharedData.getUserState() )
             dashboardItem(context, SharedData.getGlobalLang().notifications(),
                 FontAwesomeIcons.bell, 'response', Colors.redAccent),
-          if (SharedData.getUserState())
+          if (SharedData.getUserState() )
             dashboardItem(context, SharedData.getGlobalLang().missionsList(),
                 FontAwesomeIcons.solidComment, 'Missions', Colors.orange),
 

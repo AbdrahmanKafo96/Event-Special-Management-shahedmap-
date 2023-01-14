@@ -1,6 +1,6 @@
 class Witness {
-  int user_id;
-  String first_name, father_name, family_name, date_of_birth, country, image;
+  int? user_id;
+  String? first_name, father_name, family_name, date_of_birth, country, image;
 
   Witness(
       {this.user_id,

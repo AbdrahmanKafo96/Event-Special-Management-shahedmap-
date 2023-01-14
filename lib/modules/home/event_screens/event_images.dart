@@ -9,9 +9,9 @@ import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
 class PickImages extends StatefulWidget {
-  int count;
+  int ?count;
 
-  List updateList;
+  List ?updateList;
 
   PickImages({this.count, this.updateList});
 
@@ -23,30 +23,30 @@ class _PickImagesState extends State<PickImages> {
   ImagePicker _picker = ImagePicker();
 
   int subValue = 0;
-  List images = [];
+  List? images = [];
   static List<XFile> _imageFile = <XFile>[];
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.count != null && widget.count > 0) {
-      int total = widget.count;
+    if (widget.count != null && widget.count! > 0) {
+      int? total = widget.count;
 
-      if (total < 4 && total > 0) {
+      if (total! < 4 && total! > 0) {
         subValue = (total - 4) * -1;
       }
       setState(() {
         for (int index = 1; index <= total; index++) {
-          images.add("Add Image");
+          images!.add("Add Image");
         }
         for (int index = 1; index <= subValue; index++) {
-          images.add("Add Image");
+          images!.add("Add Image");
         }
       });
     } else {
       setState(() {
-        images.add("Add Image");
+        images!.add("Add Image");
       });
     }
   }
@@ -66,14 +66,14 @@ class _PickImagesState extends State<PickImages> {
       shrinkWrap: true,
       crossAxisCount: 4,
       childAspectRatio: 1,
-      children: List.generate(images.length, (index) {
-        if (widget.count != null && index < widget.updateList.length) {
+      children: List.generate(images!.length, (index) {
+        if (widget.count != null && index < widget.updateList!.length) {
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
                 Image.network(
-                  widget.updateList[index],
+                  widget.updateList![index],
                   height: 300,
                   width: 300,
                   fit: BoxFit.fill,
@@ -93,11 +93,11 @@ class _PickImagesState extends State<PickImages> {
                             .event
                             .dropValue(index);
 
-                        if ((images.length >= 2) && (images.length <= 4)) {
+                        if ((images!.length >= 2) && (images!.length <= 4)) {
                           // images.replaceRange(index, index + 1, ['Add Image']);
-                          images.removeAt(index);
+                          images!.removeAt(index);
                         } else {
-                          images.replaceRange(index, index + 1, ['Add Image']);
+                          images!.replaceRange(index, index + 1, ['Add Image']);
                         }
                       });
                     },
@@ -106,15 +106,15 @@ class _PickImagesState extends State<PickImages> {
               ],
             ),
           );
-        } else if (images[index] is ImageModel) {
-          ImageModel uploadModel = images[index];
+        } else if (images![index] is ImageModel) {
+          ImageModel uploadModel = images![index];
 
           return Card(
             clipBehavior: Clip.antiAlias,
             child: Stack(
               children: <Widget>[
                 Image.file(
-                  uploadModel.imageFile,
+                  uploadModel.imageFile!,
                   width: 300,
                   height: 300,
                 ),
@@ -133,11 +133,11 @@ class _PickImagesState extends State<PickImages> {
                             .event
                             .dropValue(index);
 
-                        if ((images.length >= 2) && (images.length <= 4)) {
+                        if ((images!.length >= 2) && (images!.length <= 4)) {
                           // images.replaceRange(index, index + 1, ['Add Image']);
-                          images.removeAt(index);
+                          images!.removeAt(index);
                         } else {
-                          images.replaceRange(index, index + 1, ['Add Image']);
+                          images!.replaceRange(index, index + 1, ['Add Image']);
                         }
                       });
                     },
@@ -149,7 +149,7 @@ class _PickImagesState extends State<PickImages> {
         } else {
           return InkWell(
             onTap: () {
-              if (images.length >= 1 && images.length <= 4) {
+              if (images!.length >= 1 && images!.length <= 4) {
                 // _showPicker(context,index);
                 showPicker(context, _imgFromGallery, _imgFromCamera,
                     index: index);
@@ -190,8 +190,8 @@ class _PickImagesState extends State<PickImages> {
   }
 
   Future _imgFromGallery(int index) async {
-    XFile file =
-        await _picker.pickImage(source: ImageSource.gallery, imageQuality: 75);
+    XFile? file =
+        await _picker.pickImage(source: ImageSource.gallery , imageQuality: 75);
     if (file != null) {
       _imageFile.add(file);
       if (_imageFile[index].path != "")
@@ -199,13 +199,13 @@ class _PickImagesState extends State<PickImages> {
           Provider.of<EventProvider>(context, listen: false).event.setXFile =
               _imageFile;
           getFileImage(index);
-          if (index < 3) images.add("Add Image");
+          if (index < 3) images!.add("Add Image");
         });
     }
   }
 
   Future _imgFromCamera(int index) async {
-    XFile file =
+    XFile? file =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 75);
     if (file != null) {
       _imageFile.add(file);
@@ -214,7 +214,7 @@ class _PickImagesState extends State<PickImages> {
           Provider.of<EventProvider>(context, listen: false).event.setXFile =
               _imageFile;
           getFileImage(index);
-          if (index < 3) images.add("Add Image");
+          if (index < 3) images!.add("Add Image");
         });
     }
   }
@@ -228,7 +228,7 @@ class _PickImagesState extends State<PickImages> {
       imageUpload.uploading = false;
       imageUpload.imageFile = File(_imageFile[index].path);
       imageUpload.imageUrl = '';
-      images.replaceRange(index, index + 1, [imageUpload]);
+      images!.replaceRange(index, index + 1, [imageUpload]);
     });
   }
 }

@@ -31,10 +31,10 @@ import 'dart:ui' as ui;
 import 'package:intl/intl.dart';
 
 class BrowserMap extends StatefulWidget {
-  LatLng latLngDestination;
-  int state;
-  List path;
-  String pathshasData = '';
+  LatLng? latLngDestination;
+  int? state;
+  List? path;
+  String? pathshasData = '';
 
   BrowserMap(
       {this.latLngDestination, this.state, this.path, this.pathshasData});
@@ -44,26 +44,26 @@ class BrowserMap extends StatefulWidget {
 }
 
 class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
-  StreamSubscription _locationSubscription;
+  StreamSubscription? _locationSubscription;
 
   // static StreamSubscription<loc.LocationData> _locSubscription;
   final kGoogleApiKey = SharedClass.mapApiKey;
   loc.LocationAccuracy desiredAccuracy = loc.LocationAccuracy.high;
 
   //GoogleMapsPlaces _places;
-  Marker marker, _destination;
-  MapType maptype = MapType.normal;
-  loc.LocationData currentPosition;
-  Circle circle;
+  Marker? marker, _destination;
+  MapType? maptype = MapType.normal;
+  loc.LocationData? currentPosition;
+  Circle? circle;
   Completer<GoogleMapController> _controller = Completer();
-  double _lat_startpoint, _lng_startpoint, _lat_endpoint, _lng_endpoint;
+  double? _lat_startpoint, _lng_startpoint, _lat_endpoint, _lng_endpoint;
   bool traffic = false;
   String weather = "";
   loc.Location _locationTracker = loc.Location();
   p.PolylinePoints polylinePoints = p.PolylinePoints();
   Map<PolylineId, Polyline> polylines = {};
   Map<MarkerId, Marker> markers = {};
-  static CameraPosition _kGooglePlex;
+  static CameraPosition? _kGooglePlex;
   final Set<Marker> markerss = new Set();
   int _polylineIdCounter = 1;
 
@@ -76,22 +76,22 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
 
   void updateMarkerAndCircle(
       loc.LocationData newLocalData, Uint8List imageData) {
-    LatLng latlng = LatLng(newLocalData.latitude, newLocalData.longitude);
+    LatLng latlng = LatLng(newLocalData.latitude!, newLocalData.longitude!);
     if (mounted) {
       setState(() {
         marker = Marker(
             markerId: MarkerId("home"),
             position: latlng,
-            rotation: newLocalData.heading,
+            rotation: newLocalData!.heading!,
             draggable: false,
             zIndex: 2,
             flat: true,
             anchor: Offset(0.5, 0.5),
             icon: BitmapDescriptor.fromBytes(imageData));
-        markerss.add(marker);
+        markerss.add(marker!);
         circle = Circle(
             circleId: CircleId("car"),
-            radius: newLocalData.accuracy,
+            radius: newLocalData.accuracy!,
             zIndex: 1,
             strokeColor: Colors.blueAccent,
             center: latlng,
@@ -112,7 +112,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
       updateMarkerAndCircle(position, imageData);
       if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
       if (_locationSubscription != null) {
-        _locationSubscription.cancel();
+        _locationSubscription!.cancel();
       }
       _lat_startpoint = position.latitude;
       _lng_startpoint = position.longitude;
@@ -136,14 +136,14 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     SharedClass.getBox().then((getValue) {
       loc.Location().getLocation().then((currentPos) {
         _kGooglePlex = CameraPosition(
-          target: LatLng(currentPos.latitude, currentPos.longitude),
+          target: LatLng(currentPos.latitude!, currentPos.longitude!),
           zoom: 18,
         );
         setState(() {
           currentPosition = currentPos;
           if (widget.state == 1) {
-            _lat_endpoint = widget.latLngDestination.latitude;
-            _lng_endpoint = widget.latLngDestination.longitude;
+            _lat_endpoint = widget.latLngDestination!.latitude;
+            _lng_endpoint = widget.latLngDestination!.longitude;
           } else {
             _lat_endpoint = getValue.containsKey("lat_endpoint")
                 ? getValue.get('lat_endpoint')
@@ -160,18 +160,17 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
               icon: BitmapDescriptor.defaultMarkerWithHue(
                   BitmapDescriptor.hueRed),
               markerId: MarkerId(12.toString()),
-              position: LatLng(_lat_endpoint, _lng_endpoint),
+              position: LatLng(_lat_endpoint!, _lng_endpoint!),
               infoWindow: InfoWindow(
                 title: "last position",
                 //  snippet: "${data.state}",
               ),
             );
-            markerss.add(_destination);
+            markerss.add(_destination!);
           }
 
           getIniLocation(currentPos);
         });
-
         //    return currentPos;
       });
     });
@@ -198,7 +197,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     _kGooglePlex = null;
     // SharedClass.closeTracking();
     if (_locationSubscription != null) {
-      _locationSubscription.cancel();
+      _locationSubscription!.cancel();
     }
     Wakelock.disable();
     WidgetsBinding.instance.removeObserver(this);
@@ -239,8 +238,8 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
             snippet: "${data.state}",
           ),
         );
-        markerss.add(_destination);
-        weather = w.temperature.celsius.toInt().toString();
+        markerss.add(_destination!);
+        weather = w.temperature!.celsius!.toInt().toString();
         _lat_endpoint = tappedPoint.latitude;
         _lng_endpoint = tappedPoint.longitude;
       });
@@ -337,32 +336,32 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     final imageInfo = await completed.future;
     final byteData =
         await imageInfo.image.toByteData(format: ui.ImageByteFormat.png);
-    return byteData.buffer.asUint8List();
+    return byteData!.buffer.asUint8List();
   }
 
   // get dalay events from the server
   Future<Set<Marker>> getDailyEvents() async {
-    List<MarkerModel> myList =
+    List<MarkerModel?>? myList =
         await Provider.of<EventProvider>(context, listen: false).getEvents();
 
-    for (int i = 0; i < myList.length; i++) {
+    for (int i = 0; i < myList!.length; i++) {
       Uint8List image = await loadNetworkImage(
-          "${SharedClass.routePath}/storage//images/events_icons/${myList[i].icon}");
+          "${SharedClass.routePath}/storage//images/events_icons/${myList[i]!.icon}");
       final ui.Codec markerImageCodec = await ui.instantiateImageCodec(
           image.buffer.asUint8List(),
           targetHeight: 100,
           targetWidth: 100);
       final ui.FrameInfo frameInfo = await markerImageCodec.getNextFrame();
-      final ByteData byteData =
+      final ByteData? byteData =
           await frameInfo.image.toByteData(format: ui.ImageByteFormat.png);
-      final Uint8List resizedImageMarker = byteData.buffer.asUint8List();
+      final Uint8List resizedImageMarker = byteData!.buffer.asUint8List();
       markerss.add(Marker(
         //add second marker
-        markerId: MarkerId(myList[i].postede_id.toString()),
-        position: LatLng(myList[i].lat, myList[i].lng), //position of marker
+        markerId: MarkerId(myList[i]!.postede_id.toString()),
+        position: LatLng(myList[i]!.lat!, myList[i]!.lng!), //position of marker
         infoWindow: InfoWindow(
           //popup info
-          title: '${myList[i].type_name}',
+          title: '${myList[i]!.type_name}',
           snippet: 'My Custom Subtitle',
         ),
         icon: BitmapDescriptor.fromBytes(resizedImageMarker), //Icon for Marker
@@ -400,7 +399,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     // points.add(LatLng(16.196142, 4.094979));
     // points.add(LatLng(20.196142, 5.094979));
     // return points;
-    return widget.path.map((e) => LatLng(e['lat'], e['long'])).toList();
+    return widget.path!.map((e) => LatLng(e['lat'], e['long'])).toList();
   }
 
   @override
@@ -451,8 +450,8 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                       resetDestination();
                     },
                     myLocationButtonEnabled: false,
-                    mapType: maptype,
-                    initialCameraPosition: _kGooglePlex,
+                    mapType: maptype!,
+                    initialCameraPosition: _kGooglePlex!,
                     polylines: Set<Polyline>.of(polylines.values),
                     // markers: Set<Marker>.of(markers.values),
                     markers: markerss,
@@ -465,7 +464,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
 
                     onCameraMoveStarted: () async {
                       if (_locationSubscription != null) {
-                        _locationSubscription.cancel();
+                        _locationSubscription!.cancel();
                       }
                       //   _locationSubscription.cancel();
                       Uint8List imageData = await getMarker();
@@ -559,10 +558,10 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                 final detail =
                                     await plist.getDetailsByPlaceId(placeid);
                                 final geometry = detail.result.geometry;
-                                var newlatlang = LatLng(geometry.location.lat,
-                                    geometry.location.lng);
+                                var newlatlang = LatLng(geometry!.location.lat,
+                                    geometry!.location.lng);
                                 if (_locationSubscription != null)
-                                  _locationSubscription.cancel();
+                                  _locationSubscription!.cancel();
                                 //move map camera to selected place with animation
                                 controller.animateCamera(
                                     CameraUpdate.newCameraPosition(
@@ -609,8 +608,8 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                             loc.LocationData userLocation =
                                 await location.getLocation();
 
-                            double longitude = userLocation.longitude;
-                            double latitude = userLocation.latitude;
+                            double longitude = userLocation.longitude!;
+                            double latitude = userLocation.latitude!;
                             // final SmsSendStatusListener listener = (SendStatus status) {};
 
                             if (latitude == null || longitude == null) {
@@ -639,7 +638,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                         listen: false)
                                     .addEvent(userData);
 
-                                if (result)
+                                if (result!)
                                   showShortToast(
                                       SharedData.getGlobalLang()
                                           .sentEvenSuccessfully(),
@@ -692,7 +691,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                       ),
                     ),
                   ),
-                  widget.pathshasData == 'yes' && widget.path.length > 0
+                  widget.pathshasData == 'yes' && widget.path!.length > 0
                       ? Positioned(
                           child: Center(
                             child: Padding(
@@ -707,7 +706,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                       final GoogleMapController controller =
                                           await _controller.future;
                                       if (_locationSubscription != null) {
-                                        _locationSubscription.cancel();
+                                        _locationSubscription!.cancel();
                                       }
                                       List<LatLng> point = _createPoints();
                                       if (controller != null) {
@@ -764,7 +763,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                 updateMarkerAndCircle(location, imageData);
 
                 if (_locationSubscription != null) {
-                  _locationSubscription.cancel();
+                  _locationSubscription!.cancel();
                 }
 
                 _locationSubscription =
@@ -774,7 +773,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                         new CameraPosition(
                             bearing: 192.8334901395799,
                             target: LatLng(
-                                newLocalData.latitude, newLocalData.longitude),
+                                newLocalData.latitude!, newLocalData.longitude!),
                             tilt: 0,
                             zoom: 18.00)));
                     updateMarkerAndCircle(newLocalData, imageData);

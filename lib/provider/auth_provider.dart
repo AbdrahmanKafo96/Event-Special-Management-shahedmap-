@@ -21,13 +21,14 @@ import 'package:flutter_background_geolocation/flutter_background_geolocation.da
 class UserAuthProvider extends ChangeNotifier {
   User user = User();
 
-  Future<bool> login(Map userData) async {
+  Future<bool?> login(Map userData) async {
     try {
       final storage = await SharedClass.getStorage();
       //  String value = await storage.read(key: "token" ,aOptions: Singleton.getAndroidOptions());
       final box = await SharedClass.getBox();
       print(userData);
       if (box != null) {
+
         final response = userData['userState'] == 'L'
             ? await http.post(
                 Uri.parse("${SharedClass.apiPath}/login"),
@@ -52,8 +53,11 @@ class UserAuthProvider extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
-
+          print(responseData );
           if (userData['userState'] == 'L') {
+              print(userData['userState']);
+
+            // showShortToast(responseData['message'], Colors.redAccent);
             if (responseData['message'] ==
                 "تحقق من البريد الالكتروني وكلمة المرور") {
               showShortToast(
@@ -64,7 +68,7 @@ class UserAuthProvider extends ChangeNotifier {
               showShortToast(
                  SharedData.getGlobalLang().blockUserMessage() , Colors.red);
               return false;
-            } else {
+            } else {print(responseData['result']['original']['data']["api_token"]);
               user.user_id =
                   responseData['result']['original']['data']["user_id"];
               user.api_token =
@@ -73,11 +77,11 @@ class UserAuthProvider extends ChangeNotifier {
               await storage.write(
                   key: 'api_token',
                   value: user.api_token,
-                  aOptions: SharedClass.getAndroidOptions());
+                  );
               await storage.write(
                   key: 'token',
                   value: responseData['token'],
-                  aOptions: SharedClass.getAndroidOptions());
+                  );
 
               box.put('user_id', user.user_id);
               box.put(
@@ -94,7 +98,9 @@ class UserAuthProvider extends ChangeNotifier {
           }
           //تحتاج تعديل الان 9\29\20222
 
+          print(responseData['status']);
           if (responseData['status'] == "failed") {
+
             if (responseData['error']['email'][0].toString() ==
                 "The email has already been taken.")
               showShortToast(
@@ -104,11 +110,12 @@ class UserAuthProvider extends ChangeNotifier {
             }
             return false;
           } else {
+
             user.user_id =
                 responseData['result']['original']['data']["user_id"];
             user.api_token =
                 responseData['result']['original']['data']["api_token"];
-
+            print(responseData['result']['original']['data']["api_token"]);
             await storage.write(
                 key: 'api_token',
                 value: user.api_token,
@@ -134,23 +141,23 @@ class UserAuthProvider extends ChangeNotifier {
       }
 
       //return  user.api_token.isNotEmpty ?  true ;
-      return true;
+    //  return true;
     } catch (e) {
       print(e);
     }
   }
 
-  Future<bool> resetPassword(String password, String confPassword,
-      String user_id, String email, BuildContext context) async {
+  Future<bool> resetPassword(String? password, String? confPassword,
+      String? user_id, String? email, BuildContext? context) async {
     final storage = await SharedClass.getStorage();
-    String value = await storage.read(
+    String? value = await storage.read(
         key: "token", aOptions: SharedClass.getAndroidOptions());
     try {
       Map data = {
-        'password': password.trim(),
-        'password_confirmation': confPassword.trim(),
-        "user_id": user_id.trim(),
-        "email": email.trim(),
+        'password': password!.trim(),
+        'password_confirmation': confPassword!.trim(),
+        "user_id": user_id!.trim(),
+        "email": email!.trim(),
       };
 
       final response = await http.post(
@@ -172,8 +179,11 @@ class UserAuthProvider extends ChangeNotifier {
         }
       } else {
         showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        return false;
       }
-    } catch (e) {}
+    } catch (e) {
+      return false;
+    }
   }
 
   void logout(BuildContext context) async {
@@ -185,20 +195,20 @@ class UserAuthProvider extends ChangeNotifier {
           int.parse( box.get('beneficiarie_id')) );
          });
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
 
-      String api_token = await storage.read(
+      String? api_token = await storage.read(
           key: 'api_token', aOptions: SharedClass.getAndroidOptions());
       DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
-      String id ;
+      String id ='';
       if (Platform.isAndroid) {
         AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
           id=androidInfo.id;
       }
       if (Platform.isIOS) {
         IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-          id=iosInfo.identifierForVendor;
+          id=iosInfo.identifierForVendor!;
       }
 
       Map userdata = {
@@ -219,7 +229,7 @@ class UserAuthProvider extends ChangeNotifier {
           );
           if (response.statusCode == 200) {
               var responseData = json.decode(response.body);
-
+            print(responseData);
             await storage.delete(
                 key: 'api_token', aOptions: SharedClass.getAndroidOptions());
              await storage.delete(
@@ -253,10 +263,10 @@ class UserAuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> saveProfileData(Map userData) async {
+  Future<bool?> saveProfileData(Map userData) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final request = await http.MultipartRequest(
           "POST",
@@ -274,9 +284,9 @@ class UserAuthProvider extends ChangeNotifier {
       if (user.profilePicture != null)
         request.files.add(http.MultipartFile(
             'image',
-            File(user.profilePicture.path).readAsBytes().asStream(),
-            File(user.profilePicture.path).lengthSync(),
-            filename: user.profilePicture.path.split("/").last));
+            File(user.profilePicture!.path).readAsBytes().asStream(),
+            File(user.profilePicture!.path).lengthSync(),
+            filename: user.profilePicture!.path.split("/").last));
       var response = await request.send();
 
       if (response.statusCode == 200) {
@@ -298,7 +308,7 @@ class UserAuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<Witness> checkState(var result) async {
+  Future<Witness?> checkState(var result) async {
     try {
       // // this method for check if the user has data before or no ...
       if (result != null) {
@@ -307,7 +317,7 @@ class UserAuthProvider extends ChangeNotifier {
         };
         final box = await SharedClass.getBox();
         final storage = await SharedClass.getStorage();
-        String value = await storage.read(
+        String? value = await storage.read(
             key: "token", aOptions: SharedClass.getAndroidOptions());
 
         final response = await http.post(
@@ -336,10 +346,10 @@ class UserAuthProvider extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateProfileData(Map userData) async {
+  Future<bool?> updateProfileData(Map userData) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final request = await http.MultipartRequest(
           "POST", Uri.parse("${SharedClass.apiPath}/updateUserData"));
@@ -353,9 +363,9 @@ class UserAuthProvider extends ChangeNotifier {
       if (user.profilePicture != null)
         request.files.add(http.MultipartFile(
             'image',
-            File(user.profilePicture.path).readAsBytes().asStream(),
-            File(user.profilePicture.path).lengthSync(),
-            filename: user.profilePicture.path.split("/").last));
+            File(user.profilePicture!.path).readAsBytes().asStream(),
+            File(user.profilePicture!.path).lengthSync(),
+            filename: user.profilePicture!.path.split("/").last));
 
       var response = await request.send();
 
@@ -416,7 +426,7 @@ class UserAuthProvider extends ChangeNotifier {
         };
         Box box = await SharedClass.getBox();
         final storage = await SharedClass.getStorage();
-        String value = await storage.read(
+        String? value = await storage.read(
             key: "token", aOptions: SharedClass.getAndroidOptions());
 
         final response = await http.post(

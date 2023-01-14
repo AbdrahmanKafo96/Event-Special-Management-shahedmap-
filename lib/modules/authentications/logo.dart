@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class Logo extends StatefulWidget {
-  String _url; double height;
+  String? _url; double? height;
   Logo(this._url ,{this.height});
   @override
   _LogoState createState() => _LogoState();

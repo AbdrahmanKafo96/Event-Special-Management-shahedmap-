@@ -178,9 +178,9 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget buildMenuItem(
     BuildContext context, {
-    NavigationItem item,
-    String text,
-    IconData icon,
+    NavigationItem? item,
+    String? text,
+    IconData? icon,
   }) {
     final provider = Provider.of<NavigationProvider>(context);
     final currentItem = provider.getNavigationItem;
@@ -201,8 +201,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
         hoverColor: Color(0xFFFF8F00),
         // tileColor: Color(0xFFFF8F00),
         leading: Icon(icon, color: color),
-        title: Text(text, style: TextStyle(color: color, fontSize: 16)),
-        onTap: () => selectItem(context, item),
+        title: Text(text!, style: TextStyle(color: color, fontSize: 16)),
+        onTap: () => selectItem(context, item!),
       ),
     );
   }

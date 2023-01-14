@@ -11,7 +11,7 @@ import 'package:shahed/widgets/custom_indecator.dart';
 
 import '../../../widgets/customDirectionality.dart';
 class Mappoly extends StatefulWidget {
-  double lat, lng;
+  double? lat, lng;
 
   Mappoly({this.lat, this.lng});
 
@@ -20,17 +20,17 @@ class Mappoly extends StatefulWidget {
 }
 
 class _MappolyState extends State<Mappoly> {
-  GoogleMapController mapController;
+  GoogleMapController? mapController;
 
   // Markers to show points on the map
-  Map<MarkerId, Marker> markers = {};
-  Map<PolylineId, Polyline> polylines = {};
+  Map<MarkerId, Marker> ?markers = {};
+  Map<PolylineId, Polyline>? polylines = {};
   List<LatLng> polylineCoordinates = [];
 
   PolylinePoints polylinePoints = PolylinePoints();
-  Position currentPosition;
-  Completer<GoogleMapController> _controller = Completer();
-  static CameraPosition _kGooglePlex;
+  Position ?currentPosition;
+  Completer<GoogleMapController>? _controller = Completer();
+  static CameraPosition? _kGooglePlex;
 
   var geoLocator = Geolocator();
   var locationOptions = LocationSettings(
@@ -43,7 +43,7 @@ class _MappolyState extends State<Mappoly> {
         desiredAccuracy: LocationAccuracy.bestForNavigation);
   }
 
-  CameraPosition initialCameraPosition;
+  CameraPosition ?initialCameraPosition;
 
   @override
   void initState() {
@@ -51,7 +51,7 @@ class _MappolyState extends State<Mappoly> {
     getCurrentPosition().then((value) {
       setState(() {
         _kGooglePlex = CameraPosition(
-          target: LatLng(currentPosition.latitude, currentPosition.longitude),
+          target: LatLng(currentPosition!.latitude , currentPosition!.longitude ),
           zoom: 14,
         );
       });
@@ -85,14 +85,14 @@ class _MappolyState extends State<Mappoly> {
                 myLocationButtonEnabled: true,
                 myLocationEnabled: true,
                 mapType: MapType.normal,
-                initialCameraPosition: _kGooglePlex,
+                initialCameraPosition: _kGooglePlex!,
                 onMapCreated: (GoogleMapController controller) {
-                  _controller.complete(controller);
+                  _controller!.complete(controller);
                   mapController = controller;
                   _getPolyline(widget.lat, widget.lng);
                 },
-                polylines: Set<Polyline>.of(polylines.values),
-                markers: Set<Marker>.of(markers.values),
+                polylines: Set<Polyline>.of(polylines!.values),
+                markers: Set<Marker>.of(markers!.values),
               ),
     );
   }
@@ -102,7 +102,7 @@ class _MappolyState extends State<Mappoly> {
     MarkerId markerId = MarkerId(id);
     Marker marker =
         Marker(markerId: markerId, icon: descriptor, position: position);
-    markers[markerId] = marker;
+    markers![markerId] = marker;
   }
 
   _addPolyLine(List<LatLng> polylineCoordinates) {
@@ -115,14 +115,14 @@ class _MappolyState extends State<Mappoly> {
       points: polylineCoordinates,
       width: 8,
     );
-    polylines[id] = polyline;
+    polylines![id] = polyline;
     setState(() {});
   }
 
   void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
     _addMarker(
-      LatLng(currentPosition.latitude, currentPosition.longitude),
+      LatLng(currentPosition!.latitude, currentPosition!.longitude),
       "origin",
       BitmapDescriptor.defaultMarker,
     );
@@ -137,7 +137,7 @@ class _MappolyState extends State<Mappoly> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       "${SharedClass.mapApiKey}",
-      PointLatLng(currentPosition.latitude, currentPosition.longitude),
+      PointLatLng(currentPosition!.latitude, currentPosition!.longitude),
       PointLatLng(lat, long),
       travelMode: TravelMode.walking,
     );

@@ -15,7 +15,7 @@ import 'package:shahed/widgets/custom_dialog.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class EventView extends StatefulWidget {
-  int eventID;String eventName;int state=0;
+  int? eventID;String? eventName;int ?state=0;
 
   EventView({this.eventID , this.eventName,this.state});
 
@@ -26,8 +26,8 @@ class EventView extends StatefulWidget {
 class _EventViewState extends State<EventView> {
   var _response;
   String video = "none";
-  List<String> imgList = List.filled(4, null);
-  int count;
+  List<String>  imgList =   List.filled(4, '');
+  int? count;
 
   final eventNameController = TextEditingController();
   final eventDescController = TextEditingController();
@@ -66,10 +66,10 @@ class _EventViewState extends State<EventView> {
                         eventNameController.text.toString()
                       };
 
-                      bool result =
+                      bool? result =
                       await Provider.of<EventProvider>(context, listen: false)
                           .updateEvent(userData );
-                      if (result) {
+                      if (result!) {
                         showShortToast(SharedData.getGlobalLang().updateSuccessfully(), Colors.green);
                         Navigator.pushAndRemoveUntil(
                           context,
@@ -119,7 +119,7 @@ class _EventViewState extends State<EventView> {
                                             style: TextStyle(color: Colors.white),
                                           ),
                                           onPressed: () {
-                                            int postId = widget.eventID;
+                                            int postId = widget.eventID!;
 
                                             SharedClass.getBox().then((
                                                 value) async{
@@ -164,7 +164,7 @@ class _EventViewState extends State<EventView> {
                         Container(
                           padding: EdgeInsets.all(5),
                             child:  _response['data']['video'] != null
-                                  ? VideoPicker(oldVideo: video , eventID: widget.eventID)
+                                  ? VideoPicker(oldVideo: video , eventID: widget.eventID!)
                                   : VideoPicker(),
 
                         ),
@@ -188,7 +188,7 @@ class _EventViewState extends State<EventView> {
                                   Padding(padding: EdgeInsets.only(right: 5,left: 5),
                                     child:Text(SharedData.getGlobalLang().imageMessage() ,style: Theme.of(context).textTheme.subtitle1,),
                                   ),
-                                  count>0?
+                                  count! >0?
                                   MyCustomImage(
                                       count: count, updateList: imgList , eventID: widget.eventID)
                                       :MyCustomImage(),
@@ -208,7 +208,7 @@ class _EventViewState extends State<EventView> {
 
   Future<void> setDataInView() async {
     await Provider.of<EventProvider>(context, listen: false)
-        .fetchEventDataByEventId(widget.eventID)
+        .fetchEventDataByEventId(widget.eventID!)
         .then((value) {
       setState(() {
         _response = value;
@@ -222,11 +222,13 @@ class _EventViewState extends State<EventView> {
           eventDescController.text = _response['data']['description'];
             int index=0;
           for (int i = 1; i <= 4; i++) {
-            if(_response['data']['image$i']!=null)
-            {
-              imgList[index]="${SharedClass.routePath}" +_response['data']['image$i'];
-print(imgList[index]);
-            } index++;
+            if(_response['data']['image$i']!=null) {
+              imgList[index] =
+                  "${SharedClass.routePath}" + _response['data']['image$i'];
+            }else{
+              imgList[index] ='';
+            }
+            index++;
           }
         }
       });

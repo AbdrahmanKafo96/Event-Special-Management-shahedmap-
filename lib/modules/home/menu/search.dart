@@ -11,10 +11,10 @@ import 'package:shahed/widgets/custom_indecator.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class DataSearchSe extends SearchDelegate<String> {
-  List<dynamic> listName;
-  List<Event> futureList;
-  String eventName;
-  int eventId;
+  List<dynamic>? listName;
+  List<Event>? futureList;
+  String? eventName;
+  int? eventId;
 
   DataSearchSe({this.listName, this.futureList});
 
@@ -43,7 +43,7 @@ class DataSearchSe extends SearchDelegate<String> {
           Icons.arrow_back,
         ),
         onPressed: () {
-          close(context, null);
+          close(context,'');
         });
   }
 
@@ -53,7 +53,7 @@ class DataSearchSe extends SearchDelegate<String> {
       'addede_id': eventId.toString(),
     };
     final storage = await SharedClass.getStorage();
-    String value = await storage.read(
+    String? value = await storage.read(
         key: "token", aOptions: SharedClass.getAndroidOptions());
     final response = await http.post(
         Uri.parse('${SharedClass.apiPath}/getEvent'),
@@ -184,8 +184,8 @@ class DataSearchSe extends SearchDelegate<String> {
   Widget buildSuggestions(BuildContext context) {
 
     List<Event> searchList = futureList
-        .where((element) =>
-            element.event_name.toLowerCase().contains(query.toLowerCase()))
+        !.where((element) =>
+            element.event_name!.toLowerCase()!.contains(query.toLowerCase()))
         .toList();
 
     return GestureDetector(
@@ -196,7 +196,7 @@ class DataSearchSe extends SearchDelegate<String> {
           }
         },
         child: ListView.builder(
-            itemCount: query == null ? futureList.length : searchList.length,
+            itemCount: query == null ? futureList!.length : searchList.length,
             itemBuilder: (context, index) {
               return Container(
                   decoration: BoxDecoration(
@@ -225,10 +225,10 @@ class DataSearchSe extends SearchDelegate<String> {
                         onTap: () {
 
                            eventId = query == null
-                               ? futureList[index].addede_id as int
+                               ? futureList![index].addede_id as int
                                : searchList[index].addede_id as int;
                            eventName = query == null
-                               ? futureList[index].event_name
+                               ? futureList![index].event_name
                                : searchList[index].event_name;
 
                           showResults(context);

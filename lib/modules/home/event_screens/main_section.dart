@@ -18,11 +18,11 @@ class EventSectionOne extends StatefulWidget {
 }
 
 class _EventSectionOneState extends State<EventSectionOne> {
-  double lat, lng;
+  double? lat, lng;
   bool load = true;
 
-  List<Marker> myMarker = [];
-  GoogleMapController mapController;
+  List<Marker>? myMarker = [];
+  GoogleMapController? mapController ;
 
   callme() async {
     await Future.delayed(Duration(seconds: 2));
@@ -44,7 +44,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
   }
 
   Color myColor = Colors.black;
-  String errorMessage1, errorMessage2, errorMessage3, errorMessage4;
+  String? errorMessage1, errorMessage2, errorMessage3, errorMessage4;
   CameraPosition camera =
       CameraPosition(target: LatLng(26.3351, 17.2283), zoom: 4);
 
@@ -254,9 +254,9 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                   setState(() {
                                     lat = fetchResult['lat'];
                                     lng = fetchResult['lng'];
-                                    var tappedPoint = LatLng(lat, lng);
+                                    var tappedPoint = LatLng(lat!, lng!);
 
-                                    myMarker.add(Marker(
+                                    myMarker!.add(Marker(
                                       markerId: MarkerId("asd"),
                                       position: tappedPoint,
                                     ));
@@ -269,7 +269,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                   });
                                 }
                               },
-                              markers: Set<Marker>.of(myMarker),
+                              markers: Set<Marker>.of(myMarker!),
                               initialCameraPosition: camera,
                               onMapCreated: (controller) {
                                 //method called when map is created
@@ -280,7 +280,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             ),
                           ),
                           Text(
-                            errorMessage1 != null ? errorMessage1 : "",
+                            errorMessage1 != null ? errorMessage1! : "",
                             style: TextStyle(fontSize: 14, color: Colors.red),
                           ),
 
@@ -348,7 +348,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                     Text(
                                       errorMessage4 == null
                                           ? ""
-                                          : errorMessage4,
+                                          : errorMessage4!,
                                       style: TextStyle(
                                           fontSize: 14, color: Colors.red),
                                     ),

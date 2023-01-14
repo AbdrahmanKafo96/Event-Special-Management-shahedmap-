@@ -5,16 +5,15 @@ import '../provider/auth_provider.dart';
 
 class SharedData{
 
- static Language _language ;
-  static Language getGlobalLang(){
+  static Language?  _language ;
+  static Language  getGlobalLang(){
    if(_language==null){
      _language = SharedClass.getLanguage();
    }
-    return _language;
+    return _language! ;
   }
-  static bool _state ;
-  static  bool getUserState()   {
-    if (_state == null) {
+   static  bool _state=false;
+  static   bool    getUserState()    {
       SharedClass.getBox().then((value) async {
 
         var user_id= value.get('user_id');
@@ -26,11 +25,10 @@ class SharedData{
            UserAuthProvider().checkState(user_id);
         }
       });
-    }
-    return _state;
-  }
-  static resetValue(){
-    _state=null;
-  }
+        return _state ;
+      }
+      static resetValue(){
+        _state= false ;
+      }
 
 }

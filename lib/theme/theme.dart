@@ -122,7 +122,7 @@ class Styles {
         ),
         headline6: GoogleFonts.notoSansArabic(
           textStyle:
-              TextStyle( color: Colors.white, fontWeight: FontWeight.bold),
+              TextStyle( color: Colors.grey, fontWeight: FontWeight.bold),
         ),headline5: GoogleFonts.notoSansArabic(
           textStyle:
               TextStyle(fontSize: 14.0 ,color: Colors.white, fontWeight: FontWeight.bold),
@@ -154,7 +154,7 @@ class Styles {
 
         suffixStyle: TextStyle(color: Colors.white),
         errorStyle: TextStyle(
-          fontSize: 10.0,
+          fontSize: 12.0,
         ),
         iconColor: Color(0xFFFF9800),
         suffixIconColor: Colors.white,

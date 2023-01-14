@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
-Widget customAppBar(BuildContext context,
+PreferredSizeWidget customAppBar(BuildContext context,
     {String title = "",
-    Color backgroundColor,
+    Color? backgroundColor,
     double elevation = 0.0,
     double titleSpacing = 1.0,
-    Widget flexibleSpace,
-    Widget leading,
-    List<Widget> actions,
-    IconData icon}) {
+    Widget? flexibleSpace,
+    Widget? leading,
+    List<Widget>? actions,
+    IconData? icon}) {
   return AppBar(
     titleSpacing: titleSpacing,
      actions: actions,

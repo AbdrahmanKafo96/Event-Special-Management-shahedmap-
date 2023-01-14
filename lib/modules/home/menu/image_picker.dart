@@ -9,10 +9,10 @@ import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
 class MyCustomImage extends StatefulWidget {
-  int count;
+  int? count;
 
-  List updateList = [];
-  int eventID;
+  List? updateList = [];
+  int? eventID;
 
   MyCustomImage({this.count, this.updateList, this.eventID});
 
@@ -25,17 +25,17 @@ class _MyCustomImageState extends State<MyCustomImage> {
 
   int subValue = 0;
   List images = List.filled(4, null);
-  List<XFile> _imageFile = List.filled(4, null);
+  List<XFile> _imageFile =  List.filled(4, XFile(''));
 
   @override
   void initState() {
     super.initState();
 
-    if (widget.count != null && widget.count > 0) {
-      int total = widget.count;
+    if (widget.count! != null && widget.count! > 0) {
+      int? total = widget.count!;
 
-      if (total < 4 && total > 0) {
-        subValue = (total - 4) * -1;
+      if (total! < 4 && total! > 0) {
+        subValue = (total! - 4) * -1;
       }
       setState(() {
         for (int index = 0; index < total; index++) {
@@ -73,7 +73,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
             child: Stack(
               children: <Widget>[
                 Image.file(
-                  uploadModel.imageFile,
+                  uploadModel.imageFile!,
                   width: 300,
                   height: 300,
                 ),
@@ -91,7 +91,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                         images[index] = 'removed';
 
                         Provider.of<EventProvider>(context, listen: false)
-                            .removeImage(widget.eventID, index);
+                            .removeImage(widget.eventID!, index);
                       });
                     },
                   ),
@@ -101,13 +101,13 @@ class _MyCustomImageState extends State<MyCustomImage> {
           );
         } else if (widget.count != null &&
             images[index] != "removed" &&
-            index < widget.updateList.length &&
-            widget.updateList.elementAt(index) is String) {
+            index < widget.updateList!.length && widget.updateList![index]!=''&&
+            widget.updateList!.elementAt(index) is String) {
           return Card(
               clipBehavior: Clip.antiAlias,
               child: Stack(children: <Widget>[
                 Image.network(
-                  widget.updateList[index],
+                  widget.updateList![index],
                   height: 300,
                   width: 300,
                   fit: BoxFit.fill,
@@ -124,7 +124,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                     onTap: () {
                       setState(() {
                         Provider.of<EventProvider>(context, listen: false)
-                            .removeImage(widget.eventID, index);
+                            .removeImage(widget.eventID!, index);
                         images[index] = "removed";
                       });
                       // Provider.of<EventProvider>(context, listen: false).event.getXFile[index]=null;
@@ -170,7 +170,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
   }
 
   Future _imgFromGallery(int index) async {
-    XFile file =
+    XFile? file =
         await _picker.pickImage(source: ImageSource.gallery, imageQuality: 75);
     if (file != null) {
       _imageFile[index] = file;
@@ -184,7 +184,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
   }
 
   Future _imgFromCamera(int index) async {
-    XFile file =
+    XFile? file =
         await _picker.pickImage(source: ImageSource.camera, imageQuality: 75);
     if (file != null) {
       _imageFile[index] = file;

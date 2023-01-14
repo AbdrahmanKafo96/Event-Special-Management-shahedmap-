@@ -14,7 +14,7 @@ import 'package:location/location.dart' as loc;
 class InformEntity extends StatelessWidget {
   final Telephony telephony = Telephony.instance;
   loc.Location location = loc.Location();
-  loc.LocationData userLocation;
+  loc.LocationData ?userLocation;
 
   @override
   Widget build(BuildContext context) {
@@ -24,26 +24,26 @@ class InformEntity extends StatelessWidget {
             IconButton(
               icon: Icon(Icons.how_to_vote),
               onPressed: () async {
-                String type_name =
+                String? type_name =
                     Provider.of<EventProvider>(context, listen: false)
                         .event
                         .eventType
                         .type_name;
 
-                String category_name =
+                String ?category_name =
                     Provider.of<EventProvider>(context, listen: false)
                         .event
                         .categoryClass
                         .category_name;
-                int emergency_phone =
+                int ?emergency_phone =
                     Provider.of<EventProvider>(context, listen: false)
                         .event
                         .categoryClass
                         .emergency_phone;
                 userLocation = await location.getLocation();
 
-                double longitude = userLocation.longitude;
-                double latitude = userLocation.latitude;
+                double longitude = userLocation!.longitude!;
+                double latitude = userLocation!.latitude!;
                 // final SmsSendStatusListener listener = (SendStatus status) {};
                 String message = "تطبيق الحدث" +
                     "\n" +

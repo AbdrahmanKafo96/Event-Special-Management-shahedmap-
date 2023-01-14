@@ -150,6 +150,24 @@ class Language extends ChangeNotifier {
       return 'كلمة مرور';
     }
   }
+  String newPassword() {
+    if (getLanguage == "AR") {
+      return 'كلمة المرور الجديدة';
+    } else if (getLanguage == "EN") {
+      return "New Password";
+    } else {
+      return 'كلمة المرور الجديدة';
+    }
+  }
+  String confirmPassword() {
+    if (getLanguage == "AR") {
+      return 'اكد كلمة المرور';
+    } else if (getLanguage == "EN") {
+      return "Confirm New Password";
+    } else {
+      return 'اكد كلمة المرور';
+    }
+  }
 
   String enterPassword() {
     if (getLanguage == "AR") {

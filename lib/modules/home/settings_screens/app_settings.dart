@@ -19,9 +19,9 @@ class AppSettings extends StatefulWidget {
 
 class _AppSettingsState extends State<AppSettings> {
   List<String> _languages = ['AR', "EN"];
-  String _selectedLanguage;
+  String _selectedLanguage='AR';
   bool _darkMode = false ,_locationState=false;
-  Box _box;
+  Box? _box;
   Language _language=SharedClass.getLanguage();
   DarkThemePreference darkThemePreference =   DarkThemePreference();
   var themeChange ;
@@ -29,13 +29,13 @@ class _AppSettingsState extends State<AppSettings> {
   void initState() {
     // TODO: implement initState
     super.initState();
-
     SharedClass.getBox().then((value) async {
       setState(() {
         _box=value;
-        _locationState=value.get('fetch');
+        _locationState=value.get('fetch')??false;
         _language.getLanguage;
         _darkMode=value.get(darkThemePreference.THEME_STATUS);
+        _selectedLanguage=_box!.get('language');
        // _darkMode=darkMode;
       });
     });
@@ -71,15 +71,15 @@ class _AppSettingsState extends State<AppSettings> {
                           color: Colors.green,
                         ),
                         trailing: DropdownButton(
-                          dropdownColor: Colors.deepOrange,
+                          dropdownColor: Colors.black.withOpacity(0.9),
                           hint: Text(_language.languages() , style: Theme.of(context).textTheme.bodyText1,),
                           value: _selectedLanguage,
                           onChanged: (newVal)  {
-                            _box.put("language", newVal);
+                            _box!.put("language", newVal);
 
                           //  _language.setLanguage=newVal;
                             setState(() {
-                              language=newVal;
+                              language=newVal!;
                               SharedData.getGlobalLang().setLanguage=newVal  ;
                               _selectedLanguage = newVal;
                             });
@@ -87,7 +87,7 @@ class _AppSettingsState extends State<AppSettings> {
                           },
                           items: _languages.map((lang) {
                             return DropdownMenuItem(
-                              child: Text(lang),
+                              child: Text(lang, style:Theme.of(context).textTheme.bodyText1,),
                               value: lang,
                             );
                           }).toList(),
@@ -100,7 +100,7 @@ class _AppSettingsState extends State<AppSettings> {
                           color: Colors.white,
                         ),
                         trailing: Switch(
-                          activeColor: Colors.deepOrange,
+                          activeColor: Colors.blue,
                           value: _darkMode,
                           onChanged: (val){
                           //_pref.setBool('darkMode', val);
@@ -126,7 +126,7 @@ class _AppSettingsState extends State<AppSettings> {
                             setState(() {
                               _locationState=val;
                              if(_locationState==true){
-                               if (SharedData.getUserState()) {
+                               if (SharedData.getUserState()!) {
                                  Geolocator.checkPermission().then((value) {
                                    Geolocator.requestPermission().then((value) {
 
@@ -149,7 +149,7 @@ class _AppSettingsState extends State<AppSettings> {
                              }else{
                                Workmanager().cancelByTag('fetchLocation');
                               }
-                             _box.put('fetch', _locationState);
+                             _box!.put('fetch', _locationState);
                             });
                           },
                         ),

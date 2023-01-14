@@ -17,9 +17,9 @@ class ResponsePage extends StatefulWidget {
 }
 
 class _ResponsePageState extends State<ResponsePage> {
-  Future<List<Respo>> fuList;
-  List<Respo> futureList = [];
-  int user_id;
+  Future<List<Respo?>?>? fuList;
+  List<Respo>? futureList = [];
+  int? user_id;
 
   @override
   initState() {
@@ -30,7 +30,7 @@ class _ResponsePageState extends State<ResponsePage> {
     getData();
   }
 
-  Future<void> getData() {
+  Future<void> getData() async{
     SharedClass.getBox().then((value) {
       setState(() {
         user_id = value.get('user_id');
@@ -74,7 +74,7 @@ class _ResponsePageState extends State<ResponsePage> {
   generateItemsList() {
     return Padding(
       padding: const EdgeInsets.only(top: 8.0),
-      child: FutureBuilder<List<Respo>>(
+      child: FutureBuilder<List<Respo?>?> (
           future: fuList,
           builder: (context, snapshot) {
             // if(!snapshot.hasData){
@@ -104,14 +104,15 @@ class _ResponsePageState extends State<ResponsePage> {
                 );
 
               case ConnectionState.done:
-                return snapshot.hasData && snapshot.data.length > 0
+                return snapshot.hasData && snapshot.data!.length > 0
                     ? RefreshIndicator(
                         displacement: 5,
+                        color: Colors.deepOrange,
                         onRefresh: getData,
                         child: ListView.builder(
                           shrinkWrap: true,
 
-                          itemCount: snapshot.data.length,
+                          itemCount: snapshot.data!.length,
                           // separatorBuilder: (context, index) => Divider(
                           //   color: Colors.black,
                           // ),
@@ -124,7 +125,7 @@ class _ResponsePageState extends State<ResponsePage> {
                                     onTap: () {},
                                     child: Ink(
                                       child: Card(
-                                        color: snapshot.data[index].seen == 0
+                                        color: snapshot.data![index]!.seen  == 0
                                             ? Colors.grey.withOpacity(0.5)
                                             : Colors.white,
                                         shape: RoundedRectangleBorder(
@@ -136,23 +137,23 @@ class _ResponsePageState extends State<ResponsePage> {
                                         ),
                                         child: ListTile(
                                             onTap: () {
-                                              if (snapshot.data[index].seen ==
+                                              if (snapshot.data![index]!.seen ==
                                                   0) {
                                                 Provider.of<EventProvider>(
                                                         context,
                                                         listen: false)
                                                     .updateNoti(
-                                                        user_id,
-                                                        snapshot.data[index]
-                                                            .notification_id)
+                                                        user_id!,
+                                                        snapshot!.data![index]
+                                                            !.notification_id!)
                                                     .then((value1) {
                                                   Provider.of<EventProvider>(
                                                           context,
                                                           listen: false)
                                                       .getRespo(
-                                                          user_id,
-                                                          snapshot.data[index]
-                                                              .notification_id)
+                                                          user_id!,
+                                                          snapshot.data![index]
+                                                              !.notification_id!)
                                                       .then((value) {
                                                     print(value['data']['lat']);
                                                     print(value['data']['lng']);
@@ -174,9 +175,9 @@ class _ResponsePageState extends State<ResponsePage> {
                                                         context,
                                                         listen: false)
                                                     .getRespo(
-                                                        user_id,
-                                                        snapshot.data[index]
-                                                            .notification_id)
+                                                        user_id!,
+                                                        snapshot.data![index]
+                                                            !.notification_id!)
                                                     .then((value) {
                                                   print(value['data']['lat']);
                                                   print(value['data']['lng']);
@@ -200,7 +201,7 @@ class _ResponsePageState extends State<ResponsePage> {
                                               color: Colors.blueGrey,
                                             ),
                                             title: Text(
-                                              '${snapshot.data[index].type_name}',
+                                              '${snapshot.data![index]!.type_name!}',
                                               style: TextStyle(
                                                   color: Color(0xFF666666)),
                                             )),

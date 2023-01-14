@@ -1,10 +1,10 @@
 
 class MarkerModel{
- final String  type_name , icon;
- final double lat, lng;
+ final String?  type_name , icon;
+ final double? lat, lng;
  //final send_date;
  //final type_id;
- final int postede_id;
+ final int? postede_id;
 
  MarkerModel({this.type_name, this.icon, this.lat, this.lng, this.postede_id});
 

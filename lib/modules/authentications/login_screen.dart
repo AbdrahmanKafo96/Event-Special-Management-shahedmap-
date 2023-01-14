@@ -156,7 +156,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     ),
                                                     onPressed: () {
                                                       if (formKey.currentState
-                                                          .validate()) {
+                                                          !.validate()) {
                                                         Provider.of<UserAuthProvider>(
                                                                 context,
                                                                 listen: false)
@@ -246,7 +246,7 @@ class _LoginUiState extends State<LoginUi> {
                                       context,
                                       onPressed: () async {
                                         DeviceInfoPlugin  deviceInfo= DeviceInfoPlugin();
-                                        String id ;
+                                        String? id ;
                                         if (Platform.isAndroid) {
                                           AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
                                           id=androidInfo.id;
@@ -345,7 +345,7 @@ class _LoginUiState extends State<LoginUi> {
                                                           listen: false)
                                                       .user
                                                       .getDate_of_birth ==
-                                                  null ||
+                                                  '' ||
                                               Provider.of<UserAuthProvider>(
                                                           context,
                                                           listen: false)
@@ -358,21 +358,20 @@ class _LoginUiState extends State<LoginUi> {
                                             showShortToast(
                                                 SharedData.getGlobalLang()
                                                     .dateBirthIsRequired(),
-                                                Colors.orange);
+                                                Colors.red);
                                           }
                                           if (Provider.of<UserAuthProvider>(
                                                       context,
                                                       listen: false)
                                                   .user
-                                                  .getCountry ==
-                                              null) {
+                                                  .getCountry == '') {
                                             showShortToast(
                                                 SharedData.getGlobalLang()
                                                     .countryRequired(),
-                                                Colors.orange);
+                                                Colors.red);
                                           }
                                         }
-                                        if (_formKey.currentState.validate()) {
+                                        if (_formKey.currentState!.validate()) {
                                           checkInternetConnectivity(context)
                                               .then((bool value) async {
                                             if (value) {

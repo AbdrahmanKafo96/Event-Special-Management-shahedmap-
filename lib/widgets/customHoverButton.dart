@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
 
-Widget customHoverButton(BuildContext context, {VoidCallback onPressed, String text ,IconData icon}) {
+Widget customHoverButton(BuildContext context, {VoidCallback? onPressed, String? text ,IconData? icon}) {
   return Container(
     height: 50,
     width: MediaQuery.of(context).size.width * 0.75,
     child: HoverButton(
-      onpressed: onPressed,
+      onpressed: onPressed!,
 
       splashColor: Color(0xFFFF8F00),
       hoverTextColor: Color(0xFFFF8F00),
@@ -27,7 +27,7 @@ Widget customHoverButton(BuildContext context, {VoidCallback onPressed, String t
               ),
             ),
             Text(
-              text,
+              text!,
               style: Theme.of(context)
                   .textTheme
                   .headline4,

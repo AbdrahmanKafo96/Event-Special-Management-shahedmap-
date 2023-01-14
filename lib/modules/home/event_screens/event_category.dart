@@ -16,13 +16,14 @@ class EventCategory extends StatefulWidget {
 }
 
 class _EventCategoryState extends State<EventCategory> {
-  List<CategoryClass> gategoryList = List<CategoryClass>();
-  String dropdownValue1 = '0', dropdownName1;
-  Database database;
+  List<CategoryClass> gategoryList = <CategoryClass>[];
+  String dropdownValue1 = '0';
+  String ?dropdownName1;
+  Database? database;
 
-  List<EventType> typesList = List<EventType>();
-  List<EventType> subTypesList = List<EventType>();
-  String dropdownValue2, dropdownName2;
+  List<EventType> typesList = <EventType>[];
+  List<EventType> subTypesList = <EventType>[];
+  String? dropdownValue2, dropdownName2;
 
   @override
   void initState() {
@@ -48,18 +49,18 @@ class _EventCategoryState extends State<EventCategory> {
               var res = jsonDecode(response.body);
 
               if (res['message'] == true) {
-                int type_count = Sqflite.firstIntValue(
-                    await database.rawQuery('SELECT COUNT(*) FROM event_type'));
+                int? type_count = Sqflite.firstIntValue(
+                    await database!.rawQuery('SELECT COUNT(*) FROM event_type'));
 
-                int category_count = Sqflite.firstIntValue(await database
-                    .rawQuery('SELECT COUNT(*) FROM event_category'));
+                int? category_count = Sqflite.firstIntValue(await database
+                    !.rawQuery('SELECT COUNT(*) FROM event_category'));
 
-                if (type_count > 0 && category_count > 0) {
+                if (type_count! > 0 && category_count! > 0) {
                   await database
-                      .rawDelete('DELETE FROM event_type')
+                      !.rawDelete('DELETE FROM event_type')
                       .then((value) {});
                   await database
-                      .rawDelete('DELETE FROM event_category')
+                      !.rawDelete('DELETE FROM event_category')
                       .then((value) {});
                 }
                 getCategoryList(1);
@@ -84,17 +85,17 @@ class _EventCategoryState extends State<EventCategory> {
   void dispose() {
     super.dispose();
 
-    database.close().then((value) {});
+    database!.close().then((value) {});
   }
 
   void fetchData() async {
-    database.rawQuery('SELECT * FROM event_category').then((list) {
+    database!.rawQuery('SELECT * FROM event_category').then((list) {
       setState(() {
         list.forEach((element) {
           gategoryList.add(CategoryClass(
-              category_id: element['category_id'],
-              category_name: element['category_name'],
-              emergency_phone: int.parse(element['emergency_phone'])));
+              category_id: element['category_id'] as int ,
+              category_name: element['category_name'] as String,
+              emergency_phone: int.parse(element['emergency_phone']as String)));
         });
         gategoryList.insert(
             0,
@@ -107,13 +108,13 @@ class _EventCategoryState extends State<EventCategory> {
       });
     });
 
-    database.rawQuery('SELECT * FROM event_type').then((type_list) {
+    database!.rawQuery('SELECT * FROM event_type').then((type_list) {
       setState(() {
         type_list.forEach((element) {
           typesList.add(EventType(
-              type_id: element['type_id'],
-              type_name: element['type_name'],
-              category_id: element['category_id']));
+              type_id: element['type_id'] as int,
+              type_name: element['type_name'] as String,
+              category_id: element['category_id'] as int));
         });
         subTypesList.insert(
             0,
@@ -146,22 +147,19 @@ class _EventCategoryState extends State<EventCategory> {
   }
 
   void insertCategory(
-      {int category_id, String category_name, int emergency_phone}) {
-    database.transaction((txn) {
+      {int? category_id, String? category_name, int? emergency_phone}) {
+    database!.transaction((txn) async{
       txn.rawInsert(
           'INSERT INTO event_category(category_id ,category_name, emergency_phone) VALUES(?,?,?)',
           [category_id, category_name, emergency_phone]).then((id2) {});
-      return null;
     });
   }
 
-  void insertType({int type_id, String type_name, int category_id}) {
-    database.transaction((txn) {
+  void insertType({int? type_id, String? type_name, int? category_id}) {
+    database!.transaction((txn) async{
       txn.rawInsert(
           'INSERT INTO event_type(type_id, type_name, category_id ) VALUES(?, ?, ?)',
           [type_id, type_name, category_id]).then((id2) {});
-
-      return null;
     });
   }
 
@@ -170,17 +168,17 @@ class _EventCategoryState extends State<EventCategory> {
         .fetchEventTypes()
         .then((value) {
       setState(() {
-        value.forEach((EventType element) {
+        value!.forEach((EventType? element) {
           if (state == 1) {
             insertType(
-                type_name: element.type_name,
-                category_id: element.category_id,
-                type_id: element.type_id);
+                type_name: element!.type_name,
+                category_id: element!.category_id,
+                type_id: element!.type_id);
           } else {
             typesList.add(EventType(
-                type_id: element.type_id,
-                type_name: element.type_name,
-                category_id: element.category_id));
+                type_id: element!.type_id,
+                type_name: element!.type_name,
+                category_id: element!.category_id));
           }
         });
         if (state == 0) {
@@ -202,17 +200,17 @@ class _EventCategoryState extends State<EventCategory> {
         .fetchEventCategories()
         .then((value) {
       setState(() {
-        value.forEach((CategoryClass element) {
+        value!.forEach((CategoryClass? element) {
           if (state == 1) {
             insertCategory(
-                category_name: element.category_name,
-                emergency_phone: element.emergency_phone,
-                category_id: element.category_id);
+                category_name: element!.category_name,
+                emergency_phone: element!.emergency_phone,
+                category_id: element!.category_id);
           } else {
             gategoryList.add(CategoryClass(
-                category_id: element.category_id,
-                category_name: element.category_name,
-                emergency_phone: element.emergency_phone));
+                category_id: element!.category_id,
+                category_name: element!.category_name,
+                emergency_phone: element!.emergency_phone));
           }
         });
 
@@ -265,7 +263,7 @@ class _EventCategoryState extends State<EventCategory> {
                     // ),
                     value: dropdownValue1,
 
-                    onChanged: (String value) {
+                    onChanged: (String? value) {
                       setState(() {
                         Provider.of<EventProvider>(context, listen: false).event.categoryClass.category_name =
                             gategoryList
@@ -283,7 +281,7 @@ class _EventCategoryState extends State<EventCategory> {
                                 .toList()[0]
                                 .emergency_phone;
 
-                        dropdownValue1 = value;
+                        dropdownValue1 = value!;
 
                         Provider.of<EventProvider>(context, listen: false)
                             .event
@@ -316,7 +314,7 @@ class _EventCategoryState extends State<EventCategory> {
                               SharedData.getGlobalLang().getLanguage == "AR"
                                   ? Alignment.centerRight
                                   : Alignment.centerLeft,
-                          child: Text(data.category_name,
+                          child: Text(data.category_name!,
                               style: Theme.of(context).textTheme.bodyText1),
                         ),
                       );
@@ -351,7 +349,7 @@ class _EventCategoryState extends State<EventCategory> {
                           isExpanded: true,
                           style: TextStyle(color: Colors.green, fontSize: 19),
                           value: dropdownValue2,
-                          onChanged: (String value) {
+                          onChanged: (String? value) {
                             setState(() {
                               dropdownValue2 = value;
 
@@ -379,7 +377,7 @@ class _EventCategoryState extends State<EventCategory> {
                                             "AR"
                                         ? Alignment.centerRight
                                         : Alignment.centerLeft,
-                                child: Text(data.type_name,
+                                child: Text(data.type_name!,
                                     style:
                                         Theme.of(context).textTheme.bodyText1),
                               ),

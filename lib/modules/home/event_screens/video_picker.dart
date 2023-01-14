@@ -10,8 +10,8 @@ import 'package:shahed/widgets/custom_toast.dart';
 import 'package:video_player/video_player.dart';
 
 class VideoPicker extends StatefulWidget {
-  String oldVideo = "";
-  int eventID;
+  String? oldVideo = "";
+  int? eventID;
 
   VideoPicker({this.oldVideo, this.eventID});
 
@@ -20,8 +20,8 @@ class VideoPicker extends StatefulWidget {
 }
 
 class _VideoPickerState extends State<VideoPicker> {
-  VideoPlayerController _controller;
-  XFile video;
+  VideoPlayerController? _controller;
+  XFile? video;
 
   ImagePicker _picker = ImagePicker();
 
@@ -46,9 +46,9 @@ class _VideoPickerState extends State<VideoPicker> {
     return InkWell(
       onTap: () {
         setState(() {
-          _controller.value.isPlaying
-              ? _controller.pause()
-              : _controller.play();
+          _controller!.value!.isPlaying
+              ? _controller!.pause()
+              : _controller!.play();
         });
       },
       child: widget.oldVideo != "none" &&
@@ -61,7 +61,7 @@ class _VideoPickerState extends State<VideoPicker> {
                 alignment: Alignment.center,
                 children: <Widget>[
                   VideoPlayer(
-                    _controller,
+                    _controller!,
                   ),
                   Positioned(
                     right: 5,
@@ -74,7 +74,7 @@ class _VideoPickerState extends State<VideoPicker> {
                       ),
                       onPressed: () {
                         Provider.of<EventProvider>(context, listen: false)
-                            .removeVideo(widget.eventID);
+                            .removeVideo(widget.eventID!);
                         // this for remove video ... we need it in view screen.
                         setState(() {
                           Provider.of<EventProvider>(context, listen: false)
@@ -94,9 +94,9 @@ class _VideoPickerState extends State<VideoPicker> {
                         radius: 25,
                         onTap: () {
                           setState(() {
-                            _controller.value.isPlaying
-                                ? _controller.pause()
-                                : _controller.play();
+                            _controller!.value.isPlaying
+                                ? _controller!.pause()
+                                : _controller!.play();
                           });
                         },
                         splashColor: Colors.grey,
@@ -105,7 +105,7 @@ class _VideoPickerState extends State<VideoPicker> {
                           width: 34,
                           height: 34,
                           child: Icon(
-                            _controller.value.isPlaying
+                            _controller!.value.isPlaying
                                 ? Icons.pause
                                 : Icons.play_arrow,
                             color: Colors.white,
@@ -131,7 +131,7 @@ class _VideoPickerState extends State<VideoPicker> {
                     //  fit: StackFit.loose,
                     alignment: Alignment.center,
                     children: <Widget>[
-                      VideoPlayer(_controller),
+                      VideoPlayer(_controller!),
                       Positioned(
                         right: 5,
                         top: 5,
@@ -163,9 +163,9 @@ class _VideoPickerState extends State<VideoPicker> {
                             radius: 25,
                             onTap: () {
                               setState(() {
-                                _controller.value.isPlaying
-                                    ? _controller.pause()
-                                    : _controller.play();
+                                _controller!.value.isPlaying
+                                    ? _controller!.pause()
+                                    : _controller!.play();
                               });
                             },
                             splashColor: Colors.grey,
@@ -174,7 +174,7 @@ class _VideoPickerState extends State<VideoPicker> {
                               width: 34,
                               height: 34,
                               child: Icon(
-                                _controller.value.isPlaying
+                                _controller!.value.isPlaying
                                     ? Icons.pause
                                     : Icons.play_arrow,
                                 color: Colors.white,
@@ -190,11 +190,11 @@ class _VideoPickerState extends State<VideoPicker> {
   @override
   void dispose() {
     super.dispose();
-    if (_controller != null) _controller.dispose();
+    if (_controller != null) _controller!.dispose();
   }
 
   _imgFromGallery() async {
-    XFile videofile = await _picker.pickVideo(source: ImageSource.gallery);
+    XFile? videofile = await _picker.pickVideo(source: ImageSource.gallery);
     if (videofile == null) {
       return;
     } else {
@@ -215,7 +215,7 @@ class _VideoPickerState extends State<VideoPicker> {
   }
 
   Future _imgFromCamera() async {
-    XFile videofile = await _picker.pickVideo(source: ImageSource.camera);
+    XFile? videofile = await _picker.pickVideo(source: ImageSource.camera);
 
     if (videofile == null) {
       return;

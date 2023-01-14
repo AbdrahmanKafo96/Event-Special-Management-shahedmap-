@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:shahed/models/navigation_item.dart';
 
 class CategoryClass{
-    int   category_id;
-    String category_name;
-    int emergency_phone;
+    int?   category_id;
+    String? category_name;
+    int? emergency_phone;
 
   CategoryClass({
       this.category_id,
@@ -26,9 +26,9 @@ class CategoryClass{
 }
 
 class Respo{
-  String type_name;
-  int notification_id;
-  int seen;
+  String? type_name;
+  int? notification_id;
+  int? seen;
 
   Respo({
 
@@ -50,9 +50,9 @@ class Respo{
 }
 class EventType {
   //Category category = Category();
-    int type_id;
-    String type_name;
-    int  category_id;
+    int? type_id;
+    String? type_name;
+    int?  category_id;
   EventType({
     this.category_id,
     this.type_id,
@@ -68,12 +68,12 @@ class EventType {
   }
 }
 class MyList {
-  IconData icon;
-  String title;
-  BuildContext context;
-  String routPage;
-  Color color;
-  NavigationItem item;
+  IconData? icon;
+  String? title;
+  BuildContext? context;
+  String? routPage;
+  Color? color;
+  NavigationItem? item;
 
 
   MyList({this.icon, this.title, this.context, this.routPage, this.color , this.item});

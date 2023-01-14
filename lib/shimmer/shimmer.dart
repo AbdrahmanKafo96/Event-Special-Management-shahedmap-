@@ -35,9 +35,8 @@ class NewsCardSkelton extends StatelessWidget {
     );
   }}
 class Skeleton extends StatelessWidget {
-
+  final double?  height, width;
   const Skeleton({  this.height, this.width})  ;
-  final double  height, width;
 
   @override
   Widget build(BuildContext context) {

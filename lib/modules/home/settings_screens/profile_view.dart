@@ -27,17 +27,17 @@ class _ProfilePageState extends State<ProfilePage> {
   final _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
 
-  File _image;
+  File? _image;
   final picker = ImagePicker();
-  String _uri;
+   String?  _uri;
   var result;
   var firstNameCon = TextEditingController();
   var fatherNameCon = TextEditingController();
   var lastNameCon = TextEditingController();
   var dateCon = TextEditingController(text: "1960-01-01 00:00:00.000");
-  String country1 = "";
+  String? country1 = "";
   bool state = false;
-  Witness witness;
+  Witness? witness;
   ImagePicker _picker = ImagePicker();
   bool switchPage = false,
       showTextFiled1 = false,
@@ -62,9 +62,9 @@ class _ProfilePageState extends State<ProfilePage> {
             if (value != null) {
               state = true;
               _image = null;
-              _uri = witness.image != null
-                  ? "${SharedClass.routePath}${witness.image}"
-                  : null;
+              _uri = witness!.image != null
+                  ? "${SharedClass.routePath}${witness!.image }"
+                  : null!;
               print(_uri);
               setDataForm();
             }
@@ -79,7 +79,7 @@ class _ProfilePageState extends State<ProfilePage> {
     fatherNameCon.dispose();
     lastNameCon.dispose();
     dateCon.dispose();
-    _uri = null;
+    _uri =null;
     country1 = null;
     witness = null;
     _image = null;
@@ -154,11 +154,13 @@ class _ProfilePageState extends State<ProfilePage> {
                               ),
                             ),
                             backgroundColor: Colors.white,
-                            backgroundImage: _image == null
-                                ? _uri != null
-                                    ? NetworkImage(_uri)
-                                    : null
-                                : FileImage(_image),
+                            backgroundImage:_image   == null  ?
+                            _uri   != null  ?
+                            NetworkImage(_uri!) as ImageProvider<Object>?
+                                : null
+                                : FileImage(_image!)  ,
+
+
                             radius: 80,
                             key: ValueKey(new Random().nextInt(100)),
                           ),
@@ -224,7 +226,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     keyboardType:
                                                         TextInputType.text,
                                                     validator: (value) => value
-                                                            .isEmpty
+                                                            !.isEmpty
                                                         ? SharedData
                                                                 .getGlobalLang()
                                                             .firstNameIsRequired()
@@ -253,7 +255,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     keyboardType:
                                                         TextInputType.text,
                                                     validator: (value) => value
-                                                            .isEmpty
+                                                            !.isEmpty
                                                         ? SharedData
                                                                 .getGlobalLang()
                                                             .middleNameRequired()
@@ -281,7 +283,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     keyboardType:
                                                         TextInputType.text,
                                                     validator: (value) => value
-                                                            .isEmpty
+                                                            !.isEmpty
                                                         ? SharedData
                                                                 .getGlobalLang()
                                                             .familyNameRequired()
@@ -402,7 +404,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                               .then((bool value) async {
                                             if (value) {
                                               var form = _formKey.currentState;
-                                              if (form.validate()) {
+                                              if (form!.validate()) {
                                                 state == true
                                                     ? updateForm(context)
                                                     : saveData(context);
@@ -611,7 +613,7 @@ class _ProfilePageState extends State<ProfilePage> {
               .toString(),
         };
 
-        bool res = await Provider.of<UserAuthProvider>(context, listen: false)
+        bool? res = await Provider.of<UserAuthProvider>(context, listen: false)
             .saveProfileData(data);
         if (res == true)
           customScaffoldMessenger(
@@ -636,11 +638,11 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   void setDataForm() {
-    firstNameCon.text = witness != null ? witness.first_name : "";
-    fatherNameCon.text = witness != null ? witness.father_name : "";
-    lastNameCon.text = witness != null ? witness.family_name : "";
+    firstNameCon.text = witness  != null ? witness!.first_name! : "";
+    fatherNameCon.text = witness != null ? witness!.father_name! : "";
+    lastNameCon.text = witness != null ? witness!.family_name! : "";
     dateCon.text =
-        witness != null ? (witness.date_of_birth) : "1960-01-01 00:00:00.000";
+        witness != null ? (witness!.date_of_birth!) : "1960-01-01 00:00:00.000";
     print(dateCon.text);
     witness != null
         ? Provider.of<UserAuthProvider>(context, listen: false)
@@ -650,11 +652,11 @@ class _ProfilePageState extends State<ProfilePage> {
             .user
             .setDate_of_birth = "1960-01-01 00:00:00.000";
 
-    country1 = witness != null ? witness.country : "";
+    country1 = witness != null ? witness!.country : "";
     witness != null
         ? Provider.of<UserAuthProvider>(context, listen: false)
             .user
-            .setCountry = witness.country
+            .setCountry = witness!.country!
         : Provider.of<UserAuthProvider>(context, listen: false)
             .user
             .setCountry = "";
@@ -681,7 +683,7 @@ class _ProfilePageState extends State<ProfilePage> {
               .toString(),
         };
 
-        bool res = await Provider.of<UserAuthProvider>(context, listen: false)
+        bool? res = await Provider.of<UserAuthProvider>(context, listen: false)
             .updateProfileData(data);
         if (res == true)
           customScaffoldMessenger(
@@ -705,8 +707,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<Witness> checkState(result) async {
-    Witness res = await Provider.of<UserAuthProvider>(context, listen: false)
+    Witness? res = await Provider.of<UserAuthProvider>(context, listen: false)
         .checkState(result);
-    return res;
+    return res!;
   }
 }

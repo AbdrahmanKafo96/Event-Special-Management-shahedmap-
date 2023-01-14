@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 
 class Notification {
-  Notification() {
+    Notification() {
     var initializationSettingsAndroid =
     AndroidInitializationSettings('@mipmap/ic_launcher_my_location');
     final DarwinInitializationSettings initializationSettingsDarwin =
@@ -15,7 +15,7 @@ class Notification {
         onDidReceiveNotificationResponse:null);
   }
 
-  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
+ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 
   Future showNotificationWithoutSound(String position) async {
     var androidPlatformChannelSpecifics = AndroidNotificationDetails(

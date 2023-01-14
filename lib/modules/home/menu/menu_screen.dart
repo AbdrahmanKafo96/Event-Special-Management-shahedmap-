@@ -20,9 +20,9 @@ class EventsMenu extends StatefulWidget {
 }
 
 class _EventsMenuState extends State<EventsMenu> {
-  Future<List<Event>> fuList;
-  List<Event> futureList = [];
-  List<dynamic> listNames = [];
+  Future<List<Event?>?>? fuList=null;
+  List<Event>? futureList = [];
+  List<dynamic>? listNames = [];
   bool result = true;
 
   @override
@@ -60,9 +60,9 @@ class _EventsMenuState extends State<EventsMenu> {
       try {
         if (list != false)
           for (int i = 0; i < list.length; i++) {
-            listNames.add(list[i]['event_name']);
-            futureList.add(Event(
-                addede_id: int.parse(list[i]['addede_id']),
+            listNames!.add(list[i]['event_name']);
+            futureList!.add(Event(
+                addede_id: int.parse(list [i]['addede_id'] ),
                 event_name: list[i]['event_name'],
                 description: list[i]['event_name'] == null
                     ? ""
@@ -73,8 +73,8 @@ class _EventsMenuState extends State<EventsMenu> {
   }
 
   generateItemsList() {
-    return FutureBuilder<List<Event>>(
-        future: fuList,
+    return FutureBuilder<List<Event?>?>(
+        future: fuList ,
         builder: (context, snapshot) {
           // if(!snapshot.hasData){
           //   return Center(child: CircularProgressIndicator());
@@ -110,7 +110,7 @@ class _EventsMenuState extends State<EventsMenu> {
                       child: ListView.builder(
                         shrinkWrap: true,
 
-                        itemCount: snapshot.data.length,
+                        itemCount: snapshot.data!.length,
                         // separatorBuilder: (context, index) => Divider(
                         //   color: Colors.black,
                         // ),
@@ -141,11 +141,11 @@ class _EventsMenuState extends State<EventsMenu> {
                                             MaterialPageRoute(
                                                 builder: (context) => EventView(
                                                       eventID: int.parse(
-                                                          snapshot.data[index]
-                                                              .addede_id),
+                                                          snapshot.data![index]
+                                                              !.addede_id),
                                                       eventName: snapshot
-                                                          .data[index]
-                                                          .event_name,
+                                                          .data![index]
+                                                          !.event_name!,
                                                   state: 0,
                                                     )),
                                           );
@@ -172,11 +172,11 @@ class _EventsMenuState extends State<EventsMenu> {
                                                         builder: (context) => EventView(
                                                             eventID: int.parse(
                                                                 snapshot
-                                                                    .data[index]
-                                                                    .addede_id),
+                                                                    .data![index]
+                                                                    !.addede_id!),
                                                             eventName: snapshot
-                                                                .data[index]
-                                                                .event_name,state: 0, )),
+                                                                .data![index]
+                                                                !.event_name!,state: 0, )),
                                                   );
                                                 }
                                               });
@@ -193,10 +193,11 @@ class _EventsMenuState extends State<EventsMenu> {
                                                         context)
                                                     .then((bool value) async {
                                                   if (value) {
+
                                                     return customDeleteEventAlert(
-                                                        int.parse(snapshot
-                                                            .data[index]
-                                                            .addede_id),
+                                                        int.parse( snapshot
+                                                            .data![index]
+                                                        !.addede_id !  ),
                                                         snapshot,
                                                         index,
                                                         context);
@@ -212,14 +213,14 @@ class _EventsMenuState extends State<EventsMenu> {
                                       color: Colors.grey.shade200,
                                     ),
                                     title: Text(
-                                      '${snapshot.data[index].event_name}',
+                                      '${snapshot.data![index]!.event_name}',
                                       softWrap: true,
                                       //overflow: TextOverflow.visible,
                                       style:
                                           Theme.of(context).textTheme.headline4,
                                     ),
                                     subtitle: Text(
-                                      '${snapshot.data[index].description}',
+                                      '${snapshot.data![index]!.description}',
                                       softWrap: true,
                                       overflow: TextOverflow.ellipsis,
 
@@ -265,9 +266,9 @@ class _EventsMenuState extends State<EventsMenu> {
         });
   }
 
-  Future<AlertDialog> customDeleteEventAlert(int addede_id,
+    customDeleteEventAlert(int addede_id,
       AsyncSnapshot snapshot, int index, BuildContext context) async {
-    return await customReusableShowDialog(
+     return await customReusableShowDialog(
       context,
       SharedData.getGlobalLang().deleteEvent(),
       widget: Text(SharedData.getGlobalLang().alertDeleteEvent()),
@@ -325,7 +326,7 @@ class _EventsMenuState extends State<EventsMenu> {
                   showSearch(
                       context: context,
                       delegate: DataSearchSe(
-                          listName: listNames, futureList: futureList));
+                          listName: listNames!, futureList: futureList!));
                 }),
           ], title: SharedData.getGlobalLang().events(), icon: FontAwesomeIcons.list),
           body: result == true

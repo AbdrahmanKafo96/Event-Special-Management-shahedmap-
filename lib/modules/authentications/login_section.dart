@@ -13,7 +13,7 @@ class LoginForm extends StatefulWidget {
 class _LoginFormState extends State<LoginForm> {
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
-  bool _passwordVisible;
+  bool? _passwordVisible;
 
   @override
   void initState() {
@@ -46,10 +46,10 @@ class _LoginFormState extends State<LoginForm> {
             height: 12,
           ),
           customTextFormField(context,
-              obsecure: !_passwordVisible,
+              obsecure: !_passwordVisible!,
               keyboardType: TextInputType.text,
               validator: (value) {
-              String result = ValidatorClass.isValidPassword(value);
+              String result = ValidatorClass.isValidPassword(value!);
               if (result == "")
                 return null;
               else {
@@ -65,13 +65,13 @@ class _LoginFormState extends State<LoginForm> {
               suffixIcon: IconButton(
                 icon: Icon(
                   // Based on passwordVisible state choose the icon
-                  _passwordVisible ? Icons.visibility : Icons.visibility_off,
+                  _passwordVisible! ? Icons.visibility : Icons.visibility_off,
                   color: Colors.grey,
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable
                   setState(() {
-                    _passwordVisible = !_passwordVisible;
+                    _passwordVisible = !_passwordVisible!;
                   });
                 },
               ),

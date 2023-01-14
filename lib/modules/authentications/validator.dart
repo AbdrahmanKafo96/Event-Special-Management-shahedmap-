@@ -12,7 +12,7 @@ class ValidatorClass {
     return emailValid;
   }
 
-  static String isValidName(String value) {
+  static String? isValidName(String value) {
     if (value.isEmpty || value == null) {
       return language.thisFieldIsRequired();
     } else {

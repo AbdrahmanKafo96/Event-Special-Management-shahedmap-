@@ -8,17 +8,18 @@ import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/models/category.dart';
 import 'package:shahed/models/event.dart';
 import 'package:shahed/singleton/singleton.dart';
-import 'package:intl/intl.dart';
+ import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import '../models/mission.dart';
 
 class EventProvider extends ChangeNotifier {
   Event event = Event();
 
-  Future<bool> addEvent(Map userData) async {
+  Future<bool?> addEvent(Map userData) async {
+
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       WeatherFactory wf = SharedClass.getWeatherFactory();
       Weather w = await wf.currentWeatherByLocation(
@@ -35,7 +36,7 @@ class EventProvider extends ChangeNotifier {
       request.fields['eventtype'] = userData['eventtype'];
       request.fields['lat'] = userData['lat'];
       request.fields['lng'] = userData['lng'];
-      request.fields['weather_temperateure'] =w.temperature.celsius.toInt().toString();
+      request.fields['weather_temperateure'] =w.temperature!.celsius!.toInt().toString();
       // code below for camera image ...
 
       if (event.getXFile != null) {
@@ -93,7 +94,7 @@ class EventProvider extends ChangeNotifier {
   Future update_position(Map data) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
 
       final response = await http.post(
@@ -124,7 +125,7 @@ class EventProvider extends ChangeNotifier {
   Future deleteEvent(int addede_id, int sender_id) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String ? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'sender_id': sender_id.toString(),
@@ -150,10 +151,11 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  updateEvent(Map userData) async {
+    Future<bool> updateEvent(Map userData) async {
     try {
+
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       //var _count = 1;
       var request = http.MultipartRequest(
@@ -165,28 +167,29 @@ class EventProvider extends ChangeNotifier {
       request.fields['event_name'] = userData['event_name'];
 
       if (event.getXFile != null) if (event.getXFile.length > 0) {
-        if (event.getXFile[0] != null)
+
+        if (event.getXFile[0] != null && event.getXFile[0].path != '')
           request.files.add(http.MultipartFile(
               'image1',
               File(event.getXFile[0].path).readAsBytes().asStream(),
               File(event.getXFile[0].path).lengthSync(),
               filename: event.getXFile[0].path.split("/").last));
 
-        if (event.getXFile[1] != null)
+        if (event.getXFile[1] != null && event.getXFile[1].path != '')
           request.files.add(http.MultipartFile(
               'image2',
               File(event.getXFile[1].path).readAsBytes().asStream(),
               File(event.getXFile[1].path).lengthSync(),
               filename: event.getXFile[1].path.split("/").last));
 
-        if (event.getXFile[2] != null)
+        if (event.getXFile[2] != null && event.getXFile[2].path != '')
           request.files.add(http.MultipartFile(
               'image3',
               File(event.getXFile[2].path).readAsBytes().asStream(),
               File(event.getXFile[2].path).lengthSync(),
               filename: event.getXFile[2].path.split("/").last));
 
-        if (event.getXFile[3] != null)
+        if (event.getXFile[3] != null && event.getXFile[3].path != '')
           request.files.add(http.MultipartFile(
               'image4',
               File(event.getXFile[3].path).readAsBytes().asStream(),
@@ -222,7 +225,10 @@ class EventProvider extends ChangeNotifier {
             SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
         return false;
       }
-    } catch (e) {}
+
+    } catch (e) {
+      return false;
+    }
   }
 
   //  we need to close connection after call these methods
@@ -232,7 +238,7 @@ class EventProvider extends ChangeNotifier {
         'addede_id': addede_id.toString(),
       };
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
 
       final response = await http.post(
@@ -257,10 +263,10 @@ class EventProvider extends ChangeNotifier {
   }
 
 //  we need to close connection after call these methods
-  Future<List<CategoryClass>> fetchEventCategories() async {
+  Future<List<CategoryClass?>?> fetchEventCategories() async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.get(
           Uri.parse('${SharedClass.apiPath}/fetchEventCategories'),
@@ -288,10 +294,10 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<EventType>> fetchEventTypes() async {
+  Future<List<EventType?>?> fetchEventTypes() async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http
           .get(Uri.parse('${SharedClass.apiPath}/fetchEventTypes'), headers: {
@@ -340,7 +346,7 @@ class EventProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final parsed = response.body;
-
+        showShortToast(SharedData.getGlobalLang().saveUpdates(), Colors.green);
         return parsed;
       } else {
         showShortToast(
@@ -379,13 +385,13 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<Event>> fetchAllListByUserId(int sender_id) async {
+  Future<List<Event?>?> fetchAllListByUserId(int sender_id) async {
     try {
       Map data = {
         'sender_id': sender_id.toString(),
       };
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${SharedClass.apiPath}/fetchAllListByUserId'),
@@ -410,13 +416,13 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<Respo>> getAllRespons(int user_id) async {
+  Future<List<Respo?>?> getAllRespons(int user_id) async {
     try {
       Map data = {
         'user_id': user_id.toString(),
       };
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${SharedClass.apiPath}/getAllRespons'),
@@ -440,13 +446,13 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<Event>> fetchSearchedEvent(int addede_id) async {
+  Future<List<Event?>?> fetchSearchedEvent(int addede_id) async {
     try {
       Map data = {
         'addede_id': addede_id.toString(),
       };
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       final response = await http.post(
           Uri.parse('${SharedClass.apiPath}/getEvent'),
@@ -501,10 +507,10 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<bool> updateNoti(int user_id, int notification_id) async {
+  Future<bool?> updateNoti(int user_id, int notification_id) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
@@ -531,10 +537,10 @@ class EventProvider extends ChangeNotifier {
         throw Exception('Failed to load List');
       }
     } catch (e) {}
-  } Future<bool> updateMissionSeen(String user_id , mission_id) async {
+  } Future<bool?> updateMissionSeen(String user_id , mission_id) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'user_id': user_id ,
@@ -568,7 +574,7 @@ class EventProvider extends ChangeNotifier {
   Future<dynamic> getRespo(int user_id, int notification_id) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'user_id': user_id.toString(),
@@ -597,10 +603,10 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<bool> stopTracking(int sender_id, int beneficiarie_id) async {
+  Future<bool?> stopTracking(int sender_id, int beneficiarie_id) async {
     try {
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       Map data = {
         'sender_id': sender_id.toString(),
@@ -633,14 +639,14 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<MarkerModel>> getEvents() async {
+  Future<List<MarkerModel?>?> getEvents() async {
     try {
       // var now = new DateTime.now();
       // var formatter = new DateFormat('yyyy-MM-dd');
       // String formattedDate = formatter.format(now);
 
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
       // Map data = {
       //  // 'date':formattedDate.toString(),
@@ -670,14 +676,14 @@ class EventProvider extends ChangeNotifier {
     } catch (e) {}
   }
 
-  Future<List<Mission>> getMissions(String user_id, ben_id) async {
+  Future<List<Mission?>?> getMissions(String user_id, ben_id) async {
     try {
       Map data = {
         'user_id': user_id,
         'ben_id': ben_id,
       };
       final storage = await SharedClass.getStorage();
-      String value = await storage.read(
+      String? value = await storage.read(
           key: "token", aOptions: SharedClass.getAndroidOptions());
 
       final response = await http.post(

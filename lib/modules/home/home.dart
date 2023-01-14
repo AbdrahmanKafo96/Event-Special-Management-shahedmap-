@@ -42,27 +42,27 @@ class _HomePageState extends State<HomePage> {
   GlobalKey<ScaffoldState> _scaffoldkey = GlobalKey<ScaffoldState>();
 
   // GlobalKey _appbarkey = GlobalKey();
-  Box box;
+  Box? box;
 
   var provider;
-  double latitude, long;
-  List points;
-  String titleNotification;
-  bool _isMoving;
-  bool _enabled;
-  String motionActivity;
-  String odometer;
-  String content;
-  String routeName = '';
-  String apiPath = 'http://ets.ly/api/update_position';
+  double  latitude=0.0, long =0.0;
+  List? points;
+  String? titleNotification;
+  bool? _isMoving;
+  bool? _enabled;
+  String? motionActivity;
+  String? odometer;
+  String? content;
+  String? routeName = '';
+  String? apiPath = 'http://ets.ly/api/update_position';
 
   @pragma('vm:entry-point')
   void openPage(var ro,
-      {double lat, lng, List path_coordinates = null, String route = null}) {
-    print("route : $routeName");
+      {double? lat, lng, List? path_coordinates = null, String? route = null}) {
+
 
     if (route == null) {
-      route = routeName;
+      route = routeName!;
     }
     if (route != null) {
       if (route == 'missionWithPath' || route == "mission") {
@@ -74,9 +74,9 @@ class _HomePageState extends State<HomePage> {
           MaterialPageRoute(
             builder: (context) => BrowserMap(
               latLngDestination: LatLng(
-                  lat == null ? latitude : lat, lng == null ? long : lng),
+                  lat == null ? latitude  : lat, lng == null ? long : lng),
               state: 1,
-              path: path_coordinates,
+              path: path_coordinates!,
               pathshasData: path_coordinates.length > 0 ? 'yes' : '',
             ),
           ),
@@ -87,8 +87,8 @@ class _HomePageState extends State<HomePage> {
           context,
           MaterialPageRoute(
               builder: (context) => Mappoly(
-                  lat: lat == null ? latitude : lat,
-                  lng: lng == null ? long : lng)),
+                  lat: lat  == null ? latitude  : lat ,
+                  lng: lng  == null ? long  : lng )),
         );
       }
     }
@@ -113,12 +113,12 @@ class _HomePageState extends State<HomePage> {
         onDidReceiveNotificationResponse: openPage); // foreground notification
     // foreground notification
     FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification.android;
+      RemoteNotification notification = message!.notification!;
+      AndroidNotification android = message!.notification!.android!;
 
       if (notification != null && android != null) {
-        print(message.notification.title);
-        print(message.notification.body);
+        print(message.notification!.title);
+        print(message.notification!.body);
         print(message.data);
 
         routeName = message.data['route'];
@@ -162,8 +162,8 @@ class _HomePageState extends State<HomePage> {
     });
     FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
       print('A new onMessageOpenedApp event was published!');
-      RemoteNotification notification = message.notification;
-      AndroidNotification android = message.notification.android;
+      RemoteNotification notification = message!.notification!;
+      AndroidNotification android = message!.notification!.android!;
       if (notification != null && android != null) {
         var provider = Provider.of<CounterProvider>(context ,listen: false);
         if (message.data['route'] == 'missionWithPath' || message.data['route'] == "mission") {
@@ -211,53 +211,55 @@ class _HomePageState extends State<HomePage> {
 
   startTrip() async {
     final storage = await SharedClass.getStorage();
-    String token = await storage.read(
+    String? token = await storage.read(
         key: "token", aOptions: SharedClass.getAndroidOptions());
     SharedClass.getBox().then((UserInfo) async {
+      if(SharedData.getUserState()){
+        // 1.  Listen to events (See docs for all 12 available events).
+        bg.BackgroundGeolocation.onLocation(_onLocation);
+        bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
+        bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
+        bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
+        bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
 
-      // 1.  Listen to events (See docs for all 12 available events).
-      bg.BackgroundGeolocation.onLocation(_onLocation);
-      bg.BackgroundGeolocation.onMotionChange(_onMotionChange);
-      bg.BackgroundGeolocation.onActivityChange(_onActivityChange);
-      bg.BackgroundGeolocation.onProviderChange(_onProviderChange);
-      bg.BackgroundGeolocation.onConnectivityChange(_onConnectivityChange);
-
-      bg.BackgroundGeolocation.onHttp((response) {
-        print(
-            "[http] response:   ${response.success}, ${response.status}, ${response.responseText}");
-      });
-
-      bg.BackgroundGeolocation.ready(bg.Config(
-              desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
-              distanceFilter: 5,
-              locationTemplate:
-                  '{"lat":<%= latitude %>,"lng":<%= longitude %>,"time":"<%= timestamp %>","speed":<%= speed %>,"accuracy":<%= accuracy %>}',
-              url: '$apiPath',
-              method: 'POST',
-              httpRootProperty: '.',
-              headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer $token',
-                'content-type': 'application/json',
-              },
-              params: {
-                'sender_id': UserInfo.get('user_id'),
-                'beneficiarie_id': int.parse(UserInfo.get('beneficiarie_id')),
-                'distance': 10,
-              },
-              stopOnTerminate: false,
-              startOnBoot: true,
-              debug: true,
-              logLevel: bg.Config.LOG_LEVEL_VERBOSE,
-              reset: true))
-          .then((bg.State state) {
-        //    _getUserLocation();
-        setState(() {
-          _enabled = state.enabled;
-          _isMoving = state.isMoving;
+        bg.BackgroundGeolocation.onHttp((response) {
+          print(
+              "[http] response:   ${response.success}, ${response.status}, ${response.responseText}");
         });
-      });
-    });
+
+        bg.BackgroundGeolocation.ready(bg.Config(
+            desiredAccuracy: bg.Config.DESIRED_ACCURACY_HIGH,
+            distanceFilter: 5,
+            locationTemplate:
+            '{"lat":<%= latitude %>,"lng":<%= longitude %>,"time":"<%= timestamp %>","speed":<%= speed %>,"accuracy":<%= accuracy %>}',
+            url: '$apiPath',
+            method: 'POST',
+            httpRootProperty: '.',
+            headers: {
+              'Accept': 'application/json',
+              'Authorization': 'Bearer $token',
+              'content-type': 'application/json',
+            },
+            params: {
+              'sender_id': UserInfo.get('user_id'),
+              'beneficiarie_id': int.parse(UserInfo.get('beneficiarie_id')),
+              'distance': 10,
+            },
+            stopOnTerminate: false,
+            startOnBoot: true,
+            debug: true,
+            logLevel: bg.Config.LOG_LEVEL_VERBOSE,
+            reset: true))
+            .then((bg.State state) {
+          //    _getUserLocation();
+          setState(() {
+            _enabled = state.enabled;
+            _isMoving = state.isMoving;
+          });
+        });
+
+      } });
+
   }
 
   void _onClickEnable(enabled) {
@@ -301,11 +303,11 @@ class _HomePageState extends State<HomePage> {
   // Manually toggle the tracking state:  moving vs stationary
   void _onClickChangePace() {
     setState(() {
-      _isMoving = !_isMoving;
+      _isMoving = !_isMoving!;
     });
     print("[onClickChangePace] -> $_isMoving");
 
-    bg.BackgroundGeolocation.changePace(_isMoving).then((bool isMoving) {
+    bg.BackgroundGeolocation.changePace(_isMoving!).then((bool isMoving) {
       print('[changePace] success $isMoving');
     }).catchError((e) {
       print('[changePace] ERROR: ' + e.code.toString());
@@ -358,7 +360,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Scaffold build(BuildContext context)   {
     return Scaffold(
         key: _scaffoldkey,
         resizeToAvoidBottomInset: false,
@@ -367,14 +369,14 @@ class _HomePageState extends State<HomePage> {
           title: SharedData.getGlobalLang().WitnessApp(),
           icon: FontAwesomeIcons.house,
           actions: [
-            SharedData.getUserState() == true
+             SharedData.getUserState()  == true
                 ? Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Transform.scale(
                       scale: 1.5,
                       child: Switch(
                           activeColor: Colors.redAccent,
-                          value: _enabled,
+                          value: _enabled!,
                           onChanged: _onClickEnable),
                     ),
                   )
@@ -386,7 +388,7 @@ class _HomePageState extends State<HomePage> {
                         minWidth: 30.0,
                         child: Icon(FontAwesomeIcons.personWalking,
                             color: Colors.white),
-                        color: (_isMoving) ? Colors.red : Colors.green,
+                        color: (_isMoving!) ? Colors.red : Colors.green,
                         onPressed: _onClickChangePace),
                   )
                 : SizedBox.shrink(),
@@ -422,7 +424,7 @@ class _HomePageState extends State<HomePage> {
                           Row(
                             children: [
                               Text(
-                                " ${SharedData.getGlobalLang().Hello()} ${box.get('unitname')}!",
+                                " ${SharedData.getGlobalLang().Hello()} ${box!.get('unitname')}!",
                                 style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 20,
@@ -522,7 +524,7 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         countryName = result.country;
         subAdminArea = result.address;
-        weather = w.temperature.celsius.toInt().toString();
+        weather = w.temperature!.celsius!.toInt().toString();
       });
     } on PlatformException catch (e) {
       if (e.code == 'PERMISSION_DENIED') {

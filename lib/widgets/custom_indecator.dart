@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-Widget customCircularProgressIndicator({Color color}){
+Widget customCircularProgressIndicator({Color? color}){
   return Container(
       child: Center(
           child: CircularProgressIndicator(

@@ -4,9 +4,9 @@ import 'package:shahed/models/navigation_item.dart';
 
 class NavigationProvider extends ChangeNotifier {
   NavigationItem _navigationItem = NavigationItem.home;
-  Box _box;
+  Box? _box;
 
-  Box get getBox => _box;
+  Box get getBox => _box!;
 
   set setBox(Box value) {
     _box = value;

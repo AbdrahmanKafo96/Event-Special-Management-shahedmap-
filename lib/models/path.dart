@@ -1,6 +1,6 @@
 class Path{
-  String title;
-  List points;
+  String? title;
+  List? points;
 
   Path({this.title, this.points});
 }

@@ -11,7 +11,7 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../models/mission.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'mission_track.dart';
+//import 'mission_track.dart';
 
 class Missions extends StatefulWidget {
   @override
@@ -20,7 +20,7 @@ class Missions extends StatefulWidget {
 
 class _MissionsState extends State<Missions> {
   // Future<List<Respo>> fuList;
-  Future<List<Mission>> futureList;
+  Future<List<Mission?>?>?  futureList;
 
   @override
   initState() {
@@ -28,32 +28,29 @@ class _MissionsState extends State<Missions> {
     Future.delayed(Duration.zero).then((value) {
       Provider.of<CounterProvider>(context ,listen: false).setCounterMissions=false;
     });
-
-   setState(() {
      getData();
-   });
   }
 
-  String user_id, ben_id;
-
-  Future<void> getData() {
+  String? user_id, ben_id;
+  Future<void> getData() async {
 
         SharedClass.getBox().then((value) async {
         setState(() {
           user_id = value.get('user_id').toString();
           ben_id = value.get('beneficiarie_id').toString();
           futureList = Provider.of<EventProvider>(context, listen: false)
-              .getMissions(user_id, ben_id);
+              .getMissions(user_id!, ben_id);
         });
 
     });
+
   }
 
   generateItemsList() {
     return Padding(
         padding: const EdgeInsets.only(top: 8.0),
-        child: FutureBuilder<List<Mission>>(
-            future:futureList,
+        child: FutureBuilder<List<Mission?>?>(
+            future:futureList ,
             builder: (ctx, snapshot) {
               // if(!snapshot.hasData){
               //   return Center(child: CircularProgressIndicator());
@@ -82,7 +79,7 @@ class _MissionsState extends State<Missions> {
                   );
 
                 case ConnectionState.done:
-                  return snapshot.hasData && snapshot.data.length > 0
+                  return snapshot.hasData && snapshot.data!.length > 0
                       ? RefreshIndicator(
                           displacement: 5,
                           color: Colors.orange,
@@ -90,7 +87,7 @@ class _MissionsState extends State<Missions> {
                           child: ListView.builder(
                             shrinkWrap: true,
 
-                            itemCount: snapshot.data.length,
+                            itemCount: snapshot.data!.length,
                             // separatorBuilder: (context, index) => Divider(
                             //   color: Colors.black,
                             // ),
@@ -100,13 +97,13 @@ class _MissionsState extends State<Missions> {
                                 child: Column(
                                   children: [
                                     Card(
-                                      color: snapshot.data[index].seen == 0
+                                      color: snapshot.data![index]!.seen == 0
                                           ? Color(0xFFc3c3c4)
                                           : Color(0xFF424250),
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
                                             color:
-                                                snapshot.data[index].seen == 0
+                                                snapshot.data![index]!.seen == 0
                                                     ? Colors.black54
                                                     : Colors.white12),
                                         borderRadius:
@@ -114,13 +111,13 @@ class _MissionsState extends State<Missions> {
                                       ),
                                       child: ListTile(
                                         onTap: () {
-                                          if (snapshot.data[index].seen == 0) {
+                                          if (snapshot.data![index]!.seen == 0) {
                                             Provider.of<EventProvider>(context,
                                                     listen: false)
                                                 .updateMissionSeen(
-                                                    user_id,
+                                                    user_id!,
                                                     snapshot
-                                                        .data[index].mission_id
+                                                        .data![index]!.mission_id
                                                         .toString())
                                                 .then((value) {
                                               Navigator.push(
@@ -130,16 +127,15 @@ class _MissionsState extends State<Missions> {
                                                         BrowserMap(
                                                           latLngDestination: LatLng(
                                                               snapshot
-                                                                  .data[index]
-                                                                  .lat_finish,
+                                                                  .data![index]
+                                                                  !.lat_finish!,
                                                               snapshot
-                                                                  .data[index]
-                                                                  .lng_finish),
+                                                                  .data![index]
+                                                                  !.lng_finish!),
                                                           state: 1,
                                                           pathshasData: 'yes',
                                                           path: snapshot
-                                                              .data[index]
-                                                              .points,
+                                                              .data![index]!.points ,
                                                         )),
                                               );
                                             });
@@ -151,25 +147,25 @@ class _MissionsState extends State<Missions> {
                                                       (context) => BrowserMap(
                                                             latLngDestination: LatLng(
                                                                 snapshot
-                                                                    .data[index]
-                                                                    .lat_finish,
+                                                                    .data![index]!
+                                                                    .lat_finish!,
                                                                 snapshot
-                                                                    .data[index]
-                                                                    .lng_finish),
+                                                                    .data![index]!
+                                                                    .lng_finish!),
                                                             state: 1,
                                                             pathshasData: 'yes',
                                                             path: snapshot
-                                                                .data[index]
-                                                                .points,
+                                                                .data![index]
+                                                                !.points,
                                                           )),
                                             );
                                           }
                                         },
                                         subtitle: Text(
-                                          '${snapshot.data[index].mission_date}',
+                                          '${snapshot.data![index]!.mission_date }',
                                           softWrap: true,
                                           overflow: TextOverflow.ellipsis,
-                                          style: snapshot.data[index].seen == 0
+                                          style: snapshot.data![index]!.seen == 0
                                               ? Theme.of(context)
                                                   .textTheme
                                                   .bodyText2
@@ -180,12 +176,12 @@ class _MissionsState extends State<Missions> {
                                         leading: Icon(
                                           Icons.task_alt,
                                           size: 30,
-                                          color: snapshot.data[index].seen == 0
+                                          color: snapshot.data![index]!.seen == 0
                                               ? Colors.green
                                               : Colors.white,
                                         ),
                                         title: Text(
-                                          '${snapshot.data[index].mission_name}',
+                                          '${snapshot.data![index]!.mission_name}',
                                           softWrap: true,
                                           //overflow: TextOverflow.visible,
                                           style: Theme.of(context)

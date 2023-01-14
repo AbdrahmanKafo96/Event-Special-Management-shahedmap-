@@ -19,10 +19,10 @@ class _RegistrationFormState extends State<RegistrationForm> {
   final firstNameController = TextEditingController();
   final fatherNameController = TextEditingController();
   final familyNameController = TextEditingController();
-  String countryController;
+  String? countryController;
 
   final date_of_birthController = TextEditingController();
-  bool _passwordVisible;
+  bool? _passwordVisible;
 
   String country1 = "";
   DateTime selectedDate = DateTime(1960);
@@ -46,7 +46,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
           context,
           validator: (value) {
             // print(Provider.of<UserAuth>(context,listen: false).getPassword.toString() );
-            if (value.isEmpty || value == null)
+            if (value!.isEmpty || value == null)
               return SharedData.getGlobalLang().thisFieldIsRequired();
 
             if (Provider.of<UserAuthProvider>(context, listen: false)
@@ -69,7 +69,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 .user
                 .setConfPassword = value;
           },
-          obsecure: !_passwordVisible,
+          obsecure: !_passwordVisible!,
           editingController: passwordConfController,
           prefixIcon: Icon(
             Icons.password,
@@ -79,12 +79,12 @@ class _RegistrationFormState extends State<RegistrationForm> {
           suffixIcon: IconButton(
             icon: Icon(
               // Based on passwordVisible state choose the icon
-              _passwordVisible ? Icons.visibility : Icons.visibility_off,
+              _passwordVisible! ? Icons.visibility : Icons.visibility_off,
             ),
             onPressed: () {
               // Update the state i.e. toogle the state of passwordVisible variable
               setState(() {
-                _passwordVisible = !_passwordVisible;
+                _passwordVisible = !_passwordVisible!;
               });
             },
           ),
@@ -102,7 +102,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               child: customTextFormField(
                 context,
                 validator: (value) {
-                  return ValidatorClass.isValidName(value);
+                  return ValidatorClass.isValidName(value!);
                 },
                 onChanged: (value) {
                   Provider.of<UserAuthProvider>(context, listen: false)
@@ -122,7 +122,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               child: customTextFormField(
                 context,
                 validator: (value) {
-                  return ValidatorClass.isValidName(value);
+                  return ValidatorClass.isValidName(value!);
                 },
                 onChanged: (value) {
                   Provider.of<UserAuthProvider>(context, listen: false)
@@ -143,7 +143,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               child: customTextFormField(
                 context,
                 validator: (value) {
-                  return ValidatorClass.isValidName(value);
+                  return ValidatorClass.isValidName(value!);
                 },
                 onChanged: (value) {
                   Provider.of<UserAuthProvider>(context, listen: false)
@@ -254,7 +254,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   }
 
   _selectDate(BuildContext context) async {
-    final DateTime selected = await showDatePicker(
+    final DateTime? selected = await showDatePicker(
       context: context,
       initialDate: selectedDate,
 
@@ -302,7 +302,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               ),
             ),
           ),
-          child: child,
+          child: child!,
         );
       },
     );

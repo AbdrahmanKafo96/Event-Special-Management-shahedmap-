@@ -19,7 +19,7 @@ import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart' as p;
 
 class MapMarker extends StatefulWidget {
-  double lat, lng;
+  double? lat, lng;
 
   MapMarker({this.lat, this.lng});
 
@@ -28,13 +28,13 @@ class MapMarker extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MapMarker> {
-  BitmapDescriptor customMarker; //attribute
+  BitmapDescriptor? customMarker; //attribute
   Completer<GoogleMapController> _cController = Completer();
 
   Map<MarkerId, Marker> markers = <MarkerId, Marker>{};
 
-  LocationData initialLocation;
-  MapType maptype;
+  LocationData? initialLocation;
+  MapType? maptype;
 
   List<Marker> myMarker = [];
   String weather = "";
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MapMarker> {
         longitude: tappedPoint.longitude,
         googleMapApiKey: "${SharedClass.mapApiKey}");
     setState(() {
-      weather = w.temperature.celsius.toInt().toString();
+      weather = w.temperature!.celsius!.toInt().toString();
       myMarker = [];
       myMarker.add(Marker(
         markerId: MarkerId(tappedPoint.toString()),
@@ -75,13 +75,13 @@ class _MyHomePageState extends State<MapMarker> {
     maptype = MapType.normal;
     if (Provider.of<EventProvider>(context, listen: false).event.tappedPoint !=
         null) {
-      LatLng result =
+      LatLng? result =
           Provider.of<EventProvider>(context, listen: false).event.tappedPoint;
       setState(() {
         myMarker = [];
         myMarker.add(Marker(
           markerId: MarkerId(result.toString()),
-          position: result,
+          position: result!,
         ));
       });
     }
@@ -94,7 +94,7 @@ class _MyHomePageState extends State<MapMarker> {
           floatingActionButton: FloatingActionButton.extended(
             onPressed: () async {
               final GoogleMapController controller = await _cController.future;
-              LocationData currentLocation;
+              LocationData? currentLocation;
               var location = Location();
               try {
                 currentLocation = await location.getLocation();
@@ -106,7 +106,7 @@ class _MyHomePageState extends State<MapMarker> {
                 CameraPosition(
                   bearing: 0,
                   target:
-                      LatLng(currentLocation.latitude, currentLocation.longitude),
+                      LatLng(currentLocation!.latitude!, currentLocation!.longitude!),
                   zoom: 15.0,
                 ),
               ));
@@ -245,11 +245,11 @@ class _MyHomePageState extends State<MapMarker> {
                     });
                   },
                   myLocationButtonEnabled: false,
-                  mapType: maptype,
+                  mapType: maptype!,
                   onTap: handleTap,
                   initialCameraPosition: CameraPosition(
                       target: widget.lat != null
-                          ? LatLng(widget.lat, widget.lng)
+                          ? LatLng(widget.lat!, widget.lng!)
                           : LatLng(26.3351, 17.2283),
                       zoom: widget.lat != null ? 15 : 5),
                   onMapCreated: (GoogleMapController controller) {
@@ -345,8 +345,8 @@ class _MyHomePageState extends State<MapMarker> {
                               final detail =
                               await plist.getDetailsByPlaceId(placeid);
                               final geometry = detail.result.geometry;
-                              final lat = geometry.location.lat;
-                              final lang = geometry.location.lng;
+                              final lat = geometry!.location.lat;
+                              final lang = geometry!.location.lng;
                               var newlatlang = LatLng(lat, lang);
 
                               //move map camera to selected place with animation

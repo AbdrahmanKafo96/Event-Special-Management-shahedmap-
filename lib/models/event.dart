@@ -4,30 +4,33 @@ import 'package:shahed/models/category.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class Event {
+    Event({ this.event_name, this.addede_id ,this.description});
   CategoryClass categoryClass = CategoryClass();
   EventType eventType = EventType();
-  String _eventName;
-  String _eventDate;
+    String? _eventName;
+  String ?_eventDate;
 
   //int _eventType;
-  double _lat;
-  double _lng;
-  String  description;
-  File   _videoFile ;
-  List<XFile>  _xfile  =[], _listSelected;
+  double? _lat;
+  double? _lng;
+  String ? description;
+  File ?  _videoFile ;
+    List<XFile>? _xfile  =[];
+      List<XFile>? _listSelected;
 
-  List<XFile>  get getListSelected => _listSelected;
+  List<XFile>  get getListSelected => _listSelected!;
 
   set setListSelected(List<XFile> value) {
     _listSelected = value;
   }
 
-  final String event_name;
+    String? event_name;
 
-  final addede_id;
-  LatLng tappedPoint  =null ;
+  final addede_id;// fooooooooooooooooocse here maybe int
 
-  Event({this.event_name, this.addede_id ,this.description});
+  LatLng? tappedPoint  =null ;
+
+
 
   factory Event.fromJson(Map<String, dynamic> json) {
     return Event(
@@ -42,19 +45,19 @@ class Event {
       _videoFile = value;
     }
 
-  List<XFile> get getXFile => _xfile;
+  List<XFile> get getXFile => _xfile!;
 
   set setXFile(List<XFile>  value) {
     _xfile=value;
   }
   void dropValue(int index){
     if(index>-1)
-      _xfile.removeAt(index);
+      _xfile!.removeAt(index);
   }
   void dropAll( ){
     _videoFile=null;
-     if(_xfile !=null) _xfile.clear();
-     if(_listSelected !=null) _listSelected.clear();
+     if(_xfile !=null) _xfile!.clear();
+     if(_listSelected !=null) _listSelected!.clear();
   }
   void nullAll( ){
     _videoFile=null;
@@ -68,31 +71,31 @@ class Event {
   //   _imageFile = value;
   // }
 
-  String get getEventName => _eventName;
+  String get getEventName => _eventName!;
 
   set setEventName(String value) {
     _eventName = value;
   }
 
-  String get getEventDate => _eventDate;
+  String get getEventDate => _eventDate!;
 
   set setEventDate(String value) {
     _eventDate = value;
   }
 
-  double get getLat => _lat;
+  double get getLat => _lat!;
 
-  set setLat(double value) {
+  set setLat(double? value) {
     _lat = value;
   }
 
-  double get getLng => _lng;
+  double get getLng => _lng!;
 
-  set setLng(double value) {
+  set setLng(double? value) {
     _lng = value;
   }
 
-  String get getDescription =>  description;
+  String get getDescription =>  description??'';
 
   set setDescription(String value) {
      description = value;

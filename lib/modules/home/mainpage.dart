@@ -36,6 +36,8 @@ class _MainPageState extends State<MainPage> {
 
       case NavigationItem.about:
         return About();
+      default:
+          return HomePage();
     }
   }
 }

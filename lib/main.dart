@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:provider/provider.dart';
-import 'package:sentry_flutter/sentry_flutter.dart';
+// import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shahed/modules/home/Responses/responses_screen.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
 import 'package:shahed/modules/home/home.dart';
@@ -41,7 +41,7 @@ import 'package:google_maps_flutter_android/google_maps_flutter_android.dart';
 import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platform_interface.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'modules/home/tracking/missions_list.dart';
-
+import 'package:intl/intl.dart';
 
 @pragma('vm:entry-point')
 void callbackDispatcher() {
@@ -55,14 +55,19 @@ void callbackDispatcher() {
           Box box = await SharedClass.getBox();
 
           final storage = await SharedClass.getStorage();
-          String value = await storage.read(
+          String? value;
+          if(await storage.containsKey(key: 'token'))
+            value   = await storage.read(
               key: "token", aOptions: SharedClass.getAndroidOptions());
 
-          Map data = {
-            'user_id': box.get('user_id').toString(),
-            'lat': userLocation.latitude.toString(),
-            'lng': userLocation.longitude.toString(),
-          };
+          Map? data;
+          if(box.containsKey('user_id')){
+              data = {
+              'user_id': box.get('user_id').toString(),
+              'lat': userLocation.latitude.toString(),
+              'lng': userLocation.longitude.toString(),
+            };
+          }
           final response = await http.post(
               Uri.parse('${SharedClass.apiPath}/updateUnit'),
               body: jsonEncode(data),
@@ -117,14 +122,14 @@ Future main() async {
     if (Platform.isAndroid) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
-          AndroidFlutterLocalNotificationsPlugin>()
+          AndroidFlutterLocalNotificationsPlugin>()!
           .createNotificationChannel(channel);
     }
     if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin
           .resolvePlatformSpecificImplementation<
           IOSFlutterLocalNotificationsPlugin>()
-          .requestPermissions(
+          !.requestPermissions(
           alert: true,
           badge: true,
           sound: true,
@@ -143,13 +148,19 @@ Future main() async {
       DeviceOrientation.portraitUp,
       DeviceOrientation.portraitDown,
     ]);
-    String token = null;
-    final storage = await SharedClass.getStorage();
+    String? token;
+       await SharedClass.getStorage().then((storage) async{
+           token=await storage.read(
+               key: "api_token", aOptions: SharedClass.getAndroidOptions());
+          if(token==null)
+             token='';
+      });
 
-    token = await storage.read(
-        key: "api_token", aOptions: SharedClass.getAndroidOptions());
+
+
 
     final box = await SharedClass.getBox();
+
     if (box.containsKey('language')) {
       language = box.get('language');
     } else {
@@ -158,7 +169,9 @@ Future main() async {
     }
     //darkMode=pref.getBool('darkMode');
     SharedData.getGlobalLang().setLanguage = language;
-    if (box.get('version_number') == null) box.put('version_number', 0);
+
+    if(box.isOpen);
+       box.put('version_number', 0);
 
     final GoogleMapsFlutterPlatform mapsImplementation =
         GoogleMapsFlutterPlatform.instance;
@@ -171,8 +184,10 @@ Future main() async {
     //     },
     //     // Init your App.
     //     appRunner:() =>
+  print('the token $token');
     runApp(
-      MultiProvider(providers: [
+      MultiProvider(
+          providers: [
         ChangeNotifierProvider<EventProvider>(
           create: (context) => EventProvider(),
         ),
@@ -191,7 +206,9 @@ Future main() async {
         ChangeNotifierProvider<CounterProvider>(
           create: (context) => CounterProvider(),
         ),
-      ], child: ShahedApp(token, language)),
+      ],
+        child:   ShahedApp(token, language)
+    ),
   //  )
   );
   //  bg.BackgroundGeolocation.registerHeadlessTask(headlessTask);
@@ -203,13 +220,14 @@ Future main() async {
 GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 class ShahedApp extends StatefulWidget {
-  String token;
+  String ? token;
   String language;
 
   ShahedApp(this.token, this.language);
 
   static void restartApp(BuildContext context) {
-    context.findAncestorStateOfType<_ShahedAppState>().restartApp();
+
+    context.findAncestorStateOfType<_ShahedAppState>()!.restartApp();
   }
 
   @override
@@ -230,7 +248,6 @@ class _ShahedAppState extends State<ShahedApp> {
   void initState() {
     super.initState();
     getCurrentAppTheme();
-
   }
 
   void getCurrentAppTheme() {
@@ -249,7 +266,8 @@ class _ShahedAppState extends State<ShahedApp> {
         return themeChangeProvider;
       },
       child: Consumer<DarkThemeProvider>(
-        builder: (BuildContext context, value, Widget child) {
+        builder: (BuildContext context, value, Widget? child) {
+
           return MaterialApp(
             // themeMode: Provider.of<ThemeProvider>(context).themeMode,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
@@ -270,7 +288,7 @@ class _ShahedAppState extends State<ShahedApp> {
             home: KeyedSubtree(
                 key: key,
                 child: customDirectionality(
-                    child: widget.token != null ? MainPage() : LoginUi())),
+                    child: widget.token != '' ? MainPage() : LoginUi())),
 
             routes: {
               'About': (context) => About(),
