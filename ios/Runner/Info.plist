@@ -47,7 +47,7 @@
 		<string>The example App requires temporary access to the device's precise location.</string>
 	</dict>
 	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
+	<string>we need access to your location to get your current location</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>The application needs permission to allow access to the microphone</string>
 	<key>NSMotionUsageDescription</key>
@@ -60,6 +60,7 @@
 		<string>fetch</string>
 		<string>location</string>
 		<string>processing</string>
+		<string>remote-notification</string>
 	</array>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
