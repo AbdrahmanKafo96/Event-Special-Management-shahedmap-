@@ -167,11 +167,11 @@ class _MyHomePageState extends State<MapMarker> {
                   if (Provider.of<EventProvider>(context, listen: false)
                               .event
                               .getLat ==
-                          null &&
+                          0.0 &&
                       Provider.of<EventProvider>(context, listen: false)
                               .event
                               .getLng ==
-                          null) {
+                          0.0) {
                     showShortToast(SharedData.getGlobalLang().locationRequired(), Colors.orange);
                   } else {
                     customReusableShowDialog(

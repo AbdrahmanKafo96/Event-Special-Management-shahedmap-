@@ -11,8 +11,8 @@ class Event {
   String ?_eventDate;
 
   //int _eventType;
-  double? _lat;
-  double? _lng;
+  double? _lat =0.0;
+  double? _lng=0.0;
   String ? description;
   File ?  _videoFile ;
     List<XFile>? _xfile  =[];

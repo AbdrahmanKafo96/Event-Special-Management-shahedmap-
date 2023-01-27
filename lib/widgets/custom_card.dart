@@ -1,8 +1,7 @@
-import 'package:badges/badges.dart';
-import 'package:flutter/material.dart';
+ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../provider/counter_provider.dart';
-
+ import 'package:badges/badges.dart' as badge ;
 Widget customCard(IconData icon, String title, Color color,
     BuildContext context, String routName) {
   var provider = Provider.of<CounterProvider>(context);
@@ -50,8 +49,8 @@ Widget customCard(IconData icon, String title, Color color,
                       child:
                               (routName == "Missions" &&
                                   provider.getCounterMissions == true)
-                          ? Badge(
-                              badgeContent: Icon(
+                          ? badge.Badge(
+                                 badgeContent: Icon(
                                 Icons.brightness_1,
                                 size: 12,
                                 color: Colors.white,
@@ -62,7 +61,7 @@ Widget customCard(IconData icon, String title, Color color,
                               ),
                             )
                           :(routName == "response" &&
-                                  provider.getCounterNotification == true)? Badge(
+                                  provider.getCounterNotification == true)? badge.Badge(
                                 badgeContent: Icon(
                                   Icons.brightness_1,
                                   size: 12,
