@@ -103,7 +103,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                               _passwordVisible!
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color: Colors.grey,
+                              color:  _passwordVisible! ?Colors.white:Colors.grey,
                             ),
                             onPressed: () {
                               // Update the state i.e. toogle the state of passwordVisible variable
@@ -166,7 +166,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                             _confPasswordVisible!
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color: Colors.grey,
+                            color:  _confPasswordVisible! ?Colors.white:Colors.grey,
                           ),
                           onPressed: () {
                             // Update the state i.e. toogle the state of passwordVisible variable

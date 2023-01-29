@@ -53,22 +53,29 @@ class UserAuthProvider extends ChangeNotifier {
 
         if (response.statusCode == 200) {
           var responseData = json.decode(response.body);
-          print(responseData );
+
           if (userData['userState'] == 'L') {
               print(userData['userState']);
 
             // showShortToast(responseData['message'], Colors.redAccent);
-            if (responseData['message'] ==
-                "تحقق من البريد الالكتروني وكلمة المرور") {
-              showShortToast(
-                  SharedData.getGlobalLang().checkEmailPassword(), Colors.red);
-              return false;
-            } else if (responseData['message'] ==
-                "لاتستطيع تسجيل الدخول لان حسابك محظور") {
-              showShortToast(
-                 SharedData.getGlobalLang().blockUserMessage() , Colors.red);
-              return false;
-            } else {print(responseData['result']['original']['data']["api_token"]);
+              if (responseData['message']!=null){
+                  showShortToast(
+                      responseData['message'], Colors.red);
+                return false;
+            // if (responseData['message'] ==
+            //     "تحقق من البريد الالكتروني وكلمة المرور") {
+            //   print("responseData['message'] : ${responseData['message']}");
+            //   showShortToast(
+            //       SharedData.getGlobalLang().checkEmailPassword(), Colors.red);
+            //   return false;
+            // } else if (responseData['message'] ==
+            //     "لاتستطيع تسجيل الدخول لان حسابك محظور") {
+            //   showShortToast(
+            //      SharedData.getGlobalLang().blockUserMessage() , Colors.red);
+            //   return false;
+            } else {
+              print("responseData['message'] : ${responseData['message']}");
+              print(responseData['result']['original']['data']["api_token"]);
               user.user_id =
                   responseData['result']['original']['data']["user_id"];
               user.api_token =
@@ -95,10 +102,9 @@ class UserAuthProvider extends ChangeNotifier {
 
               return true;
             }
-          }
-          //تحتاج تعديل الان 9\29\20222
+          }// login
 
-          print(responseData['status']);
+
           if (responseData['status'] == "failed") {
 
             if (responseData['error']['email'][0].toString() ==
@@ -404,11 +410,11 @@ class UserAuthProvider extends ChangeNotifier {
 
           if (res['error']['email'][0].toString() ==
               "The selected email is invalid.") {
-            showShortToast(SharedData.getGlobalLang().checkEmailInput(), Colors.orange);
+            showShortToast(SharedData.getGlobalLang().checkEmailInput(), Colors.green);
             return;
           }
 
-          showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.green);
+          showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.redAccent);
           return;
         } else {
           showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
