@@ -56,17 +56,17 @@ class _LoginFormState extends State<LoginForm> {
                 return result;
               }
           }, onChanged: (value) {
-            Provider.of<UserAuthProvider>(context, listen: false)
-                .user
-                .setPassword = passwordController.text;
-          },
+                Provider.of<UserAuthProvider>(context, listen: false)
+                    .user
+                    .setPassword = passwordController.text;
+              },
               editingController: passwordController,
               prefixIcon: Icon(Icons.password),
               suffixIcon: IconButton(
                 icon: Icon(
                   // Based on passwordVisible state choose the icon
                   _passwordVisible! ? Icons.visibility : Icons.visibility_off,
-                  color: Colors.grey,
+                  color: _passwordVisible! ?Colors.white:Colors.grey,
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable
@@ -85,7 +85,6 @@ class _LoginFormState extends State<LoginForm> {
   void dispose() {
     // Clean up the controller when the widget is removed from the
     // widget tree.
-
     emailController.dispose();
     passwordController.dispose();
     super.dispose();

@@ -22,7 +22,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   String? countryController;
 
   final date_of_birthController = TextEditingController();
-  bool? _passwordVisible;
+  bool? _passwordConfVisible=false;
 
   String country1 = "";
   DateTime selectedDate = DateTime(1960);
@@ -31,7 +31,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _passwordVisible = false;
+
   }
 
   @override
@@ -69,7 +69,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                 .user
                 .setConfPassword = value;
           },
-          obsecure: !_passwordVisible!,
+          obsecure: !_passwordConfVisible!,
           editingController: passwordConfController,
           prefixIcon: Icon(
             Icons.password,
@@ -79,12 +79,13 @@ class _RegistrationFormState extends State<RegistrationForm> {
           suffixIcon: IconButton(
             icon: Icon(
               // Based on passwordVisible state choose the icon
-              _passwordVisible! ? Icons.visibility : Icons.visibility_off,
+              _passwordConfVisible! ? Icons.visibility : Icons.visibility_off,
+              color: _passwordConfVisible! ?Colors.white:Colors.grey,
             ),
             onPressed: () {
               // Update the state i.e. toogle the state of passwordVisible variable
               setState(() {
-                _passwordVisible = !_passwordVisible!;
+                _passwordConfVisible = !_passwordConfVisible!;
               });
             },
           ),
@@ -220,7 +221,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   showCountryPicker(
                     context: context,
                     //Optional.  Can be used to exclude(remove) one ore more country from the countries list (optional).
-                    exclude: <String>['KN', 'MF'],
+                    exclude: <String>['LY', 'UK'],
                     //Optional. Shows phone code before the country name.
                     showPhoneCode: true,
 
@@ -292,13 +293,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Colors.black54,
-              onPrimary: Colors.orange, // <-- SEE HERE
+              primary: Color(0xff33333d),
+              onPrimary: Colors.deepOrange, // <-- SEE HERE
               onSurface: Colors.black, // <-- SEE HERE
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.deepOrange, // button text color
+                foregroundColor: Colors.deepOrange,
+                backgroundColor: Color(0xff33333d)// button text color
               ),
             ),
           ),

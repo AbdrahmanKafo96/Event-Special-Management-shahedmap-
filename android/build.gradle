@@ -1,10 +1,11 @@
 buildscript {
-    ext.kotlin_version = '1.8.0'
+    ext.kotlin_version = '1.7.21'
     ext {
         compileSdkVersion = 33                // or higher
         targetSdkVersion = 31                // or higher
         appCompatVersion = "1.4.2"           // or higher
         playServicesLocationVersion = "20.0.0"  // or higher
+         // or higher
     }
     repositories {
         google()
@@ -27,11 +28,11 @@ allprojects {
         maven {
             // [required] flutter_background_geolocation
             url "${project(':flutter_background_geolocation').projectDir}/libs"
-        }
+            }
         maven {
             // [required] background_fetch
             url "${project(':background_fetch').projectDir}/libs"
-        }
+            }
     }
 }
 
