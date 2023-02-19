@@ -407,13 +407,11 @@ class UserAuthProvider extends ChangeNotifier {
         );
         if (response.statusCode == 200) {
           var res = jsonDecode(response.body);
-
           if (res['error']['email'][0].toString() ==
               "The selected email is invalid.") {
             showShortToast(SharedData.getGlobalLang().checkEmailInput(), Colors.green);
             return;
           }
-
           showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.redAccent);
           return;
         } else {

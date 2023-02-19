@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
+import 'package:location/location.dart';
 import 'package:provider/provider.dart';
 import 'package:shahed/provider/language.dart';
 import 'package:shahed/provider/style_data.dart';
@@ -10,7 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:workmanager/workmanager.dart';
 import '../../../main.dart';
-import 'package:geolocator/geolocator.dart';
+//import 'package:geolocator/geolocator.dart';
 
 class AppSettings extends StatefulWidget {
   @override
@@ -20,6 +21,7 @@ class AppSettings extends StatefulWidget {
 class _AppSettingsState extends State<AppSettings> {
   List<String> _languages = ['AR', "EN"];
   String _selectedLanguage='AR';
+  Location location = new Location();
   bool _darkMode = false ,_locationState=false;
   Box? _box;
   Language _language=SharedClass.getLanguage();
@@ -122,13 +124,31 @@ class _AppSettingsState extends State<AppSettings> {
                         trailing: Switch(
                           activeColor: Colors.deepOrange,
                           value: _locationState,
-                          onChanged: (val){
+                          onChanged: (val)  async {
+
+                            bool _serviceEnabled;
+                          PermissionStatus _permissionGranted;
+                          LocationData _locationData;
+                            _serviceEnabled = await location.serviceEnabled();
+                            if (!_serviceEnabled) {
+                              _serviceEnabled = await location.requestService();
+                              if (!_serviceEnabled) {
+                                return;
+                              }
+                            }
+
+                            _permissionGranted = await location.hasPermission();
+                            if (_permissionGranted == PermissionStatus.denied) {
+                              _permissionGranted = await location.requestPermission();
+                              if (_permissionGranted != PermissionStatus.granted) {
+                                return;
+                              }
+                            }
                             setState(() {
                               _locationState=val;
                              if(_locationState==true){
-                               if (SharedData.getUserState()!) {
-                                 Geolocator.checkPermission().then((value) {
-                                   Geolocator.requestPermission().then((value) {
+                               if (SharedData.getUserState() ) {
+
 
                                        Workmanager().initialize(
                                          callbackDispatcher,
@@ -141,9 +161,6 @@ class _AppSettingsState extends State<AppSettings> {
                                              networkType: NetworkType.connected,
                                              requiresBatteryNotLow: false,
                                            ));
-
-                                     });
-                                   });
 
                                }
                              }else{

@@ -2,7 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_polyline_points/flutter_polyline_points.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:geolocator/geolocator.dart';
+import 'package:location/location.dart';
+//import 'package:geolocator/geolocator.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
@@ -28,19 +29,19 @@ class _MappolyState extends State<Mappoly> {
   List<LatLng> polylineCoordinates = [];
 
   PolylinePoints polylinePoints = PolylinePoints();
-  Position ?currentPosition;
+ // Position ?currentPosition;
   Completer<GoogleMapController>? _controller = Completer();
   static CameraPosition? _kGooglePlex;
 
-  var geoLocator = Geolocator();
-  var locationOptions = LocationSettings(
-    accuracy: LocationAccuracy.bestForNavigation,
-    distanceFilter: 4,
-  );
-
+  // var geoLocator = Geolocator();
+  // var locationOptions = LocationSettings(
+  //   accuracy: LocationAccuracy.bestForNavigation,
+  //   distanceFilter: 4,
+  // );
+  Location currentPosition =Location();
+  var userLocation;
   Future getCurrentPosition() async {
-    currentPosition = await Geolocator.getCurrentPosition(
-        desiredAccuracy: LocationAccuracy.bestForNavigation);
+    userLocation= await  currentPosition.getLocation();
   }
 
   CameraPosition ?initialCameraPosition;
@@ -49,9 +50,9 @@ class _MappolyState extends State<Mappoly> {
   void initState() {
     super.initState();
     getCurrentPosition().then((value) {
-      setState(() {
+      this.setState(() {
         _kGooglePlex = CameraPosition(
-          target: LatLng(currentPosition!.latitude , currentPosition!.longitude ),
+          target: LatLng(userLocation .latitude , userLocation .longitude ),
           zoom: 14,
         );
       });
@@ -76,7 +77,16 @@ class _MappolyState extends State<Mappoly> {
         appBar: customAppBar(
             context,
           title: SharedData.getGlobalLang().eventLocation() ,
-          icon: FontAwesomeIcons.bomb
+          icon: FontAwesomeIcons.bomb,
+            leading: IconButton(
+                tooltip: SharedData.getGlobalLang().back(),
+                icon: Icon(
+                  Icons.arrow_back,
+                  color: Colors.white,
+                ),
+                onPressed: () {
+                  Navigator.pop(context);
+                })
         ),
         body: _kGooglePlex == null
             ?customCircularProgressIndicator()
@@ -122,7 +132,7 @@ class _MappolyState extends State<Mappoly> {
   void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
     _addMarker(
-      LatLng(currentPosition!.latitude, currentPosition!.longitude),
+      LatLng(userLocation .latitude, userLocation .longitude),
       "origin",
       BitmapDescriptor.defaultMarker,
     );
@@ -137,7 +147,7 @@ class _MappolyState extends State<Mappoly> {
 
     PolylineResult result = await polylinePoints.getRouteBetweenCoordinates(
       "${SharedClass.mapApiKey}",
-      PointLatLng(currentPosition!.latitude, currentPosition!.longitude),
+      PointLatLng(userLocation .latitude, userLocation .longitude),
       PointLatLng(lat, long),
       travelMode: TravelMode.walking,
     );

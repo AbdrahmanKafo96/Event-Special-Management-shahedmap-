@@ -5,15 +5,14 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:location/location.dart' as loc;
 import 'package:provider/provider.dart';
-// import 'package:sentry_flutter/sentry_flutter.dart';
 import 'package:shahed/modules/home/Responses/responses_screen.dart';
 import 'package:shahed/modules/home/event_screens/main_section.dart';
 import 'package:shahed/modules/home/home.dart';
 import 'package:shahed/modules/home/informauthorities/inform.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/modules/home/menu/menu_screen.dart';
-import 'package:shahed/modules/home/paths/paths.dart';
 import 'package:shahed/modules/home/settings_screens/app_settings.dart';
 import 'package:shahed/modules/home/settings_screens/about_screen.dart';
 import 'package:shahed/modules/home/settings_screens/profile_view.dart';
@@ -32,7 +31,7 @@ import 'package:shahed/widgets/customDirectionality.dart';
 import 'modules/home/event_screens/SuccessPage.dart';
 import 'modules/authentications/login_screen.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
-import 'package:geolocator/geolocator.dart';
+// import 'package:geolocator/geolocator.dart';
 import 'package:workmanager/workmanager.dart';
 import 'package:shahed/notification/notification.dart' as notif;
 import 'package:http/http.dart' as http;
@@ -42,47 +41,63 @@ import 'package:google_maps_flutter_platform_interface/google_maps_flutter_platf
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'modules/home/tracking/missions_list.dart';
 import 'package:intl/intl.dart';
-
+import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 @pragma('vm:entry-point')
 void callbackDispatcher() {
   try {
     Workmanager().executeTask((task, inputData) async {
       switch (task) {
         case "fetchBackground":
-          Position userLocation = await Geolocator.getCurrentPosition(
-              desiredAccuracy: LocationAccuracy.high);
-          await Hive.initFlutter();
-          Box box = await SharedClass.getBox();
+          // loc.Location currentLocation=loc.Location();
+        await Hive.initFlutter();
+                    Box box = await SharedClass.getBox();
 
-          final storage = await SharedClass.getStorage();
-          String? value;
-          if(await storage.containsKey(key: 'token'))
-            value   = await storage.read(
+                    final storage = await SharedClass.getStorage();
+                    String? value;
+                    // if(await storage.containsKey(key: 'token'))
+          value   = await storage.read(
               key: "token", aOptions: SharedClass.getAndroidOptions());
+                    Map? data;
+          bg.BackgroundGeolocation.getCurrentPosition(
+              persist: false,     // <-- do not persist this location
+              desiredAccuracy: 0, // <-- desire best possible accuracy
+              timeout: 30000,     // <-- wait 30s before giving up.
+              samples: 3          // <-- sample 3 location before selecting best.
+          ).then((bg.Location userLocation)  {
 
-          Map? data;
-          if(box.containsKey('user_id')){
-              data = {
-              'user_id': box.get('user_id').toString(),
-              'lat': userLocation.latitude.toString(),
-              'lng': userLocation.longitude.toString(),
+
+
+
+            if(box.containsKey('user_id')){
+            data = {
+            'user_id': box.get('user_id').toString(),
+            'lat': userLocation.coords.latitude.toString(),
+            'lng': userLocation.coords.longitude.toString(),
             };
-          }
-          final response = await http.post(
-              Uri.parse('${SharedClass.apiPath}/updateUnit'),
-              body: jsonEncode(data),
-              headers: {
-                'Accept': 'application/json',
-                'Authorization': 'Bearer $value',
-                'content-type': 'application/json',
-              });
-
-          if (response.statusCode == 200) {
+            } }).catchError((error) {
+            print('[getCurrentPosition] ERROR: $error');
+          });
+            final response = await http.post(
+            Uri.parse('${SharedClass.apiPath}/updateUnit'),
+            body: jsonEncode(data),
+            headers: {
+            'Accept': 'application/json',
+            'Authorization': 'Bearer $value',
+            'content-type': 'application/json',
+            });
+            print("response.statusCode :${ response.body}");
+            if (response.statusCode == 200) {
             json.decode(response.body);
             notif.Notification notification = new notif.Notification();
             notification.showNotificationWithoutSound("تم ارسال موقع الوحدة للخادم" );
 
-          }
+            }
+
+          //await currentLocation.enableBackgroundMode(enable: true);
+        //  var userLocation=await currentLocation.getLocation();
+          // Position userLocation = await Geolocator.getCurrentPosition(
+          //     desiredAccuracy: LocationAccuracy.high);
+
           break;
       }
       return Future.value(true);

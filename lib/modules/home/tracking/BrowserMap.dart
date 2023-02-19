@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as p;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder2/geocoder2.dart';
-import 'package:geolocator/geolocator.dart' as geo;
+//import 'package:geolocator/geolocator.dart' as geo;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -289,9 +289,9 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   void _getPolyline(var lat, var long) async {
     /// add origin marker origin marker
     //var currentPosition = await loc.Location().getLocation();
-    var currentPosition = await geo.Geolocator.getCurrentPosition();
+    var currentPosition = await  _locationTracker.getLocation();
     _addMarker(
-      LatLng(currentPosition.latitude, currentPosition.longitude),
+      LatLng(currentPosition.latitude!, currentPosition.longitude!),
       "origin",
       BitmapDescriptor.defaultMarker,
     );
@@ -307,7 +307,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     p.PolylineResult result = await polylinePoints
         .getRouteBetweenCoordinates(
       "${SharedClass.mapApiKey}",
-      p.PointLatLng(currentPosition.latitude, currentPosition.longitude),
+      p.PointLatLng(currentPosition.latitude!, currentPosition.longitude!),
       p.PointLatLng(lat, long),
       travelMode: p.TravelMode.walking,
     )

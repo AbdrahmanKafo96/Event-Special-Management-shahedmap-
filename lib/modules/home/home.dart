@@ -252,10 +252,11 @@ class _HomePageState extends State<HomePage> {
             reset: true))
             .then((bg.State state) {
           //    _getUserLocation();
-          setState(() {
+          //if(mounted)
+        //  setState(() {
             _enabled = state.enabled;
             _isMoving = state.isMoving;
-          });
+        //  });
         });
 
       } });
@@ -318,7 +319,7 @@ class _HomePageState extends State<HomePage> {
     print('[location] - $location');
 
     String odometerKM = (location.odometer / 1000.0).toStringAsFixed(1);
-
+    if(mounted)
     setState(() {
       content = encoder.convert(location.toMap());
       odometer = odometerKM;
