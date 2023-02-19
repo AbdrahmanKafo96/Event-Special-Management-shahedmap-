@@ -157,30 +157,27 @@ class _PickImagesState extends State<PickImages> {
                 // we can put a message here if the list is full.
               }
             },
-            child: Card(
+            child: Container(
               color: Colors.black54,
-              elevation: 5.0,
-              child: Container(
-                margin: EdgeInsets.all(2),
-                child: Column(
-                  // spacing: 2,
-                  // runSpacing: -10,
-                  // alignment: WrapAlignment.center,
-                  // crossAxisAlignment: WrapCrossAlignment.center,
-                  // direction: Axis.horizontal,
-                  children: [
-                    Icon(
-                      Icons.add_photo_alternate,
-                      size: 24,
+              margin: EdgeInsets.all(2),
+              child: Column(
+                // spacing: 2,
+                // runSpacing: -10,
+                // alignment: WrapAlignment.center,
+                // crossAxisAlignment: WrapCrossAlignment.center,
+                // direction: Axis.horizontal,
+                children: [
+                  Icon(
+                    Icons.add_photo_alternate,
+                    size: 24,
+                  ),
+                  FittedBox(
+                    child: Text(
+                      SharedData.getGlobalLang().pickImage(),
+                      style: Theme.of(context).textTheme.subtitle2,
                     ),
-                    FittedBox(
-                      child: Text(
-                        SharedData.getGlobalLang().pickImage(),
-                        style: Theme.of(context).textTheme.subtitle2,
-                      ),
-                    )
-                  ],
-                ),
+                  )
+                ],
               ),
             ),
           );

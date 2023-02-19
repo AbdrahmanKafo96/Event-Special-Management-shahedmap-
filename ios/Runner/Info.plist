@@ -72,9 +72,31 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
+	<key>FirebaseAppDelegateProxyEnabled</key>
+	<false/>
 	<key>io.flutter.embedded_views_preview</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	<key>NSAppTransportSecurity</key>
+        <dict>
+            <key>NSAllowsArbitraryLoads</key>
+            <true/>
+            <key>LSApplicationQueriesSchemes</key>
+            <array>
+              <string>sms</string>
+              <string>tel</string>
+            </array>
+            <key>NSExceptionDomains</key>
+            <dict>
+                <key>ets.ly</key>
+                <dict>
+                    <key>NSIncludesSubdomains</key>
+                    <true/>
+                    <key>NSThirdPartyExceptionRequiresForwardSecrecy</key>
+                    <false/>
+                </dict>
+           </dict>
+      </dict>
 </dict>
 </plist>
