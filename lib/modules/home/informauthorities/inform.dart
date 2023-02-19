@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:another_flushbar/flushbar.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -10,6 +12,7 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:telephony/telephony.dart';
 import 'package:location/location.dart' as loc;
+import 'package:url_launcher/url_launcher.dart';
 
 class InformEntity extends StatelessWidget {
   final Telephony telephony = Telephony.instance;
@@ -64,11 +67,28 @@ class InformEntity extends StatelessWidget {
                     duration: Duration(seconds: 3),
                   ).show(context);
                 } else {
-                  await telephony.sendSmsByDefaultApp(
-                    to: "+218${emergency_phone.toString()}",
-                    message: message,
-                    // statusListener: listener,
-                  );
+                  if(Platform.isAndroid) {
+                      await telephony.sendSmsByDefaultApp(
+                        to: "+218${emergency_phone.toString()}",
+                        message: message,
+                        // statusListener: listener,
+                      );
+                    }
+                    if(Platform.isIOS)
+                    {
+                      //Uri sms = Uri.parse('sms:${emergency_phone.toString()}?subject=NewAction&body=${message}');
+                      final Uri sms = Uri(
+                        scheme: 'sms',
+                        path:  emergency_phone.toString(),
+                        queryParameters: <String, String>{
+                          //'subject':'News&',
+                          'body': Uri.encodeComponent( message),
+                        },
+                      );
+                      if (await launchUrl(sms)) {
+                        //app opened
+                      }
+                    }
                   showShortToast(SharedData.getGlobalLang().checkMessagesApp(), Colors.green);
                   Provider.of<EventProvider>(context, listen: false)
                       .event
