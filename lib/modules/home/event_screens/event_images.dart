@@ -8,6 +8,8 @@ import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
+import '../../../theme/colors_app.dart';
+
 class PickImages extends StatefulWidget {
   int ?count;
 
@@ -85,7 +87,7 @@ class _PickImagesState extends State<PickImages> {
                     child: Icon(
                       FontAwesomeIcons.xmark,
                       size: 20,
-                      color: Colors.red,
+                      color: SharedColor.red,
                     ),
                     onTap: () {
                       setState(() {
@@ -125,7 +127,7 @@ class _PickImagesState extends State<PickImages> {
                     child: Icon(
                       FontAwesomeIcons.xmark,
                       size: 20,
-                      color: Colors.red,
+                      color: SharedColor.red,
                     ),
                     onTap: () {
                       setState(() {
@@ -158,7 +160,7 @@ class _PickImagesState extends State<PickImages> {
               }
             },
             child: Container(
-              color: Colors.black54,
+              color: SharedColor.black54,
               margin: EdgeInsets.all(2),
               child: Column(
                 // spacing: 2,

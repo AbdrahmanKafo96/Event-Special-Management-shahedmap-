@@ -10,6 +10,7 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
 
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 class Mappoly extends StatefulWidget {
   double? lat, lng;
@@ -82,7 +83,7 @@ class _MappolyState extends State<Mappoly> {
                 tooltip: SharedData.getGlobalLang().back(),
                 icon: Icon(
                   Icons.arrow_back,
-                  color: Colors.white,
+                  color: SharedColor.white,
                 ),
                 onPressed: () {
                   Navigator.pop(context);
@@ -121,7 +122,7 @@ class _MappolyState extends State<Mappoly> {
     );
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.blue,
+      color: SharedColor.blue,
       points: polylineCoordinates,
       width: 8,
     );

@@ -5,7 +5,7 @@ import '../provider/auth_provider.dart';
 
 class SharedData{
 
-  static Language?  _language ;
+  static Language?  _language;
   static Language  getGlobalLang(){
    if(_language==null){
      _language = SharedClass.getLanguage();
@@ -25,7 +25,7 @@ class SharedData{
            UserAuthProvider().checkState(user_id);
         }
       });
-        return _state ;
+        return _state;
       }
       static resetValue(){
         _state= false ;

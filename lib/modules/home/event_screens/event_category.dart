@@ -10,6 +10,8 @@ import 'package:sqflite/sqflite.dart';
 import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 
+import '../../../theme/colors_app.dart';
+
 class EventCategory extends StatefulWidget {
   @override
   _EventCategoryState createState() => _EventCategoryState();
@@ -231,7 +233,7 @@ class _EventCategoryState extends State<EventCategory> {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Color(0xff424250),
+        color: Color(SharedColor.greyIntColor),
         borderRadius: BorderRadius.circular(24),
       ),
       padding: EdgeInsets.only(top: 10, bottom: 10, left: 2, right: 2),
@@ -243,22 +245,22 @@ class _EventCategoryState extends State<EventCategory> {
             child: Container(
                 padding: EdgeInsets.only(left: 10, right: 10),
                 decoration: BoxDecoration(
-                  color: Color(0xff424250),
-                  border: Border.all(color: Colors.orange, width: 1),
+                  color: Color(SharedColor.greyIntColor),
+                  border: Border.all(color: SharedColor.orange, width: 1),
                   borderRadius: BorderRadius.circular(15),
                 ),
                 child: DropdownButtonHideUnderline(
                   child: DropdownButton<String>(
                     hint: Text(SharedData.getGlobalLang().chooseCategory(),
                         style: Theme.of(context).textTheme.bodyText1),
-                    iconEnabledColor: Colors.white,
+                    iconEnabledColor: SharedColor.white,
                     borderRadius: BorderRadius.circular(15),
-                    dropdownColor: Colors.black.withOpacity(0.9),
+                    dropdownColor: SharedColor.black.withOpacity(0.9),
                     icon: Icon(Icons.arrow_drop_down),
                     iconSize: 24,
                     isExpanded: true,
                     // style: TextStyle(
-                    //     color: Colors.black,
+                    //     color: SharedColor.black,
                     //     fontSize: 16
                     // ),
                     value: dropdownValue1,
@@ -333,21 +335,21 @@ class _EventCategoryState extends State<EventCategory> {
                   child: Container(
                       padding: EdgeInsets.only(left: 10, right: 10),
                       decoration: BoxDecoration(
-                        color: Color(0xff424250),
-                        border: Border.all(color: Colors.orange, width: 1),
+                        color: Color(SharedColor.greyIntColor),
+                        border: Border.all(color: SharedColor.orange, width: 1),
                         borderRadius: BorderRadius.circular(15),
                       ),
                       child: DropdownButtonHideUnderline(
                         child: DropdownButton<String>(
                           hint: Text(SharedData.getGlobalLang().chooseType(),
                               style: Theme.of(context).textTheme.bodyText1),
-                          dropdownColor: Colors.black.withOpacity(0.9),
-                          iconEnabledColor: Colors.white,
+                          dropdownColor: SharedColor.black.withOpacity(0.9),
+                          iconEnabledColor: SharedColor.white,
                           borderRadius: BorderRadius.circular(15),
                           icon: Icon(Icons.arrow_drop_down),
                           iconSize: 24,
                           isExpanded: true,
-                          style: TextStyle(color: Colors.green, fontSize: 19),
+                          style: TextStyle(color: SharedColor.green, fontSize: 19),
                           value: dropdownValue2,
                           onChanged: (String? value) {
                             setState(() {

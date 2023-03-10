@@ -1,11 +1,9 @@
 import 'dart:async';
-import 'dart:math';
 import 'package:another_flushbar/flushbar.dart';
 import 'package:http/http.dart' as http;
 import 'package:flutter_polyline_points/flutter_polyline_points.dart' as p;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:geocoder2/geocoder2.dart';
-//import 'package:geolocator/geolocator.dart' as geo;
 import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -25,6 +23,7 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart';
 import 'package:weather/weather.dart';
+import '../../../theme/colors_app.dart';
 import '../../../widgets/custom_indecator.dart';
 import 'package:location/location.dart' as loc;
 import 'dart:ui' as ui;
@@ -93,9 +92,9 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
             circleId: CircleId("car"),
             radius: newLocalData.accuracy!,
             zIndex: 1,
-            strokeColor: Colors.blueAccent,
+            strokeColor: SharedColor.blueAccent,
             center: latlng,
-            fillColor: Colors.blue.withAlpha(70));
+            fillColor: SharedColor.blue.withAlpha(70));
       });
     }
     if (_lng_endpoint != null) _getPolyline(_lat_endpoint, _lng_endpoint);
@@ -195,7 +194,6 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   void dispose() {
     super.dispose();
     _kGooglePlex = null;
-    // SharedClass.closeTracking();
     if (_locationSubscription != null) {
       _locationSubscription!.cancel();
     }
@@ -271,7 +269,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     );
     Polyline polyline = Polyline(
       polylineId: id,
-      color: Colors.blue,
+      color: SharedColor.blue,
       points: polylineCoordinates,
       width: 6,
     );
@@ -339,7 +337,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     return byteData!.buffer.asUint8List();
   }
 
-  // get dalay events from the server
+  // get daily events from the server
   Future<Set<Marker>> getDailyEvents() async {
     List<MarkerModel?>? myList =
         await Provider.of<EventProvider>(context, listen: false).getEvents();
@@ -380,7 +378,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
     final Polyline polyline = Polyline(
       polylineId: polylineId,
       consumeTapEvents: true,
-      color: Colors.red,
+      color: SharedColor.red,
       width: 5,
       points: _createPoints(),
     );
@@ -391,14 +389,6 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
   }
 
   List<LatLng> _createPoints() {
-    // final List<LatLng> points = <LatLng>[];
-    // points.add(LatLng(1.875249, 0.845140));
-    // points.add(LatLng(4.851221, 1.715736));
-    // points.add(LatLng(8.196142, 2.094979));
-    // points.add(LatLng(12.196142, 3.094979));
-    // points.add(LatLng(16.196142, 4.094979));
-    // points.add(LatLng(20.196142, 5.094979));
-    // return points;
     return widget.path!.map((e) => LatLng(e['lat'], e['long'])).toList();
   }
 
@@ -419,7 +409,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
             tooltip: SharedData.getGlobalLang().back(),
             icon: Icon(
               Icons.arrow_back,
-              color: Colors.white,
+              color: SharedColor.white,
             ),
             onPressed: () {
               // if active is true then we need show alert to the user to check
@@ -479,7 +469,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                   Positioned(
                       child: Container(
                     decoration: BoxDecoration(
-                      color: Color(0xff33333d),
+                      color: Color(SharedColor.darkIntColor),
                       borderRadius: BorderRadius.only(
                           bottomLeft: Radius.circular(25),
                           bottomRight: Radius.circular(25)),
@@ -490,7 +480,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         PopupMenuButton(
-                          color: Colors.deepOrange,
+                          color: SharedColor.deepOrange,
                           icon: Icon(FontAwesomeIcons.layerGroup),
                           itemBuilder: (builder) {
                             return customPopupMenuEntry(context);
@@ -534,7 +524,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                   types: [],
                                   strictbounds: false,
                                   decoration:
-                                      InputDecoration(fillColor: Colors.white),
+                                      InputDecoration(fillColor: SharedColor.white),
                                   components: [
                                     Component(Component.country, 'ly'),
                                   ],
@@ -574,10 +564,10 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                           },
                           child: Icon(
                             FontAwesomeIcons.magnifyingGlass,
-                            color: Colors.white,
+                            color: SharedColor.white,
                           ),
                           style: ElevatedButton.styleFrom(
-                              backgroundColor: Color(0xff33333d),
+                              backgroundColor: Color(SharedColor.darkIntColor),
                               shape: CircleBorder(),
                               elevation: 0 //<-- SEE HERE
                               // padding: EdgeInsets.all(10),
@@ -593,11 +583,11 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                           child: Icon(
                             FontAwesomeIcons.bus,
                             color:
-                                traffic == true ? Colors.green : Colors.white,
+                                traffic == true ? SharedColor.green : SharedColor.white,
                           ),
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            backgroundColor: Color(0xff33333d),
+                            backgroundColor: Color(SharedColor.darkIntColor),
                             shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
@@ -617,7 +607,7 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                 //  title: 'Hey Ninja',
                                 message: SharedData.getGlobalLang()
                                     .categoryTypeAreRequired(),
-                                backgroundColor: Colors.orange,
+                                backgroundColor: SharedColor.orange,
                                 duration: Duration(seconds: 3),
                               ).show(context);
                             } else {
@@ -642,22 +632,22 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                   showShortToast(
                                       SharedData.getGlobalLang()
                                           .sentEvenSuccessfully(),
-                                      Colors.green);
+                                      SharedColor.green);
                                 else
                                   showShortToast(
                                       SharedData.getGlobalLang()
                                           .saveWasNotSuccessful(),
-                                      Colors.redAccent);
+                                      SharedColor.redAccent);
                               });
                             }
                           },
                           child: Icon(
                             FontAwesomeIcons.locationDot,
-                            color: Colors.white,
+                            color: SharedColor.white,
                           ),
                           style: ElevatedButton.styleFrom(
                             elevation: 0,
-                            backgroundColor: Color(0xff33333d),
+                            backgroundColor: Color(SharedColor.darkIntColor),
                             shape: CircleBorder(), //<-- SEE HERE
                             // padding: EdgeInsets.all(10),
                           ),
@@ -675,13 +665,13 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                           children: [
                             Icon(
                               FontAwesomeIcons.temperatureThreeQuarters,
-                              color: Colors.orangeAccent,
+                              color: SharedColor.orangeAccent,
                               size: 24,
                             ),
                             Text(
                               "${weather}",
                               style: TextStyle(
-                                  color: Colors.black54,
+                                  color: SharedColor.black54,
                                   fontSize: 24,
                                   fontWeight: FontWeight.bold),
                               // overflow: TextOverflow.ellipsis,
@@ -730,11 +720,11 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
                                     },
                                     child: Icon(
                                       Icons.center_focus_strong,
-                                      color: Colors.red,
+                                      color: SharedColor.red,
                                     ),
                                     style: ElevatedButton.styleFrom(
                                       elevation: 0,
-                                      backgroundColor: Color(0xff33333d),
+                                      backgroundColor: Color(SharedColor.darkIntColor),
                                       shape: CircleBorder(), //<-- SEE HERE
                                       // padding: EdgeInsets.all(10),
                                     ),
@@ -750,10 +740,10 @@ class _BrowserMapState extends State<BrowserMap> with WidgetsBindingObserver {
         floatingActionButton: FloatingActionButton(
             child: Icon(
               Icons.location_searching,
-              color: Colors.black12.withOpacity(.5),
+              color: SharedColor.black12.withOpacity(.5),
             ),
             tooltip: SharedData.getGlobalLang().currentLocation(),
-            backgroundColor: Colors.deepOrange,
+            backgroundColor: SharedColor.deepOrange,
             onPressed: () async {
               try {
                 final GoogleMapController controller = await _controller.future;

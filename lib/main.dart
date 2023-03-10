@@ -64,10 +64,6 @@ void callbackDispatcher() {
               timeout: 30000,     // <-- wait 30s before giving up.
               samples: 3          // <-- sample 3 location before selecting best.
           ).then((bg.Location userLocation)  {
-
-
-
-
             if(box.containsKey('user_id')){
             data = {
             'user_id': box.get('user_id').toString(),
@@ -282,8 +278,35 @@ class _ShahedAppState extends State<ShahedApp> {
       },
       child: Consumer<DarkThemeProvider>(
         builder: (BuildContext context, value, Widget? child) {
-
           return MaterialApp(
+            onGenerateRoute: (viewName) {
+              if (viewName.name == 'Missions')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => Missions());
+              else if  (viewName.name == 'browserMap')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => BrowserMap(state: 0,));
+                else if (viewName.name == 'About')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => About());
+              else  if (viewName.name == 'Inform')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => InformEntity());
+              else  if (viewName.name == 'Home')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => HomePage());
+              else  if (viewName.name == 'ProfilePage')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => ProfilePage());
+              else  if (viewName.name == 'ResetPage')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => CreateNewPasswordView());
+              else  if (viewName.name == 'settings')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => AppSettings());
+              else  if (viewName.name == 'EventSectionOne')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => EventSectionOne());
+              else  if (viewName.name == 'eventList')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => EventsMenu());
+              else  if (viewName.name == 'response')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => ResponsePage());
+              else  if (viewName.name == 'successPage')
+                  return PageRouteBuilder(pageBuilder: (_, __, ___) => SuccessPage());
+             else
+              return null;
+            },
             // themeMode: Provider.of<ThemeProvider>(context).themeMode,
             theme: Styles.themeData(themeChangeProvider.darkTheme, context),
             // darkTheme: MyThemes.darkTheme,
@@ -305,21 +328,21 @@ class _ShahedAppState extends State<ShahedApp> {
                 child: customDirectionality(
                     child: widget.token != '' ? MainPage() : LoginUi())),
 
-            routes: {
-              'About': (context) => About(),
-              'Inform': (context) => InformEntity(),
-              'Home': (context) => HomePage(),
-              'ProfilePage': (context) => ProfilePage(),
-              'ResetPage': (context) => CreateNewPasswordView(),
-              'settings': (context) => AppSettings(),
-              'EventSectionOne': (context) => EventSectionOne(),
-              'eventList': (context) => EventsMenu(),
-              'browserMap': (context) => BrowserMap(state: 0,),
-              'response': (context) => ResponsePage(),// notifications single notification page
-              'successPage': (context) => SuccessPage(),
-              'Missions': (context) => Missions(),// list of missions
-
-            },
+            // routes: {
+            //   'About': (context) => About(),
+            //   'Inform': (context) => InformEntity(),
+            //   'Home': (context) => HomePage(),
+            //   'ProfilePage': (context) => ProfilePage(),
+            //   'ResetPage': (context) => CreateNewPasswordView(),
+            //   'settings': (context) => AppSettings(),
+            //   'EventSectionOne': (context) => EventSectionOne(),
+            //   'eventList': (context) => EventsMenu(),
+            //   'browserMap': (context) => BrowserMap(state: 0,),
+            //   'response': (context) => ResponsePage(),// notifications single notification page
+            //   'successPage': (context) => SuccessPage(),
+            //   'Missions': (context) => Missions(),// list of missions
+            //
+            // },
           );
         },
       ),

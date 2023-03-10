@@ -54,7 +54,7 @@ class _HomePageState extends State<HomePage> {
   String? odometer;
   String? content;
   String? routeName = '';
-  String? apiPath = 'http://ets.ly/api/update_position';
+  String? apiPath = '${SharedClass.apiPath}/update_position';
 
   @pragma('vm:entry-point')
   void openPage(var ro,
@@ -71,24 +71,27 @@ class _HomePageState extends State<HomePage> {
         }
         Navigator.push(
           context,
-          MaterialPageRoute(
-            builder: (context) => BrowserMap(
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => BrowserMap(
               latLngDestination: LatLng(
                   lat == null ? latitude  : lat, lng == null ? long : lng),
               state: 1,
               path: path_coordinates!,
               pathshasData: path_coordinates.length > 0 ? 'yes' : '',
             ),
+            transitionDuration: Duration.zero,
           ),
         );
       }
       if (route == 'RespondToEvent') {
         Navigator.push(
           context,
-          MaterialPageRoute(
-              builder: (context) => Mappoly(
-                  lat: lat  == null ? latitude  : lat ,
-                  lng: lng  == null ? long  : lng )),
+          PageRouteBuilder(
+            pageBuilder: (_, __, ___) => Mappoly(
+                lat: lat  == null ? latitude  : lat ,
+                lng: lng  == null ? long  : lng ),
+            transitionDuration: Duration.zero,
+          ),
         );
       }
     }

@@ -11,6 +11,7 @@ import 'package:shahed/singleton/singleton.dart';
  import 'package:intl/intl.dart';
 import 'package:weather/weather.dart';
 import '../models/mission.dart';
+import '../theme/colors_app.dart';
 
 class EventProvider extends ChangeNotifier {
   Event event = Event();
@@ -68,12 +69,12 @@ class EventProvider extends ChangeNotifier {
         var res = jsonDecode(respStr);
 
         if (res['error'].toString() != 'null') {
-          showShortToast(res['error'].toString(), Colors.red);
+          showShortToast(res['error'].toString(), SharedColor.red);
           return false;
         }
         if (res['message'] == 'لاتستطيع ارسال حدث لان حسابك محظور') {
           showShortToast(
-              SharedData.getGlobalLang().blockEventMessage(), Colors.red);
+              SharedData.getGlobalLang().blockEventMessage(), SharedColor.red);
           return false;
         }
         if (res['status'] == 'success') {
@@ -85,7 +86,7 @@ class EventProvider extends ChangeNotifier {
         }
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         return false;
       }
     } catch (e) {}
@@ -116,7 +117,7 @@ class EventProvider extends ChangeNotifier {
       } else {
         print(response.body);
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to delete post.');
       }
     } catch (e) {}
@@ -145,7 +146,7 @@ class EventProvider extends ChangeNotifier {
         return Event.fromJson(jsonDecode(response.body));
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to delete post.');
       }
     } catch (e) {}
@@ -212,7 +213,7 @@ class EventProvider extends ChangeNotifier {
 
         if (respo['message'] == 'لاتستطيع تعديل الحدث لان حسابك محظور') {
           showShortToast(
-              SharedData.getGlobalLang().blockEditEventMessage(), Colors.red);
+              SharedData.getGlobalLang().blockEditEventMessage(), SharedColor.red);
           return false;
         }
         if (respo['status'] == 'success') {
@@ -222,7 +223,7 @@ class EventProvider extends ChangeNotifier {
         }
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         return false;
       }
 
@@ -257,7 +258,7 @@ class EventProvider extends ChangeNotifier {
         // return parsed.map<Event>((json) => Event.fromJson(json)).toList();
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
       }
     } catch (e) {}
   }
@@ -288,7 +289,7 @@ class EventProvider extends ChangeNotifier {
         // If the server did not return a 200 OK response,
         // then throw an exception.
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load posts');
       }
     } catch (e) {}
@@ -316,7 +317,7 @@ class EventProvider extends ChangeNotifier {
         // return  CategoryClass.fromJson(jsonDecode(response.body));
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         // If the server did not return a 200 OK response,
         // then throw an exception.
         throw Exception('Failed to load album');
@@ -346,11 +347,11 @@ class EventProvider extends ChangeNotifier {
 
       if (response.statusCode == 200) {
         final parsed = response.body;
-        showShortToast(SharedData.getGlobalLang().saveUpdates(), Colors.green);
+        showShortToast(SharedData.getGlobalLang().saveUpdates(), SharedColor.green);
         return parsed;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -379,7 +380,7 @@ class EventProvider extends ChangeNotifier {
         return parsed;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -410,7 +411,7 @@ class EventProvider extends ChangeNotifier {
         return parsed.map<Event>((json) => Event.fromJson(json)).toList();
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -440,7 +441,7 @@ class EventProvider extends ChangeNotifier {
         return parsed.map<Respo>((json) => Respo.fromJson(json)).toList();
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -469,7 +470,7 @@ class EventProvider extends ChangeNotifier {
         return parsed.map<Event>((json) => Event.fromJson(json)).toList();
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -501,7 +502,7 @@ class EventProvider extends ChangeNotifier {
           return false;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -533,7 +534,7 @@ class EventProvider extends ChangeNotifier {
           return false;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -565,7 +566,7 @@ class EventProvider extends ChangeNotifier {
           return false;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -597,7 +598,7 @@ class EventProvider extends ChangeNotifier {
         //   return false;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -632,7 +633,7 @@ class EventProvider extends ChangeNotifier {
           return false;
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
       //  throw Exception('Failed to load List');
         return false;
       }
@@ -670,7 +671,7 @@ class EventProvider extends ChangeNotifier {
         }
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}
@@ -702,7 +703,7 @@ class EventProvider extends ChangeNotifier {
         return result.reversed.toList();
       } else {
         showShortToast(
-            SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         throw Exception('Failed to load List');
       }
     } catch (e) {}

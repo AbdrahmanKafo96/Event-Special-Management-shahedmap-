@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shahed/modules/home/mainpage.dart';
 import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/theme/colors_app.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 
@@ -31,7 +32,7 @@ class _SuccessPageState extends State<SuccessPage> {
         ),
         body: Center(
             child: Container(
-          color: Color(0xFFf7f7f7),
+          color: Color(SharedColor.deepWhiteOrangeColor),
           height: MediaQuery.of(context).size.height,
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -43,7 +44,7 @@ class _SuccessPageState extends State<SuccessPage> {
               ),
               Text(
                 SharedData.getGlobalLang().sentEvenSuccessfully(),
-                style: TextStyle(color: Colors.grey, fontSize: 18),
+                style: TextStyle(color: SharedColor.grey, fontSize: 18),
               )
             ],
           ),

@@ -9,8 +9,8 @@ class SharedClass {
   SharedClass._();
 
   static FlutterSecureStorage? _storage;
-  static String apiPath = "http://ets.ly/api";
-  static String routePath = "http://ets.ly";
+  static String apiPath = "https://ets.ly/api";
+  static String routePath = "https://ets.ly";
   static const String mapApiKey = "AIzaSyCxMAiyFG-l2DUifjrksWErZFk_gZ8mTEk";
   static const String weatherApiKey = "fe5ab7fcf47cd01b406b3d7faa519b21";
   static Language? _language;

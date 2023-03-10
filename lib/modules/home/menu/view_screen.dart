@@ -12,6 +12,7 @@ import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_dialog.dart';
 
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class EventView extends StatefulWidget {
@@ -50,7 +51,7 @@ class _EventViewState extends State<EventView> {
                 title:'${widget.eventName}',
                 actions: [
                   IconButton(
-                 //   color: Colors.white,
+                 //   color: SharedColor.white,
                      // iconSize: 24,
                       onPressed: ()  async {
                   checkInternetConnectivity(context).then((bool value) async {
@@ -70,14 +71,14 @@ class _EventViewState extends State<EventView> {
                       await Provider.of<EventProvider>(context, listen: false)
                           .updateEvent(userData );
                       if (result!) {
-                        showShortToast(SharedData.getGlobalLang().updateSuccessfully(), Colors.green);
+                        showShortToast(SharedData.getGlobalLang().updateSuccessfully(), SharedColor.green);
                         Navigator.pushAndRemoveUntil(
                           context,
                           MaterialPageRoute(builder: (context) => HomePage()),
                               (Route<dynamic> route) => false,
                         );
                       } else {
-                        showShortToast(SharedData.getGlobalLang().updateWasNotSuccessful(), Colors.orange);
+                        showShortToast(SharedData.getGlobalLang().updateWasNotSuccessful(), SharedColor.orange);
                       }
                     }
 
@@ -87,7 +88,7 @@ class _EventViewState extends State<EventView> {
                       tooltip: SharedData.getGlobalLang().delete(),
                       icon: Icon(
                         Icons.delete,
-                        color: Colors.white,
+                        color: SharedColor.white,
                       ),
                       onPressed: () {
                         checkInternetConnectivity(context).then((
@@ -101,7 +102,7 @@ class _EventViewState extends State<EventView> {
                                       TextButton(
                                         child: Text(
                                          SharedData.getGlobalLang().cancel(),
-                                          style: TextStyle(color: Colors.white),
+                                          style: TextStyle(color: SharedColor.white),
                                         ),
                                         onPressed: () {
                                           Navigator.of(context).pop();
@@ -109,14 +110,14 @@ class _EventViewState extends State<EventView> {
                                       ),
                                       Container(
                                         decoration: BoxDecoration(
-                                          color: Colors.red,
+                                          color: SharedColor.red,
                                           borderRadius: BorderRadius.all(Radius.circular(5)),
                                         ),
 
                                         child: TextButton(
                                           child: Text(
                                             SharedData.getGlobalLang().deleteEvent(),
-                                            style: TextStyle(color: Colors.white),
+                                            style: TextStyle(color: SharedColor.white),
                                           ),
                                           onPressed: () {
                                             int postId = widget.eventID!;
@@ -154,7 +155,7 @@ class _EventViewState extends State<EventView> {
               body: _response == null
                   ? Center(
                       child: CircularProgressIndicator(
-                        color: Colors.white,
+                        color: SharedColor.white,
                         strokeWidth: 7.0,
                       ),
                     )
@@ -171,12 +172,12 @@ class _EventViewState extends State<EventView> {
                         Container(
                           margin: EdgeInsets.all(5),
                           child: Card(
-                            shadowColor:Color(0xff424250),
+                            shadowColor:Color(SharedColor.greyIntColor),
                             elevation: 0.5,
-                            color: Color(0xff424250),
+                            color: Color(SharedColor.greyIntColor),
                             shape:  RoundedRectangleBorder(
 
-                              //  side: BorderSide(color: Colors.gr, width: 1),
+                              //  side: BorderSide(color: SharedColor.gr, width: 1),
                               borderRadius: BorderRadius.all(Radius.circular(24),)
                             ),
                             child: Padding(

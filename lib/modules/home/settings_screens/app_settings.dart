@@ -11,6 +11,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:workmanager/workmanager.dart';
 import '../../../main.dart';
+import '../../../theme/colors_app.dart';
 //import 'package:geolocator/geolocator.dart';
 
 class AppSettings extends StatefulWidget {
@@ -50,7 +51,7 @@ class _AppSettingsState extends State<AppSettings> {
 
     return   Scaffold(
         drawer: CustomDrawer(),
-        //backgroundColor: _darkMode?Colors.black:Colors.white,
+        //backgroundColor: _darkMode?SharedColor.black:SharedColor.white,
         appBar:customAppBar(context,title:_language.settingsHeading()  ,icon: FontAwesomeIcons.gear),
         body: SingleChildScrollView(
           child: Container(
@@ -60,7 +61,7 @@ class _AppSettingsState extends State<AppSettings> {
               children: <Widget>[
 
                 Card(
-                  color: Color(0xFF424250),
+                  color: Color(SharedColor.greyIntColor),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(10),
                   ),
@@ -70,10 +71,10 @@ class _AppSettingsState extends State<AppSettings> {
                         title: Text(_language.changeLanguage() , style: Theme.of(context).textTheme.headline4,),
                         leading: Icon(
                           FontAwesomeIcons.language,
-                          color: Colors.green,
+                          color: SharedColor.green,
                         ),
                         trailing: DropdownButton(
-                          dropdownColor: Colors.black.withOpacity(0.9),
+                          dropdownColor: SharedColor.black.withOpacity(0.9),
                           hint: Text(_language.languages() , style: Theme.of(context).textTheme.bodyText1,),
                           value: _selectedLanguage,
                           onChanged: (newVal)  {
@@ -99,10 +100,10 @@ class _AppSettingsState extends State<AppSettings> {
                         title: Text(_language.darkMode() , style: Theme.of(context).textTheme.headline4,),
                         leading: Icon(
                           FontAwesomeIcons.brush,
-                          color: Colors.white,
+                          color: SharedColor.white,
                         ),
                         trailing: Switch(
-                          activeColor: Colors.blue,
+                          activeColor: SharedColor.blue,
                           value: _darkMode,
                           onChanged: (val){
                           //_pref.setBool('darkMode', val);
@@ -118,11 +119,11 @@ class _AppSettingsState extends State<AppSettings> {
                         title: Text(_language.fetchCurrentLocation() , style: Theme.of(context).textTheme.headline4,),
                         leading: Icon(
                           FontAwesomeIcons.locationDot,
-                          color: Colors.redAccent,
+                          color: SharedColor.redAccent,
                         ),
                         subtitle: Text(_language.fetchLocationEveryQuarter() ,style: Theme.of(context).textTheme.subtitle1,),
                         trailing: Switch(
-                          activeColor: Colors.deepOrange,
+                          activeColor: SharedColor.deepOrange,
                           value: _locationState,
                           onChanged: (val)  async {
 

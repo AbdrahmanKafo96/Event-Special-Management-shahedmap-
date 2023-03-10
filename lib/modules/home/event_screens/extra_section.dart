@@ -15,6 +15,7 @@ import 'package:intl/intl.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/singleton/singleton.dart';
 
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class EventSectionTow extends StatefulWidget {
@@ -53,11 +54,11 @@ class _EventSectionTowState extends State<EventSectionTow> {
                 height: double.infinity,
                 padding: EdgeInsets.all(10),
                 decoration: BoxDecoration(
-                  color: Color(0xFF33333D),
+                  color: Color(SharedColor.darkIntColor),
                   borderRadius: BorderRadius.all(Radius.circular(25)),
                   boxShadow: [
                     BoxShadow(
-                      color: Colors.black12.withOpacity(0.2),
+                      color: SharedColor.black12.withOpacity(0.2),
                       spreadRadius: 3,
                       blurRadius: 3,
                       offset: Offset(0, 2), // changes position of shadow
@@ -80,7 +81,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                           child: Container(
                               height: double.infinity * 0.3,
                               decoration: BoxDecoration(
-                                color: Color(0xff424250),
+                                color: Color(SharedColor.greyIntColor),
                                 borderRadius: BorderRadius.only(
                                     topLeft: Radius.circular(24),
                                     topRight: Radius.circular(24),
@@ -99,16 +100,16 @@ class _EventSectionTowState extends State<EventSectionTow> {
                           margin: EdgeInsets.only(top: 10),
                           child: HoverButton(
                             height: 50,
-                            splashColor: Color(0xFFFF8F00),
-                            hoverTextColor: Color(0xFFFF8F00),
-                            highlightColor: Color(0xFFFF8F00),
-                            color: Color(0xFFfe6e00),
+                            splashColor: Color(SharedColor.orangeIntColor),
+                            hoverTextColor: Color(SharedColor.orangeIntColor),
+                            highlightColor: Color(SharedColor.orangeIntColor),
+                            color: Color(SharedColor.deepOrangeColor),
                             child: isLoading
                                 ? Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
                                     children: [
                                       customCircularProgressIndicator(
-                                        color: Colors.white,
+                                        color: SharedColor.white,
                                       ),
                                       const SizedBox(
                                         height: 24,
@@ -211,7 +212,7 @@ class _EventSectionTowState extends State<EventSectionTow> {
                                     } else {}
                                   } else {
                                     showShortToast(
-                                        SharedData.getGlobalLang().descRequired(), Colors.red);
+                                        SharedData.getGlobalLang().descRequired(), SharedColor.red);
                                   }
                                 }
                               });

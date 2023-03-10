@@ -25,8 +25,8 @@ Widget customCard(IconData icon, String title, Color color,
         padding: EdgeInsets.all(10),
         child: Center(
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+           // crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(
                 decoration: BoxDecoration(
@@ -81,19 +81,11 @@ Widget customCard(IconData icon, String title, Color color,
                   radius: 30,
                 ),
               ),
+              SizedBox(height: 15,),
               FittedBox(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    Text(
-                      "$title",
-                      style: Theme.of(context).textTheme.headline5,
-                    ),
-                    Icon(
-                      Icons.arrow_forward,
-                      color: Colors.white,
-                    )
-                  ],
+                child: Text(
+                  "$title",
+                  style: Theme.of(context).textTheme.headline5,
                 ),
               ),
             ],

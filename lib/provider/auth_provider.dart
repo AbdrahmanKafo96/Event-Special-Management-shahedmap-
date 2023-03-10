@@ -15,6 +15,7 @@ import 'dart:convert' as convert;
 import 'package:http/http.dart' as http;
 import 'package:shahed/singleton/singleton.dart';
 import 'package:location/location.dart' as loc;
+import '../theme/colors_app.dart';
 import '../widgets/checkInternet.dart';
 import 'package:flutter_background_geolocation/flutter_background_geolocation.dart' as bg;
 
@@ -60,7 +61,7 @@ class UserAuthProvider extends ChangeNotifier {
             // showShortToast(responseData['message'], Colors.redAccent);
               if (responseData['message']!=null){
                   showShortToast(
-                      responseData['message'], Colors.red);
+                      responseData['message'], SharedColor.red);
                 return false;
             // if (responseData['message'] ==
             //     "تحقق من البريد الالكتروني وكلمة المرور") {
@@ -110,9 +111,9 @@ class UserAuthProvider extends ChangeNotifier {
             if (responseData['error']['email'][0].toString() ==
                 "The email has already been taken.")
               showShortToast(
-                  SharedData.getGlobalLang().emailAlreadyUsed(), Colors.red);
+                  SharedData.getGlobalLang().emailAlreadyUsed(), SharedColor.red);
             else {
-              showShortToast(SharedData.getGlobalLang().pleaseCheckYourInputs(), Colors.red);
+              showShortToast(SharedData.getGlobalLang().pleaseCheckYourInputs(), SharedColor.red);
             }
             return false;
           } else {
@@ -141,7 +142,7 @@ class UserAuthProvider extends ChangeNotifier {
             return true;
           }
         } else {
-          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
           return false;
         }
       }
@@ -184,7 +185,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         return false;
       }
     } catch (e) {
@@ -260,7 +261,7 @@ class UserAuthProvider extends ChangeNotifier {
                 context, MaterialPageRoute(builder: (_) => LoginUi()));
           } else {
             print(response.body);
-            showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+            showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
           }
         }
       });
@@ -302,11 +303,11 @@ class UserAuthProvider extends ChangeNotifier {
         if (responseData['message'] == 'success') {
           return true;
         } else {
-          showShortToast(SharedData.getGlobalLang().saveWasNotSuccessful(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().saveWasNotSuccessful(), SharedColor.orange);
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         return false;
       }
     } catch (e) {
@@ -343,7 +344,7 @@ class UserAuthProvider extends ChangeNotifier {
             return null;
           }
         } else {
-          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
           return null;
         }
       }
@@ -385,7 +386,7 @@ class UserAuthProvider extends ChangeNotifier {
           return false;
         }
       } else {
-        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
         return false;
       }
     } catch (e) {
@@ -409,13 +410,13 @@ class UserAuthProvider extends ChangeNotifier {
           var res = jsonDecode(response.body);
           if (res['error']['email'][0].toString() ==
               "The selected email is invalid.") {
-            showShortToast(SharedData.getGlobalLang().checkEmailInput(), Colors.green);
+            showShortToast(SharedData.getGlobalLang().checkEmailInput(), SharedColor.green);
             return;
           }
-          showShortToast(SharedData.getGlobalLang().checkInbox(), Colors.redAccent);
+          showShortToast(SharedData.getGlobalLang().checkInbox(), SharedColor.redAccent);
           return;
         } else {
-          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
           return null;
         }
       }
@@ -446,7 +447,7 @@ class UserAuthProvider extends ChangeNotifier {
           box.put('beneficiarie_id', res['data']['beneficiarie_id']);
           box.put('unitname', res['data']['name']);
         } else {
-          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), Colors.orange);
+          showShortToast(SharedData.getGlobalLang().unableAccessSystem(), SharedColor.orange);
           return null;
         }
       }

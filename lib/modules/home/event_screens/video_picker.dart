@@ -9,6 +9,8 @@ import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:video_player/video_player.dart';
 
+import '../../../theme/colors_app.dart';
+
 class VideoPicker extends StatefulWidget {
   String? oldVideo = "";
   int? eventID;
@@ -70,7 +72,7 @@ class _VideoPickerState extends State<VideoPicker> {
                       icon: Icon(
                         FontAwesomeIcons.xmark,
                         size: 28,
-                        color: Colors.red,
+                        color: SharedColor.red,
                       ),
                       onPressed: () {
                         Provider.of<EventProvider>(context, listen: false)
@@ -88,7 +90,7 @@ class _VideoPickerState extends State<VideoPicker> {
                   Material(
                       type: MaterialType.transparency,
                       borderRadius: BorderRadius.circular(4),
-                      color: Colors.grey.withOpacity(0.5),
+                      color: SharedColor.grey.withOpacity(0.5),
                       child: InkWell(
                         borderRadius: BorderRadius.circular(4),
                         radius: 25,
@@ -99,8 +101,8 @@ class _VideoPickerState extends State<VideoPicker> {
                                 : _controller!.play();
                           });
                         },
-                        splashColor: Colors.grey,
-                        highlightColor: Colors.grey,
+                        splashColor: SharedColor.grey,
+                        highlightColor: SharedColor.grey,
                         child: Container(
                           width: 34,
                           height: 34,
@@ -108,7 +110,7 @@ class _VideoPickerState extends State<VideoPicker> {
                             _controller!.value.isPlaying
                                 ? Icons.pause
                                 : Icons.play_arrow,
-                            color: Colors.white,
+                            color: SharedColor.white,
                           ),
                         ),
                       ))
@@ -139,7 +141,7 @@ class _VideoPickerState extends State<VideoPicker> {
                           icon: Icon(
                             FontAwesomeIcons.xmark,
                             size: 28,
-                            color: Colors.red,
+                            color: SharedColor.red,
                           ),
                           onPressed: () {
                             setState(() {
@@ -157,7 +159,7 @@ class _VideoPickerState extends State<VideoPicker> {
                       Material(
                           type: MaterialType.transparency,
                           borderRadius: BorderRadius.circular(4),
-                          color: Colors.grey.withOpacity(0.5),
+                          color: SharedColor.grey.withOpacity(0.5),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(4),
                             radius: 25,
@@ -168,8 +170,8 @@ class _VideoPickerState extends State<VideoPicker> {
                                     : _controller!.play();
                               });
                             },
-                            splashColor: Colors.grey,
-                            highlightColor: Colors.grey,
+                            splashColor: SharedColor.grey,
+                            highlightColor: SharedColor.grey,
                             child: Container(
                               width: 34,
                               height: 34,
@@ -177,7 +179,7 @@ class _VideoPickerState extends State<VideoPicker> {
                                 _controller!.value.isPlaying
                                     ? Icons.pause
                                     : Icons.play_arrow,
-                                color: Colors.white,
+                                color: SharedColor.white,
                               ),
                             ),
                           ))
@@ -209,7 +211,7 @@ class _VideoPickerState extends State<VideoPicker> {
               .setVideoFile = file;
         });
       } else {
-        showShortToast(SharedData.getGlobalLang().alertSizeFile(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().alertSizeFile(), SharedColor.orange);
       }
     }
   }
@@ -233,7 +235,7 @@ class _VideoPickerState extends State<VideoPicker> {
               .setVideoFile = file;
         });
       } else {
-        showShortToast(SharedData.getGlobalLang().alertSizeFile(), Colors.orange);
+        showShortToast(SharedData.getGlobalLang().alertSizeFile(), SharedColor.orange);
       }
     }
   }
@@ -242,10 +244,10 @@ class _VideoPickerState extends State<VideoPicker> {
     return Card(
       elevation: 1.0,
       shape: RoundedRectangleBorder(
-        //  side: BorderSide(color: Colors.gr, width: 1),
+        //  side: BorderSide(color: SharedColor.gr, width: 1),
         borderRadius: BorderRadius.all(Radius.circular(24)),
       ),
-      color: Color(0xff424250),
+      color: Color(SharedColor.greyIntColor),
       child: Padding(
         padding: EdgeInsets.all(5),
         child: Column(
@@ -257,16 +259,16 @@ class _VideoPickerState extends State<VideoPicker> {
                 width: 100,
                 child: Card(
                   elevation: 0.5,
-                  color: Colors.white.withOpacity(0.2),
+                  color: SharedColor.white.withOpacity(0.2),
                   shape: RoundedRectangleBorder(
-                    //  side: BorderSide(color: Colors.gr, width: 1),
+                    //  side: BorderSide(color: SharedColor.gr, width: 1),
                     borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(5),
                         bottomRight: Radius.circular(5)),
                   ),
                   child: Icon(
                     FontAwesomeIcons.upload,
-                    color: Colors.white,
+                    color: SharedColor.white,
                   ),
                 ),
               ),

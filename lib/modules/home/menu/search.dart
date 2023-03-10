@@ -8,6 +8,7 @@ import 'package:shahed/widgets/checkInternet.dart';
 import 'package:http/http.dart' as http;
 import 'package:shahed/widgets/custom_indecator.dart';
 
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class DataSearchSe extends SearchDelegate<String> {
@@ -89,7 +90,7 @@ class DataSearchSe extends SearchDelegate<String> {
   //                   children: [
   //                     Container(
   //                         decoration: BoxDecoration(
-  //                           color: Colors.white,
+  //                           color: SharedColor.white,
   //                           borderRadius: BorderRadius.circular(15.0),
   //                         ),
   //                         padding: EdgeInsets.only(top: 8),
@@ -129,7 +130,7 @@ class DataSearchSe extends SearchDelegate<String> {
   //                                             .updateEvent(),
   //                                         icon: Icon(
   //                                           Icons.edit,
-  //                                           color: Colors.deepOrange,
+  //                                           color: SharedColor.deepOrange,
   //                                         ),
   //                                         onPressed: () {
   //                                           checkInternetConnectivity(context)
@@ -157,7 +158,7 @@ class DataSearchSe extends SearchDelegate<String> {
   //                                 leading: Icon(
   //                                   Icons.event_note_rounded,
   //                                   size: 30,
-  //                                   color: Colors.amber.shade200,
+  //                                   color: SharedColor.amber.shade200,
   //                                 ),
   //                                 title: Text(
   //                                   '${snapshot.data['data']['event_name']}',
@@ -165,7 +166,7 @@ class DataSearchSe extends SearchDelegate<String> {
   //                                       Theme.of(context).textTheme.bodyText1,
   //                                 )))),
   //                     Divider(
-  //                       color: Colors.grey,
+  //                       color: SharedColor.grey,
   //                     )
   //                   ],
   //                 );
@@ -204,10 +205,10 @@ class DataSearchSe extends SearchDelegate<String> {
                   ),
                   padding: EdgeInsets.only(top: 8),
                   child: Card(
-                      color: Color(0xFF424250),
+                      color: Color(SharedColor.greyIntColor),
                       shape: RoundedRectangleBorder(
                         side: BorderSide(
-                          color: Color(0xFF424250),
+                          color: Color(SharedColor.greyIntColor),
                         ),
                         borderRadius: BorderRadius.circular(15.0),
                       ),

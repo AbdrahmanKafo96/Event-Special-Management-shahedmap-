@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shahed/theme/colors_app.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 
 Future<dynamic> customReusableShowDialog(
@@ -19,7 +20,7 @@ Future<dynamic> customReusableShowDialog(
     builder: (context) {
       return customDirectionality(
         child: AlertDialog(
-          backgroundColor: Color(0xff33333d),
+          backgroundColor: Color(SharedColor.darkIntColor),
           title: Text(
             header,
             style: Theme.of(context).textTheme.bodyText1,

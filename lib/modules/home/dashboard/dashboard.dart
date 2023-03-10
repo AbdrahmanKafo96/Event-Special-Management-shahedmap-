@@ -13,6 +13,7 @@ import 'package:location/location.dart' as loc;
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 import '../../../provider/event_provider.dart';
+import '../../../theme/colors_app.dart';
 
 class Dashboard extends StatefulWidget {
   @override
@@ -61,24 +62,24 @@ class _DashboardState extends State<Dashboard> {
         padding: EdgeInsets.all(1.0),
         children: <Widget>[
           dashboardItem(context, SharedData.getGlobalLang().addEvent(),
-              FontAwesomeIcons.locationDot, 'addEvent', Colors.deepOrange),
+              FontAwesomeIcons.locationDot, 'addEvent', SharedColor.deepOrange),
           //  if (SharedData.getUserState())
           if (   SharedData.getUserState()  )
           dashboardItem(context, SharedData.getGlobalLang().browseMap(),
-              FontAwesomeIcons.mapLocationDot, 'browserMap', Colors.teal),
+              FontAwesomeIcons.mapLocationDot, 'browserMap', SharedColor.teal),
 
           if (SharedData.getUserState() )
             dashboardItem(context, SharedData.getGlobalLang().notifications(),
-                FontAwesomeIcons.bell, 'response', Colors.redAccent),
+                FontAwesomeIcons.bell, 'response', SharedColor.redAccent),
           if (SharedData.getUserState() )
             dashboardItem(context, SharedData.getGlobalLang().missionsList(),
-                FontAwesomeIcons.solidComment, 'Missions', Colors.orange),
+                FontAwesomeIcons.solidComment, 'Missions', SharedColor.orange),
 
           dashboardItem(context, SharedData.getGlobalLang().notifyAgency(),
-              FontAwesomeIcons.users, 'Inform', Colors.greenAccent),
+              FontAwesomeIcons.users, 'Inform', SharedColor.greenAccent),
 
           dashboardItem(context, SharedData.getGlobalLang().eventList(),
-              FontAwesomeIcons.list, 'eventList', Colors.blue),
+              FontAwesomeIcons.list, 'eventList', SharedColor.blue),
         ],
       ),
     );
@@ -91,15 +92,21 @@ class _DashboardState extends State<Dashboard> {
           Provider.of<EventProvider>(ctx, listen: false).event = Event();
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => EventSectionOne()),
+            //MaterialPageRoute(builder: (context) => EventSectionOne()),
+            PageRouteBuilder(
+              pageBuilder: (_, __, ___) => EventSectionOne(),
+              transitionDuration: Duration.zero,
+            ),
           );
         }
       });
     } else {
-      return Navigator.of(ctx).pushNamed(
-        viewName,
-        arguments: (route) => false,
-      );
+      print("from the dashboard$viewName");
+      Navigator.pushNamed(context, viewName);
+      // return Navigator.of(ctx).pushNamed(
+      //   viewName,
+      //   // arguments: (route) => false,
+      // );
     }
   }
 

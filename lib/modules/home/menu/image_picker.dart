@@ -8,6 +8,8 @@ import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_modal_bottomsheet.dart';
 
+import '../../../theme/colors_app.dart';
+
 class MyCustomImage extends StatefulWidget {
   int? count;
 
@@ -84,7 +86,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                     child: Icon(
                       FontAwesomeIcons.xmark,
                       size: 20,
-                      color: Colors.red,
+                      color: SharedColor.red,
                     ),
                     onTap: () {
                       setState(() {
@@ -119,7 +121,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                     child: Icon(
                       FontAwesomeIcons.xmark,
                       size: 20,
-                      color: Colors.red,
+                      color: SharedColor.red,
                     ),
                     onTap: () {
                       setState(() {
@@ -134,7 +136,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
               ]));
         } else {
           return Card(
-            color: Colors.black54,
+            color: SharedColor.black54,
             elevation: 5.0,
             child: FittedBox(
               child: Column(
@@ -147,7 +149,7 @@ class _MyCustomImageState extends State<MyCustomImage> {
                   IconButton(
                     icon: Icon(
                       Icons.add_photo_alternate,
-                      color: Colors.white,
+                      color: SharedColor.white,
                       size: 26,
                     ),
                     onPressed: () {

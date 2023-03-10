@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart'; 
+import 'package:provider/provider.dart';
+import 'package:shahed/theme/colors_app.dart'; 
 import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
@@ -44,7 +45,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
             body: Container(
               height: double.maxFinite,
               decoration: BoxDecoration(
-                  color: Color(0xff424250),
+                  color: Color(SharedColor.greyIntColor),
                   borderRadius: BorderRadius.all(
                     Radius.circular(24),
                   )),
@@ -103,7 +104,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                               _passwordVisible!
                                   ? Icons.visibility
                                   : Icons.visibility_off,
-                              color:  _passwordVisible! ?Colors.white:Colors.grey,
+                              color:  _passwordVisible! ?SharedColor.white:SharedColor.grey,
                             ),
                             onPressed: () {
                               // Update the state i.e. toogle the state of passwordVisible variable
@@ -166,7 +167,7 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                             _confPasswordVisible!
                                 ? Icons.visibility
                                 : Icons.visibility_off,
-                            color:  _confPasswordVisible! ?Colors.white:Colors.grey,
+                            color:  _confPasswordVisible! ?SharedColor.white:SharedColor.grey,
                           ),
                           onPressed: () {
                             // Update the state i.e. toogle the state of passwordVisible variable
@@ -209,11 +210,11 @@ class _CreateNewPasswordViewState extends State<CreateNewPasswordView> {
                                       // Navigator.of(context).pop();
                                       showShortToast(
                                           SharedData.getGlobalLang().passwordChangedSuccessfully(),
-                                          Colors.green);
+                                          SharedColor.green);
                                     } else {
                                       showShortToast(
                                           SharedData.getGlobalLang().TryChangingYourPasswordAgain(),
-                                          Colors.red);
+                                          SharedColor.red);
                                     }
                                   }
                                 }

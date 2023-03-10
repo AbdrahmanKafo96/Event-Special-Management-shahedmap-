@@ -18,6 +18,8 @@ import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:google_maps_webservice/places.dart' as p;
 
+import '../../../theme/colors_app.dart';
+
 class MapMarker extends StatefulWidget {
   double? lat, lng;
 
@@ -87,6 +89,7 @@ class _MyHomePageState extends State<MapMarker> {
     }
   }
 
+
   @override
   Widget build(BuildContext context) {
     return   customDirectionality(
@@ -111,23 +114,23 @@ class _MyHomePageState extends State<MapMarker> {
                 ),
               ));
             },
-            hoverColor: Color(0xFFFF8F00),
-            backgroundColor: Color(0xFFfe6e00),
+            hoverColor: Color(SharedColor.orangeIntColor),
+            backgroundColor: Color( SharedColor.deepOrangeColor),
             label: Text(
               SharedData.getGlobalLang().currentLocation(),
               style: Theme.of(context).textTheme.bodyText1,
             ),
             icon: Icon(
               Icons.location_on,
-              color: Colors.white,
+              color: SharedColor.white,
             ),
           ),
           appBar: customAppBar(
             context,
-            //backgroundColor: Colors.teal,
+            //backgroundColor: SharedColor.teal,
             title: SharedData.getGlobalLang().locateEvent(),
             leading: PopupMenuButton(
-              color: Colors.deepOrange,
+              color: SharedColor.deepOrange,
               itemBuilder: (builder) {
                 return customPopupMenuEntry(context);
               },
@@ -161,7 +164,7 @@ class _MyHomePageState extends State<MapMarker> {
               IconButton(
                 icon: Icon(
                   Icons.add_location,
-                  color: Colors.white,
+                  color: SharedColor.white,
                 ),
                 onPressed: () {
                   if (Provider.of<EventProvider>(context, listen: false)
@@ -172,7 +175,7 @@ class _MyHomePageState extends State<MapMarker> {
                               .event
                               .getLng ==
                           0.0) {
-                    showShortToast(SharedData.getGlobalLang().locationRequired(), Colors.orange);
+                    showShortToast(SharedData.getGlobalLang().locationRequired(), SharedColor.orange);
                   } else {
                     customReusableShowDialog(
                       context,
@@ -182,7 +185,7 @@ class _MyHomePageState extends State<MapMarker> {
                         TextButton(
                           child: Text(
                             SharedData.getGlobalLang().cancel(),
-                            style: TextStyle(color: Colors.grey),
+                            style: TextStyle(color: SharedColor.grey),
                           ),
                           onPressed: () {
                             Navigator.of(context).pop();
@@ -190,7 +193,7 @@ class _MyHomePageState extends State<MapMarker> {
                         ),
                         Container(
                           decoration: BoxDecoration(
-                            color: Colors.deepOrange,
+                            color: SharedColor.deepOrange,
                             borderRadius: BorderRadius.all(Radius.circular(5)),
                           ),
                           child: TextButton(
@@ -200,7 +203,7 @@ class _MyHomePageState extends State<MapMarker> {
                             ),
                             onPressed: () {
                               showShortToast(
-                                 SharedData.getGlobalLang().positionSuccessfully() , Colors.green);
+                                 SharedData.getGlobalLang().positionSuccessfully() , SharedColor.green);
                               Map getResult = {
                                 'lat': Provider.of<EventProvider>(context,
                                         listen: false)
@@ -264,11 +267,11 @@ class _MyHomePageState extends State<MapMarker> {
                     child: Column(
                       children: [
                         IconButton(
-                          hoverColor: Colors.grey,
-                          highlightColor: Colors.grey,
+                          hoverColor: SharedColor.grey,
+                          highlightColor: SharedColor.grey,
                           icon: Icon(
                             Icons.arrow_back,
-                            color: Colors.black87,
+                            color: SharedColor.black87,
                           ),
                           onPressed: () {
                             Provider.of<EventProvider>(context, listen: false)
@@ -290,7 +293,7 @@ class _MyHomePageState extends State<MapMarker> {
                            children: [
                              Icon(
                                FontAwesomeIcons.temperatureThreeQuarters,
-                               color: Colors.black87,
+                               color: SharedColor.black87,
                                size: 24,
                              ),
                              SizedBox(
@@ -299,7 +302,7 @@ class _MyHomePageState extends State<MapMarker> {
                              Text(
                                "${weather}",
                                style: TextStyle(
-                                   color: Colors.black87,
+                                   color: SharedColor.black87,
                                    fontSize: 24,
                                    fontWeight: FontWeight.bold),
                                // overflow: TextOverflow.ellipsis,
@@ -318,7 +321,7 @@ class _MyHomePageState extends State<MapMarker> {
                                 context: context,
                                 apiKey: SharedClass.mapApiKey,
                                 mode: Mode.overlay,
-                                decoration: InputDecoration(fillColor: Colors.white),
+                                decoration: InputDecoration(fillColor: SharedColor.white),
                                 hint: SharedData.getGlobalLang().search(),
                                 types: [],
                                 strictbounds: false,
@@ -352,7 +355,8 @@ class _MyHomePageState extends State<MapMarker> {
                               //move map camera to selected place with animation
                               controller.animateCamera(
                                   CameraUpdate.newCameraPosition(CameraPosition(
-                                      target: newlatlang, zoom: 17)));
+                                      target: newlatlang, zoom: 17))
+                              );
                             }
                           }catch (e) {
                             print(e);
@@ -360,7 +364,7 @@ class _MyHomePageState extends State<MapMarker> {
                           },
                           child: Icon(
                             FontAwesomeIcons.magnifyingGlass,
-                            color: Colors.black12.withOpacity(.5),
+                            color: SharedColor.black12.withOpacity(.5),
                           ),
                           style: ElevatedButton.styleFrom(
                             shape: CircleBorder(), //<-- SEE HERE

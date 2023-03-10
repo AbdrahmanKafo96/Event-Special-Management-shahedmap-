@@ -8,6 +8,7 @@ import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/widgets/custom_indecator.dart';
+import '../../../theme/colors_app.dart';
 import 'event_category.dart';
 import 'package:location/location.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -43,7 +44,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
     super.dispose();
   }
 
-  Color myColor = Colors.black;
+  Color myColor = SharedColor.black;
   String? errorMessage1, errorMessage2, errorMessage3, errorMessage4;
   CameraPosition camera =
       CameraPosition(target: LatLng(26.3351, 17.2283), zoom: 4);
@@ -74,7 +75,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         errorMessage1 =
                             SharedData.getGlobalLang().locationRequired();
                         setState(() {
-                          myColor = Colors.red;
+                          myColor = SharedColor.red;
                         });
                       } else {
                         setState(() {
@@ -109,7 +110,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         errorMessage2 =
                             SharedData.getGlobalLang().categoryRequired();
                         setState(() {
-                          myColor = Colors.red;
+                          myColor = SharedColor.red;
                         });
                       } else {
                         setState(() {
@@ -135,7 +136,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         errorMessage3 =
                             SharedData.getGlobalLang().typeRequired();
                         setState(() {
-                          myColor = Colors.red;
+                          myColor = SharedColor.red;
                         });
                       } else {
                         setState(() {
@@ -159,7 +160,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                         errorMessage4 =
                             SharedData.getGlobalLang().imageRequired();
                         setState(() {
-                          myColor = Colors.red;
+                          myColor = SharedColor.red;
                         });
                       } else {
                         setState(() {
@@ -192,11 +193,11 @@ class _EventSectionOneState extends State<EventSectionOne> {
                     //  width: MediaQuery.of(context).size.width,
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
-                      color: Color(0xFF33333D),
+                      color: Color(SharedColor.darkIntColor),
                       borderRadius: BorderRadius.all(Radius.circular(25)),
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.black12.withOpacity(0.2),
+                          color: SharedColor.black12.withOpacity(0.2),
                           spreadRadius: 3,
                           blurRadius: 3,
                           offset: Offset(0, 2), // changes position of shadow
@@ -281,7 +282,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                           ),
                           Text(
                             errorMessage1 != null ? errorMessage1! : "",
-                            style: TextStyle(fontSize: 14, color: Colors.red),
+                            style: TextStyle(fontSize: 14, color: SharedColor.red),
                           ),
 
                           Row(
@@ -297,7 +298,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                             errorMessage2 != null && errorMessage3 != null
                                 ? "${errorMessage2} ${errorMessage3}"
                                 : "",
-                            style: TextStyle(fontSize: 14, color: Colors.red),
+                            style: TextStyle(fontSize: 14, color: SharedColor.red),
                           ),
                           Row(
                             children: [
@@ -311,11 +312,11 @@ class _EventSectionOneState extends State<EventSectionOne> {
                           Container(
                             margin: EdgeInsets.all(5),
                             child: Card(
-                              shadowColor: Color(0xff424250),
+                              shadowColor: Color(SharedColor.greyIntColor),
                               elevation: 0.5,
-                              color: Color(0xff424250),
+                              color: Color(SharedColor.greyIntColor),
                               shape: RoundedRectangleBorder(
-                                //  side: BorderSide(color: Colors.gr, width: 1),
+                                //  side: BorderSide(color: SharedColor.gr, width: 1),
                                 borderRadius: BorderRadius.only(
                                   bottomLeft: Radius.circular(24),
                                   bottomRight: Radius.circular(24),
@@ -350,7 +351,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                                           ? ""
                                           : errorMessage4!,
                                       style: TextStyle(
-                                          fontSize: 14, color: Colors.red),
+                                          fontSize: 14, color: SharedColor.red),
                                     ),
                                   ],
                                 ),
@@ -360,7 +361,7 @@ class _EventSectionOneState extends State<EventSectionOne> {
                           // Text(
                           //   errorMessage4 == null ? "" : errorMessage4,
                           //   style:
-                          //       TextStyle(fontSize: 14, color: Colors.red),
+                          //       TextStyle(fontSize: 14, color: SharedColor.red),
                           // ),
                         ]),
                   )),

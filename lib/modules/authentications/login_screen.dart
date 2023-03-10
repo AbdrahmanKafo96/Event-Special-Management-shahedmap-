@@ -14,6 +14,7 @@ import 'package:shahed/widgets/custom_dialog.dart';
 import 'package:shahed/widgets/custom_toast.dart';
 import 'package:shahed/modules/authentications/validator.dart';
 import 'package:shahed/provider/auth_provider.dart';
+import '../../theme/colors_app.dart';
 import '../../widgets/customHoverButton.dart';
 import 'account_section.dart';
 import 'logo.dart';
@@ -53,14 +54,14 @@ class _LoginUiState extends State<LoginUi> {
                 child: Stack(
                   children: [
                     Container(
-                      decoration: const BoxDecoration(color: Color(0xff33333d)),
+                      decoration: const BoxDecoration(color: Color(SharedColor.darkIntColor)),
                       height: double.infinity,
                       child: Card(
                         margin: EdgeInsets.all(10),
-                        color: Color(0xFF424250),
+                        color: Color(SharedColor.greyIntColor),
                         shape: RoundedRectangleBorder(
                           side: BorderSide(
-                            color: Colors.grey.withOpacity(0.5),
+                            color: SharedColor.grey.withOpacity(0.5),
                             width: 1,
                           ),
                           borderRadius: BorderRadius.circular(25),
@@ -134,7 +135,7 @@ class _LoginUiState extends State<LoginUi> {
                                                         .cancel(),
                                                     style: TextStyle(
 
-                                                        color: Colors.white),
+                                                        color: SharedColor.white),
                                                   ),
                                                   onPressed: () {
                                                     Navigator.pop(context);
@@ -142,12 +143,12 @@ class _LoginUiState extends State<LoginUi> {
                                                 ),
                                                 Container(
                                                   decoration: BoxDecoration(
-                                                    color: Colors.deepOrange,
+                                                    color: SharedColor.deepOrange,
                                                     borderRadius: BorderRadius.all(
                                                         Radius.circular(5)),
                                                   ),
                                                   child: TextButton(
-                                                    //color: Colors.green,
+                                                    //color: SharedColor.green,
                                                     child: Text(
                                                       SharedData.getGlobalLang()
                                                           .sendRequest(),
@@ -179,7 +180,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     bottom: 5, right: 1, left: 1),
                                                 child: Icon(
                                                   Icons.lock_reset_outlined,
-                                                  color: Colors.white,
+                                                  color: SharedColor.white,
                                                 ),
                                               ),
 
@@ -187,7 +188,7 @@ class _LoginUiState extends State<LoginUi> {
                                                   SharedData.getGlobalLang()
                                                       .forgetYourPassword(),
                                                   style: TextStyle(
-                                                    color: Colors.orange,
+                                                    color: SharedColor.orange,
 
                                                     decoration:
                                                         TextDecoration.underline,
@@ -213,7 +214,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     bottom: 5, right: 1, left: 1),
                                                 child: Icon(
                                                   Icons.person,
-                                                  color: Colors.white,
+                                                  color: SharedColor.white,
                                                 ),
                                               ),
                                               Text(
@@ -223,7 +224,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     : SharedData.getGlobalLang()
                                                         .hasNoAccount(),
                                                 style: TextStyle(
-                                                  color: Colors.orange,
+                                                  color: SharedColor.orange,
                                                   fontSize: 14,
                                                   decoration:
                                                       TextDecoration.underline,
@@ -358,7 +359,7 @@ class _LoginUiState extends State<LoginUi> {
                                             showShortToast(
                                                 SharedData.getGlobalLang()
                                                     .dateBirthIsRequired(),
-                                                Colors.red);
+                                                SharedColor.red);
                                           }
                                           if (Provider.of<UserAuthProvider>(
                                                       context,
@@ -368,7 +369,7 @@ class _LoginUiState extends State<LoginUi> {
                                             showShortToast(
                                                 SharedData.getGlobalLang()
                                                     .countryRequired(),
-                                                Colors.red);
+                                                SharedColor.red);
                                           }
                                         }
                                         if (_formKey.currentState!.validate()) {
@@ -390,7 +391,7 @@ class _LoginUiState extends State<LoginUi> {
                                                     return AlertDialog(
                                                       contentPadding:
                                                           EdgeInsets.zero,
-                                                      backgroundColor: Colors.blue
+                                                      backgroundColor: SharedColor.blue
                                                           .withOpacity(0),
                                                       content: Stack(
                                                         children: <Widget>[

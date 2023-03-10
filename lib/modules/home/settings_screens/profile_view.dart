@@ -16,6 +16,7 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../shared_data/shareddata.dart';
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customHoverButton.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -125,12 +126,12 @@ class _ProfilePageState extends State<ProfilePage> {
                         onTap: pickImage,
                         child: Container(
                           decoration: BoxDecoration(
-                            color: Colors.white,
+                            color: SharedColor.white,
                             shape: BoxShape.circle,
                             boxShadow: [
                               BoxShadow(
                                   blurRadius: 2,
-                                  color: Colors.grey.withOpacity(0.5),
+                                  color: SharedColor.grey.withOpacity(0.5),
                                   spreadRadius: 2)
                             ],
                           ),
@@ -143,7 +144,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                           ? "حمل الصورة الشخصية"
                                           : "",
                                       style: TextStyle(
-                                          color: Colors.black, fontSize: 12)),
+                                          color: SharedColor.black, fontSize: 12)),
                                   WidgetSpan(
                                     child: state != true
                                         ? Icon(Icons.perm_media_sharp)
@@ -153,7 +154,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ],
                               ),
                             ),
-                            backgroundColor: Colors.white,
+                            backgroundColor: SharedColor.white,
                             backgroundImage:_image   == null  ?
                             _uri   != null  ?
                             NetworkImage(_uri!) as ImageProvider<Object>?
@@ -170,7 +171,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ),
                 // decoration: const BoxDecoration(
-                //   color: Colors.white,
+                //   color: SharedColor.white,
                 // ),
               ),
               Positioned(
@@ -184,8 +185,8 @@ class _ProfilePageState extends State<ProfilePage> {
                       gradient: LinearGradient(
                         colors: [
                           //Color.fromRGBO(36, 36, 36, 0.85),
-                          Color(0xFF424250),
-                          Color(0xff33333d),
+                          Color(SharedColor.greyIntColor),
+                          Color(SharedColor.darkIntColor),
                         ],
                       ),
                       boxShadow: [
@@ -234,7 +235,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.deepOrange,
+                                                      color: SharedColor.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -263,7 +264,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.deepOrange,
+                                                      color: SharedColor.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -291,7 +292,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     prefixIcon: Icon(
                                                       Icons
                                                           .drive_file_rename_outline,
-                                                      color: Colors.deepOrange,
+                                                      color: SharedColor.deepOrange,
                                                     ),
                                                     labelText: SharedData
                                                             .getGlobalLang()
@@ -394,7 +395,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                       height: 50,
                                       width: double.infinity,
                                       decoration: BoxDecoration(
-                                          color: Color(0xFFfe6e00),
+                                          color: Color(SharedColor.deepOrangeColor),
                                           borderRadius:
                                               BorderRadius.circular(20)),
                                       child: customHoverButton(
@@ -417,7 +418,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 });
                                               } else {
                                                 customScaffoldMessenger(
-                                                  color: Colors.red,
+                                                  color: SharedColor.red,
                                                   context: context,
                                                   text:
                                                       SharedData.getGlobalLang()
@@ -453,11 +454,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 leading: Icon(
                                   Icons.drive_file_rename_outline,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                               ),
                               ListTile(
@@ -473,11 +474,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 leading: Icon(
                                   Icons.drive_file_rename_outline,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                               ),
                               ListTile(
@@ -493,11 +494,11 @@ class _ProfilePageState extends State<ProfilePage> {
                                 ),
                                 leading: Icon(
                                   Icons.drive_file_rename_outline,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                                 trailing: Icon(
                                   Icons.arrow_forward_ios,
-                                  color: Colors.white,
+                                  color: SharedColor.white,
                                 ),
                               ),
                               // ListTile(
@@ -513,11 +514,11 @@ class _ProfilePageState extends State<ProfilePage> {
                               //   ),
                               //   leading: Icon(
                               //     Icons.date_range,
-                              //     color: Colors.white,
+                              //     color: SharedColor.white,
                               //   ),
                               //   trailing: Icon(
                               //     Icons.arrow_forward_ios,
-                              //     color: Colors.white,
+                              //     color: SharedColor.white,
                               //   ),
                               // ),
 
@@ -526,7 +527,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                  height: 50,
                                  width: double.infinity,
                                  decoration: BoxDecoration(
-                                     color: Color(0xFFfe6e00),
+                                     color: Color(SharedColor.deepOrangeColor),
                                      borderRadius: BorderRadius.circular(20)),
                                  child: HoverButton(
                                    onpressed: () {
@@ -538,10 +539,10 @@ class _ProfilePageState extends State<ProfilePage> {
                                        showTextFiled4 = true;
                                      });
                                    },
-                                   splashColor: Color(0xFFFF8F00),
-                                   hoverTextColor: Color(0xFFFF8F00),
-                                   highlightColor: Color(0xFFFF8F00),
-                                   color: Color(0xFFfe6e00),
+                                   splashColor: Color(SharedColor.orangeIntColor),
+                                   hoverTextColor: Color(SharedColor.orangeIntColor),
+                                   highlightColor: Color(SharedColor.orangeIntColor),
+                                   color: Color(SharedColor.orangeIntColor),
                                    child: Center(
                                        child: Row(
                                            mainAxisAlignment:
@@ -617,13 +618,13 @@ class _ProfilePageState extends State<ProfilePage> {
             .saveProfileData(data);
         if (res == true)
           customScaffoldMessenger(
-            color: Colors.green,
+            color: SharedColor.green,
             context: context,
             text: SharedData.getGlobalLang().savedSuccessfully(),
           );
         else {
           customScaffoldMessenger(
-            color: Colors.orange,
+            color: SharedColor.orange,
             context: context,
             text: SharedData.getGlobalLang().saveWasNotSuccessful(),
           );
@@ -631,7 +632,7 @@ class _ProfilePageState extends State<ProfilePage> {
       } // end if stm
     } catch (ex) {
       customScaffoldMessenger(
-          color: Colors.orange,
+          color: SharedColor.orange,
           context: context,
           text: SharedData.getGlobalLang().saveWasNotSuccessful());
     }
@@ -687,19 +688,19 @@ class _ProfilePageState extends State<ProfilePage> {
             .updateProfileData(data);
         if (res == true)
           customScaffoldMessenger(
-              color: Colors.green,
+              color: SharedColor.green,
               context: context,
               text: SharedData.getGlobalLang().updateSuccessfully());
         else {
           customScaffoldMessenger(
-              color: Colors.orange,
+              color: SharedColor.orange,
               context: context,
               text: SharedData.getGlobalLang().saveWasNotSuccessful());
         }
       } // end if stm
     } catch (ex) {
       customScaffoldMessenger(
-        color: Colors.orange,
+        color: SharedColor.orange,
         context: context,
         text: SharedData.getGlobalLang().saveWasNotSuccessful(),
       );

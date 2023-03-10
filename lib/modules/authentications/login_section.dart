@@ -5,6 +5,8 @@ import 'package:shahed/provider/auth_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
 import 'package:shahed/widgets/custom_Text_Field.dart';
 
+import '../../theme/colors_app.dart';
+
 class LoginForm extends StatefulWidget {
   @override
   _LoginFormState createState() => _LoginFormState();
@@ -66,7 +68,7 @@ class _LoginFormState extends State<LoginForm> {
                 icon: Icon(
                   // Based on passwordVisible state choose the icon
                   _passwordVisible! ? Icons.visibility : Icons.visibility_off,
-                  color: _passwordVisible! ?Colors.white:Colors.grey,
+                  color: _passwordVisible! ?SharedColor.white:SharedColor.grey,
                 ),
                 onPressed: () {
                   // Update the state i.e. toogle the state of passwordVisible variable

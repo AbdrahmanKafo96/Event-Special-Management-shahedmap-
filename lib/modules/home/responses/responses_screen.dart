@@ -11,6 +11,8 @@ import 'package:shahed/shimmer/shimmer.dart';
 import 'package:shahed/singleton/singleton.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 
+import '../../../theme/colors_app.dart';
+
 class ResponsePage extends StatefulWidget {
   @override
   _ResponsePageState createState() => _ResponsePageState();
@@ -44,19 +46,19 @@ class _ResponsePageState extends State<ResponsePage> {
 
   Widget slideLeftBackground() {
     return Container(
-      color: Colors.red,
+      color: SharedColor.red,
       child: Align(
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: <Widget>[
             Icon(
               Icons.delete,
-              color: Colors.white,
+              color: SharedColor.white,
             ),
             Text(
               SharedData.getGlobalLang().delete(),
               style: TextStyle(
-                color: Colors.white,
+                color: SharedColor.white,
                 fontWeight: FontWeight.w700,
               ),
               textAlign: TextAlign.right,
@@ -107,14 +109,14 @@ class _ResponsePageState extends State<ResponsePage> {
                 return snapshot.hasData && snapshot.data!.length > 0
                     ? RefreshIndicator(
                         displacement: 5,
-                        color: Colors.deepOrange,
+                        color: SharedColor.deepOrange,
                         onRefresh: getData,
                         child: ListView.builder(
                           shrinkWrap: true,
 
                           itemCount: snapshot.data!.length,
                           // separatorBuilder: (context, index) => Divider(
-                          //   color: Colors.black,
+                          //   color: SharedColor.black,
                           // ),
                           itemBuilder: (context, index) {
                             return Padding(
@@ -126,11 +128,11 @@ class _ResponsePageState extends State<ResponsePage> {
                                     child: Ink(
                                       child: Card(
                                         color: snapshot.data![index]!.seen  == 0
-                                            ? Colors.grey.withOpacity(0.5)
-                                            : Colors.white,
+                                            ? SharedColor.grey.withOpacity(0.5)
+                                            : SharedColor.white,
                                         shape: RoundedRectangleBorder(
                                           side: BorderSide(
-                                            color: Colors.green.shade300,
+                                            color: SharedColor.green,
                                           ),
                                           borderRadius:
                                               BorderRadius.circular(15.0),
@@ -159,14 +161,17 @@ class _ResponsePageState extends State<ResponsePage> {
                                                     print(value['data']['lng']);
                                                     Navigator.push(
                                                       context,
-                                                      MaterialPageRoute(
-                                                          builder: (context) => Mappoly(
-                                                              lat: double.parse(
-                                                                  value['data']
-                                                                      ['lat']),
-                                                              lng: double.parse(
-                                                                  value['data'][
-                                                                      'lng']))),
+                                                      PageRouteBuilder(
+                                                        pageBuilder: (_, __, ___) => Mappoly(
+                                                            lat: double.parse(
+                                                                value['data']
+                                                                ['lat']),
+                                                            lng: double.parse(
+                                                                value['data'][
+                                                                'lng'])),
+                                                        transitionDuration: Duration.zero,
+                                                      ),
+
                                                     );
                                                   });
                                                 });
@@ -183,14 +188,17 @@ class _ResponsePageState extends State<ResponsePage> {
                                                   print(value['data']['lng']);
                                                   Navigator.push(
                                                     context,
-                                                    MaterialPageRoute(
-                                                        builder: (context) => Mappoly(
-                                                            lat: double.parse(
-                                                                value['data']
-                                                                    ['lat']),
-                                                            lng: double.parse(
-                                                                value['data']
-                                                                    ['lng']))),
+                                                    PageRouteBuilder(
+                                                      pageBuilder: (_, __, ___) =>  Mappoly(
+                                                          lat: double.parse(
+                                                              value['data']
+                                                              ['lat']),
+                                                          lng: double.parse(
+                                                              value['data']
+                                                              ['lng'])),
+                                                      transitionDuration: Duration.zero,
+                                                    ),
+
                                                   );
                                                 });
                                               }
@@ -198,7 +206,7 @@ class _ResponsePageState extends State<ResponsePage> {
                                             leading: Icon(
                                               Icons.event_note_rounded,
                                               size: 30,
-                                              color: Colors.blueGrey,
+                                              color: SharedColor.blueGrey,
                                             ),
                                             title: Text(
                                               '${snapshot.data![index]!.type_name!}',
@@ -217,12 +225,12 @@ class _ResponsePageState extends State<ResponsePage> {
                     : Center(
                         child: Text(
                             SharedData.getGlobalLang().noNotifications(),
-                            style: TextStyle(color: Colors.black54)));
+                            style: TextStyle(color: SharedColor.black54)));
               default:
                 {
                   return Center(
                       child: Text(SharedData.getGlobalLang().noNotifications(),
-                          style: TextStyle(color: Colors.black54)));
+                          style: TextStyle(color: SharedColor.black54)));
                 }
             }
           }),
@@ -246,7 +254,7 @@ class _ResponsePageState extends State<ResponsePage> {
         TextButton(
           child: Text(
             SharedData.getGlobalLang().cancel(),
-            style: TextStyle(color: Colors.black),
+            style: TextStyle(color: SharedColor.black),
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -255,7 +263,7 @@ class _ResponsePageState extends State<ResponsePage> {
         TextButton(
           child: Text(
             SharedData.getGlobalLang().delete(),
-            style: TextStyle(color: Colors.red),
+            style: TextStyle(color: SharedColor.red),
           ),
           onPressed: () {
             var postId = addede_id;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:hovering/hovering.dart';
+import 'package:shahed/theme/colors_app.dart';
 
 Widget customHoverButton(BuildContext context, {VoidCallback? onPressed, String? text ,IconData? icon}) {
   return Container(
@@ -8,10 +9,10 @@ Widget customHoverButton(BuildContext context, {VoidCallback? onPressed, String?
     child: HoverButton(
       onpressed: onPressed!,
 
-      splashColor: Color(0xFFFF8F00),
-      hoverTextColor: Color(0xFFFF8F00),
-      highlightColor: Color(0xFFFF8F00),
-      color: Color(0xFFfe6e00),
+      splashColor: Color(SharedColor.orangeIntColor),
+      hoverTextColor: Color(SharedColor.orangeIntColor),
+      highlightColor: Color(SharedColor.orangeIntColor),
+      color: Color(SharedColor.deepOrangeColor),
       child:   Row(
           mainAxisAlignment:
           MainAxisAlignment.center,

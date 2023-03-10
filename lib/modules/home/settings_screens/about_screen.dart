@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_drawer.dart';
 import '../../../shared_data/shareddata.dart';
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 
 class About extends StatefulWidget {
@@ -41,12 +42,12 @@ class _AboutState extends State<About> {
                   'https://www.linkedin.com/in/abdrahman-kafo-945b331b5/',
               tagLine: SharedData.getGlobalLang().infoDevelopmentTeam(),
               twitterHandle: ' ',
-              textColor: Colors.white,
-              cardColor: Color(0xff33333d),
-              companyColor: Colors.grey,
+              textColor: SharedColor.white,
+              cardColor: Color(SharedColor.darkIntColor),
+              companyColor: SharedColor.grey,
               companyFontWeight: FontWeight.bold,
               taglineFontWeight: FontWeight.bold,
-              taglineColor: Colors.grey,
+              taglineColor: SharedColor.grey,
             ),
           ),
         ),

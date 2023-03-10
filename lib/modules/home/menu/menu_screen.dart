@@ -11,6 +11,7 @@ import 'package:shahed/widgets/checkInternet.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:shahed/widgets/custom_dialog.dart';
+import '../../../theme/colors_app.dart';
 import '../../../widgets/customDirectionality.dart';
 import 'search.dart';
 
@@ -112,7 +113,7 @@ class _EventsMenuState extends State<EventsMenu> {
 
                         itemCount: snapshot.data!.length,
                         // separatorBuilder: (context, index) => Divider(
-                        //   color: Colors.black,
+                        //   color: SharedColor.black,
                         // ),
                         itemBuilder: (context, index) {
                           return Column(
@@ -123,10 +124,10 @@ class _EventsMenuState extends State<EventsMenu> {
                                 ),
                                 padding: EdgeInsets.only(top: 8),
                                 child: Card(
-                                  color: Color(0xFF424250),
+                                  color: Color(SharedColor.greyIntColor),
                                   shape: RoundedRectangleBorder(
                                     side: BorderSide(
-                                      color: Color(0xFF424250),
+                                      color: Color(SharedColor.greyIntColor),
                                     ),
                                     borderRadius: BorderRadius.circular(15.0),
                                   ),
@@ -160,7 +161,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                             tooltip: SharedData.getGlobalLang().updateEvent(),
                                             icon: Icon(
                                               Icons.edit,
-                                              color: Colors.green,
+                                              color: SharedColor.green,
                                             ),
                                             onPressed: () {
                                               checkInternetConnectivity(context)
@@ -186,7 +187,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                               tooltip: SharedData.getGlobalLang().deleteEvent(),
                                               icon: Icon(
                                                 Icons.delete,
-                                                color: Colors.red,
+                                                color: SharedColor.red,
                                               ),
                                               onPressed: () {
                                                 checkInternetConnectivity(
@@ -231,7 +232,7 @@ class _EventsMenuState extends State<EventsMenu> {
                                 ),
                               ),
                               // Divider(
-                              //   color: Colors.grey,
+                              //   color: SharedColor.grey,
                               // )
                             ],
                           );
@@ -276,7 +277,7 @@ class _EventsMenuState extends State<EventsMenu> {
         TextButton(
           child: Text(
             SharedData.getGlobalLang().cancel(),
-            style: TextStyle(color: Colors.grey),
+            style: TextStyle(color: SharedColor.grey),
           ),
           onPressed: () {
             Navigator.of(context).pop();
@@ -284,13 +285,13 @@ class _EventsMenuState extends State<EventsMenu> {
         ),
         Container(
           decoration: BoxDecoration(
-            color: Colors.red,
+            color: SharedColor.red,
             borderRadius: BorderRadius.all(Radius.circular(5)),
           ),
           child: TextButton(
             child: Text(
               SharedData.getGlobalLang().deleteEvent(),
-              style: TextStyle(color: Colors.white),
+              style: TextStyle(color: SharedColor.white),
             ),
             onPressed: () {
               var postId = addede_id;
@@ -316,11 +317,11 @@ class _EventsMenuState extends State<EventsMenu> {
           resizeToAvoidBottomInset: false,
           appBar: customAppBar(context,actions: [
             IconButton(
-                color: Colors.red,
+                color: SharedColor.red,
                 tooltip: SharedData.getGlobalLang().search(),
                 icon: Icon(
                   Icons.search_rounded,
-                  color: Colors.white,
+                  color: SharedColor.white,
                 ),
                 onPressed: () {
                   showSearch(

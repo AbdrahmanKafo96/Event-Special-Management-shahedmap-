@@ -9,6 +9,8 @@ import 'package:shahed/widgets/custom_Text_Field.dart';
 import '../../shared_data/shareddata.dart';
 import 'package:intl/intl.dart';
 
+import '../../theme/colors_app.dart';
+
 class RegistrationForm extends StatefulWidget {
   @override
   _RegistrationFormState createState() => _RegistrationFormState();
@@ -80,7 +82,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
             icon: Icon(
               // Based on passwordVisible state choose the icon
               _passwordConfVisible! ? Icons.visibility : Icons.visibility_off,
-              color: _passwordConfVisible! ?Colors.white:Colors.grey,
+              color: _passwordConfVisible! ?SharedColor.white:SharedColor.grey,
             ),
             onPressed: () {
               // Update the state i.e. toogle the state of passwordVisible variable
@@ -168,8 +170,8 @@ class _RegistrationFormState extends State<RegistrationForm> {
               flex: 1,
               child: ElevatedButton.icon(
                 style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.deepOrange, // background
-                foregroundColor: Colors.white, // foreground
+                backgroundColor: SharedColor.deepOrange, // background
+                foregroundColor: SharedColor.white, // foreground
                 ),
                 onPressed: () => _selectDate(context),
                 icon: Icon(Icons.date_range),
@@ -178,7 +180,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
               // child: DateTimePicker(
               //
               //   style: TextStyle(
-              //     color: Colors.deepOrange
+              //     color: SharedColor.deepOrange
               //   ),
               //
               //   validator: (value) {
@@ -241,7 +243,7 @@ class _RegistrationFormState extends State<RegistrationForm> {
                   country1 != ""
                       ? country1
                       : SharedData.getGlobalLang().chooseCountry(),
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: SharedColor.white),
                 ),
               ),
             ),
@@ -293,14 +295,14 @@ class _RegistrationFormState extends State<RegistrationForm> {
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.light(
-              primary: Color(0xff33333d),
-              onPrimary: Colors.deepOrange, // <-- SEE HERE
-              onSurface: Colors.black, // <-- SEE HERE
+              primary: Color(SharedColor.darkIntColor),
+              onPrimary: SharedColor.deepOrange, // <-- SEE HERE
+              onSurface: SharedColor.black, // <-- SEE HERE
             ),
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                foregroundColor: Colors.deepOrange,
-                backgroundColor: Color(0xff33333d)// button text color
+                foregroundColor: SharedColor.deepOrange,
+                backgroundColor: Color(SharedColor.darkIntColor)// button text color
               ),
             ),
           ),

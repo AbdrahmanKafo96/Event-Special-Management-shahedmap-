@@ -11,6 +11,8 @@ import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import '../../../models/mission.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import '../../../theme/colors_app.dart';
 //import 'mission_track.dart';
 
 class Missions extends StatefulWidget {
@@ -82,14 +84,14 @@ class _MissionsState extends State<Missions> {
                   return snapshot.hasData && snapshot.data!.length > 0
                       ? RefreshIndicator(
                           displacement: 5,
-                          color: Colors.orange,
+                          color: SharedColor.orange,
                           onRefresh: getData,
                           child: ListView.builder(
                             shrinkWrap: true,
 
                             itemCount: snapshot.data!.length,
                             // separatorBuilder: (context, index) => Divider(
-                            //   color: Colors.black,
+                            //   color: SharedColor.black,
                             // ),
                             itemBuilder: (context, index) {
                               return Padding(
@@ -98,14 +100,14 @@ class _MissionsState extends State<Missions> {
                                   children: [
                                     Card(
                                       color: snapshot.data![index]!.seen == 0
-                                          ? Color(0xFFc3c3c4)
-                                          : Color(0xFF424250),
+                                          ? Color(SharedColor.whiteIntColor)
+                                          : Color(SharedColor.greyIntColor),
                                       shape: RoundedRectangleBorder(
                                         side: BorderSide(
                                             color:
                                                 snapshot.data![index]!.seen == 0
-                                                    ? Colors.black54
-                                                    : Colors.white12),
+                                                    ? SharedColor.black54
+                                                    : SharedColor.white12),
                                         borderRadius:
                                             BorderRadius.circular(15.0),
                                       ),
@@ -122,42 +124,46 @@ class _MissionsState extends State<Missions> {
                                                 .then((value) {
                                               Navigator.push(
                                                 context,
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        BrowserMap(
-                                                          latLngDestination: LatLng(
-                                                              snapshot
-                                                                  .data![index]
-                                                                  !.lat_finish!,
-                                                              snapshot
-                                                                  .data![index]
-                                                                  !.lng_finish!),
-                                                          state: 1,
-                                                          pathshasData: 'yes',
-                                                          path: snapshot
-                                                              .data![index]!.points ,
-                                                        )),
+                                                PageRouteBuilder(
+                                                  pageBuilder: (_, __, ___) =>   BrowserMap(
+                                                    latLngDestination: LatLng(
+                                                        snapshot
+                                                            .data![index]
+                                                        !.lat_finish!,
+                                                        snapshot
+                                                            .data![index]
+                                                        !.lng_finish!),
+                                                    state: 1,
+                                                    pathshasData: 'yes',
+                                                    path: snapshot
+                                                        .data![index]!.points ,
+                                                  ),
+                                                  transitionDuration: Duration.zero,
+                                                ),
+
                                               );
                                             });
                                           } else {
                                             Navigator.push(
                                               context,
-                                              MaterialPageRoute(
-                                                  builder:
-                                                      (context) => BrowserMap(
-                                                            latLngDestination: LatLng(
-                                                                snapshot
-                                                                    .data![index]!
-                                                                    .lat_finish!,
-                                                                snapshot
-                                                                    .data![index]!
-                                                                    .lng_finish!),
-                                                            state: 1,
-                                                            pathshasData: 'yes',
-                                                            path: snapshot
-                                                                .data![index]
-                                                                !.points,
-                                                          )),
+                                              PageRouteBuilder(
+                                                pageBuilder: (_, __, ___) =>  BrowserMap(
+                                                  latLngDestination: LatLng(
+                                                      snapshot
+                                                          .data![index]!
+                                                          .lat_finish!,
+                                                      snapshot
+                                                          .data![index]!
+                                                          .lng_finish!),
+                                                  state: 1,
+                                                  pathshasData: 'yes',
+                                                  path: snapshot
+                                                      .data![index]
+                                                  !.points,
+                                                ),
+                                                transitionDuration: Duration.zero,
+                                              ),
+
                                             );
                                           }
                                         },
@@ -177,8 +183,8 @@ class _MissionsState extends State<Missions> {
                                           Icons.task_alt,
                                           size: 30,
                                           color: snapshot.data![index]!.seen == 0
-                                              ? Colors.green
-                                              : Colors.white,
+                                              ? SharedColor.green
+                                              : SharedColor.white,
                                         ),
                                         title: Text(
                                           '${snapshot.data![index]!.mission_name}',
@@ -199,13 +205,13 @@ class _MissionsState extends State<Missions> {
                       : Center(
                           child: Text(
                               SharedData.getGlobalLang().noNotifications(),
-                              style: TextStyle(color: Colors.black54)));
+                              style: TextStyle(color: SharedColor.black54)));
                 default:
                   {
                     return Center(
                         child: Text(
                             SharedData.getGlobalLang().noNotifications(),
-                            style: TextStyle(color: Colors.black54)));
+                            style: TextStyle(color: SharedColor.black54)));
                   }
               }
             }));

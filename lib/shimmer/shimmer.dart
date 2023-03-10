@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shahed/theme/colors_app.dart';
 class NewsCardSkelton extends StatelessWidget {
 
   @override
@@ -45,7 +46,7 @@ class Skeleton extends StatelessWidget {
       width: width,
       padding: const EdgeInsets.all(5 / 2),
       decoration: BoxDecoration(
-          color: Colors.grey.withOpacity(0.09),
+          color: SharedColor.grey.withOpacity(0.09),
           borderRadius:
           const BorderRadius.all(Radius.circular(5))),
     );

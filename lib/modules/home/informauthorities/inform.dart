@@ -7,6 +7,7 @@ import 'package:shahed/modules/authentications/logo.dart';
 import 'package:shahed/modules/home/event_screens/event_category.dart';
 import 'package:shahed/provider/event_provider.dart';
 import 'package:shahed/shared_data/shareddata.dart';
+import 'package:shahed/theme/colors_app.dart';
 import 'package:shahed/widgets/customDirectionality.dart';
 import 'package:shahed/widgets/custom_app_bar.dart';
 import 'package:shahed/widgets/custom_toast.dart';
@@ -63,7 +64,7 @@ class InformEntity extends StatelessWidget {
                   await Flushbar(
                     //  title: 'Hey Ninja',
                     message: SharedData.getGlobalLang().categoryTypeAreRequired(),
-                    backgroundColor: Colors.orange,
+                    backgroundColor: SharedColor.orange,
                     duration: Duration(seconds: 3),
                   ).show(context);
                 } else {
@@ -89,7 +90,7 @@ class InformEntity extends StatelessWidget {
                         //app opened
                       }
                     }
-                  showShortToast(SharedData.getGlobalLang().checkMessagesApp(), Colors.green);
+                  showShortToast(SharedData.getGlobalLang().checkMessagesApp(), SharedColor.green);
                   Provider.of<EventProvider>(context, listen: false)
                       .event
                       .eventType
@@ -111,7 +112,7 @@ class InformEntity extends StatelessWidget {
             )
           ]),
           body: Container(
-             color: Color(0xff424250),
+             color: Color( SharedColor.greyIntColor),
               padding: EdgeInsets.all(10),
               height: double.maxFinite,
               child: Column(

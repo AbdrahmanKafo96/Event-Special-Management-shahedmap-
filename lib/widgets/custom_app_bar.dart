@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'dart:ui' as ui;
 
+import 'package:shahed/theme/colors_app.dart';
+
 PreferredSizeWidget customAppBar(BuildContext context,
     {String title = "",
     Color? backgroundColor,
@@ -16,13 +18,8 @@ PreferredSizeWidget customAppBar(BuildContext context,
     leading: leading,
     flexibleSpace: Container(
       decoration: const BoxDecoration(
-        color: Color(0xff33333d),
-        // gradient: LinearGradient(
-        //   colors: [
-        //     Color(0xFF424250),
-        //     Color(0xff33333d),
-        //   ],
-        // ),
+        color: Color(SharedColor.darkIntColor),
+
       ),
     ),
     title: Text.rich(
@@ -32,7 +29,7 @@ PreferredSizeWidget customAppBar(BuildContext context,
               alignment: ui.PlaceholderAlignment.middle,
               child: Icon(
                 icon,
-                color: Colors.white,
+                color: SharedColor.white,
               )),
           //  TextSpan(text: 'downloads on both stores'),
           TextSpan(text: " $title "),
