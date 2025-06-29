@@ -1,6 +1,6 @@
 # Event Special Management (shahedmap)
 
-A new Flutter application.
+Event Special Management: It is a system for collecting events that occur in reality and provides the advantage of tracking and access to them easily with the ability to monitor units and manage security groups and so on.
 
 ## Getting Started
 
