@@ -1,4 +1,4 @@
-# shahedmap
+# Event Special Management (shahedmap)
 
 A new Flutter application.
 
